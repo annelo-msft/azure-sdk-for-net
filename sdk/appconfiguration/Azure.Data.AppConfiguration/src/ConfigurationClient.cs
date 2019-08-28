@@ -38,7 +38,7 @@ namespace Azure.Data.AppConfiguration
         }
 
         /// <summary>
-        /// Creates a <see cref="ConfigurationClient"/> that sends requests to the configuration store.
+        /// Initializes a new instance of the <see cref="ConfigurationClient"/>.
         /// </summary>
         /// <param name="connectionString">Connection string with authentication option and related parameters.</param>
         /// <param name="options">Options that allow to configure the management of the request sent to the configuration store.</param>
@@ -55,6 +55,41 @@ namespace Azure.Data.AppConfiguration
                     new AuthenticationPolicy(credential, secret),
                     new SyncTokenPolicy());
         }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ConfigurationClient"/>, using the managed identity of an Azure resource.
+        /// </summary>
+        /// <param name="endpoint"></param>
+        /// <param name="subscriptionId"></param>
+        /// <param name="resourceGroup"></param>
+        /// <param name="credential"></param>
+        public ConfigurationClient(string endpoint, string subscriptionId, string resourceGroup, TokenCredential credential)
+            : this(endpoint, subscriptionId, resourceGroup, credential, new ConfigurationClientOptions())
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ConfigurationClient"/> using the managed identity of an Azure resource.
+        /// </summary>
+        /// <param name="endpoint">The endpoint of the Azure App Configuration store to connect to.</param>
+        /// <param name="subscriptionId"></param>
+        /// <param name="resourceGroup"></param>
+        /// <param name="credential">Managed identity token credential.</param>
+        /// <param name="options">Options that allow to configure the management of the request sent to the configuration store.</param>
+        public ConfigurationClient(string endpoint, string subscriptionId, string resourceGroup, TokenCredential credential, ConfigurationClientOptions options)
+        {
+            // TODO: Should client validate parameters, or will service do this?
+
+            var connectionString = GetConnectionString(endpoint, subscriptionId, resourceGroup, credential);
+            
+            //ParseConnectionString(connectionString, out _baseUri, out var credential, out var secret);
+
+            //_pipeline = HttpPipelineBuilder.Build(options,
+            //        new AuthenticationPolicy(credential, secret),
+            //        new SyncTokenPolicy());
+
+        }
+
 
         /// <summary>
         /// Creates a <see cref="ConfigurationSetting"/> only if the setting does not already exist in the configuration store.

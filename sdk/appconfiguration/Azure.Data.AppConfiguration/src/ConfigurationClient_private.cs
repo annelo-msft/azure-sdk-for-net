@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Azure.Core;
@@ -27,6 +28,12 @@ namespace Azure.Data.AppConfiguration
         const string FieldsQueryFilter = "$select";
         const string IfMatchName = "If-Match";
         const string IfNoneMatch = "If-None-Match";
+
+        private const string ArmEndpoint = "https://management.azure.com";
+        private const string SubscriptionsRoute = "/subscriptions/";
+        private const string ResourceGroupsRoute = "/resourceGroups/";
+        private const string ConfigStoreRoute = "/providers/Microsoft.AppConfiguration/configurationStores/";
+        private const string ListKeysRoute = "/ListKeys";
 
         static readonly char[] ReservedCharacters = new char[] { ',', '\\' };
 
@@ -85,6 +92,60 @@ namespace Azure.Data.AppConfiguration
                     secret = Convert.FromBase64String(secretBase64);
                 }
             };
+        }
+
+        private string GetConnectionString(string endpoint, string subscriptionId, string resourceGroup, TokenCredential credential)
+        {
+            HttpPipeline pipeline = HttpPipelineBuilder.Build(new ConfigurationClientOptions(),
+                new BearerTokenAuthenticationPolicy(credential, ArmEndpoint));
+
+            using DiagnosticScope scope = pipeline.Diagnostics.CreateScope("Azure.Data.AppConfiguration.ConfigurationClient.ctor");
+            scope.Start();
+
+            try
+            {
+                using Request request = CreateGetApiKeysRequest(endpoint, subscriptionId, resourceGroup);
+                Response response = await pipeline.SendRequestAsync(request, cancellationToken).ConfigureAwait(false);
+
+                switch (response.Status)
+                {
+                    case 200:
+                    case 201:
+                        return await CreateResponseAsync(response, cancellationToken).ConfigureAwait(false);
+                    default:
+                        throw await response.CreateRequestFailedExceptionAsync().ConfigureAwait(false);
+                }
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+
+        }
+
+        private Request CreateGetApiKeysRequest(HttpPipeline pipeline)
+        {
+            Request request = pipeline.CreateRequest();
+            request.Method = RequestMethod.Post;
+
+            BuildUriForArmListKeys()
+
+            //using (var request = new HttpRequestMessage(HttpMethod.Post, ArmEndpoint + store.Id + $"/listKeys?api-version={AppConfigurationStoreResourceVersion}"))
+            //subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AppConfiguration/configurationStores/{configStoreName}/ListKeys": {
+
+            using (var request = new HttpRequestMessage())
+            {
+                request.Headers.Add("Authorization", "Bearer " + token);
+                if (!string.IsNullOrEmpty(options?.UserAgent))
+                {
+                    request.Headers.Add(HeaderNames.UserAgent, options.UserAgent);
+                }
+
+                using (HttpResponseMessage response = await httpClient.SendAsync(request, ct))
+                {
+                }
+            }
         }
 
         void BuildUriForKvRoute(RequestUriBuilder builder, ConfigurationSetting keyValue)
