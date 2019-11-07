@@ -35,4 +35,8 @@
     <Compile Include="$(AzureCoreSharedSources)ResponseExceptionExtensions.cs" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\core\Azure.Core\src\Azure.Core.csproj" />
+  </ItemGroup>
+
 </Project>

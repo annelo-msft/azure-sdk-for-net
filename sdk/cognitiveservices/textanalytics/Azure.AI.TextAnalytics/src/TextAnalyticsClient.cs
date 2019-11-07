@@ -28,13 +28,40 @@ namespace Azure.AI.TextAnalytics
         {
         }
 
-        // TODO: How are we doing AAD auth?
+        /// <summary>
+        /// </summary>
+        /// <param name="endpoint"></param>
+        /// <param name="credential"></param>
+        public TextAnalyticsClient(Uri endpoint, TokenCredential credential)
+            : this(endpoint, credential, new TextAnalyticsClientOptions())
+        {
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="endpoint"></param>
+        /// <param name="credential"></param>
+        /// <param name="options"></param>
+        public TextAnalyticsClient(Uri endpoint, TokenCredential credential, TextAnalyticsClientOptions options)
+        {
+            Argument.AssertNotNull(endpoint, nameof(endpoint));
+            Argument.AssertNotNull(credential, nameof(credential));
+            Argument.AssertNotNull(options, nameof(options));
+
+            Console.WriteLine(credential?.ToString());
+
+            _baseUri = endpoint;
+            _apiVersion = options.GetVersionString();
+            _pipeline = HttpPipelineBuilder.Build(options,
+                new BearerTokenAuthenticationPolicy(credential, "https://cognitiveservices.azure.com/.default"));
+            _clientDiagnostics = new ClientDiagnostics(options);
+        }
 
         /// <summary>
         /// </summary>
         /// <param name="endpoint"></param>
         /// <param name="subscriptionKey"></param>
-        public TextAnalyticsClient(string endpoint, string subscriptionKey)
+        public TextAnalyticsClient(Uri endpoint, string subscriptionKey)
             : this(endpoint, subscriptionKey, new TextAnalyticsClientOptions())
         {
         }
@@ -44,12 +71,13 @@ namespace Azure.AI.TextAnalytics
         /// <param name="endpoint"></param>
         /// <param name="subscriptionKey"></param>
         /// <param name="options"></param>
-        public TextAnalyticsClient(string endpoint, string subscriptionKey, TextAnalyticsClientOptions options)
+        public TextAnalyticsClient(Uri endpoint, string subscriptionKey, TextAnalyticsClientOptions options)
         {
-            Argument.AssertNotNullOrEmpty(endpoint, nameof(endpoint));
-            Argument.AssertNotNullOrEmpty(subscriptionKey, nameof(endpoint));
+            Argument.AssertNotNull(endpoint, nameof(endpoint));
+            Argument.AssertNotNullOrEmpty(subscriptionKey, nameof(subscriptionKey));
+            Argument.AssertNotNull(options, nameof(options));
 
-            _baseUri = new Uri(endpoint);
+            _baseUri = endpoint;
             _subscriptionKey = subscriptionKey;
             _apiVersion = options.GetVersionString();
             _pipeline = HttpPipelineBuilder.Build(options);
