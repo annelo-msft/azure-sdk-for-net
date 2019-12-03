@@ -24,16 +24,22 @@ namespace Azure.Data.AppConfiguration
         public static readonly string Any = "*";
 
         /// <summary>
+        /// A wildcard that matches any key or any label when passed as a filter
+        /// to Keys or Labels.
+        /// </summary>
+        public static readonly string NoLabel = "\0";
+
+        /// <summary>
         /// Keys or key filters that will be used to select a set of <see cref="ConfigurationSetting"/> entities.
         /// </summary>
         /// <remarks>See the documentation for this client library for details on the format of filter expressions.</remarks>
-        public IList<string> Keys { get; }
+        public IList<string> KeyFilters { get; }
 
         /// <summary>
         /// Labels or label filters that will be used to select a set of <see cref="ConfigurationSetting"/> entities.
         /// </summary>
         /// <remarks>See the documentation for this client library for details on the format of filter expressions.</remarks>
-        public IList<string> Labels { get; }
+        public IList<string> LabelFilters { get; }
 
         /// <summary>
         /// The fields of the <see cref="ConfigurationSetting"/> to retrieve for each setting in the retrieved group.
@@ -57,18 +63,45 @@ namespace Azure.Data.AppConfiguration
         /// Creates a <see cref="SettingSelector"/> that will retrieve <see cref="ConfigurationSetting"/> entities that match
         /// the passed-in keys and labels.
         /// </summary>
-        /// <param name="key">A key or key filter indicating which <see cref="ConfigurationSetting"/> entities to select.</param>
-        /// <param name="label">A label or label filter indicating which <see cref="ConfigurationSetting"/> entities to select.</param>
-        public SettingSelector(string key, string label = default)
+        /// <param name="keyFilter">A key or key filter indicating which <see cref="ConfigurationSetting"/> entities to select.</param>
+        /// <param name="labelFilter">A label or label filter indicating which <see cref="ConfigurationSetting"/> entities to select.</param>
+        public SettingSelector(string keyFilter, string labelFilter = default)
         {
-            Keys = new List<string>
+            KeyFilters = new List<string>
             {
-                key ?? Any
+                keyFilter ?? Any
             };
 
-            Labels = new List<string>();
-            if (label != null)
-                Labels.Add(label);
+            LabelFilters = new List<string>();
+            if (labelFilter != null)
+                LabelFilters.Add(labelFilter);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="keyName"></param>
+        public void AddKey(string keyName)
+        {
+            //TODO: Remove default wildcard
+
+            KeyFilters.Add(EscapeString(keyName));
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="labelName"></param>
+        public void AddLabel(string labelName)
+        {
+            //TODO: Remove default wildcard
+
+            LabelFilters.Add(EscapeString(labelName));
+        }
+
+#pragma warning disable CA1801
+        private static string EscapeString(string value)
+        {
+#pragma warning restore CA1801
+            throw new NotImplementedException();
         }
 
         #region nobody wants to see these

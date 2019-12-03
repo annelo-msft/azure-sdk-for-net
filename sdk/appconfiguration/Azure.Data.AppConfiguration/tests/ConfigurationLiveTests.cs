@@ -825,8 +825,8 @@ namespace Azure.Data.AppConfiguration.Tests
 
                 var selector = new SettingSelector();
 
-                Assert.AreEqual("*", selector.Keys.First());
-                Assert.AreEqual("*", selector.Labels.First());
+                Assert.AreEqual("*", selector.KeyFilters.First());
+                Assert.AreEqual("*", selector.LabelFilters.First());
 
                 var resultsReturned = (await service.GetConfigurationSettingsAsync(selector, CancellationToken.None).ToEnumerableAsync())
                     .Count();
@@ -899,7 +899,7 @@ namespace Azure.Data.AppConfiguration.Tests
 
                 var selector = new SettingSelector(null, testSetting.Label);
 
-                Assert.AreEqual("*", selector.Keys.First());
+                Assert.AreEqual("*", selector.KeyFilters.First());
 
                 ConfigurationSetting[] batch = (await service.GetConfigurationSettingsAsync(selector, CancellationToken.None).ToEnumerableAsync())
                     .ToArray();
@@ -1140,7 +1140,7 @@ namespace Azure.Data.AppConfiguration.Tests
                 await service.SetConfigurationSettingAsync(xyzSetting);
 
                 var selector = new SettingSelector("ab,cd");
-                selector.Keys.Add("wx,yz");
+                selector.AddKey("wx,yz");
 
                 ConfigurationSetting[] settings = (await service.GetConfigurationSettingsAsync(selector, CancellationToken.None).ToEnumerableAsync()).ToArray();
 
@@ -1195,7 +1195,7 @@ namespace Azure.Data.AppConfiguration.Tests
                 await service.SetConfigurationSettingAsync(xyzSetting);
 
                 var selector = new SettingSelector("abc");
-                selector.Keys.Add("xyz");
+                selector.AddKey("xyz");
 
                 ConfigurationSetting[] settings = (await service.GetConfigurationSettingsAsync(selector, CancellationToken.None).ToEnumerableAsync()).ToArray();
 
@@ -1224,7 +1224,7 @@ namespace Azure.Data.AppConfiguration.Tests
                 await service.SetConfigurationSettingAsync(xyzSetting);
 
                 var selector = new SettingSelector(null, "abc");
-                selector.Labels.Add("xyz");
+                selector.AddLabel("xyz");
 
                 ConfigurationSetting[] settings = (await service.GetConfigurationSettingsAsync(selector, CancellationToken.None).ToEnumerableAsync()).ToArray();
 

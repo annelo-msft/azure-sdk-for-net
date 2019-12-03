@@ -133,10 +133,10 @@ namespace Azure.Data.AppConfiguration
 
         internal static void BuildBatchQuery(RequestUriBuilder builder, SettingSelector selector, string pageLink)
         {
-            if (selector.Keys.Count > 0)
+            if (selector.KeyFilters.Count > 0)
             {
                 var keysCopy = new List<string>();
-                foreach (var key in selector.Keys)
+                foreach (var key in selector.KeyFilters)
                 {
                     if (key.IndexOfAny(s_reservedCharacters) != -1)
                     {
@@ -151,9 +151,9 @@ namespace Azure.Data.AppConfiguration
                 builder.AppendQuery(KeyQueryFilter, keys);
             }
 
-            if (selector.Labels.Count > 0)
+            if (selector.LabelFilters.Count > 0)
             {
-                var labelsCopy = selector.Labels.Select(label => string.IsNullOrEmpty(label) ? "\0" : EscapeReservedCharacters(label));
+                var labelsCopy = selector.LabelFilters.Select(label => string.IsNullOrEmpty(label) ? "\0" : EscapeReservedCharacters(label));
                 var labels = string.Join(",", labelsCopy);
                 builder.AppendQuery(LabelQueryFilter, labels);
             }

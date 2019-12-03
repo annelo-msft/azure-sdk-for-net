@@ -33,8 +33,8 @@ namespace Azure.Data.AppConfiguration.Tests
         public void FilterReservedCharacter()
         {
             var selector = new SettingSelector("my_key", "my_label");
-            selector.Keys.Add( "key,key" );
-            selector.Labels.Add("label,label");
+            selector.KeyFilters.Add( "key,key" );
+            selector.LabelFilters.Add("label,label");
 
             var builder = new RequestUriBuilder();
             builder.Reset(new Uri("http://localhost/"));
