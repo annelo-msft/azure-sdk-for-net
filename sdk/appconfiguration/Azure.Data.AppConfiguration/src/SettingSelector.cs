@@ -33,13 +33,13 @@ namespace Azure.Data.AppConfiguration
         /// Keys or key filters that will be used to select a set of <see cref="ConfigurationSetting"/> entities.
         /// </summary>
         /// <remarks>See the documentation for this client library for details on the format of filter expressions.</remarks>
-        public IList<string> KeyFilters { get; }
+        public IReadOnlyCollection<string> KeyFilters { get; }
 
         /// <summary>
         /// Labels or label filters that will be used to select a set of <see cref="ConfigurationSetting"/> entities.
         /// </summary>
         /// <remarks>See the documentation for this client library for details on the format of filter expressions.</remarks>
-        public IList<string> LabelFilters { get; }
+        public IReadOnlyCollection<string> LabelFilters { get; }
 
         /// <summary>
         /// The fields of the <see cref="ConfigurationSetting"/> to retrieve for each setting in the retrieved group.
@@ -57,24 +57,17 @@ namespace Azure.Data.AppConfiguration
         /// Creates a <see cref="SettingSelector"/> that will retrieve all <see cref="ConfigurationSetting"/> entities in the
         /// configuration store by setting both Key and Label filters to Any.
         /// </summary>
-        public SettingSelector() : this(Any, Any) { }
-
-        /// <summary>
-        /// Creates a <see cref="SettingSelector"/> that will retrieve <see cref="ConfigurationSetting"/> entities that match
-        /// the passed-in keys and labels.
-        /// </summary>
-        /// <param name="keyFilter">A key or key filter indicating which <see cref="ConfigurationSetting"/> entities to select.</param>
-        /// <param name="labelFilter">A label or label filter indicating which <see cref="ConfigurationSetting"/> entities to select.</param>
-        public SettingSelector(string keyFilter, string labelFilter = default)
+        public SettingSelector()
         {
             KeyFilters = new List<string>
             {
-                keyFilter ?? Any
+                Any
             };
 
-            LabelFilters = new List<string>();
-            if (labelFilter != null)
-                LabelFilters.Add(labelFilter);
+            LabelFilters = new List<string>
+            {
+                Any
+            };
         }
 
         /// <summary>
@@ -82,9 +75,10 @@ namespace Azure.Data.AppConfiguration
         /// <param name="keyName"></param>
         public void AddKey(string keyName)
         {
+            throw new NotImplementedException();
             //TODO: Remove default wildcard
 
-            KeyFilters.Add(EscapeString(keyName));
+            //KeyFilters.AddKeyFilter(EscapeString(keyName));
         }
 
         /// <summary>
@@ -92,9 +86,11 @@ namespace Azure.Data.AppConfiguration
         /// <param name="labelName"></param>
         public void AddLabel(string labelName)
         {
+            throw new NotImplementedException();
+
             //TODO: Remove default wildcard
 
-            LabelFilters.Add(EscapeString(labelName));
+            //LabelFilters.Add(EscapeString(labelName));
         }
 
 #pragma warning disable CA1801
