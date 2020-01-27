@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System.Linq;
@@ -15,12 +15,12 @@ namespace Azure.AI.FormRecognizer.Core
     /// <summary>
     /// A collection of custom form models that may take multiple service requests to asynchronously iterate over.
     /// </summary>
-    public class ModelsAsyncPageable : AsyncPageable<ModelInfo>
+    public class CustomModelsAsyncPageable : AsyncPageable<CustomModelInfo>
     {
         private HttpPipeline _pipeline;
         private FormRecognizerClientOptions _options;
 
-        internal ModelsAsyncPageable(HttpPipeline pipeline, FormRecognizerClientOptions options, CancellationToken cancellationToken)
+        internal CustomModelsAsyncPageable(HttpPipeline pipeline, FormRecognizerClientOptions options, CancellationToken cancellationToken)
         : base(cancellationToken)
         {
             _pipeline = pipeline;
@@ -28,15 +28,15 @@ namespace Azure.AI.FormRecognizer.Core
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ModelsAsyncPageable"/> class for mocking.
+        /// Initializes a new instance of the <see cref="CustomModelsAsyncPageable"/> class for mocking.
         /// </summary>
-        protected ModelsAsyncPageable()
+        protected CustomModelsAsyncPageable()
         { }
 
         /// <inheritdoc />
-        public async override IAsyncEnumerable<Page<ModelInfo>> AsPages(string continuationToken = null, int? pageSizeHint = null)
+        public async override IAsyncEnumerable<Page<CustomModelInfo>> AsPages(string continuationToken = null, int? pageSizeHint = null)
         {
-            Page<ModelInfo> page;
+            Page<CustomModelInfo> page;
             do
             {
                 page = await GetPageAsync(continuationToken, CancellationToken).ConfigureAwait(false);
@@ -50,19 +50,19 @@ namespace Azure.AI.FormRecognizer.Core
         /// </summary>
         /// <param name="continuationToken">Optional continuation token from a previous page result.</param>
         /// <param name="cancellationToken">Optional cancellation token.</param>
-        public async Task<Page<ModelInfo>> GetPageAsync(string continuationToken = null, CancellationToken cancellationToken = default)
+        public async Task<Page<CustomModelInfo>> GetPageAsync(string continuationToken = null, CancellationToken cancellationToken = default)
         {
             using (var request = _pipeline.CreateListModelsRequest(continuationToken))
             using (var response = await _pipeline.SendRequestAsync(request, cancellationToken).ConfigureAwait(false))
             {
                 response.ExpectStatus(HttpStatusCode.OK, _options);
                 var listing = await response.GetJsonContentAsync<ModelListing>(_options, cancellationToken).ConfigureAwait(false);
-                return Page<ModelInfo>.FromValues(listing.ModelList.ToList(), listing.NextLink, response);
+                return Page<CustomModelInfo>.FromValues(listing.ModelList.ToList(), listing.NextLink, response);
             }
         }
 
         /// <inheritdoc />
-        public async override IAsyncEnumerator<ModelInfo> GetAsyncEnumerator(CancellationToken cancellationToken = default)
+        public async override IAsyncEnumerator<CustomModelInfo> GetAsyncEnumerator(CancellationToken cancellationToken = default)
         {
             string nextLink = null;
             do

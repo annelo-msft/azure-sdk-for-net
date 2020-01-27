@@ -8,9 +8,9 @@ namespace Azure.AI.FormRecognizer.Serialization
 {
     internal class ModelInfoJson
     {
-        public static ModelInfo Read(JsonElement root)
+        public static CustomModelInfo Read(JsonElement root)
         {
-            var modelInfo = ModelInfo.Create();
+            var modelInfo = CustomModelInfo.Create();
             if (root.ValueKind == JsonValueKind.Object)
             {
                 foreach (JsonProperty property in root.EnumerateObject())
@@ -21,7 +21,7 @@ namespace Azure.AI.FormRecognizer.Serialization
             return modelInfo;
         }
 
-        private static void ReadPropertyValue(ref ModelInfo modelInfo, JsonProperty property)
+        private static void ReadPropertyValue(ref CustomModelInfo modelInfo, JsonProperty property)
         {
             if (property.NameEquals("modelId"))
             {

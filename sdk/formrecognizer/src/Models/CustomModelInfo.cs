@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -8,7 +8,7 @@ namespace Azure.AI.FormRecognizer.Models
     /// <summary>
     /// Model Info.
     /// </summary>
-    public class ModelInfo
+    public class CustomModelInfo
     {
         /// <summary>
         /// Model Id.
@@ -31,10 +31,10 @@ namespace Azure.AI.FormRecognizer.Models
         public DateTimeOffset LastUpdatedOn { get; internal set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ModelInfo"/> class.
+        /// Initializes a new instance of the <see cref="CustomModelInfo"/> class.
         /// </summary>
-        protected ModelInfo() { }
+        protected CustomModelInfo() { }
 
-        internal static ModelInfo Create() => new ModelInfo();
+        internal static CustomModelInfo Create() => new CustomModelInfo();
     }
 }

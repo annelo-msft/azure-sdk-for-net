@@ -14,7 +14,7 @@ namespace Azure.AI.FormRecognizer.Core
     /// <summary>
     /// A collection of custom form models that may take multiple service requests to synchronously iterate over.
     /// </summary>
-    public class ModelsPageable : Pageable<ModelInfo>
+    public class ModelsPageable : Pageable<CustomModelInfo>
     {
         private HttpPipeline _pipeline;
         private FormRecognizerClientOptions _options;
@@ -27,15 +27,15 @@ namespace Azure.AI.FormRecognizer.Core
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ModelsAsyncPageable"/> class.
+        /// Initializes a new instance of the <see cref="CustomModelsAsyncPageable"/> class.
         /// </summary>
         protected ModelsPageable()
         { }
 
         /// <inheritdoc />
-        public override IEnumerable<Page<ModelInfo>> AsPages(string continuationToken = null, int? pageSizeHint = null)
+        public override IEnumerable<Page<CustomModelInfo>> AsPages(string continuationToken = null, int? pageSizeHint = null)
         {
-            Page<ModelInfo> page;
+            Page<CustomModelInfo> page;
             do
             {
                 page = GetPage(continuationToken);
@@ -49,19 +49,19 @@ namespace Azure.AI.FormRecognizer.Core
         /// Get a page of models.
         /// </summary>
         /// <param name="continuationToken"></param>
-        public Page<ModelInfo> GetPage(string continuationToken = null)
+        public Page<CustomModelInfo> GetPage(string continuationToken = null)
         {
             using (var request = _pipeline.CreateListModelsRequest(continuationToken))
             using (var response = _pipeline.SendRequest(request, CancellationToken))
             {
                 response.ExpectStatus(HttpStatusCode.OK, _options);
                 var listing = response.GetJsonContent<ModelListing>(_options);
-                return Page<ModelInfo>.FromValues(listing.ModelList.ToList(), listing.NextLink, response);
+                return Page<CustomModelInfo>.FromValues(listing.ModelList.ToList(), listing.NextLink, response);
             }
         }
 
         /// <inheritdoc />
-        public override IEnumerator<ModelInfo> GetEnumerator()
+        public override IEnumerator<CustomModelInfo> GetEnumerator()
         {
             string nextLink = null;
             do

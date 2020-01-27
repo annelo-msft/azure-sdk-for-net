@@ -138,12 +138,12 @@ namespace Azure.AI.FormRecognizer.Tests.Core
             Assert.Contains("foo", ex.Message);
         }
 
-        private ModelsAsyncPageable GetClient(params MockResponse[] responses)
+        private CustomModelsAsyncPageable GetClient(params MockResponse[] responses)
         {
             var mockTransport = new MockTransport(responses);
             var pipeline = new HttpPipeline(mockTransport);
             var options = new FormRecognizerClientOptions();
-            return new ModelsAsyncPageable(pipeline, options, CancellationToken.None);
+            return new CustomModelsAsyncPageable(pipeline, options, CancellationToken.None);
         }
     }
 }

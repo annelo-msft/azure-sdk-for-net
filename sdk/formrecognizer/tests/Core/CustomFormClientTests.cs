@@ -119,7 +119,7 @@ namespace Azure.AI.FormRecognizer.Tests.Core
             var listing = client.ListModelsAsync();
 
             // Assert
-            Assert.IsAssignableFrom<IAsyncEnumerable<ModelInfo>>(listing);
+            Assert.IsAssignableFrom<IAsyncEnumerable<CustomModelInfo>>(listing);
         }
 
         [Fact]
@@ -132,7 +132,7 @@ namespace Azure.AI.FormRecognizer.Tests.Core
             var listing = client.ListModels();
 
             // Assert
-            Assert.IsAssignableFrom<IEnumerable<ModelInfo>>(listing);
+            Assert.IsAssignableFrom<IEnumerable<CustomModelInfo>>(listing);
         }
 
         [Theory]

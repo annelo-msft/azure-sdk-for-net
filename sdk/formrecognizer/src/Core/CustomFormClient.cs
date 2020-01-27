@@ -135,7 +135,7 @@ namespace Azure.AI.FormRecognizer.Core
         /// <summary>
         /// Asynchronously get information about all custom models.
         ///
-        /// This method returns a <see cref="ModelsAsyncPageable" /> that can be used to asynchronously enumerate
+        /// This method returns a <see cref="CustomModelsAsyncPageable" /> that can be used to asynchronously enumerate
         /// all models or list them page-by-page.
         ///
         /// ```csharp
@@ -153,9 +153,9 @@ namespace Azure.AI.FormRecognizer.Core
         /// var page2 = client.Custom.ListModelsAsync().GetPageAsync(page1.ContinuationToken);
         /// ```
         /// </summary>
-        public virtual ModelsAsyncPageable ListModelsAsync(CancellationToken cancellationToken = default)
+        public virtual CustomModelsAsyncPageable ListModelsAsync(CancellationToken cancellationToken = default)
         {
-            return new ModelsAsyncPageable(_pipeline, _options, cancellationToken);
+            return new CustomModelsAsyncPageable(_pipeline, _options, cancellationToken);
         }
 
         /// <summary>

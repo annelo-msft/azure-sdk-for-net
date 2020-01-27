@@ -27,7 +27,7 @@ namespace Azure.AI.FormRecognizer.Tests.Extensions
         {
             // Arrange
             var model = Model.Create();
-            model.ModelInfo = ModelInfo.Create();
+            model.ModelInfo = CustomModelInfo.Create();
             model.ModelInfo.Status = testStatus;
 
             // Act
@@ -45,7 +45,7 @@ namespace Azure.AI.FormRecognizer.Tests.Extensions
         {
             // Arrange
             var model = Model.Create();
-            model.ModelInfo = ModelInfo.Create();
+            model.ModelInfo = CustomModelInfo.Create();
             model.ModelInfo.Status = testStatus;
 
             // Act
