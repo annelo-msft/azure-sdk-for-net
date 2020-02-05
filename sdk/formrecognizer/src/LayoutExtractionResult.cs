@@ -1,14 +1,22 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using Azure.AI.FormRecognizer.Prediction;
 using System;
 
-namespace Azure.AI.FormRecognizer.Prediction
+namespace Azure.AI.FormRecognizer.Prebuilt
 {
     /// <summary>
     /// </summary>
-    public class CustomUnsupervisedAnalysisResult
+    public class LayoutExtractionResult
     {
+        private AnalyzeOperation operation;
+
+        internal LayoutExtractionResult(AnalyzeOperation operation)
+        {
+            this.operation = operation;
+        }
+
         /// <summary>
         /// Status of the operation.
         /// </summary>
@@ -27,19 +35,13 @@ namespace Azure.AI.FormRecognizer.Prediction
         internal DateTimeOffset CreationTime { get; set; }
 
         /// <summary>
-        /// Page-level information extracted from the input.
-        /// </summary>
-        public ExtractedPage[] PageValues { get; internal set; }
-
-        /// <summary>
         /// Output of the Optical Character Recognition engine, including text
         /// elements with bounding boxes, as well as page geometry, and page and line languages.
         /// </summary>
-        public OcrExtractedPage[] ExtractedPages { get; internal set; }
+        public ExtractedPage[] TextDetails { get; internal set; }
 
         /// <summary>
-        /// Output of the enhanced Optical Character Recognition engine, which identifies
-        /// tables.
+        /// Table output of the enhanced Optical Character Recognition engine.
         /// </summary>
         public ExtractedTable[] ExtractedTables { get; internal set; }
     }

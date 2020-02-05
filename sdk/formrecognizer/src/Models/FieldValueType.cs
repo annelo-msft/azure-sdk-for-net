@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-namespace Azure.AI.FormRecognizer.Prediction
+namespace Azure.AI.FormRecognizer.Custom
 {
     // TODO: Make extensible enum
 

@@ -5,7 +5,7 @@ using Azure.AI.FormRecognizer.Models;
 using System;
 using System.Collections.Generic;
 
-namespace Azure.AI.FormRecognizer.Prediction
+namespace Azure.AI.FormRecognizer.Custom
 {
     /// <summary>
     /// A set of predefined fields extracted from a form by a supervised learning model.
@@ -30,7 +30,7 @@ namespace Azure.AI.FormRecognizer.Prediction
         /// <summary>
         /// Initializes a new instance of the <see cref="ExtractedForm"/> class.
         /// </summary>
-        protected ExtractedForm()
+        internal ExtractedForm()
         {
         }
 

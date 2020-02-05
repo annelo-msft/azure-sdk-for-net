@@ -3,13 +3,15 @@
 
 using System.Collections.Generic;
 
-namespace Azure.AI.FormRecognizer.Prediction
+namespace Azure.AI.FormRecognizer
 {
     /// <summary>
     /// Represents a line of extracted text.
     /// </summary>
-    public class OcrExtractedLine
+    public class ExtractedLine
     {
+        internal ExtractedLine() { }
+
         /// <summary>
         /// The detected language of the line, if different from the overall page language.
         /// </summary>
@@ -19,7 +21,7 @@ namespace Azure.AI.FormRecognizer.Prediction
         /// <summary>
         /// List of words extracted from the line.
         /// </summary>
-        public IList<OcrExtractedWord> Words { get; internal set; }
+        public IList<ExtractedWord> Words { get; internal set; }
 
         /// <summary>
         /// The text content of the line.
@@ -33,12 +35,7 @@ namespace Azure.AI.FormRecognizer.Prediction
         /// </summary>
         public float[] BoundingBox { get; internal set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="OcrExtractedLine"/> class.
-        /// </summary>
-        protected OcrExtractedLine()
-        { }
 
-        internal static OcrExtractedLine Create() => new OcrExtractedLine();
+        internal static ExtractedLine Create() => new ExtractedLine();
     }
 }

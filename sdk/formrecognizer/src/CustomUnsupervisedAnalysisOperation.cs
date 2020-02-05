@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+// TODO: Move to common
+using Azure.AI.FormRecognizer.Custom;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,7 +11,7 @@ namespace Azure.AI.FormRecognizer.Prediction
 {
     /// <summary>
     /// </summary>
-    public class CustomUnsupervisedAnalysisOperation : Operation<CustomUnsupervisedAnalysisResult>
+    internal class CustomUnsupervisedAnalysisOperation : Operation<FieldsAndClustersResult>
     {
         private AnalyzeOperation _operation;
 
@@ -28,7 +30,7 @@ namespace Azure.AI.FormRecognizer.Prediction
         /// <summary>
         /// </summary>
 #pragma warning disable CA1065 // Do not raise exceptions in unexpected locations
-        public override CustomUnsupervisedAnalysisResult Value => throw new NotImplementedException();
+        public override FieldsAndClustersResult Value => throw new NotImplementedException();
 #pragma warning restore CA1065 // Do not raise exceptions in unexpected locations
 
         /// <summary>
@@ -62,7 +64,7 @@ namespace Azure.AI.FormRecognizer.Prediction
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public override ValueTask<Response<CustomUnsupervisedAnalysisResult>> WaitForCompletionAsync(CancellationToken cancellationToken = default)
+        public override ValueTask<Response<FieldsAndClustersResult>> WaitForCompletionAsync(CancellationToken cancellationToken = default)
             => throw new NotImplementedException();
 
         /// <summary>
@@ -70,7 +72,7 @@ namespace Azure.AI.FormRecognizer.Prediction
         /// <param name="pollingInterval"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public override ValueTask<Response<CustomUnsupervisedAnalysisResult>> WaitForCompletionAsync(TimeSpan pollingInterval, CancellationToken cancellationToken = default)
+        public override ValueTask<Response<FieldsAndClustersResult>> WaitForCompletionAsync(TimeSpan pollingInterval, CancellationToken cancellationToken = default)
             => throw new NotImplementedException();
     }
 }

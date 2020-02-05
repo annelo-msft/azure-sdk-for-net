@@ -7,13 +7,15 @@ using System.Text.Json.Serialization;
 using Azure.AI.FormRecognizer.Models;
 using Azure.AI.FormRecognizer.Serialization.Converters;
 
-namespace Azure.AI.FormRecognizer.Training
+namespace Azure.AI.FormRecognizer.Custom
 {
     /// <summary>
     /// Custom Form Recognizer model.
     /// </summary>
     public class UnsupervisedTrainingResult
     {
+        internal UnsupervisedTrainingResult() { }
+
         /// <summary>
         /// Model Id.
         /// </summary>
@@ -64,11 +66,6 @@ namespace Azure.AI.FormRecognizer.Training
         /// Errors returned during the training operation.
         /// </summary>
         public FormRecognizerError[] Errors { get; internal set; }
-        /// <summary>
-        /// Initializes a new instance of the <see cref="UnsupervisedTrainingResult"/> class.
-        /// </summary>
-        protected UnsupervisedTrainingResult()
-        { }
 
         internal static UnsupervisedTrainingResult Create() => new UnsupervisedTrainingResult();
     }

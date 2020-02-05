@@ -9,9 +9,9 @@ namespace Azure.AI.FormRecognizer.Serialization
 {
     internal class ReadResultJson
     {
-        public static OcrExtractedPage Read(JsonElement root)
+        public static ExtractedPage Read(JsonElement root)
         {
-            var readResult = OcrExtractedPage.Create();
+            var readResult = ExtractedPage.Create();
             if (root.ValueKind == JsonValueKind.Object)
             {
                 foreach (JsonProperty property in root.EnumerateObject())
@@ -21,12 +21,12 @@ namespace Azure.AI.FormRecognizer.Serialization
             }
             if (readResult.Lines == default)
             {
-                readResult.Lines = Array.Empty<OcrExtractedLine>();
+                readResult.Lines = Array.Empty<ExtractedLine>();
             }
             return readResult;
         }
 
-        private static void ReadPropertyValue(ref OcrExtractedPage readResult, JsonProperty property)
+        private static void ReadPropertyValue(ref ExtractedPage readResult, JsonProperty property)
         {
             if (property.NameEquals("page"))
             {
@@ -46,7 +46,7 @@ namespace Azure.AI.FormRecognizer.Serialization
             }
             else if (property.NameEquals("unit"))
             {
-                readResult.Unit = EnumJson.Read<FormGeometryUnit>(property.Value);
+                readResult.Unit = EnumJson.Read<FormDimensionUnit>(property.Value);
             }
             else if (property.NameEquals("language"))
             {

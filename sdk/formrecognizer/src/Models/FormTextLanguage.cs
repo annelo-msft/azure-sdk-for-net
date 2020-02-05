@@ -4,7 +4,7 @@
 using System;
 using System.ComponentModel;
 
-namespace Azure.AI.FormRecognizer.Prediction
+namespace Azure.AI.FormRecognizer
 {
     // TODO: Normalize language across Cognitive
 

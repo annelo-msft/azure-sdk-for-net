@@ -3,6 +3,7 @@
 
 using System;
 using Azure.AI.FormRecognizer.Arguments;
+using Azure.AI.FormRecognizer.Prediction;
 using Azure.Core.Pipeline;
 
 namespace Azure.AI.FormRecognizer.Http

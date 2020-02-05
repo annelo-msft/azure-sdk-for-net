@@ -24,16 +24,16 @@ namespace Azure.AI.FormRecognizer.Serialization
 
             if (analysisResult.ReadResults == default)
             {
-                analysisResult.ReadResults = Array.Empty<OcrExtractedPage>();
+                analysisResult.ReadResults = Array.Empty<ExtractedPage>();
             }
             if (analysisResult.PageResults == default)
             {
                 analysisResult.PageResults = Array.Empty<PageResult>();
             }
-            if (analysisResult.DocumentResults == default)
-            {
-                analysisResult.DocumentResults = Array.Empty<ExtractedForm>();
-            }
+            //if (analysisResult.DocumentResults == default)
+            //{
+            //    analysisResult.DocumentResults = Array.Empty<ExtractedForm>();
+            //}
             if (analysisResult.Errors == default)
             {
                 analysisResult.Errors = Array.Empty<FormRecognizerError>();
@@ -80,7 +80,7 @@ namespace Azure.AI.FormRecognizer.Serialization
             }
             else if (property.NameEquals("readResults"))
             {
-                analyzedForm.ReadResults = new OcrExtractedPage[property.Value.GetArrayLength()];
+                analyzedForm.ReadResults = new ExtractedPage[property.Value.GetArrayLength()];
                 var i = 0;
                 foreach (var json in property.Value.EnumerateArray())
                 {
@@ -98,16 +98,16 @@ namespace Azure.AI.FormRecognizer.Serialization
                     i += 1;
                 }
             }
-            else if (property.NameEquals("documentResults"))
-            {
-                analyzedForm.DocumentResults = new ExtractedForm[property.Value.GetArrayLength()];
-                var i = 0;
-                foreach (var json in property.Value.EnumerateArray())
-                {
-                    analyzedForm.DocumentResults[i] = DocumentResultJson.Read(json);
-                    i += 1;
-                }
-            }
+            //else if (property.NameEquals("documentResults"))
+            //{
+            //    analyzedForm.DocumentResults = new ExtractedForm[property.Value.GetArrayLength()];
+            //    var i = 0;
+            //    foreach (var json in property.Value.EnumerateArray())
+            //    {
+            //        analyzedForm.DocumentResults[i] = DocumentResultJson.Read(json);
+            //        i += 1;
+            //    }
+            //}
             else if (property.NameEquals("errors"))
             {
                 analyzedForm.Errors = new FormRecognizerError[property.Value.GetArrayLength()];

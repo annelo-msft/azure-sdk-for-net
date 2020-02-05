@@ -1,18 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-namespace Azure.AI.FormRecognizer.Custom
+namespace Azure.AI.FormRecognizer.Prebuilt
 {
     /// <summary>
     /// </summary>
-    public class PredefinedFieldValue
+    public class FloatFieldValue
     {
-        internal PredefinedFieldValue() { }
-
-        /// <summary>
-        /// Type of field value.
-        /// </summary>
-        public FieldValueType Type { get; internal set; }
+        internal FloatFieldValue() { }
 
         /// <summary>
         /// Confidence value.

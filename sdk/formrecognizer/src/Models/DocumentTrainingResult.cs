@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-namespace Azure.AI.FormRecognizer.Training
+namespace Azure.AI.FormRecognizer.Custom
 {
     /// <summary>
     /// Report for a custom model training document.
@@ -42,7 +42,7 @@ namespace Azure.AI.FormRecognizer.Training
         /// <summary>
         /// Initializes a new instance of the <see cref="DocumentTrainingResult"/> class.
         /// </summary>
-        protected DocumentTrainingResult()
+        internal DocumentTrainingResult()
         { }
 
         internal static DocumentTrainingResult Create() => new DocumentTrainingResult();

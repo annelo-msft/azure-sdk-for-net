@@ -3,6 +3,7 @@
 
 using System;
 using System.Text.Json.Serialization;
+using Azure.AI.FormRecognizer.Custom;
 using Azure.AI.FormRecognizer.Models;
 using Azure.AI.FormRecognizer.Serialization;
 
@@ -21,7 +22,7 @@ namespace Azure.AI.FormRecognizer.Prediction
         /// <summary>
         /// Text extracted from the input.
         /// </summary>
-        public OcrExtractedPage[] ReadResults { get; internal set; }
+        public ExtractedPage[] ReadResults { get; internal set; }
 
         /// <summary>
         /// Page-level information extracted from the input.

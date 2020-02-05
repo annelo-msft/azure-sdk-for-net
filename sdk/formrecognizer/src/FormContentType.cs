@@ -4,7 +4,7 @@
 using System;
 using System.ComponentModel;
 
-namespace Azure.AI.FormRecognizer.Prediction
+namespace Azure.AI.FormRecognizer
 {
     /// <summary>
     /// Form content type for local files.

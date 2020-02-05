@@ -1,12 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using Azure.AI.FormRecognizer.Custom;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Azure.AI.FormRecognizer.Training
+namespace Azure.AI.FormRecognizer.Custom
 {
     /// <summary>
     /// </summary>

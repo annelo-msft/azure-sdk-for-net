@@ -9,9 +9,9 @@ namespace Azure.AI.FormRecognizer.Serialization
 {
     internal class TextLineJson
     {
-        public static OcrExtractedLine Read(JsonElement root)
+        public static ExtractedLine Read(JsonElement root)
         {
-            var textLine = OcrExtractedLine.Create();
+            var textLine = ExtractedLine.Create();
             if (root.ValueKind == JsonValueKind.Object)
             {
                 foreach (JsonProperty property in root.EnumerateObject())
@@ -21,12 +21,12 @@ namespace Azure.AI.FormRecognizer.Serialization
             }
             if (textLine.Words == default)
             {
-                textLine.Words = Array.Empty<OcrExtractedWord>();
+                textLine.Words = Array.Empty<ExtractedWord>();
             }
             return textLine;
         }
 
-        private static void ReadPropertyValue(ref OcrExtractedLine textLine, JsonProperty property)
+        private static void ReadPropertyValue(ref ExtractedLine textLine, JsonProperty property)
         {
             //if (property.NameEquals("text"))
             //{

@@ -5,11 +5,11 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Azure.AI.FormRecognizer.Training
+namespace Azure.AI.FormRecognizer.Custom
 {
     /// <summary>
     /// </summary>
-    public class FormRecognizerTrainingClient
+    internal class FormRecognizerTrainingClient
     {
         private FormRecognizerClient _formRecognizerClient;
 

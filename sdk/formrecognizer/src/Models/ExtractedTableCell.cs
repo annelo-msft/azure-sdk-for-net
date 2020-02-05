@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Azure.AI.FormRecognizer.Prediction
+namespace Azure.AI.FormRecognizer
 {
     // TODO: Solve referencing problem, wherein the table cell or other element
     // points back to the raw OCR TextElement.
@@ -13,6 +13,8 @@ namespace Azure.AI.FormRecognizer.Prediction
     /// </summary>
     public class ExtractedTableCell
     {
+        internal ExtractedTableCell() { }
+
         /// <summary>
         /// The text content of the line.
         /// </summary>
@@ -62,11 +64,6 @@ namespace Azure.AI.FormRecognizer.Prediction
 
         internal ExtractedTable DataTable { get; set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ExtractedTableCell"/> class.
-        /// </summary>
-        protected ExtractedTableCell()
-        { }
 
         internal static ExtractedTableCell Create() => new ExtractedTableCell();
     }

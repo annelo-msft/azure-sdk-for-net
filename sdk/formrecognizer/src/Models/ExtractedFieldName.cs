@@ -5,12 +5,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Azure.AI.FormRecognizer.Prediction
+namespace Azure.AI.FormRecognizer.Custom
 {
     /// <summary>
     /// </summary>
     public class ExtractedFieldName
     {
+        internal ExtractedFieldName() { }
+
         /// <summary>
         /// The text content of the line.
         /// </summary>

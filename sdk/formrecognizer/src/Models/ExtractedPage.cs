@@ -3,14 +3,16 @@
 
 using System.Collections.Generic;
 
-namespace Azure.AI.FormRecognizer.Prediction
+namespace Azure.AI.FormRecognizer
 {
     /// <summary>
     /// Output of the Optical Character Recognition engine, including text
     /// elements with bounding boxes, as well as page geometry, and page and line languages.
     /// </summary>
-    public class OcrExtractedPage
+    public class ExtractedPage
     {
+        internal ExtractedPage() { }
+
         /// <summary>
         /// The 1-based page number in the input document.
         /// </summary>
@@ -36,7 +38,7 @@ namespace Azure.AI.FormRecognizer.Prediction
         ///
         /// For images, the unit is "pixel". For PDF, the unit is "inch".
         /// </summary>
-        public FormGeometryUnit Unit { get; internal set; }
+        public FormDimensionUnit Unit { get; internal set; }
 
         /// <summary>
         /// The detected language on the page overall.
@@ -50,14 +52,9 @@ namespace Azure.AI.FormRecognizer.Prediction
         /// As the sorting order depends on the detected text, it may change across images and OCR version updates. Thus, business logic
         /// should be built upon the actual line location instead of order.
         /// </summary>
-        public OcrExtractedLine[] Lines { get; internal set; }
+        public ExtractedLine[] Lines { get; internal set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="OcrExtractedPage"/> class.
-        /// </summary>
-        protected OcrExtractedPage()
-        { }
 
-        internal static OcrExtractedPage Create() => new OcrExtractedPage();
+        internal static ExtractedPage Create() => new ExtractedPage();
     }
 }

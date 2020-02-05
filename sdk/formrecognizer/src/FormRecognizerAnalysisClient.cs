@@ -12,7 +12,7 @@ namespace Azure.AI.FormRecognizer.Prediction
 {
     /// <summary>
     /// </summary>
-    public class FormRecognizerAnalysisClient
+    internal class FormRecognizerAnalysisClient
     {
         private FormRecognizerClient _formRecognizerClient;
         private FormReceiptClient _formReceiptClient;
@@ -44,8 +44,8 @@ namespace Azure.AI.FormRecognizer.Prediction
         {
             var temp = options.Version;
             _formRecognizerClient = new FormRecognizerClient(endpoint, credential, new FormRecognizerClientOptions());
-            _formReceiptClient = new FormReceiptClient(endpoint, credential, new FormReceiptClientOptions());
-            _formLayoutClient = new FormLayoutClient(endpoint, credential, new FormLayoutClientOptions());
+            _formReceiptClient = new FormReceiptClient(endpoint, credential);
+            _formLayoutClient = new FormLayoutClient(endpoint, credential);
         }
 
         /// <summary>
@@ -247,10 +247,10 @@ namespace Azure.AI.FormRecognizer.Prediction
         /// <param name="includeTextDetails"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public virtual FormInsetAnalysisOperation StartFormInsetAnalysis(Stream stream, FormContentType? contentType = null, bool includeTextDetails = false, CancellationToken cancellationToken = default)
+        public virtual LayoutExtractionOperation StartLayoutExtraction(Stream stream, FormContentType? contentType = null, bool includeTextDetails = false, CancellationToken cancellationToken = default)
         {
             AnalyzeOperation operation = _formLayoutClient.StartAnalyze(stream, contentType, includeTextDetails, cancellationToken);
-            return new FormInsetAnalysisOperation(operation);
+            return new LayoutExtractionOperation(operation);
         }
 
         /// <summary>
@@ -259,10 +259,10 @@ namespace Azure.AI.FormRecognizer.Prediction
         /// <param name="includeTextDetails"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public virtual FormInsetAnalysisOperation StartFormInsetAnalysis(Uri uri, bool includeTextDetails = false, CancellationToken cancellationToken = default)
+        public virtual LayoutExtractionOperation StartLayoutExtraction(Uri uri, bool includeTextDetails = false, CancellationToken cancellationToken = default)
         {
             AnalyzeOperation operation = _formLayoutClient.StartAnalyze(uri, includeTextDetails, cancellationToken);
-            return new FormInsetAnalysisOperation(operation);
+            return new LayoutExtractionOperation(operation);
         }
 
         /// <summary>
@@ -270,10 +270,10 @@ namespace Azure.AI.FormRecognizer.Prediction
         /// <param name="operationId"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public virtual FormInsetAnalysisOperation StartFormInsetAnalysis(string operationId, CancellationToken cancellationToken = default)
+        public virtual LayoutExtractionOperation StartLayoutExtraction(string operationId, CancellationToken cancellationToken = default)
         {
             AnalyzeOperation operation = _formLayoutClient.StartAnalyze(operationId, cancellationToken);
-            return new FormInsetAnalysisOperation(operation);
+            return new LayoutExtractionOperation(operation);
         }
 
         /// <summary>
@@ -283,10 +283,10 @@ namespace Azure.AI.FormRecognizer.Prediction
         /// <param name="includeTextDetails"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public virtual async Task<FormInsetAnalysisOperation> StartFormInsetAnalysisAsync(Stream stream, FormContentType? contentType = null, bool includeTextDetails = false, CancellationToken cancellationToken = default)
+        public virtual async Task<LayoutExtractionOperation> StartLayoutExtractionAsync(Stream stream, FormContentType? contentType = null, bool includeTextDetails = false, CancellationToken cancellationToken = default)
         {
             AnalyzeOperation op = await _formReceiptClient.StartAnalyzeAsync(stream, contentType, includeTextDetails, cancellationToken).ConfigureAwait(false);
-            return new FormInsetAnalysisOperation(op);
+            return new LayoutExtractionOperation(op);
         }
 
         /// <summary>
@@ -295,10 +295,10 @@ namespace Azure.AI.FormRecognizer.Prediction
         /// <param name="includeTextDetails"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public virtual async Task<FormInsetAnalysisOperation> StartFormInsetAnalysisAsync(Uri uri, bool includeTextDetails = false, CancellationToken cancellationToken = default)
+        public virtual async Task<LayoutExtractionOperation> StartLayoutExtractionAsync(Uri uri, bool includeTextDetails = false, CancellationToken cancellationToken = default)
         {
             AnalyzeOperation op = await _formReceiptClient.StartAnalyzeAsync(uri, includeTextDetails, cancellationToken).ConfigureAwait(false);
-            return new FormInsetAnalysisOperation(op);
+            return new LayoutExtractionOperation(op);
         }
 
     }

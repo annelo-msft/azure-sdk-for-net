@@ -21,9 +21,9 @@ namespace Azure.AI.FormRecognizer.Tests.Core
             Assert.True(client is AnalyzeClient);
         }
 
-        private FormLayoutClient GetClient(params MockResponse[] responses)
+        private LayoutExtractionClient GetClient(params MockResponse[] responses)
         {
-            return new FormLayoutClient(new Uri("http://localhost"), new CognitiveKeyCredential("fake-key"));
+            return new LayoutExtractionClient(new Uri("http://localhost"), new CognitiveKeyCredential("fake-key"));
         }
     }
 }

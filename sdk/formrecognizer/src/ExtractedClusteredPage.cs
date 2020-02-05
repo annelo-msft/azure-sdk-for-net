@@ -1,13 +1,15 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-namespace Azure.AI.FormRecognizer.Prediction
+namespace Azure.AI.FormRecognizer.Custom
 {
     /// <summary>
     /// Page information extracted by an unsupervised model.
     /// </summary>
-    public class ExtractedPage
+    public class ExtractedClusteredPage
     {
+        internal ExtractedClusteredPage() { }
+
         /// <summary>
         /// Page number.
         /// </summary>
@@ -21,6 +23,6 @@ namespace Azure.AI.FormRecognizer.Prediction
         /// <summary>
         /// List of key-value pairs extracted from the page.
         /// </summary>
-        public ExtractedField[] PageFields { get; internal set; }
+        public ExtractedField[] Fields { get; internal set; }
     }
 }

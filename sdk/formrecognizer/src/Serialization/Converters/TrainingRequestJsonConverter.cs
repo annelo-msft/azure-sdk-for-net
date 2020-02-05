@@ -27,10 +27,10 @@ namespace Azure.AI.FormRecognizer.Serialization.Converters
                 {
                     writer.WriteString("prefix", value.SourceFilter.Prefix);
                 }
-                if (value.SourceFilter.IncludeSubFolders.HasValue)
-                {
-                    writer.WriteBoolean("includeSubFolders", value.SourceFilter.IncludeSubFolders.Value);
-                }
+                //if (value.SourceFilter.IncludeSubFolders.HasValue)
+                //{
+                //    writer.WriteBoolean("includeSubFolders", value.SourceFilter.IncludeSubFolders.Value);
+                //}
                 writer.WriteEndObject();
             }
             if (value.UseLabelFile.HasValue)

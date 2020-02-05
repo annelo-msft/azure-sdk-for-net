@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 
-namespace Azure.AI.FormRecognizer.Prediction
+namespace Azure.AI.FormRecognizer.Custom
 {
     /// <summary>
     /// </summary>
@@ -18,6 +18,8 @@ namespace Azure.AI.FormRecognizer.Prediction
         /// read from the form field.
         /// </summary>
         private IDictionary<string, PredefinedFieldValue> _fieldsByName { get; set; }
+
+        internal PredefinedFieldCollection() { }
 
         /// <summary>
         /// </summary>

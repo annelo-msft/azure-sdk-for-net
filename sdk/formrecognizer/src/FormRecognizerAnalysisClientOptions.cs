@@ -10,7 +10,7 @@ namespace Azure.AI.FormRecognizer.Prediction
 {
     /// <summary>
     /// </summary>
-    public class FormRecognizerAnalysisClientOptions : ClientOptions
+    internal class FormRecognizerAnalysisClientOptions : ClientOptions
     {
         internal const ServiceVersion LatestVersion = ServiceVersion.V2_0_Preview;
 

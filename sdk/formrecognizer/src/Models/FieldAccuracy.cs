@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-namespace Azure.AI.FormRecognizer.Training
+namespace Azure.AI.FormRecognizer.Custom
 {
     /// <summary>
     /// Report for a custom model training field.
@@ -13,7 +13,6 @@ namespace Azure.AI.FormRecognizer.Training
         /// </summary>
         public string FieldName { get; internal set; }
 
-
         // TODO: How is Accuracy different from Confidence?
 
         /// <summary>
@@ -24,7 +23,7 @@ namespace Azure.AI.FormRecognizer.Training
         /// <summary>
         /// Initializes a new instance of the <see cref="FieldAccuracy"/> class.
         /// </summary>
-        protected FieldAccuracy()
+        internal FieldAccuracy()
         { }
 
         internal static FieldAccuracy Create() => new FieldAccuracy();

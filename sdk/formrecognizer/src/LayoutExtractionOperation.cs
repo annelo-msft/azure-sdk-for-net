@@ -1,21 +1,24 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using Azure.AI.FormRecognizer.Custom;
-using Azure.AI.FormRecognizer.Models;
+using Azure.AI.FormRecognizer.Prebuilt;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Azure.AI.FormRecognizer.Custom
+namespace Azure.AI.FormRecognizer.Prediction
 {
     /// <summary>
+    /// Layout operation
     /// </summary>
-    public class TrainUnsupervisedModelOperation : Operation<UnsupervisedTrainingResult>
+    internal class LayoutExtractionOperation : Operation<LayoutExtractionResult>
     {
-        private TrainingOperation _operation;
+        private AnalyzeOperation _operation;
 
-        internal TrainUnsupervisedModelOperation(TrainingOperation operation)
+        /// <summary>
+        /// </summary>
+        /// <param name="operation"></param>
+        internal LayoutExtractionOperation(AnalyzeOperation operation)
         {
             _operation = operation;
         }
@@ -26,7 +29,9 @@ namespace Azure.AI.FormRecognizer.Custom
 
         /// <summary>
         /// </summary>
-        public override UnsupervisedTrainingResult Value => _operation.Value;
+#pragma warning disable CA1065 // Do not raise exceptions in unexpected locations
+        public override LayoutExtractionResult Value => throw new NotImplementedException();
+#pragma warning restore CA1065 // Do not raise exceptions in unexpected locations
 
         /// <summary>
         /// </summary>
@@ -59,15 +64,15 @@ namespace Azure.AI.FormRecognizer.Custom
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public override ValueTask<Response<UnsupervisedTrainingResult>> WaitForCompletionAsync(CancellationToken cancellationToken = default)
-            => _operation.WaitForCompletionAsync(cancellationToken);
+        public override ValueTask<Response<LayoutExtractionResult>> WaitForCompletionAsync(CancellationToken cancellationToken = default)
+            => throw new NotImplementedException();
 
         /// <summary>
         /// </summary>
         /// <param name="pollingInterval"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public override ValueTask<Response<UnsupervisedTrainingResult>> WaitForCompletionAsync(TimeSpan pollingInterval, CancellationToken cancellationToken = default)
-            => _operation.WaitForCompletionAsync(pollingInterval, cancellationToken);
+        public override ValueTask<Response<LayoutExtractionResult>> WaitForCompletionAsync(TimeSpan pollingInterval, CancellationToken cancellationToken = default)
+            => throw new NotImplementedException();
     }
 }

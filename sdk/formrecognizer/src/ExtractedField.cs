@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-namespace Azure.AI.FormRecognizer.Prediction
+namespace Azure.AI.FormRecognizer.Custom
 {
     /// <summary>
     /// </summary>
@@ -9,6 +9,8 @@ namespace Azure.AI.FormRecognizer.Prediction
     {
         // TODO: What is the value of label if this is only in unsupervised learning?
         // Or is this used for supervised learning as well?
+
+        internal ExtractedField() { }
 
         /// <summary>
         /// A user defined label for the key/value pair entry.

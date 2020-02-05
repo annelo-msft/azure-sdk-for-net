@@ -1,18 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-namespace Azure.AI.FormRecognizer.Custom
+namespace Azure.AI.FormRecognizer.Prebuilt
 {
     /// <summary>
     /// </summary>
-    public class PredefinedFieldValue
+    public class StringFieldValue
     {
-        internal PredefinedFieldValue() { }
-
-        /// <summary>
-        /// Type of field value.
-        /// </summary>
-        public FieldValueType Type { get; internal set; }
+        internal StringFieldValue() { }
 
         /// <summary>
         /// Confidence value.
@@ -27,7 +22,7 @@ namespace Azure.AI.FormRecognizer.Custom
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        public dynamic Value { get; internal set; }
+        public string Value { get; internal set; }
 
         /// <summary>
         /// </summary>

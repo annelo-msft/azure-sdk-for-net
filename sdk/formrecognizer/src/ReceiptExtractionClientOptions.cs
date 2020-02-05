@@ -1,15 +1,16 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using Azure.Core;
 using System;
 using System.Text;
 using System.Text.Json;
 
-namespace Azure.AI.FormRecognizer.Custom
+namespace Azure.AI.FormRecognizer.Prediction
 {
     /// <summary>
     /// </summary>
-    internal class FormRecognizerTrainingClientOptions
+    internal class ReceiptExtractionClientOptions : ClientOptions
     {
         internal const ServiceVersion LatestVersion = ServiceVersion.V2_0_Preview;
 
@@ -29,6 +30,7 @@ namespace Azure.AI.FormRecognizer.Custom
         /// </summary>
         public ServiceVersion Version { get; }
 
+
         /// <summary>
         /// Get the extra headers sent by the client to the service on each request.
         /// </summary>
@@ -37,15 +39,14 @@ namespace Azure.AI.FormRecognizer.Custom
         internal Encoding Encoding { get; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FormRecognizerTrainingClientOptions"/> class.
+        /// Initializes a new instance of the <see cref="FormRecognizerClientOptions"/> class.
         /// </summary>
         /// <param name="version">Set the service version to use for all requests.</param>
-        public FormRecognizerTrainingClientOptions(ServiceVersion version = LatestVersion)
+        public ReceiptExtractionClientOptions(ServiceVersion version = LatestVersion)
         {
             Version = version;
             Encoding = Encoding.UTF8;
             SerializationOptions = new JsonSerializerOptions();
-            FormRecognizerClientOptions.AddJsonConverters(SerializationOptions);
         }
 
         internal static string GetVersionString(ServiceVersion version)
@@ -56,5 +57,6 @@ namespace Azure.AI.FormRecognizer.Custom
                 _ => throw new NotSupportedException($"The service version {version} is not supported."),
             };
         }
+
     }
 }

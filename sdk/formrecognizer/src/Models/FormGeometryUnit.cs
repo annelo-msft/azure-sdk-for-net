@@ -1,14 +1,14 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-namespace Azure.AI.FormRecognizer.Prediction
+namespace Azure.AI.FormRecognizer
 {
     // TODO: Make extensible enum
 
     /// <summary>
     /// The unit used by the width, height and boundingBox properties.
     /// </summary>
-    public enum FormGeometryUnit
+    public enum FormDimensionUnit
     {
         /// <summary>Pixel.</summary>
         Pixel = 1,

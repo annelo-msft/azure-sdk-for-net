@@ -1,12 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-namespace Azure.AI.FormRecognizer.Prediction
+namespace Azure.AI.FormRecognizer
 {
     /// <summary>
     /// Represents an extracted word.
     /// </summary>
-    public class OcrExtractedWord
+    public class ExtractedWord
     {
         /// <summary>
         /// Confidence value in the prediction of the word.
@@ -24,11 +24,11 @@ namespace Azure.AI.FormRecognizer.Prediction
         public float[] BoundingBox { get; internal set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="OcrExtractedWord"/> class.
+        /// Initializes a new instance of the <see cref="ExtractedWord"/> class.
         /// </summary>
-        protected OcrExtractedWord()
+        internal ExtractedWord()
         { }
 
-        internal static OcrExtractedWord Create() => new OcrExtractedWord();
+        internal static ExtractedWord Create() => new ExtractedWord();
     }
 }

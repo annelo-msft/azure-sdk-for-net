@@ -5,12 +5,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Azure.AI.FormRecognizer.Training
+namespace Azure.AI.FormRecognizer.Custom
 {
     /// <summary>
     /// </summary>
     public class FormCluster
     {
+        internal FormCluster() { }
+
         /// <summary>
         /// Cluster Id
         /// </summary>
