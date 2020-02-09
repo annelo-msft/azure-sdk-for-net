@@ -19,7 +19,7 @@ namespace Azure.AI.FormRecognizer.Custom
         /// <summary>
         /// The amount of time it took to train the model.
         /// </summary>
-        public TimeSpan Duration { get; set; }
+        public TimeSpan? Duration { get; set; }
 
         /// <summary>
         /// Date and time when the model was created.

@@ -2,12 +2,13 @@
 // Licensed under the MIT License.
 
 using Azure.AI.FormRecognizer.Prediction;
+using Azure.AI.FormRecognizer.Custom;
 using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Azure.AI.FormRecognizer.Custom
+namespace Azure.AI.FormRecognizer
 {
     /// <summary>
     /// </summary>
@@ -129,10 +130,10 @@ namespace Azure.AI.FormRecognizer.Custom
         /// <param name="includeRawPageExtractions"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public virtual ExtractLabeledFormResult ExtractLabeledForm(string modelId, Stream stream, FormContentType? contentType = null, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
+        public virtual ExtractPredefinedFieldFormResult ExtractPredefinedFieldForm(string modelId, Stream stream, FormContentType? contentType = null, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
         {
             AnalyzeOperation op = _formRecognizerClient.GetModelReference(modelId).StartAnalyze(stream, contentType, includeRawPageExtractions, cancellationToken);
-            return new ExtractLabeledFormResult(op);
+            return new ExtractPredefinedFieldFormResult(op);
         }
 
         /// <summary>
@@ -143,10 +144,10 @@ namespace Azure.AI.FormRecognizer.Custom
         /// <param name="includeRawPageExtractions"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public virtual async Task<ExtractLabeledFormResult> ExtractLabeledFormAsync(string modelId, Stream stream, FormContentType? contentType = null, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
+        public virtual async Task<ExtractPredefinedFieldFormResult> ExtractPredefinedFieldFormAsync(string modelId, Stream stream, FormContentType? contentType = null, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
         {
             AnalyzeOperation op = await _formRecognizerClient.GetModelReference(modelId).StartAnalyzeAsync(stream, contentType, includeRawPageExtractions, cancellationToken).ConfigureAwait(false);
-            return new ExtractLabeledFormResult(op);
+            return new ExtractPredefinedFieldFormResult(op);
         }
 
         /// <summary>
@@ -156,10 +157,10 @@ namespace Azure.AI.FormRecognizer.Custom
         /// <param name="includeRawPageExtractions"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public virtual ExtractLabeledFormResult ExtractLabeledForm(string modelId, Uri uri, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
+        public virtual ExtractPredefinedFieldFormResult ExtractPredefinedFieldForm(string modelId, Uri uri, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
         {
             AnalyzeOperation op = _formRecognizerClient.GetModelReference(modelId).StartAnalyze(uri, includeRawPageExtractions, cancellationToken);
-            return new ExtractLabeledFormResult(op);
+            return new ExtractPredefinedFieldFormResult(op);
         }
 
         /// <summary>
@@ -169,10 +170,10 @@ namespace Azure.AI.FormRecognizer.Custom
         /// <param name="includeRawPageExtractions"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public virtual async Task<ExtractLabeledFormResult> ExtractLabeledFormAsync(string modelId, Uri uri, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
+        public virtual async Task<ExtractPredefinedFieldFormResult> ExtractPredefinedFieldFormAsync(string modelId, Uri uri, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
         {
             AnalyzeOperation operation = await _formRecognizerClient.GetModelReference(modelId).StartAnalyzeAsync(uri, includeRawPageExtractions, cancellationToken).ConfigureAwait(false);
-            return new ExtractLabeledFormResult(operation);
+            return new ExtractPredefinedFieldFormResult(operation);
         }
 
         /// <summary>

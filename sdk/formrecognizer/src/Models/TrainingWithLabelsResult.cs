@@ -12,9 +12,9 @@ namespace Azure.AI.FormRecognizer.Custom
     /// <summary>
     /// Custom Form Recognizer model.
     /// </summary>
-    public class TrainWithLabelsResult
+    public class TrainingWithLabelsResult
     {
-        internal TrainWithLabelsResult() { }
+        internal TrainingWithLabelsResult() { }
 
         /// <summary>
         /// Model Id.
@@ -29,7 +29,7 @@ namespace Azure.AI.FormRecognizer.Custom
         /// <summary>
         /// List of fields used to train the model and the train operation error reported by each.
         /// </summary>
-        public LabeledFieldAccuracy[] FieldAccuracies { get; internal set; }
+        public PredefinedFieldAccuracy[] FieldAccuracies { get; internal set; }
 
         /// <summary>
         /// </summary>
@@ -47,6 +47,6 @@ namespace Azure.AI.FormRecognizer.Custom
         /// </summary>
         public FormRecognizerError[] TrainingErrors { get; internal set; }
 
-        internal static TrainWithLabelsResult Create() => new TrainWithLabelsResult();
+        internal static TrainingWithLabelsResult Create() => new TrainingWithLabelsResult();
     }
 }

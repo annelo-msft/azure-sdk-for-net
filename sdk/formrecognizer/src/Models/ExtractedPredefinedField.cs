@@ -10,9 +10,9 @@ namespace Azure.AI.FormRecognizer
 {
     /// <summary>
     /// </summary>
-    public class ExtractedLabeledField
+    public class ExtractedPredefinedField
     {
-        internal ExtractedLabeledField() { }
+        internal ExtractedPredefinedField() { }
 
         /// <summary>
         /// The name of the predefined field.
@@ -27,7 +27,7 @@ namespace Azure.AI.FormRecognizer
         /// <summary>
         /// Type of field value.
         /// </summary>
-        public LabeledValueType Type { get; internal set; }
+        public PredefinedFieldValueType Type { get; internal set; }
 
         // TODO: Should this go on Value?
         /// <summary>

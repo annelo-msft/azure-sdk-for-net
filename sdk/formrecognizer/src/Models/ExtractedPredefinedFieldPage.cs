@@ -5,7 +5,7 @@ namespace Azure.AI.FormRecognizer.Custom
 {
     /// <summary>
     /// </summary>
-    public class ExtractedLabeledPage
+    public class ExtractedPredefinedFieldPage
     {
         /// <summary>
         /// Page number.
@@ -14,7 +14,7 @@ namespace Azure.AI.FormRecognizer.Custom
 
         /// <summary>
         /// </summary>
-        public ExtractedLabeledField[] Fields { get; internal set; }
+        public ExtractedPredefinedField[] Fields { get; internal set; }
 
         /// <summary>
         /// Output of the enhanced Optical Character Recognition engine, which identifies

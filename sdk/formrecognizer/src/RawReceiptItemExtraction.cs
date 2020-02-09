@@ -13,14 +13,14 @@ namespace Azure.AI.FormRecognizer.Prebuilt
 
         /// <summary>
         /// </summary>
-        public ExtractedLabeledField Quantity { get; internal set; }
+        public ExtractedPredefinedField Quantity { get; internal set; }
 
         /// <summary>
         /// </summary>
-        public ExtractedLabeledField Name { get; internal set; }
+        public ExtractedPredefinedField Name { get; internal set; }
 
         /// <summary>
         /// </summary>
-        public ExtractedLabeledField TotalPrice { get; internal set; }
+        public ExtractedPredefinedField TotalPrice { get; internal set; }
     }
 }

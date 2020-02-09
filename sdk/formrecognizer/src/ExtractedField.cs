@@ -12,18 +12,19 @@ namespace Azure.AI.FormRecognizer.Custom
 
         internal ExtractedField() { }
 
+        // TODO: Label doesn't make sense on a field from an unsupervised model. Hint?
         /// <summary>
         /// A user defined label for the key/value pair entry.
         /// </summary>
-        public string Label { get; internal set; }
+        internal string Label { get; set; }
 
         /// <summary>
         /// </summary>
-        public ExtractedText FieldName { get; internal set; }
+        public ExtractedText Name { get; internal set; }
 
         /// <summary>
         /// </summary>
-        public ExtractedText FieldValue { get; internal set; }
+        public ExtractedText Value { get; internal set; }
 
         // TODO: Should Confidence go on BoundedText?  Should it be ExtractedText?
         /// <summary>

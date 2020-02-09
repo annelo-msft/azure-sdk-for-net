@@ -8,7 +8,7 @@ namespace Azure.AI.FormRecognizer
     /// <summary>
     /// Semantic data type of the field value.
     /// </summary>
-    public enum LabeledValueType
+    public enum PredefinedFieldValueType
     {
         /// <summary>String.</summary>
         StringType = 1,

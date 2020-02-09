@@ -10,7 +10,7 @@ namespace Azure.AI.FormRecognizer.Custom
     /// <summary>
     /// A set of predefined fields extracted from a form by a supervised learning model.
     /// </summary>
-    public class ExtractedForm
+    public class ExtractedPredefinedFieldForm
     {
         // TODO: Possible values include, receipt, layout, user-specified?
         /// <summary>
@@ -25,15 +25,15 @@ namespace Azure.AI.FormRecognizer.Custom
 
         /// <summary>
         /// </summary>
-        public ExtractedLabeledPage[] Pages { get; internal set;}
+        public ExtractedPredefinedFieldPage[] Pages { get; internal set;}
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ExtractedForm"/> class.
+        /// Initializes a new instance of the <see cref="ExtractedPredefinedFieldForm"/> class.
         /// </summary>
-        internal ExtractedForm()
+        internal ExtractedPredefinedFieldForm()
         {
         }
 
-        internal static ExtractedForm Create() => new ExtractedForm();
+        internal static ExtractedPredefinedFieldForm Create() => new ExtractedPredefinedFieldForm();
     }
 }

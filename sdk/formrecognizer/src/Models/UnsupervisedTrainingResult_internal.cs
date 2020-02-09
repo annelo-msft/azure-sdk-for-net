@@ -55,7 +55,7 @@ namespace Azure.AI.FormRecognizer.Custom
         /// <summary>
         /// List of fields used to train the model and the train operation error reported by each.
         /// </summary>
-        public LabeledFieldAccuracy[] FieldAccuracies { get; internal set; }
+        public PredefinedFieldAccuracy[] FieldAccuracies { get; internal set; }
 
         /// <summary>
         /// Average accuracy.

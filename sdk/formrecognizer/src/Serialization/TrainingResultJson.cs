@@ -26,7 +26,7 @@ namespace Azure.AI.FormRecognizer.Serialization
             //}
             if (trainingResult.FieldAccuracies == default)
             {
-                trainingResult.FieldAccuracies = Array.Empty<LabeledFieldAccuracy>();
+                trainingResult.FieldAccuracies = Array.Empty<PredefinedFieldAccuracy>();
             }
             if (trainingResult.Errors == default)
             {

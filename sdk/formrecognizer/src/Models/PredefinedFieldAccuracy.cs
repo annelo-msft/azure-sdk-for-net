@@ -6,7 +6,7 @@ namespace Azure.AI.FormRecognizer.Custom
     /// <summary>
     /// Report for a custom model training field.
     /// </summary>
-    public class LabeledFieldAccuracy
+    public class PredefinedFieldAccuracy
     {
         /// <summary>
         /// Training field name.
@@ -21,11 +21,11 @@ namespace Azure.AI.FormRecognizer.Custom
         public float Accuracy { get; internal set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LabeledFieldAccuracy"/> class.
+        /// Initializes a new instance of the <see cref="PredefinedFieldAccuracy"/> class.
         /// </summary>
-        internal LabeledFieldAccuracy()
+        internal PredefinedFieldAccuracy()
         { }
 
-        internal static LabeledFieldAccuracy Create() => new LabeledFieldAccuracy();
+        internal static PredefinedFieldAccuracy Create() => new PredefinedFieldAccuracy();
     }
 }

@@ -21,11 +21,11 @@ namespace Azure.AI.FormRecognizer.Custom
         /// <summary>
         /// A case-sensitive prefix string to filter documents in the source path for training. For example, when using an Azure storage container URI, use the prefix to restrict sub folders for training.
         /// </summary>
-        public string Prefix { get; set; }
+        public string Prefix { get; internal set; }
 
         /// <summary>
         /// A flag to indicate if subfolders within the set of prefix folders will also need to be included when searching for content to be preprocessed.
         /// </summary>
-        public bool IncludeSubFolders { get; set; }
+        public bool IncludeSubFolders { get; internal set; }
     }
 }

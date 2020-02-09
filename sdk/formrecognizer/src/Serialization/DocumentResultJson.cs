@@ -11,9 +11,9 @@ namespace Azure.AI.FormRecognizer.Serialization
 {
     internal class DocumentResultJson
     {
-        public static ExtractedForm Read(JsonElement root)
+        public static ExtractedPredefinedFieldForm Read(JsonElement root)
         {
-            var documentResult = ExtractedForm.Create();
+            var documentResult = ExtractedPredefinedFieldForm.Create();
             if (root.ValueKind == JsonValueKind.Object)
             {
                 foreach (JsonProperty property in root.EnumerateObject())
@@ -28,7 +28,7 @@ namespace Azure.AI.FormRecognizer.Serialization
             return documentResult;
         }
 
-        private static void ReadPropertyValue(ref ExtractedForm documentResult, JsonProperty property)
+        private static void ReadPropertyValue(ref ExtractedPredefinedFieldForm documentResult, JsonProperty property)
         {
             if (property.NameEquals("docType"))
             {

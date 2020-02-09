@@ -13,23 +13,23 @@ namespace Azure.AI.FormRecognizer.Prebuilt
 
         /// <summary>
         /// </summary>
-        public ExtractedLabeledField MerchantName { get; internal set; }
+        public ExtractedPredefinedField MerchantName { get; internal set; }
 
         /// <summary>
         /// </summary>
-        public ExtractedLabeledField MerchantAddress { get; internal set; }
+        public ExtractedPredefinedField MerchantAddress { get; internal set; }
 
         /// <summary>
         /// </summary>
-        public ExtractedLabeledField MerchantPhoneNumber { get; internal set; }
+        public ExtractedPredefinedField MerchantPhoneNumber { get; internal set; }
 
         /// <summary>
         /// </summary>
-        public ExtractedLabeledField TransactionDate { get; internal set; }
+        public ExtractedPredefinedField TransactionDate { get; internal set; }
 
         /// <summary>
         /// </summary>
-        public ExtractedLabeledField TransactionTime { get; internal set; }
+        public ExtractedPredefinedField TransactionTime { get; internal set; }
 
         /// <summary>
         /// </summary>
@@ -37,18 +37,18 @@ namespace Azure.AI.FormRecognizer.Prebuilt
 
         /// <summary>
         /// </summary>
-        public ExtractedLabeledField Subtotal { get; internal set; }
+        public ExtractedPredefinedField Subtotal { get; internal set; }
 
         /// <summary>
         /// </summary>
-        public ExtractedLabeledField Tax { get; internal set; }
+        public ExtractedPredefinedField Tax { get; internal set; }
 
         /// <summary>
         /// </summary>
-        public ExtractedLabeledField Tip { get; internal set; }
+        public ExtractedPredefinedField Tip { get; internal set; }
 
         /// <summary>
         /// </summary>
-        public ExtractedLabeledField Total { get; internal set; }
+        public ExtractedPredefinedField Total { get; internal set; }
     }
 }

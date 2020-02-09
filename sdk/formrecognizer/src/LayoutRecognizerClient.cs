@@ -1,13 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using Azure.AI.FormRecognizer.Prebuilt;
 using Azure.AI.FormRecognizer.Prediction;
 using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Azure.AI.FormRecognizer.Prebuilt
+namespace Azure.AI.FormRecognizer
 {
     /// <summary>
     /// </summary>

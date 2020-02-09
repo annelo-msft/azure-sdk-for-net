@@ -9,14 +9,14 @@ namespace Azure.AI.FormRecognizer.Custom
 {
     /// <summary>
     /// </summary>
-    public class ExtractLabeledFormResult
+    public class ExtractPredefinedFieldFormResult
     {
         private AnalyzeOperation operation;
 
         /// <summary>
         /// </summary>
         /// <param name="operation"></param>
-        internal ExtractLabeledFormResult(AnalyzeOperation operation)
+        internal ExtractPredefinedFieldFormResult(AnalyzeOperation operation)
         {
             this.operation = operation;
         }
@@ -41,7 +41,7 @@ namespace Azure.AI.FormRecognizer.Custom
         /// <summary>
         /// Information extracted from each form in the input file.
         /// </summary>
-        public ExtractedForm[] Forms { get; internal set; }
+        public ExtractedPredefinedFieldForm[] Forms { get; internal set; }
 
         // TODO: would it be better to put this in Forms?  It should go there logically, but I like having all
         // AnalysisResults having OCR output at the top level.
