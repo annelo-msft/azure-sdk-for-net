@@ -51,12 +51,12 @@ namespace Azure.AI.FormRecognizer.Prebuilt
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="contentType"></param>
-        /// <param name="includeTextDetails"></param>
+        /// <param name="includeRawPageExtractions"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public virtual LayoutExtractionResult ExtractLayout(Stream stream, FormContentType? contentType = null, bool includeTextDetails = false, CancellationToken cancellationToken = default)
+        public virtual LayoutExtractionResult ExtractLayout(Stream stream, FormContentType? contentType = null, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
         {
-            AnalyzeOperation operation = _formLayoutClient.StartAnalyze(stream, contentType, includeTextDetails, cancellationToken);
+            AnalyzeOperation operation = _formLayoutClient.StartAnalyze(stream, contentType, includeRawPageExtractions, cancellationToken);
             return new LayoutExtractionResult(operation);
         }
 
@@ -64,35 +64,35 @@ namespace Azure.AI.FormRecognizer.Prebuilt
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="contentType"></param>
-        /// <param name="includeTextDetails"></param>
+        /// <param name="includeRawPageExtractions"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public virtual async Task<LayoutExtractionResult> ExtractLayoutAsync(Stream stream, FormContentType? contentType = null, bool includeTextDetails = false, CancellationToken cancellationToken = default)
+        public virtual async Task<LayoutExtractionResult> ExtractLayoutAsync(Stream stream, FormContentType? contentType = null, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
         {
-            AnalyzeOperation op = await _formLayoutClient.StartAnalyzeAsync(stream, contentType, includeTextDetails, cancellationToken).ConfigureAwait(false);
+            AnalyzeOperation op = await _formLayoutClient.StartAnalyzeAsync(stream, contentType, includeRawPageExtractions, cancellationToken).ConfigureAwait(false);
             return new LayoutExtractionResult(op);
         }
 
         /// <summary>
         /// </summary>
         /// <param name="uri"></param>
-        /// <param name="includeTextDetails"></param>
+        /// <param name="includeRawPageExtractions"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public virtual LayoutExtractionResult ExtractLayout(Uri uri, bool includeTextDetails = false, CancellationToken cancellationToken = default)
+        public virtual LayoutExtractionResult ExtractLayout(Uri uri, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
         {
-            AnalyzeOperation operation = _formLayoutClient.StartAnalyze(uri, includeTextDetails, cancellationToken);
+            AnalyzeOperation operation = _formLayoutClient.StartAnalyze(uri, includeRawPageExtractions, cancellationToken);
             return new LayoutExtractionResult(operation);
         }
         /// <summary>
         /// </summary>
         /// <param name="uri"></param>
-        /// <param name="includeTextDetails"></param>
+        /// <param name="includeRawPageExtractions"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public virtual async Task<LayoutExtractionResult> ExtractLayoutAsync(Uri uri, bool includeTextDetails = false, CancellationToken cancellationToken = default)
+        public virtual async Task<LayoutExtractionResult> ExtractLayoutAsync(Uri uri, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
         {
-            AnalyzeOperation op = await _formLayoutClient.StartAnalyzeAsync(uri, includeTextDetails, cancellationToken).ConfigureAwait(false);
+            AnalyzeOperation op = await _formLayoutClient.StartAnalyzeAsync(uri, includeRawPageExtractions, cancellationToken).ConfigureAwait(false);
             return new LayoutExtractionResult(op);
         }
     }

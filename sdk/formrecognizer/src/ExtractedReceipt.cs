@@ -18,29 +18,25 @@ namespace Azure.AI.FormRecognizer.Prebuilt
         /// </summary>
         public ReceiptType ReceiptType { get; internal set; }
 
-        // TODO: It would be better to have these properties be strongly typed
-        // rather than being a predefined field value.  But they need the confidence
-        // values attached!  Think more about this.
+        /// <summary>
+        /// </summary>
+        public string MerchantName { get; internal set; }
 
         /// <summary>
         /// </summary>
-        public StringFieldValue MerchantName { get; internal set; }
+        public string MerchantAddress { get; internal set; }
 
         /// <summary>
         /// </summary>
-        public StringFieldValue MerchantAddress { get; internal set; }
+        public string MerchantPhoneNumber { get; internal set; }
 
         /// <summary>
         /// </summary>
-        public StringFieldValue MerchantPhoneNumber { get; internal set; }
+        public DateTime TransactionDate { get; internal set; }
 
         /// <summary>
         /// </summary>
-        public DateTimeFieldValue TransactionDate { get; internal set; }
-
-        /// <summary>
-        /// </summary>
-        public DateTimeFieldValue TransactionTime { get; internal set; }
+        public DateTime TransactionTime { get; internal set; }
 
         /// <summary>
         /// </summary>
@@ -48,18 +44,22 @@ namespace Azure.AI.FormRecognizer.Prebuilt
 
         /// <summary>
         /// </summary>
-        public FloatFieldValue Subtotal { get; internal set; }
+        public float Subtotal { get; internal set; }
 
         /// <summary>
         /// </summary>
-        public FloatFieldValue Tax { get; internal set; }
+        public float Tax { get; internal set; }
 
         /// <summary>
         /// </summary>
-        public FloatFieldValue Tip { get; internal set; }
+        public float Tip { get; internal set; }
 
         /// <summary>
         /// </summary>
-        public FloatFieldValue Total { get; internal set; }
+        public float Total { get; internal set; }
+
+        /// <summary>
+        /// </summary>
+        public RawReceiptExtraction RawFields { get; internal set; }
     }
 }

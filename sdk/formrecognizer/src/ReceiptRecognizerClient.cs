@@ -53,12 +53,12 @@ namespace Azure.AI.FormRecognizer.Prebuilt
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="contentType"></param>
-        /// <param name="includeTextDetails"></param>
+        /// <param name="includeRawPageExtractions"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public virtual ExtractReceiptResult ExtractReceipt(Stream stream, FormContentType? contentType = null, bool includeTextDetails = false, CancellationToken cancellationToken = default)
+        public virtual ExtractReceiptResult ExtractReceipt(Stream stream, FormContentType? contentType = null, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
         {
-            AnalyzeOperation operation = _formReceiptClient.StartAnalyze(stream, contentType, includeTextDetails, cancellationToken);
+            AnalyzeOperation operation = _formReceiptClient.StartAnalyze(stream, contentType, includeRawPageExtractions, cancellationToken);
             return new ExtractReceiptResult(operation);
         }
 
@@ -66,36 +66,36 @@ namespace Azure.AI.FormRecognizer.Prebuilt
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="contentType"></param>
-        /// <param name="includeTextDetails"></param>
+        /// <param name="includeRawPageExtractions"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public virtual async Task<ExtractReceiptResult> ExtractReceiptAsync(Stream stream, FormContentType? contentType = null, bool includeTextDetails = false, CancellationToken cancellationToken = default)
+        public virtual async Task<ExtractReceiptResult> ExtractReceiptAsync(Stream stream, FormContentType? contentType = null, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
         {
-            AnalyzeOperation op = await _formReceiptClient.StartAnalyzeAsync(stream, contentType, includeTextDetails, cancellationToken).ConfigureAwait(false);
+            AnalyzeOperation op = await _formReceiptClient.StartAnalyzeAsync(stream, contentType, includeRawPageExtractions, cancellationToken).ConfigureAwait(false);
             return new ExtractReceiptResult(op);
         }
 
         /// <summary>
         /// </summary>
         /// <param name="uri"></param>
-        /// <param name="includeTextDetails"></param>
+        /// <param name="includeRawPageExtractions"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public virtual ExtractReceiptResult ExtractReceipt(Uri uri, bool includeTextDetails = false, CancellationToken cancellationToken = default)
+        public virtual ExtractReceiptResult ExtractReceipt(Uri uri, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
         {
-            AnalyzeOperation op = _formReceiptClient.StartAnalyze(uri, includeTextDetails, cancellationToken);
+            AnalyzeOperation op = _formReceiptClient.StartAnalyze(uri, includeRawPageExtractions, cancellationToken);
             return new ExtractReceiptResult(op);
         }
 
         /// <summary>
         /// </summary>
         /// <param name="uri"></param>
-        /// <param name="includeTextDetails"></param>
+        /// <param name="includeRawPageExtractions"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public virtual async Task<ExtractReceiptResult> ExtractReceiptAsync(Uri uri, bool includeTextDetails = false, CancellationToken cancellationToken = default)
+        public virtual async Task<ExtractReceiptResult> ExtractReceiptAsync(Uri uri, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
         {
-            AnalyzeOperation op = await _formReceiptClient.StartAnalyzeAsync(uri, includeTextDetails, cancellationToken).ConfigureAwait(false);
+            AnalyzeOperation op = await _formReceiptClient.StartAnalyzeAsync(uri, includeRawPageExtractions, cancellationToken).ConfigureAwait(false);
             return new ExtractReceiptResult(op);
         }
     }
