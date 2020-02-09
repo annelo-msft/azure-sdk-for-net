@@ -9,9 +9,9 @@ namespace Azure.AI.FormRecognizer.Custom
 {
     /// <summary>
     /// </summary>
-    public class FormCluster
+    public class TrainedFormCluster
     {
-        internal FormCluster() { }
+        internal TrainedFormCluster() { }
 
         /// <summary>
         /// Cluster Id

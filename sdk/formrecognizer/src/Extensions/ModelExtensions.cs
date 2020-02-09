@@ -3,19 +3,20 @@
 
 using Azure.AI.FormRecognizer.Models;
 using Azure.AI.FormRecognizer.Prediction;
+using Azure.AI.FormRecognizer.Custom;
 
 namespace Azure.AI.FormRecognizer
 {
     internal static class ModelExtensions
     {
-        public static bool IsModelComplete(this ModelStatus modelStatus)
+        public static bool IsModelComplete(this TrainingStatus modelStatus)
         {
-            return modelStatus != ModelStatus.Creating;
+            return modelStatus != TrainingStatus.Training;
         }
 
-        public static bool IsModelSuccess(this ModelStatus modelStatus)
+        public static bool IsModelSuccess(this TrainingStatus modelStatus)
         {
-            return modelStatus == ModelStatus.Ready;
+            return modelStatus == TrainingStatus.Ready;
         }
 
         public static bool IsAnalysisComplete(this Analysis analysis)

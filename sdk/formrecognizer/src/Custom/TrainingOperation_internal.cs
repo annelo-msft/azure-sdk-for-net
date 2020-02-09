@@ -114,10 +114,10 @@ namespace Azure.AI.FormRecognizer.Custom
             _response = response;
             response.ExpectStatus(HttpStatusCode.OK, _options);
             var model = response.GetJsonContent<TrainingResult>(_options);
-            if (model.Status.IsModelComplete())
-            {
-                _value = model;
-            }
+            //if (model.Status.IsModelComplete())
+            //{
+            //    _value = model;
+            //}
             return response;
         }
 

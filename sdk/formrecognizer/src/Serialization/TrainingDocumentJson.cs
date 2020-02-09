@@ -10,9 +10,9 @@ namespace Azure.AI.FormRecognizer.Serialization
 {
     internal class TrainingDocumentJson
     {
-        public static DocumentTrainingResult Read(JsonElement root)
+        public static TrainingInputResult Read(JsonElement root)
         {
-            var trainingDocument = DocumentTrainingResult.Create();
+            var trainingDocument = TrainingInputResult.Create();
             if (root.ValueKind == JsonValueKind.Object)
             {
                 foreach (JsonProperty property in root.EnumerateObject())
@@ -20,14 +20,14 @@ namespace Azure.AI.FormRecognizer.Serialization
                     ReadPropertyValue(ref trainingDocument, property);
                 }
             }
-            if (trainingDocument.Errors == default)
-            {
-                trainingDocument.Errors = Array.Empty<FormRecognizerError>();
-            }
+            //if (trainingDocument.Errors == default)
+            //{
+            //    trainingDocument.Errors = Array.Empty<FormRecognizerError>();
+            //}
             return trainingDocument;
         }
 
-        private static void ReadPropertyValue(ref DocumentTrainingResult trainingDocument, JsonProperty property)
+        private static void ReadPropertyValue(ref TrainingInputResult trainingDocument, JsonProperty property)
         {
             if (property.NameEquals("documentName"))
             {
@@ -35,16 +35,16 @@ namespace Azure.AI.FormRecognizer.Serialization
             }
             else if (property.NameEquals("pages"))
             {
-                trainingDocument.Pages = property.Value.GetInt32();
+                trainingDocument.TotalTrainedPages = property.Value.GetInt32();
             }
-            else if (property.NameEquals("errors"))
-            {
-                trainingDocument.Errors = ArrayJson.Read(property.Value, ErrorDetailsJson.Read);
-            }
-            else if (property.NameEquals("status"))
-            {
-                trainingDocument.Status = EnumJson.Read<DocumentTrainingStatus>(property.Value);
-            }
+            //else if (property.NameEquals("errors"))
+            //{
+            //    trainingDocument.Errors = ArrayJson.Read(property.Value, ErrorDetailsJson.Read);
+            //}
+            //else if (property.NameEquals("status"))
+            //{
+            //    trainingDocument.Status = EnumJson.Read<TrainingInputSuccessStatus>(property.Value);
+            //}
         }
     }
 }

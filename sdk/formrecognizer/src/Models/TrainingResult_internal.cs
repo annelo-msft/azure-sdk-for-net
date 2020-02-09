@@ -15,14 +15,14 @@ namespace Azure.AI.FormRecognizer.Models
         /// <summary>
         /// List of the documents used to train the model and any errors reported in each document.
         /// </summary>
-        public DocumentTrainingResult[] TrainingDocumentResults { get; internal set; }
+        public TrainingInputResult[] TrainingDocumentResults { get; internal set; }
 
         // TODO: Does Fields apply only to supervised models?  How is this different from FormClusters?
 
         /// <summary>
         /// List of fields used to train the model and the train operation error reported by each.
         /// </summary>
-        public FieldAccuracy[] FieldAccuracies { get; internal set; }
+        public LabeledFieldAccuracy[] FieldAccuracies { get; internal set; }
 
         /// <summary>
         /// Average accuracy.

@@ -26,7 +26,7 @@ namespace Azure.AI.FormRecognizer.Custom
         /// <summary>
         /// Model status.
         /// </summary>
-        internal ModelStatus Status { get; set; }
+        internal TrainingStatus Status { get; set; }
 
         /// <summary>
         /// Date and time when the status was last updated.
@@ -43,19 +43,19 @@ namespace Azure.AI.FormRecognizer.Custom
         /// </summary>
         // TODO: Question - will this be populated for supervised models?
         // If not, we should probably break FRCustomModel into supervised and unsupervised custom models.s
-        public ICollection<FormCluster> FormClusters { get; internal set; }
+        public ICollection<TrainedFormCluster> FormClusters { get; internal set; }
 
         /// <summary>
         /// List of the documents used to train the model and any errors reported in each document.
         /// </summary>
-        public DocumentTrainingResult[] DocumentTrainingResults { get; internal set; }
+        public TrainingInputResult[] DocumentTrainingResults { get; internal set; }
 
         // TODO: Do field accuracies apply only to supervised models?  How is this different from FormClusters?
 
         /// <summary>
         /// List of fields used to train the model and the train operation error reported by each.
         /// </summary>
-        public FieldAccuracy[] FieldAccuracies { get; internal set; }
+        public LabeledFieldAccuracy[] FieldAccuracies { get; internal set; }
 
         /// <summary>
         /// Average accuracy.

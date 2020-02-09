@@ -3,14 +3,15 @@
 
 using System.Text.Json;
 using Azure.AI.FormRecognizer.Models;
+using Azure.AI.FormRecognizer.Custom;
 
 namespace Azure.AI.FormRecognizer.Serialization
 {
     internal class ModelInfoJson
     {
-        public static ModelInfo Read(JsonElement root)
+        public static ModelInfo_internal Read(JsonElement root)
         {
-            var modelInfo = ModelInfo.Create();
+            var modelInfo = ModelInfo_internal.Create();
             if (root.ValueKind == JsonValueKind.Object)
             {
                 foreach (JsonProperty property in root.EnumerateObject())
@@ -21,7 +22,7 @@ namespace Azure.AI.FormRecognizer.Serialization
             return modelInfo;
         }
 
-        private static void ReadPropertyValue(ref ModelInfo modelInfo, JsonProperty property)
+        private static void ReadPropertyValue(ref ModelInfo_internal modelInfo, JsonProperty property)
         {
             if (property.NameEquals("modelId"))
             {
@@ -29,7 +30,7 @@ namespace Azure.AI.FormRecognizer.Serialization
             }
             else if (property.NameEquals("status"))
             {
-                modelInfo.Status = EnumJson.Read<ModelStatus>(property.Value);
+                modelInfo.Status = EnumJson.Read<TrainingStatus>(property.Value);
             }
             else if (property.NameEquals("createdDateTime"))
             {

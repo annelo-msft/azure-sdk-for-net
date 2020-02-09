@@ -22,41 +22,30 @@ namespace Azure.AI.FormRecognizer.Custom
         public string ModelId { get; internal set; }
 
         /// <summary>
-        /// Model status.
+        /// Average accuracy.
         /// </summary>
-        internal ModelStatus Status { get; set; }
-
-        /// <summary>
-        /// Date and time when the status was last updated.
-        /// </summary>
-        internal DateTimeOffset LastUpdateTime { get; set; }
-
-        /// <summary>
-        /// Date and time when the model was created.
-        /// </summary>
-        public DateTimeOffset CreationTime { get; internal set; }
-
-        /// <summary>
-        /// List of the documents used to train the model and any errors reported in each document.
-        /// </summary>
-        public DocumentTrainingResult[] DocumentTrainingResults { get; internal set; }
-
-        // TODO: Do field accuracies apply only to supervised models?  How is this different from FormClusters?
+        public float? AverageFieldAccuracy { get; internal set; }
 
         /// <summary>
         /// List of fields used to train the model and the train operation error reported by each.
         /// </summary>
-        public FieldAccuracy[] FieldAccuracies { get; internal set; }
+        public LabeledFieldAccuracy[] FieldAccuracies { get; internal set; }
 
         /// <summary>
-        /// Average accuracy.
         /// </summary>
-        public float? AverageModelAccuracy { get; internal set; }
+        public TrainingInfo TrainingInfo { get; internal set; }
+
+        /// <summary>
+        /// List of the documents used to train the model and any errors reported in each document.
+        /// </summary>
+        public TrainingInputResult[] TrainingInputResults { get; internal set; }
+
+        // TODO: Do field accuracies apply only to supervised models?  How is this different from FormClusters?
 
         /// <summary>
         /// Errors returned during the training operation.
         /// </summary>
-        public FormRecognizerError[] Errors { get; internal set; }
+        public FormRecognizerError[] TrainingErrors { get; internal set; }
 
         internal static TrainWithLabelsResult Create() => new TrainWithLabelsResult();
     }

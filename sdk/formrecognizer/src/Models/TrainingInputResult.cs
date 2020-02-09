@@ -6,18 +6,17 @@ namespace Azure.AI.FormRecognizer.Custom
     /// <summary>
     /// Report for a custom model training document.
     /// </summary>
-    public class DocumentTrainingResult
+    public class TrainingInputResult
     {
         /// <summary>
-        /// Training document name.
+        /// Name of training input document.
         /// </summary>
         public string DocumentName { get; internal set; }
 
         /// <summary>
         /// Total number of pages trained.
         /// </summary>
-        public int Pages { get; internal set; }
-
+        public int TotalTrainedPages { get; internal set; }
 
         // TODO: Are these errors about the document, or the training operation, or ... ?
         // What are the possible values of these?  Would it be better to group these with
@@ -28,7 +27,7 @@ namespace Azure.AI.FormRecognizer.Custom
         /// <summary>
         /// List of errors.
         /// </summary>
-        public FormRecognizerError[] Errors { get; internal set; }
+        public FormRecognizerError[] TrainingInputErrors { get; internal set; }
 
         // TODO: What does it mean for a training document to have failed or succeeded?
         // Is this in the context of either supervised or unsupervised models, or does it apply to both?
@@ -37,14 +36,14 @@ namespace Azure.AI.FormRecognizer.Custom
         /// <summary>
         /// Status of the training operation.
         /// </summary>
-        public DocumentTrainingStatus Status { get; internal set; }
+        public TrainingInputSuccessStatus SuccessStatus { get; internal set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DocumentTrainingResult"/> class.
+        /// Initializes a new instance of the <see cref="TrainingInputResult"/> class.
         /// </summary>
-        internal DocumentTrainingResult()
+        internal TrainingInputResult()
         { }
 
-        internal static DocumentTrainingResult Create() => new DocumentTrainingResult();
+        internal static TrainingInputResult Create() => new TrainingInputResult();
     }
 }
