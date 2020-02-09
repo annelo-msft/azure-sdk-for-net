@@ -21,11 +21,11 @@ namespace Azure.AI.FormRecognizer.Custom
         /// <summary>
         /// First and last page number where the form is found within the input file.
         /// </summary>
-        public (int, int) FormPageRange { get; internal set; }
+        public PageRange PageRange { get; internal set; }
 
         /// <summary>
         /// </summary>
-        public PredefinedFieldCollection Fields { get; internal set; }
+        public ExtractedLabeledPage[] Pages { get; internal set;}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExtractedForm"/> class.

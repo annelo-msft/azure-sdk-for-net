@@ -37,12 +37,12 @@ namespace Azure.AI.FormRecognizer.Custom
         /// <summary>
         /// Page-level information extracted from the input.
         /// </summary>
-        public ExtractedPage[] ExtractedPages { get; internal set; }
+        public ExtractedPage[] Pages { get; internal set; }
 
         /// <summary>
         /// Output of the Optical Character Recognition engine, including text
         /// elements with bounding boxes, as well as page geometry, and page and line languages.
         /// </summary>
-        public RawPageExtraction[] RawPageExtractions { get; internal set; }
+        public RawPageExtraction[] RawPages { get; internal set; }
     }
 }

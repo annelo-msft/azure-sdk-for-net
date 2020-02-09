@@ -43,19 +43,13 @@ namespace Azure.AI.FormRecognizer.Custom
         /// </summary>
         public ExtractedForm[] Forms { get; internal set; }
 
+        // TODO: would it be better to put this in Forms?  It should go there logically, but I like having all
+        // AnalysisResults having OCR output at the top level.
+
         /// <summary>
         /// Output of the Optical Character Recognition engine, including text
         /// elements with bounding boxes, as well as page geometry, and page and line languages.
         /// </summary>
-        public RawPageExtraction[] TextDetails { get; internal set; }
-
-        // TODO: values is by form, would it make sense to have tables by form as well?
-        // Would it make sense to have tables inside of FormValues, or otherwise grouped
-        // together by form?  Will a table that's on two pages be split into two?
-
-        /// <summary>
-        /// List of data tables extracted from the form.
-        /// </summary>
-        public ExtractedTable[] ExtractedTables { get; internal set; }
+        public RawPageExtraction[] RawPages { get; internal set; }
     }
 }

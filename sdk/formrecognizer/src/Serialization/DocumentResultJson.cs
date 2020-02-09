@@ -40,7 +40,7 @@ namespace Azure.AI.FormRecognizer.Serialization
                 var start = array.Current.GetInt32();
                 array.MoveNext();
                 var end = array.Current.GetInt32();
-                documentResult.FormPageRange = (start, end);
+                //documentResult.FormPageRange = (start, end);
             }
             //else if (property.NameEquals("fields"))
             //{
