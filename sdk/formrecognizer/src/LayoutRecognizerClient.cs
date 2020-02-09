@@ -3,9 +3,7 @@
 
 using Azure.AI.FormRecognizer.Prediction;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,13 +11,13 @@ namespace Azure.AI.FormRecognizer.Prebuilt
 {
     /// <summary>
     /// </summary>
-    public class ReceiptExtractionClient
+    public class LayoutRecognizerClient
     {
-        private FormReceiptClient _formReceiptClient;
+        private FormLayoutClient _formLayoutClient;
 
         /// <summary>
         /// </summary>
-        protected ReceiptExtractionClient()
+        protected LayoutRecognizerClient()
         {
         }
 
@@ -29,7 +27,7 @@ namespace Azure.AI.FormRecognizer.Prebuilt
         /// <param name="endpoint">Endpoint.</param>
         /// <param name="credential">Your assigned subscription key, copied from https://portal.azure.com/</param>
 #pragma warning disable AZC0007 // DO provide a minimal constructor that takes only the parameters required to connect to the service.
-        public ReceiptExtractionClient(Uri endpoint, CognitiveKeyCredential credential)
+        public LayoutRecognizerClient(Uri endpoint, CognitiveKeyCredential credential)
 #pragma warning restore AZC0007 // DO provide a minimal constructor that takes only the parameters required to connect to the service.
             : this(endpoint, credential, new FormRecognizerClientOptions())
         {
@@ -42,11 +40,11 @@ namespace Azure.AI.FormRecognizer.Prebuilt
         /// <param name="credential">Your assigned subscription key, copied from https://portal.azure.com/</param>
         /// <param name="options">Optional service parameters.</param>
 #pragma warning disable AZC0007 // DO provide a minimal constructor that takes only the parameters required to connect to the service.
-        public ReceiptExtractionClient(Uri endpoint, CognitiveKeyCredential credential, FormRecognizerClientOptions options)
+        public LayoutRecognizerClient(Uri endpoint, CognitiveKeyCredential credential, FormRecognizerClientOptions options)
 #pragma warning restore AZC0007 // DO provide a minimal constructor that takes only the parameters required to connect to the service.
         {
             var temp = options.Version;
-            _formReceiptClient = new FormReceiptClient(endpoint, credential, new FormReceiptClientOptions());
+            _formLayoutClient = new FormLayoutClient(endpoint, credential, new FormLayoutClientOptions());
         }
 
         /// <summary>
@@ -56,10 +54,10 @@ namespace Azure.AI.FormRecognizer.Prebuilt
         /// <param name="includeTextDetails"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public virtual ExtractReceiptResult ExtractReceipt(Stream stream, FormContentType? contentType = null, bool includeTextDetails = false, CancellationToken cancellationToken = default)
+        public virtual LayoutExtractionResult ExtractLayout(Stream stream, FormContentType? contentType = null, bool includeTextDetails = false, CancellationToken cancellationToken = default)
         {
-            AnalyzeOperation operation = _formReceiptClient.StartAnalyze(stream, contentType, includeTextDetails, cancellationToken);
-            return new ExtractReceiptResult(operation);
+            AnalyzeOperation operation = _formLayoutClient.StartAnalyze(stream, contentType, includeTextDetails, cancellationToken);
+            return new LayoutExtractionResult(operation);
         }
 
         /// <summary>
@@ -69,10 +67,10 @@ namespace Azure.AI.FormRecognizer.Prebuilt
         /// <param name="includeTextDetails"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public virtual async Task<ExtractReceiptResult> ExtractReceiptAsync(Stream stream, FormContentType? contentType = null, bool includeTextDetails = false, CancellationToken cancellationToken = default)
+        public virtual async Task<LayoutExtractionResult> ExtractLayoutAsync(Stream stream, FormContentType? contentType = null, bool includeTextDetails = false, CancellationToken cancellationToken = default)
         {
-            AnalyzeOperation op = await _formReceiptClient.StartAnalyzeAsync(stream, contentType, includeTextDetails, cancellationToken).ConfigureAwait(false);
-            return new ExtractReceiptResult(op);
+            AnalyzeOperation op = await _formLayoutClient.StartAnalyzeAsync(stream, contentType, includeTextDetails, cancellationToken).ConfigureAwait(false);
+            return new LayoutExtractionResult(op);
         }
 
         /// <summary>
@@ -81,22 +79,21 @@ namespace Azure.AI.FormRecognizer.Prebuilt
         /// <param name="includeTextDetails"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public virtual ExtractReceiptResult ExtractReceipt(Uri uri, bool includeTextDetails = false, CancellationToken cancellationToken = default)
+        public virtual LayoutExtractionResult ExtractLayout(Uri uri, bool includeTextDetails = false, CancellationToken cancellationToken = default)
         {
-            AnalyzeOperation op = _formReceiptClient.StartAnalyze(uri, includeTextDetails, cancellationToken);
-            return new ExtractReceiptResult(op);
+            AnalyzeOperation operation = _formLayoutClient.StartAnalyze(uri, includeTextDetails, cancellationToken);
+            return new LayoutExtractionResult(operation);
         }
-
         /// <summary>
         /// </summary>
         /// <param name="uri"></param>
         /// <param name="includeTextDetails"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public virtual async Task<ExtractReceiptResult> ExtractReceiptAsync(Uri uri, bool includeTextDetails = false, CancellationToken cancellationToken = default)
+        public virtual async Task<LayoutExtractionResult> ExtractLayoutAsync(Uri uri, bool includeTextDetails = false, CancellationToken cancellationToken = default)
         {
-            AnalyzeOperation op = await _formReceiptClient.StartAnalyzeAsync(uri, includeTextDetails, cancellationToken).ConfigureAwait(false);
-            return new ExtractReceiptResult(op);
+            AnalyzeOperation op = await _formLayoutClient.StartAnalyzeAsync(uri, includeTextDetails, cancellationToken).ConfigureAwait(false);
+            return new LayoutExtractionResult(op);
         }
     }
 }
