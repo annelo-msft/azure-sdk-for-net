@@ -9,7 +9,7 @@ namespace Azure.AI.FormRecognizer
     /// <summary>
     /// Represents a line of extracted text.
     /// </summary>
-    public class ExtractedLine : BoundedText
+    public class ExtractedLine : ExtractedText
     {
         internal ExtractedLine() { }
 

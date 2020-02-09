@@ -12,7 +12,7 @@ namespace Azure.AI.FormRecognizer
     /// <summary>
     /// Information about the extracted cell in a table.
     /// </summary>
-    public class ExtractedTableCell : BoundedText
+    public class ExtractedTableCell : ExtractedText
     {
         internal ExtractedTableCell() { }
 
@@ -51,9 +51,12 @@ namespace Azure.AI.FormRecognizer
         /// </summary>
         public float Confidence { get; internal set; }
 
-        // TODO: What is this data table for?
+        // TODO: What is this data table for?  A cell could contain a table?
+        // What is the use case for this, and is it the best representation?
 
-        internal ExtractedTable DataTable { get; set; }
+        /// <summary>
+        /// </summary>
+        internal ExtractedTable Table { get; set; }
 
 
         internal static ExtractedTableCell Create() => new ExtractedTableCell();

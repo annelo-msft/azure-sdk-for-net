@@ -24,5 +24,11 @@ namespace Azure.AI.FormRecognizer.Custom
         /// List of key-value pairs extracted from the page.
         /// </summary>
         public ExtractedField[] Fields { get; internal set; }
+
+        /// <summary>
+        /// Output of the enhanced Optical Character Recognition engine, which identifies
+        /// tables.
+        /// </summary>
+        public ExtractedTable[] Tables { get; internal set; }
     }
 }

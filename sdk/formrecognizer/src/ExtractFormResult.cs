@@ -44,11 +44,5 @@ namespace Azure.AI.FormRecognizer.Custom
         /// elements with bounding boxes, as well as page geometry, and page and line languages.
         /// </summary>
         public RawPageExtraction[] RawPageExtractions { get; internal set; }
-
-        /// <summary>
-        /// Output of the enhanced Optical Character Recognition engine, which identifies
-        /// tables.
-        /// </summary>
-        public ExtractedTable[] ExtractedTables { get; internal set; }
     }
 }

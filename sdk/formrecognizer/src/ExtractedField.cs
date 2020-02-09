@@ -19,12 +19,13 @@ namespace Azure.AI.FormRecognizer.Custom
 
         /// <summary>
         /// </summary>
-        public BoundedText FieldName { get; internal set; }
+        public ExtractedText FieldName { get; internal set; }
 
         /// <summary>
         /// </summary>
-        public BoundedText FieldValue { get; internal set; }
+        public ExtractedText FieldValue { get; internal set; }
 
+        // TODO: Should Confidence go on BoundedText?  Should it be ExtractedText?
         /// <summary>
         /// Confidence value.
         /// </summary>

@@ -11,11 +11,6 @@ namespace Azure.AI.FormRecognizer
         internal ExtractedTable() { }
 
         /// <summary>
-        /// Page number.
-        /// </summary>
-        public int PageNumber { get; internal set; }
-
-        /// <summary>
         /// Number of rows.
         /// </summary>
         public int Rows { get; internal set; }

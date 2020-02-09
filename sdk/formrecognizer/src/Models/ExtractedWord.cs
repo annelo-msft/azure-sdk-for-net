@@ -8,7 +8,7 @@ namespace Azure.AI.FormRecognizer
     /// <summary>
     /// Represents an extracted word.
     /// </summary>
-    public class ExtractedWord : BoundedText
+    public class ExtractedWord : ExtractedText
     {
         /// <summary>
         /// Confidence value in the prediction of the word.

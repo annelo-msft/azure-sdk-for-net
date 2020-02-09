@@ -7,7 +7,7 @@ namespace Azure.AI.FormRecognizer.Prebuilt
 {
     /// <summary>
     /// </summary>
-    public class StringFieldValue : BoundedText
+    public class StringFieldValue : ExtractedText
     {
         internal StringFieldValue() { }
 

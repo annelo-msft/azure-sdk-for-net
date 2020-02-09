@@ -9,9 +9,9 @@ namespace Azure.AI.FormRecognizer.Custom
 {
     /// <summary>
     /// </summary>
-    public class BoundedText
+    public class ExtractedText
     {
-        internal BoundedText() { }
+        internal ExtractedText() { }
 
         /// <summary>
         /// The text content of the line.
@@ -22,5 +22,7 @@ namespace Azure.AI.FormRecognizer.Custom
         /// Bounding box of the extracted line.
         /// </summary>
         public float[] BoundingBox { get; internal set; }
+
+        // TODO: It would make sense to put confidence on this.  Could we do that/
     }
 }
