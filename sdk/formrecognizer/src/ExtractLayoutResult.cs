@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using Azure.AI.FormRecognizer.Custom;
 using Azure.AI.FormRecognizer.Prediction;
 using System;
 
@@ -8,11 +9,11 @@ namespace Azure.AI.FormRecognizer.Prebuilt
 {
     /// <summary>
     /// </summary>
-    public class LayoutExtractionResult
+    public class ExtractLayoutResult
     {
         private AnalyzeOperation operation;
 
-        internal LayoutExtractionResult(AnalyzeOperation operation)
+        internal ExtractLayoutResult(AnalyzeOperation operation)
         {
             this.operation = operation;
         }
@@ -35,14 +36,14 @@ namespace Azure.AI.FormRecognizer.Prebuilt
         internal DateTimeOffset CreationTime { get; set; }
 
         /// <summary>
+        /// Table output of the enhanced Optical Character Recognition engine.
+        /// </summary>
+        public ExtractedLayoutPage[] Pages { get; internal set; }
+
+        /// <summary>
         /// Output of the Optical Character Recognition engine, including text
         /// elements with bounding boxes, as well as page geometry, and page and line languages.
         /// </summary>
-        public RawPageExtraction[] TextDetails { get; internal set; }
-
-        /// <summary>
-        /// Table output of the enhanced Optical Character Recognition engine.
-        /// </summary>
-        public ExtractedTable[] ExtractedTables { get; internal set; }
+        public RawPageExtraction[] RawPages { get; internal set; }
     }
 }

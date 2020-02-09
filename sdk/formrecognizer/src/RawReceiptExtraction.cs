@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using Azure.AI.FormRecognizer.Custom;
+//using Azure.AI.FormRecognizer.Custom;
 
 namespace Azure.AI.FormRecognizer.Prebuilt
 {
