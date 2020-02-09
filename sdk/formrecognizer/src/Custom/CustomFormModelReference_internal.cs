@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -20,7 +20,7 @@ namespace Azure.AI.FormRecognizer.Custom
     /// supports retrieving and deleting models. The client also supports analyzing new forms from both
     /// <see cref="Stream" /> and <see cref="Uri" /> objects.
     /// </summary>
-    internal class CustomFormModelReference : AnalyzeClient
+    internal class CustomFormModelReference_internal : AnalyzeClient
     {
         private readonly string _modelId;
 
@@ -30,12 +30,12 @@ namespace Azure.AI.FormRecognizer.Custom
         public string ModelId => _modelId;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CustomFormModelReference"/> class for mocking.
+        /// Initializes a new instance of the <see cref="CustomFormModelReference_internal"/> class for mocking.
         /// </summary>
-        protected CustomFormModelReference()
+        protected CustomFormModelReference_internal()
         { }
 
-        internal CustomFormModelReference(string modelId, HttpPipeline pipeline, JsonSerializerOptions options)
+        internal CustomFormModelReference_internal(string modelId, HttpPipeline pipeline, JsonSerializerOptions options)
             : base(pipeline, options, GetModelPath(modelId))
         {
             Throw.IfNullOrEmpty(modelId, nameof(modelId));
@@ -107,7 +107,7 @@ namespace Azure.AI.FormRecognizer.Custom
         internal static string GetModelPath(string modelId)
         {
             Throw.IfNullOrEmpty(modelId, nameof(modelId));
-            return $"{FormRecognizerClient.BasePath}/{modelId}";
+            return $"{FormRecognizerClient_internal.BasePath}/{modelId}";
         }
     }
 }

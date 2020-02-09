@@ -26,7 +26,7 @@ namespace Azure.AI.FormRecognizer.Extensions
             Throw.IfNullOrEmpty(trainRequest.Source, nameof(TrainingRequest.Source));
             var request = pipeline.CreateRequest();
             request.Method = RequestMethod.Post;
-            request.Uri.Path = FormRecognizerClient.BasePath;
+            request.Uri.Path = FormRecognizerClient_internal.BasePath;
             request.AddJsonContent(trainRequest, options);
             return request;
         }
@@ -35,7 +35,7 @@ namespace Azure.AI.FormRecognizer.Extensions
         {
             var request = pipeline.CreateRequest();
             request.Method = RequestMethod.Get;
-            request.Uri.Path = CustomFormModelReference.GetModelPath(modelId);
+            request.Uri.Path = CustomFormModelReference_internal.GetModelPath(modelId);
             if (includeKeys.HasValue)
             {
                 request.Uri.AppendQuery(IncludeKeysQueryKey, includeKeys.Value ? "true" : "false");
@@ -53,7 +53,7 @@ namespace Azure.AI.FormRecognizer.Extensions
             }
             if (string.IsNullOrEmpty(nextLink))
             {
-                request.Uri.Path = FormRecognizerClient.BasePath;
+                request.Uri.Path = FormRecognizerClient_internal.BasePath;
             }
             else
             {
@@ -66,7 +66,7 @@ namespace Azure.AI.FormRecognizer.Extensions
         {
             var request = pipeline.CreateRequest();
             request.Method = RequestMethod.Delete;
-            request.Uri.Path = CustomFormModelReference.GetModelPath(modelId);
+            request.Uri.Path = CustomFormModelReference_internal.GetModelPath(modelId);
             return request;
         }
         #endregion

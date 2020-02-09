@@ -18,7 +18,7 @@ namespace Azure.AI.FormRecognizer
     /// The FormRecognizer client provides syncronous and asynchronous methods to manage custom forms,
     /// prebuilt models, and layout requests.
     /// </summary>
-    internal class FormRecognizerClient
+    internal class FormRecognizerClient_internal
     {
         internal const string BasePath = "/custom/models";
         private readonly HttpPipeline _pipeline;
@@ -26,83 +26,83 @@ namespace Azure.AI.FormRecognizer
 
         #region Constructors
         /// <summary>
-        /// Initializes a new instance of the <see cref="FormRecognizerClient"/> class using a key-based credential.
+        /// Initializes a new instance of the <see cref="FormRecognizerClient_internal"/> class using a key-based credential.
         /// </summary>
         /// <param name="endpoint">Endpoint.</param>
         /// <param name="credential">Your assigned subscription key, copied from https://portal.azure.com/</param>
-        public FormRecognizerClient(Uri endpoint, CognitiveKeyCredential credential)
+        public FormRecognizerClient_internal(Uri endpoint, CognitiveKeyCredential credential)
             : this(endpoint, credential, new FormRecognizerClientOptions())
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FormRecognizerClient"/> class using a subscription key credential.
+        /// Initializes a new instance of the <see cref="FormRecognizerClient_internal"/> class using a subscription key credential.
         /// </summary>
         /// <param name="endpoint">Endpoint.</param>
         /// <param name="credential">Your assigned subscription key, copied from https://portal.azure.com/</param>
         /// <param name="options">Optional service parameters.</param>
-        public FormRecognizerClient(Uri endpoint, CognitiveKeyCredential credential, FormRecognizerClientOptions options)
+        public FormRecognizerClient_internal(Uri endpoint, CognitiveKeyCredential credential, FormRecognizerClientOptions options)
             : this(endpoint, new FormAuthenticator(credential), options)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FormRecognizerClient"/> class using an Azure Active Directory credential.
+        /// Initializes a new instance of the <see cref="FormRecognizerClient_internal"/> class using an Azure Active Directory credential.
         /// </summary>
         /// <param name="endpoint">Endpoint.</param>
         /// <param name="credential">Azure Active Directory credential.</param>
-        public FormRecognizerClient(Uri endpoint, TokenCredential credential)
+        public FormRecognizerClient_internal(Uri endpoint, TokenCredential credential)
             : this(endpoint, credential, new FormRecognizerClientOptions())
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FormRecognizerClient"/> class using an Azure Active Directory credential.
+        /// Initializes a new instance of the <see cref="FormRecognizerClient_internal"/> class using an Azure Active Directory credential.
         /// </summary>
         /// <param name="endpoint">Endpoint.</param>
         /// <param name="credential">Azure Active Directory credential.</param>
         /// <param name="options">Optional service parameters.</param>
-        public FormRecognizerClient(Uri endpoint, TokenCredential credential, FormRecognizerClientOptions options)
+        public FormRecognizerClient_internal(Uri endpoint, TokenCredential credential, FormRecognizerClientOptions options)
             : this(endpoint, new FormAuthenticator(credential), options)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FormRecognizerClient"/> class using a user-defined credential.
+        /// Initializes a new instance of the <see cref="FormRecognizerClient_internal"/> class using a user-defined credential.
         /// </summary>
         /// <param name="endpoint">Endpoint.</param>
         /// <param name="credential">User-defined credential.</param>
-        public FormRecognizerClient(Uri endpoint, CognitiveHeaderCredential credential)
+        public FormRecognizerClient_internal(Uri endpoint, CognitiveHeaderCredential credential)
             : this(endpoint, credential, new FormRecognizerClientOptions())
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FormRecognizerClient"/> class using a user-defined credential.
+        /// Initializes a new instance of the <see cref="FormRecognizerClient_internal"/> class using a user-defined credential.
         /// </summary>
         /// <param name="endpoint">Endpoint.</param>
         /// <param name="credential">User-defined credential</param>
         /// <param name="options">Optional service parameters.</param>
-        public FormRecognizerClient(Uri endpoint, CognitiveHeaderCredential credential, FormRecognizerClientOptions options)
+        public FormRecognizerClient_internal(Uri endpoint, CognitiveHeaderCredential credential, FormRecognizerClientOptions options)
             : this(endpoint, new FormAuthenticator(credential), options)
         {
         }
 
-        internal FormRecognizerClient(Uri endpoint, FormAuthenticator authenticator, FormRecognizerClientOptions options)
+        internal FormRecognizerClient_internal(Uri endpoint, FormAuthenticator authenticator, FormRecognizerClientOptions options)
             : this(FormHttpPipelineBuilder.Build(endpoint, authenticator, options), options)
         {
         }
 
-        internal FormRecognizerClient(HttpPipeline pipeline, FormRecognizerClientOptions options)
+        internal FormRecognizerClient_internal(HttpPipeline pipeline, FormRecognizerClientOptions options)
         {
             _pipeline = pipeline;
             _options = options;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FormRecognizerClient"/> class for mocking.
+        /// Initializes a new instance of the <see cref="FormRecognizerClient_internal"/> class for mocking.
         /// </summary>
-        protected FormRecognizerClient()
+        protected FormRecognizerClient_internal()
         { }
 
         #endregion
@@ -111,7 +111,7 @@ namespace Azure.AI.FormRecognizer
         /// Access a model to perform analysis, retrieve metadata or delete it.
         /// </summary>
         /// <param name="modelId">Model identifier</param>
-        public virtual CustomFormModelReference GetModelReference(string modelId) => new CustomFormModelReference(modelId, _pipeline, _options.SerializationOptions);
+        public virtual CustomFormModelReference_internal GetModelReference(string modelId) => new CustomFormModelReference_internal(modelId, _pipeline, _options.SerializationOptions);
 
         /// <summary>
         /// Asynchronously create and train a custom model.
@@ -233,13 +233,13 @@ namespace Azure.AI.FormRecognizer
         /// </summary>
         public virtual AsyncPageable<ModelInfo_internal> ListModelsAsync(CancellationToken cancellationToken = default)
         {
-            return new ModelsAsyncPageable(_pipeline, _options.SerializationOptions, cancellationToken);
+            return new ModelsAsyncPageable_internal(_pipeline, _options.SerializationOptions, cancellationToken);
         }
 
         /// <summary>
         /// Get information about all custom models.
         ///
-        /// This method returns a <see cref="ModelsPageable" /> that can be used to snchronously enumerate
+        /// This method returns a <see cref="ModelsPageable_internal" /> that can be used to snchronously enumerate
         /// all models or list them page-by-page.
         ///
         /// ```csharp
@@ -259,7 +259,7 @@ namespace Azure.AI.FormRecognizer
         /// </summary>
         public virtual Pageable<ModelInfo_internal> ListModels(CancellationToken cancellationToken = default)
         {
-            return new ModelsPageable(_pipeline, _options.SerializationOptions, cancellationToken);
+            return new ModelsPageable_internal(_pipeline, _options.SerializationOptions, cancellationToken);
         }
 
         /// <summary>

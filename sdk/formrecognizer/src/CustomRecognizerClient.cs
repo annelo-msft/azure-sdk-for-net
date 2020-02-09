@@ -14,7 +14,7 @@ namespace Azure.AI.FormRecognizer
     /// </summary>
     public class CustomRecognizerClient
     {
-        private FormRecognizerClient _formRecognizerClient;
+        private FormRecognizerClient_internal _formRecognizerClient;
 
         /// <summary>
         /// </summary>
@@ -23,7 +23,7 @@ namespace Azure.AI.FormRecognizer
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FormRecognizerClient"/> class using a key-based credential.
+        /// Initializes a new instance of the <see cref="FormRecognizerClient_internal"/> class using a key-based credential.
         /// </summary>
         /// <param name="endpoint">Endpoint.</param>
         /// <param name="credential">Your assigned subscription key, copied from https://portal.azure.com/</param>
@@ -35,7 +35,7 @@ namespace Azure.AI.FormRecognizer
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FormRecognizerClient"/> class using a subscription key credential.
+        /// Initializes a new instance of the <see cref="FormRecognizerClient_internal"/> class using a subscription key credential.
         /// </summary>
         /// <param name="endpoint">Endpoint.</param>
         /// <param name="credential">Your assigned subscription key, copied from https://portal.azure.com/</param>
@@ -45,7 +45,7 @@ namespace Azure.AI.FormRecognizer
 #pragma warning restore AZC0007 // DO provide a minimal constructor that takes only the parameters required to connect to the service.
         {
             var temp = options.Version;
-            _formRecognizerClient = new FormRecognizerClient(endpoint, credential, options);
+            _formRecognizerClient = new FormRecognizerClient_internal(endpoint, credential, options);
         }
 
         #region Training

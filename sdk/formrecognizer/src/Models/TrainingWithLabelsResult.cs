@@ -17,19 +17,8 @@ namespace Azure.AI.FormRecognizer.Custom
         internal TrainingWithLabelsResult() { }
 
         /// <summary>
-        /// Model Id.
         /// </summary>
-        public string ModelId { get; internal set; }
-
-        /// <summary>
-        /// Average accuracy.
-        /// </summary>
-        public float? AverageFieldAccuracy { get; internal set; }
-
-        /// <summary>
-        /// List of fields used to train the model and the train operation error reported by each.
-        /// </summary>
-        public PredefinedFieldAccuracy[] FieldAccuracies { get; internal set; }
+        public TrainedWithLabelsModel Model { get; internal set; }
 
         /// <summary>
         /// </summary>

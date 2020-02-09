@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System.Linq;
@@ -16,12 +16,12 @@ namespace Azure.AI.FormRecognizer.Custom
     /// <summary>
     /// A collection of custom form models that may take multiple service requests to asynchronously iterate over.
     /// </summary>
-    internal class ModelsAsyncPageable : AsyncPageable<ModelInfo_internal>
+    internal class ModelsAsyncPageable_internal : AsyncPageable<ModelInfo_internal>
     {
         private HttpPipeline _pipeline;
         private JsonSerializerOptions _options;
 
-        internal ModelsAsyncPageable(HttpPipeline pipeline, JsonSerializerOptions options, CancellationToken cancellationToken)
+        internal ModelsAsyncPageable_internal(HttpPipeline pipeline, JsonSerializerOptions options, CancellationToken cancellationToken)
         : base(cancellationToken)
         {
             _pipeline = pipeline;
@@ -29,9 +29,9 @@ namespace Azure.AI.FormRecognizer.Custom
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ModelsAsyncPageable"/> class for mocking.
+        /// Initializes a new instance of the <see cref="ModelsAsyncPageable_internal"/> class for mocking.
         /// </summary>
-        protected ModelsAsyncPageable()
+        protected ModelsAsyncPageable_internal()
         { }
 
         /// <inheritdoc />

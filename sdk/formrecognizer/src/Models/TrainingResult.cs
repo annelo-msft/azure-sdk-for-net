@@ -17,16 +17,8 @@ namespace Azure.AI.FormRecognizer.Custom
         internal TrainingResult() { }
 
         /// <summary>
-        /// Model Id.
         /// </summary>
-        public string ModelId { get; internal set; }
-
-        /// <summary>
-        /// Keys extracted by the custom model.
-        /// </summary>
-        // TODO: Question - will this be populated for supervised models?
-        // If not, we should probably break FRCustomModel into supervised and unsupervised custom models.s
-        public TrainedFormCluster[] FormClusters { get; internal set; }
+        public TrainedModel Model { get; internal set; }
 
         /// <summary>
         /// </summary>
