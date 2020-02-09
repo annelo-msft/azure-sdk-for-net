@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using Azure.AI.FormRecognizer.Custom;
 using System.Collections.Generic;
 
 namespace Azure.AI.FormRecognizer
@@ -8,7 +9,7 @@ namespace Azure.AI.FormRecognizer
     /// <summary>
     /// Represents a line of extracted text.
     /// </summary>
-    public class ExtractedLine
+    public class ExtractedLine : BoundedText
     {
         internal ExtractedLine() { }
 
@@ -22,19 +23,6 @@ namespace Azure.AI.FormRecognizer
         /// List of words extracted from the line.
         /// </summary>
         public IList<ExtractedWord> Words { get; internal set; }
-
-        /// <summary>
-        /// The text content of the line.
-        /// </summary>
-        public string Text { get; internal set; }
-
-        // TODO: Normalize BoundingBox across Cognitive
-
-        /// <summary>
-        /// Bounding box of the extracted line.
-        /// </summary>
-        public float[] BoundingBox { get; internal set; }
-
 
         internal static ExtractedLine Create() => new ExtractedLine();
     }

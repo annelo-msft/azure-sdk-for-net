@@ -47,7 +47,7 @@ namespace Azure.AI.FormRecognizer.Custom
         /// Output of the Optical Character Recognition engine, including text
         /// elements with bounding boxes, as well as page geometry, and page and line languages.
         /// </summary>
-        public ExtractedPage[] TextDetails { get; internal set; }
+        public RawPageExtraction[] TextDetails { get; internal set; }
 
         // TODO: values is by form, would it make sense to have tables by form as well?
         // Would it make sense to have tables inside of FormValues, or otherwise grouped

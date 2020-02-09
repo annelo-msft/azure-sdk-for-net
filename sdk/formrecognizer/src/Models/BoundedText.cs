@@ -9,9 +9,9 @@ namespace Azure.AI.FormRecognizer.Custom
 {
     /// <summary>
     /// </summary>
-    public class ExtractedFieldName
+    public class BoundedText
     {
-        internal ExtractedFieldName() { }
+        internal BoundedText() { }
 
         /// <summary>
         /// The text content of the line.

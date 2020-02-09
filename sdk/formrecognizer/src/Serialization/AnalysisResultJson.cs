@@ -24,7 +24,7 @@ namespace Azure.AI.FormRecognizer.Serialization
 
             if (analysisResult.ReadResults == default)
             {
-                analysisResult.ReadResults = Array.Empty<ExtractedPage>();
+                analysisResult.ReadResults = Array.Empty<RawPageExtraction>();
             }
             if (analysisResult.PageResults == default)
             {
@@ -80,7 +80,7 @@ namespace Azure.AI.FormRecognizer.Serialization
             }
             else if (property.NameEquals("readResults"))
             {
-                analyzedForm.ReadResults = new ExtractedPage[property.Value.GetArrayLength()];
+                analyzedForm.ReadResults = new RawPageExtraction[property.Value.GetArrayLength()];
                 var i = 0;
                 foreach (var json in property.Value.EnumerateArray())
                 {

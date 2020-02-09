@@ -9,9 +9,9 @@ namespace Azure.AI.FormRecognizer
     /// Output of the Optical Character Recognition engine, including text
     /// elements with bounding boxes, as well as page geometry, and page and line languages.
     /// </summary>
-    public class ExtractedPage
+    public class RawPageExtraction
     {
-        internal ExtractedPage() { }
+        internal RawPageExtraction() { }
 
         /// <summary>
         /// The 1-based page number in the input document.
@@ -55,6 +55,6 @@ namespace Azure.AI.FormRecognizer
         public ExtractedLine[] Lines { get; internal set; }
 
 
-        internal static ExtractedPage Create() => new ExtractedPage();
+        internal static RawPageExtraction Create() => new RawPageExtraction();
     }
 }

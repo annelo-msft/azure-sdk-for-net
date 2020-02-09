@@ -6,9 +6,9 @@ namespace Azure.AI.FormRecognizer.Custom
     /// <summary>
     /// Page information extracted by an unsupervised model.
     /// </summary>
-    public class ExtractedClusteredPage
+    public class ExtractedPage
     {
-        internal ExtractedClusteredPage() { }
+        internal ExtractedPage() { }
 
         /// <summary>
         /// Page number.

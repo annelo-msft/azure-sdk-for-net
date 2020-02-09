@@ -19,11 +19,11 @@ namespace Azure.AI.FormRecognizer.Custom
 
         /// <summary>
         /// </summary>
-        public ExtractedFieldName FieldName { get; internal set; }
+        public BoundedText FieldName { get; internal set; }
 
         /// <summary>
         /// </summary>
-        public ExtractedFieldValue FieldValue { get; internal set; }
+        public BoundedText FieldValue { get; internal set; }
 
         /// <summary>
         /// Confidence value.
