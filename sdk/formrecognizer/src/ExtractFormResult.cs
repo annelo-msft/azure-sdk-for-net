@@ -8,11 +8,11 @@ namespace Azure.AI.FormRecognizer.Custom
 {
     /// <summary>
     /// </summary>
-    public class FieldsAndClustersResult
+    public class ExtractFormResult
     {
         private AnalyzeOperation operation;
 
-        internal FieldsAndClustersResult(AnalyzeOperation operation)
+        internal ExtractFormResult(AnalyzeOperation operation)
         {
             this.operation = operation;
         }

@@ -12,7 +12,7 @@ namespace Azure.AI.FormRecognizer.Prediction
     /// <summary>
     /// Supervised custom model analyis operation
     /// </summary>
-    internal class CustomSupervisedAnalysisOperation : Operation<PredefinedFieldsResult>
+    internal class CustomSupervisedAnalysisOperation : Operation<ExtractLabeledFormResult>
     {
         private AnalyzeOperation _operation;
 
@@ -31,7 +31,7 @@ namespace Azure.AI.FormRecognizer.Prediction
         /// <summary>
         /// </summary>
 #pragma warning disable CA1065 // Do not raise exceptions in unexpected locations
-        public override PredefinedFieldsResult Value => throw new NotImplementedException();
+        public override ExtractLabeledFormResult Value => throw new NotImplementedException();
 #pragma warning restore CA1065 // Do not raise exceptions in unexpected locations
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace Azure.AI.FormRecognizer.Prediction
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public override ValueTask<Response<PredefinedFieldsResult>> WaitForCompletionAsync(CancellationToken cancellationToken = default)
+        public override ValueTask<Response<ExtractLabeledFormResult>> WaitForCompletionAsync(CancellationToken cancellationToken = default)
             => throw new NotImplementedException();
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace Azure.AI.FormRecognizer.Prediction
         /// <param name="pollingInterval"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public override ValueTask<Response<PredefinedFieldsResult>> WaitForCompletionAsync(TimeSpan pollingInterval, CancellationToken cancellationToken = default)
+        public override ValueTask<Response<ExtractLabeledFormResult>> WaitForCompletionAsync(TimeSpan pollingInterval, CancellationToken cancellationToken = default)
             => throw new NotImplementedException();
     }
 }

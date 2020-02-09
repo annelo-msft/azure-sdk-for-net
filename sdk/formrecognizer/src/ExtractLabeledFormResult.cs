@@ -9,14 +9,14 @@ namespace Azure.AI.FormRecognizer.Custom
 {
     /// <summary>
     /// </summary>
-    public class PredefinedFieldsResult
+    public class ExtractLabeledFormResult
     {
         private AnalyzeOperation operation;
 
         /// <summary>
         /// </summary>
         /// <param name="operation"></param>
-        internal PredefinedFieldsResult(AnalyzeOperation operation)
+        internal ExtractLabeledFormResult(AnalyzeOperation operation)
         {
             this.operation = operation;
         }

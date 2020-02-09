@@ -129,10 +129,10 @@ namespace Azure.AI.FormRecognizer.Custom
         /// <param name="includeTextDetails"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public virtual PredefinedFieldsResult ExtractPredefinedFields(string modelId, Stream stream, FormContentType? contentType = null, bool includeTextDetails = false, CancellationToken cancellationToken = default)
+        public virtual ExtractLabeledFormResult ExtractLabeledForm(string modelId, Stream stream, FormContentType? contentType = null, bool includeTextDetails = false, CancellationToken cancellationToken = default)
         {
             AnalyzeOperation op = _formRecognizerClient.GetModelReference(modelId).StartAnalyze(stream, contentType, includeTextDetails, cancellationToken);
-            return new PredefinedFieldsResult(op);
+            return new ExtractLabeledFormResult(op);
         }
 
         /// <summary>
@@ -143,10 +143,10 @@ namespace Azure.AI.FormRecognizer.Custom
         /// <param name="includeTextDetails"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public virtual async Task<PredefinedFieldsResult> ExtractPredefinedFieldsAsync(string modelId, Stream stream, FormContentType? contentType = null, bool includeTextDetails = false, CancellationToken cancellationToken = default)
+        public virtual async Task<ExtractLabeledFormResult> ExtractLabeledFormAsync(string modelId, Stream stream, FormContentType? contentType = null, bool includeTextDetails = false, CancellationToken cancellationToken = default)
         {
             AnalyzeOperation op = await _formRecognizerClient.GetModelReference(modelId).StartAnalyzeAsync(stream, contentType, includeTextDetails, cancellationToken).ConfigureAwait(false);
-            return new PredefinedFieldsResult(op);
+            return new ExtractLabeledFormResult(op);
         }
 
         /// <summary>
@@ -156,10 +156,10 @@ namespace Azure.AI.FormRecognizer.Custom
         /// <param name="includeTextDetails"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public virtual PredefinedFieldsResult ExtractPredefinedFields(string modelId, Uri uri, bool includeTextDetails = false, CancellationToken cancellationToken = default)
+        public virtual ExtractLabeledFormResult ExtractLabeledForm(string modelId, Uri uri, bool includeTextDetails = false, CancellationToken cancellationToken = default)
         {
             AnalyzeOperation op = _formRecognizerClient.GetModelReference(modelId).StartAnalyze(uri, includeTextDetails, cancellationToken);
-            return new PredefinedFieldsResult(op);
+            return new ExtractLabeledFormResult(op);
         }
 
         /// <summary>
@@ -169,10 +169,10 @@ namespace Azure.AI.FormRecognizer.Custom
         /// <param name="includeTextDetails"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public virtual async Task<PredefinedFieldsResult> ExtractPredefinedFieldsAsync(string modelId, Uri uri, bool includeTextDetails = false, CancellationToken cancellationToken = default)
+        public virtual async Task<ExtractLabeledFormResult> ExtractLabeledFormAsync(string modelId, Uri uri, bool includeTextDetails = false, CancellationToken cancellationToken = default)
         {
             AnalyzeOperation operation = await _formRecognizerClient.GetModelReference(modelId).StartAnalyzeAsync(uri, includeTextDetails, cancellationToken).ConfigureAwait(false);
-            return new PredefinedFieldsResult(operation);
+            return new ExtractLabeledFormResult(operation);
         }
 
         /// <summary>
@@ -183,10 +183,10 @@ namespace Azure.AI.FormRecognizer.Custom
         /// <param name="includeTextDetails"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public virtual FieldsAndClustersResult ExtractFieldsAndClusters(string modelId, Stream stream, FormContentType? contentType = null, bool includeTextDetails = false, CancellationToken cancellationToken = default)
+        public virtual ExtractFormResult ExtractForm(string modelId, Stream stream, FormContentType? contentType = null, bool includeTextDetails = false, CancellationToken cancellationToken = default)
         {
             AnalyzeOperation operation = _formRecognizerClient.GetModelReference(modelId).StartAnalyze(stream, contentType, includeTextDetails, cancellationToken);
-            return new FieldsAndClustersResult(operation);
+            return new ExtractFormResult(operation);
         }
 
         /// <summary>
@@ -197,10 +197,10 @@ namespace Azure.AI.FormRecognizer.Custom
         /// <param name="includeTextDetails"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public virtual async Task<FieldsAndClustersResult> ExtractFieldsAndClustersAsync(string modelId, Stream stream, FormContentType? contentType = null, bool includeTextDetails = false, CancellationToken cancellationToken = default)
+        public virtual async Task<ExtractFormResult> ExtractFormAsync(string modelId, Stream stream, FormContentType? contentType = null, bool includeTextDetails = false, CancellationToken cancellationToken = default)
         {
             AnalyzeOperation op = await _formRecognizerClient.GetModelReference(modelId).StartAnalyzeAsync(stream, contentType, includeTextDetails, cancellationToken).ConfigureAwait(false);
-            return new FieldsAndClustersResult(op);
+            return new ExtractFormResult(op);
         }
 
         /// <summary>
@@ -210,10 +210,10 @@ namespace Azure.AI.FormRecognizer.Custom
         /// <param name="includeTextDetails"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public virtual FieldsAndClustersResult ExtractFieldsAndClusters(string modelId, Uri uri, bool includeTextDetails = false, CancellationToken cancellationToken = default)
+        public virtual ExtractFormResult ExtractForm(string modelId, Uri uri, bool includeTextDetails = false, CancellationToken cancellationToken = default)
         {
             AnalyzeOperation op = _formRecognizerClient.GetModelReference(modelId).StartAnalyze(uri, includeTextDetails, cancellationToken);
-            return new FieldsAndClustersResult(op);
+            return new ExtractFormResult(op);
         }
 
         /// <summary>
@@ -223,10 +223,10 @@ namespace Azure.AI.FormRecognizer.Custom
         /// <param name="includeTextDetails"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public virtual async Task<FieldsAndClustersResult> ExtractFieldsAndClustersAsync(string modelId, Uri uri, bool includeTextDetails = false, CancellationToken cancellationToken = default)
+        public virtual async Task<ExtractFormResult> ExtractFormAsync(string modelId, Uri uri, bool includeTextDetails = false, CancellationToken cancellationToken = default)
         {
             AnalyzeOperation op = await _formRecognizerClient.GetModelReference(modelId).StartAnalyzeAsync(uri, includeTextDetails, cancellationToken).ConfigureAwait(false);
-            return new FieldsAndClustersResult(op);
+            return new ExtractFormResult(op);
         }
         #endregion Prediction
     }

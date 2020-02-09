@@ -11,7 +11,7 @@ namespace Azure.AI.FormRecognizer.Prediction
 {
     /// <summary>
     /// </summary>
-    internal class CustomUnsupervisedAnalysisOperation : Operation<FieldsAndClustersResult>
+    internal class CustomUnsupervisedAnalysisOperation : Operation<ExtractFormResult>
     {
         private AnalyzeOperation _operation;
 
@@ -30,7 +30,7 @@ namespace Azure.AI.FormRecognizer.Prediction
         /// <summary>
         /// </summary>
 #pragma warning disable CA1065 // Do not raise exceptions in unexpected locations
-        public override FieldsAndClustersResult Value => throw new NotImplementedException();
+        public override ExtractFormResult Value => throw new NotImplementedException();
 #pragma warning restore CA1065 // Do not raise exceptions in unexpected locations
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace Azure.AI.FormRecognizer.Prediction
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public override ValueTask<Response<FieldsAndClustersResult>> WaitForCompletionAsync(CancellationToken cancellationToken = default)
+        public override ValueTask<Response<ExtractFormResult>> WaitForCompletionAsync(CancellationToken cancellationToken = default)
             => throw new NotImplementedException();
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace Azure.AI.FormRecognizer.Prediction
         /// <param name="pollingInterval"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public override ValueTask<Response<FieldsAndClustersResult>> WaitForCompletionAsync(TimeSpan pollingInterval, CancellationToken cancellationToken = default)
+        public override ValueTask<Response<ExtractFormResult>> WaitForCompletionAsync(TimeSpan pollingInterval, CancellationToken cancellationToken = default)
             => throw new NotImplementedException();
     }
 }
