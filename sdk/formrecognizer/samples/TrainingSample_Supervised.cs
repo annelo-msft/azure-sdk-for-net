@@ -7,20 +7,19 @@ using System.Threading.Tasks;
 
 namespace Azure.AI.FormRecognizer.Samples
 {
-    public class TrainingSample_Unsupervised
+    public class TrainingSample_Supervised
     {
-
-        public static async Task Main(string[] args)
-        {
-            try
-            {
-                await Train();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-            }
-        }
+        //public static async Task Main(string[] args)
+        //{
+        //    try
+        //    {
+        //        await Train();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine(ex);
+        //    }
+        //}
 
         private static async Task Train()
         {
@@ -32,7 +31,7 @@ namespace Azure.AI.FormRecognizer.Samples
 
             string trainingFilePath = "https://annelostorage01.blob.core.windows.net/container-formreco?sp=rl&st=2020-02-01T03:54:59Z&se=2020-02-02T03:54:59Z&sv=2019-02-02&sr=c&sig=%2FlZqrmWSI%2FZ%2B9TeWdJynZfGzQmLws9zz7NB5foEjPjg%3D";
 
-            TrainingOperation op = await client.StartTrainingAsync(trainingFilePath, new TrainingFileFilter());
+            TrainWithLabelsOperation op = await client.StartTrainingSupervisedModelAsync(trainingFilePath, new TrainingFileFilter());
 
             Console.WriteLine($"Created model with id {op.Id}");
 
@@ -42,40 +41,29 @@ namespace Azure.AI.FormRecognizer.Samples
             if (op.HasValue)
             {
                 // TODO: How would this be used in a customer scenario?
-                TrainingResult_original value = op.Value;
+                LabeledTrainingResult value = op.Value;
 
                 Console.WriteLine($"Model Id is: {value.ModelId}");
+                Console.WriteLine($"Average model accuracy is: {value.AverageModelAccuracy}");
                 Console.WriteLine($"Model Creation Time: {value.CreationTime}");
 
-                //// TODO: Is this relevant to unsupervised models?
-                //Console.WriteLine($"Average model accuracy is: {value.AverageModelAccuracy}");
-
-                Console.WriteLine("Identified fields in clusters: ");
-                foreach (var cluster in value.FormClusters)
+                Console.WriteLine("Fields and accuracies: ");
+                foreach (var field in value.FieldAccuracies)
                 {
-                    Console.WriteLine($"    Form Cluster : {cluster.FormClusterId}");
-                    foreach (var fieldName in cluster.FieldNames)
-                    {
-                        Console.WriteLine($"        Field Name: {fieldName}");
-                    }
+                    Console.WriteLine($"Field: {field.FieldName}");
+                    Console.WriteLine($"Accuracy: {field.Accuracy}");
                 }
-
-                //// TODO: Does this come back from unsupervised?  How is it different from the fields contained
-                //// in the form clusters?
-                //Console.WriteLine("Fields and accuracies: ");
-                //foreach (var field in value.FieldAccuracies)
-                //{
-                //    Console.WriteLine($"Field: {field.FieldName}");
-                //    Console.WriteLine($"Accuracy: {field.Accuracy}");
-                //}
 
                 Console.WriteLine("Document Training Results: ");
                 foreach (var documentTrainingResult in value.DocumentTrainingResults)
                 {
                     Console.WriteLine($"Document Name: {documentTrainingResult.DocumentName}");
                     Console.WriteLine($"Number of pages trained: {documentTrainingResult.Pages}");
+
+                    // TODO: What does it mean for one of the training documents to fail?
                     Console.WriteLine($"Training status for this document: {documentTrainingResult.Status}");
 
+                    // TODO: What do these contain and how will they be used by customers?
                     Console.WriteLine($"Document training errors: ");
                     foreach (var error in documentTrainingResult.Errors)
                     {

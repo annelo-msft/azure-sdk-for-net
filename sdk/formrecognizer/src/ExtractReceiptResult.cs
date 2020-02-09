@@ -36,7 +36,7 @@ namespace Azure.AI.FormRecognizer.Prebuilt
 
         /// <summary>
         /// </summary>
-        public ExtractedReceipt Receipt { get; internal set; }
+        public ExtractedReceipt[] Receipt { get; internal set; }
 
         /// <summary>
         /// Output of the Optical Character Recognition engine, including text
