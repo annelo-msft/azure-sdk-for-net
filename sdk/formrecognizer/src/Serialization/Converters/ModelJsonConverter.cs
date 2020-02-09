@@ -9,9 +9,9 @@ using Azure.AI.FormRecognizer.Models;
 
 namespace Azure.AI.FormRecognizer.Serialization.Converters
 {
-    internal class ModelJsonConverter : JsonConverter<UnsupervisedTrainingResult>
+    internal class ModelJsonConverter : JsonConverter<TrainingResult>
     {
-        public override UnsupervisedTrainingResult Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override TrainingResult Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             using JsonDocument json = JsonDocument.ParseValue(ref reader);
             JsonElement root = json.RootElement;
@@ -19,14 +19,14 @@ namespace Azure.AI.FormRecognizer.Serialization.Converters
             return Read(root);
         }
 
-        public override void Write(Utf8JsonWriter writer, UnsupervisedTrainingResult value, JsonSerializerOptions options)
+        public override void Write(Utf8JsonWriter writer, TrainingResult value, JsonSerializerOptions options)
         {
             throw new NotImplementedException();
         }
 
-        public static UnsupervisedTrainingResult Read(JsonElement root)
+        public static TrainingResult Read(JsonElement root)
         {
-            var model = UnsupervisedTrainingResult.Create();
+            var model = TrainingResult.Create();
             if (root.ValueKind == JsonValueKind.Object)
             {
                 foreach (JsonProperty property in root.EnumerateObject())

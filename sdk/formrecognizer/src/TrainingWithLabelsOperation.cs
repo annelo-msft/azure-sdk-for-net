@@ -9,11 +9,11 @@ namespace Azure.AI.FormRecognizer.Custom
 {
     /// <summary>
     /// </summary>
-    public class TrainSupervisedModelOperation : Operation<SupervisedTrainingResult>
+    public class TrainingWithLabelsOperation : Operation<TrainWithLabelsResult>
     {
-        private TrainingOperation _operation;
+        private TrainingOperation_internal _operation;
 
-        internal TrainSupervisedModelOperation(TrainingOperation operation)
+        internal TrainingWithLabelsOperation(TrainingOperation_internal operation)
         {
             _operation = operation;
         }
@@ -25,7 +25,7 @@ namespace Azure.AI.FormRecognizer.Custom
         /// <summary>
         /// </summary>
 #pragma warning disable CA1065 // Do not raise exceptions in unexpected locations
-        public override SupervisedTrainingResult Value => throw new NotImplementedException();
+        public override TrainWithLabelsResult Value => throw new NotImplementedException();
 #pragma warning restore CA1065 // Do not raise exceptions in unexpected locations
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace Azure.AI.FormRecognizer.Custom
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public override ValueTask<Response<SupervisedTrainingResult>> WaitForCompletionAsync(CancellationToken cancellationToken = default)
+        public override ValueTask<Response<TrainWithLabelsResult>> WaitForCompletionAsync(CancellationToken cancellationToken = default)
             => throw new NotImplementedException();
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace Azure.AI.FormRecognizer.Custom
         /// <param name="pollingInterval"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public override ValueTask<Response<SupervisedTrainingResult>> WaitForCompletionAsync(TimeSpan pollingInterval, CancellationToken cancellationToken)
+        public override ValueTask<Response<TrainWithLabelsResult>> WaitForCompletionAsync(TimeSpan pollingInterval, CancellationToken cancellationToken)
            => throw new NotImplementedException();
     }
 }

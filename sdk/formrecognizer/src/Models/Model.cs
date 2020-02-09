@@ -24,7 +24,7 @@ namespace Azure.AI.FormRecognizer.Models
         /// <summary>
         /// Custom model training result.
         /// </summary>
-        public TrainingResult TrainResult { get; internal set; }
+        public TrainingResult_internal TrainResult { get; internal set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Model"/> class.

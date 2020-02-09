@@ -12,15 +12,17 @@ namespace Azure.AI.FormRecognizer.Custom
     /// <summary>
     /// Custom Form Recognizer model.
     /// </summary>
-    public class SupervisedTrainingResult
+    internal class UnsupervisedTrainingResult_internal
     {
-        internal SupervisedTrainingResult() { }
+        internal UnsupervisedTrainingResult_internal() { }
 
         /// <summary>
         /// Model Id.
         /// </summary>
         public string ModelId { get; internal set; }
 
+        // TODO: Note this is internal because only used internally -- operation status can
+        // be gotten from the operation. Is there a better way to represent this?
         /// <summary>
         /// Model status.
         /// </summary>
@@ -35,6 +37,13 @@ namespace Azure.AI.FormRecognizer.Custom
         /// Date and time when the model was created.
         /// </summary>
         public DateTimeOffset CreationTime { get; internal set; }
+
+        /// <summary>
+        /// Keys extracted by the custom model.
+        /// </summary>
+        // TODO: Question - will this be populated for supervised models?
+        // If not, we should probably break FRCustomModel into supervised and unsupervised custom models.s
+        public ICollection<FormCluster> FormClusters { get; internal set; }
 
         /// <summary>
         /// List of the documents used to train the model and any errors reported in each document.
@@ -58,6 +67,6 @@ namespace Azure.AI.FormRecognizer.Custom
         /// </summary>
         public FormRecognizerError[] Errors { get; internal set; }
 
-        internal static SupervisedTrainingResult Create() => new SupervisedTrainingResult();
+        internal static UnsupervisedTrainingResult_internal Create() => new UnsupervisedTrainingResult_internal();
     }
 }

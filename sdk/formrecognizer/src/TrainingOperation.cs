@@ -11,11 +11,11 @@ namespace Azure.AI.FormRecognizer.Custom
 {
     /// <summary>
     /// </summary>
-    public class TrainUnsupervisedModelOperation : Operation<UnsupervisedTrainingResult>
+    public class TrainingOperation : Operation<TrainingResult>
     {
-        private TrainingOperation _operation;
+        private TrainingOperation_internal _operation;
 
-        internal TrainUnsupervisedModelOperation(TrainingOperation operation)
+        internal TrainingOperation(TrainingOperation_internal operation)
         {
             _operation = operation;
         }
@@ -26,7 +26,7 @@ namespace Azure.AI.FormRecognizer.Custom
 
         /// <summary>
         /// </summary>
-        public override UnsupervisedTrainingResult Value => _operation.Value;
+        public override TrainingResult Value => _operation.Value;
 
         /// <summary>
         /// </summary>
@@ -59,7 +59,7 @@ namespace Azure.AI.FormRecognizer.Custom
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public override ValueTask<Response<UnsupervisedTrainingResult>> WaitForCompletionAsync(CancellationToken cancellationToken = default)
+        public override ValueTask<Response<TrainingResult>> WaitForCompletionAsync(CancellationToken cancellationToken = default)
             => _operation.WaitForCompletionAsync(cancellationToken);
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace Azure.AI.FormRecognizer.Custom
         /// <param name="pollingInterval"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public override ValueTask<Response<UnsupervisedTrainingResult>> WaitForCompletionAsync(TimeSpan pollingInterval, CancellationToken cancellationToken = default)
+        public override ValueTask<Response<TrainingResult>> WaitForCompletionAsync(TimeSpan pollingInterval, CancellationToken cancellationToken = default)
             => _operation.WaitForCompletionAsync(pollingInterval, cancellationToken);
     }
 }

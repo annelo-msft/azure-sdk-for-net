@@ -116,7 +116,7 @@ namespace Azure.AI.FormRecognizer
         /// <summary>
         /// Asynchronously create and train a custom model.
         ///
-        /// This method returns a <see cref="TrainingOperation" /> that can be used to track the status of the training
+        /// This method returns a <see cref="TrainingOperation_internal" /> that can be used to track the status of the training
         /// operation, including waiting for its completion.
         ///
         /// ```csharp
@@ -141,21 +141,21 @@ namespace Azure.AI.FormRecognizer
         /// Any other files are ignored.
         /// </param>
         /// <param name="cancellationToken">Optional cancellation token.</param>
-        public async virtual Task<TrainingOperation> StartTrainingAsync(TrainingRequest trainRequest, CancellationToken cancellationToken = default)
+        public async virtual Task<TrainingOperation_internal> StartTrainingAsync(TrainingRequest trainRequest, CancellationToken cancellationToken = default)
         {
             using (var request = _pipeline.CreateTrainRequest(trainRequest, _options.SerializationOptions))
             using (var response = await _pipeline.SendRequestAsync(request, cancellationToken))
             {
                 response.ExpectStatus(HttpStatusCode.Created, _options.SerializationOptions);
-                var id = TrainingOperation.GetTrainingOperationId(response);
-                return new TrainingOperation(_pipeline, id, _options.SerializationOptions);
+                var id = TrainingOperation_internal.GetTrainingOperationId(response);
+                return new TrainingOperation_internal(_pipeline, id, _options.SerializationOptions);
             }
         }
 
         /// <summary>
         /// Create and train a custom model.
         ///
-        /// This method returns a <see cref="TrainingOperation" /> that can be used to track the status of the training
+        /// This method returns a <see cref="TrainingOperation_internal" /> that can be used to track the status of the training
         /// operation, including waiting for its completion.
         ///
         /// ```csharp
@@ -189,25 +189,25 @@ namespace Azure.AI.FormRecognizer
         /// Any other files are ignored.
         /// </param>
         /// <param name="cancellationToken">Optional cancellation token.</param>
-        public virtual TrainingOperation StartTraining(TrainingRequest trainRequest, CancellationToken cancellationToken = default)
+        public virtual TrainingOperation_internal StartTraining(TrainingRequest trainRequest, CancellationToken cancellationToken = default)
         {
             using (var request = _pipeline.CreateTrainRequest(trainRequest, _options.SerializationOptions))
             using (var response = _pipeline.SendRequest(request, cancellationToken))
             {
                 response.ExpectStatus(HttpStatusCode.Created, _options.SerializationOptions);
-                var id = TrainingOperation.GetTrainingOperationId(response);
-                return new TrainingOperation(_pipeline, id, _options.SerializationOptions);
+                var id = TrainingOperation_internal.GetTrainingOperationId(response);
+                return new TrainingOperation_internal(_pipeline, id, _options.SerializationOptions);
             }
         }
 
         /// <summary>
-        /// Get a <see cref="TrainingOperation" /> status reference to an existhing training request.
+        /// Get a <see cref="TrainingOperation_internal" /> status reference to an existhing training request.
         /// </summary>
         /// <param name="operationId">The operation id from a previous training request.</param>
         /// <param name="cancellationToken">Optional cancellation token.</param>
-        public virtual TrainingOperation StartTraining(string operationId, CancellationToken cancellationToken = default)
+        public virtual TrainingOperation_internal StartTraining(string operationId, CancellationToken cancellationToken = default)
         {
-            return new TrainingOperation(_pipeline, operationId, _options.SerializationOptions);
+            return new TrainingOperation_internal(_pipeline, operationId, _options.SerializationOptions);
         }
 
         /// <summary>

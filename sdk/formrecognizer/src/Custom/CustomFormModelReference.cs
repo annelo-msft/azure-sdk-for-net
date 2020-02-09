@@ -49,13 +49,13 @@ namespace Azure.AI.FormRecognizer.Custom
         /// </summary>
         /// <param name="includeKeys">Include list of extracted keys in model information.</param>
         /// <param name="cancellationToken">Optional cancellation token.</param>
-        public async virtual Task<Response<UnsupervisedTrainingResult>> GetAsync(bool? includeKeys = default, CancellationToken cancellationToken = default)
+        public async virtual Task<Response<TrainingResult>> GetAsync(bool? includeKeys = default, CancellationToken cancellationToken = default)
         {
             using (var request = Pipeline.CreateGetModelRequest(_modelId, includeKeys))
             using (var response = await Pipeline.SendRequestAsync(request, cancellationToken).ConfigureAwait(false))
             {
                 response.ExpectStatus(HttpStatusCode.OK, Options);
-                var model = await response.GetJsonContentAsync<UnsupervisedTrainingResult>(Options, cancellationToken).ConfigureAwait(false);
+                var model = await response.GetJsonContentAsync<TrainingResult>(Options, cancellationToken).ConfigureAwait(false);
                 return Response.FromValue(model, response);
             }
         }
@@ -65,13 +65,13 @@ namespace Azure.AI.FormRecognizer.Custom
         /// </summary>
         /// /// <param name="includeKeys">Include list of extracted keys in model information.</param>
         /// <param name="cancellationToken">Optional cancellation token.</param>
-        public virtual Response<UnsupervisedTrainingResult> Get(bool? includeKeys = default, CancellationToken cancellationToken = default)
+        public virtual Response<TrainingResult> Get(bool? includeKeys = default, CancellationToken cancellationToken = default)
         {
             using (var request = Pipeline.CreateGetModelRequest(_modelId, includeKeys))
             using (var response = Pipeline.SendRequest(request, cancellationToken))
             {
                 response.ExpectStatus(HttpStatusCode.OK, Options);
-                var model = response.GetJsonContent<UnsupervisedTrainingResult>(Options);
+                var model = response.GetJsonContent<TrainingResult>(Options);
                 return Response.FromValue(model, response);
             }
         }

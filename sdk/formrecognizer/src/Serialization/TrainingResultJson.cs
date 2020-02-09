@@ -10,9 +10,9 @@ namespace Azure.AI.FormRecognizer.Serialization
 {
     internal class TrainingResultJson
     {
-        public static TrainingResult Read(JsonElement root)
+        public static TrainingResult_internal Read(JsonElement root)
         {
-            var trainingResult = TrainingResult.Create();
+            var trainingResult = TrainingResult_internal.Create();
             if (root.ValueKind == JsonValueKind.Object)
             {
                 foreach (JsonProperty property in root.EnumerateObject())
@@ -35,7 +35,7 @@ namespace Azure.AI.FormRecognizer.Serialization
             return trainingResult;
         }
 
-        private static void ReadPropertyValue(ref TrainingResult trainingResult, JsonProperty property)
+        private static void ReadPropertyValue(ref TrainingResult_internal trainingResult, JsonProperty property)
         {
             //if (property.NameEquals("trainingDocuments"))
             //{

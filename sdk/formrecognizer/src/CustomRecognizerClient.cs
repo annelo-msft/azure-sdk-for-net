@@ -54,7 +54,7 @@ namespace Azure.AI.FormRecognizer.Custom
         /// <param name="source"></param>
         /// <param name="filter"></param>
         /// <param name="cancellationToken"></param>
-        public virtual TrainUnsupervisedModelOperation StartTrainingUnsupervisedModel(string source, TrainingFileFilter filter, CancellationToken cancellationToken = default)
+        public virtual TrainingOperation StartTraining(string source, TrainingFileFilter filter, CancellationToken cancellationToken = default)
         {
             var operation = _formRecognizerClient.StartTraining(new TrainingRequest()
             {
@@ -62,7 +62,7 @@ namespace Azure.AI.FormRecognizer.Custom
                 SourceFilter = filter,
             });
 
-            return new TrainUnsupervisedModelOperation(operation);
+            return new TrainingOperation(operation);
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace Azure.AI.FormRecognizer.Custom
         /// <param name="source"></param>
         /// <param name="filter"></param>
         /// <param name="cancellationToken"></param>
-        public virtual async Task<TrainUnsupervisedModelOperation> StartTrainingUnsupervisedModelAsync(string source, TrainingFileFilter filter, CancellationToken cancellationToken = default)
+        public virtual async Task<TrainingOperation> StartTrainingAsync(string source, TrainingFileFilter filter, CancellationToken cancellationToken = default)
         {
             var operation = await _formRecognizerClient.StartTrainingAsync(new TrainingRequest()
             {
@@ -78,7 +78,7 @@ namespace Azure.AI.FormRecognizer.Custom
                 SourceFilter = filter,
             }, cancellationToken).ConfigureAwait(false);
 
-            return new TrainUnsupervisedModelOperation(operation);
+            return new TrainingOperation(operation);
         }
 
         // TODO: Would it be good to provide an overload that lets you pass labels programmatically?  Probably not worth the cost -
@@ -89,7 +89,7 @@ namespace Azure.AI.FormRecognizer.Custom
         /// <param name="source"></param>
         /// <param name="filter"></param>
         /// <param name="cancellationToken"></param>
-        public virtual TrainSupervisedModelOperation StartTrainingSupervisedModel(string source, TrainingFileFilter filter, CancellationToken cancellationToken = default)
+        public virtual TrainingWithLabelsOperation StartTrainingWithLabels(string source, TrainingFileFilter filter, CancellationToken cancellationToken = default)
         {
             var operation = _formRecognizerClient.StartTraining(new TrainingRequest()
             {
@@ -98,7 +98,7 @@ namespace Azure.AI.FormRecognizer.Custom
                 UseLabelFile = true
             });
 
-            return new TrainSupervisedModelOperation(operation);
+            return new TrainingWithLabelsOperation(operation);
         }
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace Azure.AI.FormRecognizer.Custom
         /// <param name="source"></param>
         /// <param name="filter"></param>
         /// <param name="cancellationToken"></param>
-        public virtual async Task<TrainSupervisedModelOperation> StartTrainingSupervisedModelAsync(string source, TrainingFileFilter filter, CancellationToken cancellationToken = default)
+        public virtual async Task<TrainingWithLabelsOperation> StartTrainingWithLabelsAsync(string source, TrainingFileFilter filter, CancellationToken cancellationToken = default)
         {
             var operation = await _formRecognizerClient.StartTrainingAsync(new TrainingRequest()
             {
@@ -114,7 +114,7 @@ namespace Azure.AI.FormRecognizer.Custom
                 SourceFilter = filter,
             }, cancellationToken).ConfigureAwait(false);
 
-            return new TrainSupervisedModelOperation(operation);
+            return new TrainingWithLabelsOperation(operation);
         }
 
         #endregion Training

@@ -1,23 +1,56 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using Azure.AI.FormRecognizer.Custom;
+using System;
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
+using Azure.AI.FormRecognizer.Models;
+using Azure.AI.FormRecognizer.Serialization.Converters;
 
-namespace Azure.AI.FormRecognizer.Models
+namespace Azure.AI.FormRecognizer.Custom
 {
     /// <summary>
-    /// Custom model training result.
+    /// Custom Form Recognizer model.
     /// </summary>
-    internal class TrainingResult
+    public class TrainingResult
     {
-        // TODO: Does training documents apply to both supervised and unsupervised learning?
+        internal TrainingResult() { }
+
+        /// <summary>
+        /// Model Id.
+        /// </summary>
+        public string ModelId { get; internal set; }
+
+        // TODO: Note this is internal because only used internally -- operation status can
+        // be gotten from the operation. Is there a better way to represent this?
+        /// <summary>
+        /// Model status.
+        /// </summary>
+        internal ModelStatus Status { get; set; }
+
+        /// <summary>
+        /// Date and time when the status was last updated.
+        /// </summary>
+        internal DateTimeOffset LastUpdateTime { get; set; }
+
+        /// <summary>
+        /// Date and time when the model was created.
+        /// </summary>
+        public DateTimeOffset CreationTime { get; internal set; }
+
+        /// <summary>
+        /// Keys extracted by the custom model.
+        /// </summary>
+        // TODO: Question - will this be populated for supervised models?
+        // If not, we should probably break FRCustomModel into supervised and unsupervised custom models.s
+        public ICollection<FormCluster> FormClusters { get; internal set; }
 
         /// <summary>
         /// List of the documents used to train the model and any errors reported in each document.
         /// </summary>
-        public DocumentTrainingResult[] TrainingDocumentResults { get; internal set; }
+        public DocumentTrainingResult[] DocumentTrainingResults { get; internal set; }
 
-        // TODO: Does Fields apply only to supervised models?  How is this different from FormClusters?
+        // TODO: Do field accuracies apply only to supervised models?  How is this different from FormClusters?
 
         /// <summary>
         /// List of fields used to train the model and the train operation error reported by each.
@@ -33,11 +66,6 @@ namespace Azure.AI.FormRecognizer.Models
         /// Errors returned during the training operation.
         /// </summary>
         public FormRecognizerError[] Errors { get; internal set; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TrainingResult"/> class.
-        /// </summary>
-        protected TrainingResult() { }
 
         internal static TrainingResult Create() => new TrainingResult();
     }
