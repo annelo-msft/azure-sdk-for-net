@@ -23,7 +23,6 @@ namespace Azure.AI.FormRecognizer
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FormRecognizerClient"/> class using a key-based credential.
         /// </summary>
         /// <param name="endpoint">Endpoint.</param>
         /// <param name="credential">Your assigned subscription key, copied from https://portal.azure.com/</param>
@@ -35,7 +34,6 @@ namespace Azure.AI.FormRecognizer
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FormRecognizerClient"/> class using a subscription key credential.
         /// </summary>
         /// <param name="endpoint">Endpoint.</param>
         /// <param name="credential">Your assigned subscription key, copied from https://portal.azure.com/</param>

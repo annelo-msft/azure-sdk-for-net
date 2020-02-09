@@ -120,6 +120,66 @@ namespace Azure.AI.FormRecognizer
 
         #endregion Training
 
+        #region Get model info methods
+        /// <summary>
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public virtual Pageable<ModelTrainingInfo> GetModelsTrainingInfo(CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public virtual AsyncPageable<ModelTrainingInfo> GetModelsTrainingInfoAsync(CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public virtual Response<ModelCollectionInfo> GetModelCollectionInfo(CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public virtual async Task<Response<ModelCollectionInfo>> GetModelCollectionInfoAsync(CancellationToken cancellationToken = default)
+        {
+            await Task.Run(() => { }).ConfigureAwait(false);
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="modelId"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public virtual Response DeleteModel(string modelId, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="modelId"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public virtual async Task<Response> DeleteModelAsync(string modelId, CancellationToken cancellationToken = default)
+        {
+            await Task.Run(() => { }).ConfigureAwait(false);
+            throw new NotImplementedException();
+        }
+        #endregion Get model info methods
+
         #region Prediction
 
         /// <summary>

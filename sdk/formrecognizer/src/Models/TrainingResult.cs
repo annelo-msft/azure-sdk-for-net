@@ -22,7 +22,7 @@ namespace Azure.AI.FormRecognizer.Custom
 
         /// <summary>
         /// </summary>
-        public TrainingInfo TrainingInfo { get; internal set; }
+        public ModelTrainingInfo TrainingInfo { get; internal set; }
 
         /// <summary>
         /// List of the documents used to train the model and any errors reported in each document.

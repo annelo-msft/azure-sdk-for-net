@@ -8,18 +8,22 @@ namespace Azure.AI.FormRecognizer.Custom
 {
     /// <summary>
     /// </summary>
-    public class TrainingInfo
+    public class ModelTrainingInfo
     {
-        internal TrainingInfo() { }
+        internal ModelTrainingInfo() { }
 
         /// <summary>
         /// </summary>
-        public TrainingStatus TrainingStatus { get; set; }
+        public string ModelId { get; internal set; }
+
+        /// <summary>
+        /// </summary>
+        public TrainingStatus TrainingStatus { get; internal set; }
 
         /// <summary>
         /// The amount of time it took to train the model.
         /// </summary>
-        public TimeSpan? Duration { get; set; }
+        public TimeSpan? Duration { get; internal set; }
 
         /// <summary>
         /// Date and time when the model was created.
