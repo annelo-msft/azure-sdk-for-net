@@ -114,7 +114,7 @@ namespace Azure.AI.FormRecognizer.Serialization
                 var i = 0;
                 foreach (var json in property.Value.EnumerateArray())
                 {
-                    analyzedForm.Errors[i] = ErrorDetailsJson.Read(json);
+                    //analyzedForm.Errors[i] = ErrorDetailsJson.Read(json);
                     i += 1;
                 }
             }

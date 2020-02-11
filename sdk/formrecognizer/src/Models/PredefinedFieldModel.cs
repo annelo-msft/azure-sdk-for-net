@@ -5,9 +5,9 @@ namespace Azure.AI.FormRecognizer.Custom
 {
     /// <summary>
     /// </summary>
-    public class TrainedWithLabelsModel
+    public class PredefinedFieldModel
     {
-        internal TrainedWithLabelsModel() { }
+        internal PredefinedFieldModel() { }
 
         /// <summary>
         /// Model Id.

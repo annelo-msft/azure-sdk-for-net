@@ -37,10 +37,10 @@ namespace Azure.AI.FormRecognizer.Samples
             var stream = File.OpenRead(filePath);
             //var op = await client.GetModelReference(modelId).StartAnalyzeAsync(stream, null, includeTextDetails: false);
 
-            FieldsAndClustersResult result = await client.ExtractFieldsAndClustersAsync(modelId, stream);
+            ExtractFormResult result = await client.ExtractFormAsync(modelId, stream);
 
             // Print form fields
-            foreach (var page in result.PageValues)
+            foreach (var page in result.Pages)
             {
                 Console.WriteLine($"On page {page.PageNumber}: ");
 
@@ -48,12 +48,12 @@ namespace Azure.AI.FormRecognizer.Samples
                 {
                     // TODO: Would it be better to implement ToString here, instead of making users write out "Text"?
 
-                    Console.WriteLine($"Found field {field.FieldName.Text} with value {field.FieldValue.Text}");
+                    Console.WriteLine($"Found field {field.Name.Text} with value {field.Value.Text}");
                 }
             }
 
             // Print OCR Values
-            foreach (var page in result.TextDetails)
+            foreach (var page in result.RawPages)
             {
                 Console.WriteLine($"On page {page.PageNumber}: ");
 
@@ -68,6 +68,7 @@ namespace Azure.AI.FormRecognizer.Samples
                 }
             }
 
+            // Was:
             //var keyText = op.Value.AnalyzeResult.PageResults[0].KeyValuePairs[0].Key.Text;
             //var valueText = op.Value.AnalyzeResult.PageResults[0].KeyValuePairs[0].Value.Text;
 

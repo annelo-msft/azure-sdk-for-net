@@ -6,19 +6,19 @@ namespace Azure.AI.FormRecognizer
     /// <summary>
     /// Error response.
     /// </summary>
-    public struct FormRecognizerError
+    public readonly struct FormRecognizerError
     {
         // TODO: Make this look as much as possible as TextAnalyticsError.
 
         /// <summary>
         /// Error status.
         /// </summary>
-        public string Message { get; set; }
+        public string Message { get; }
 
         /// <summary>
         /// Error code.
         /// </summary>
-        public string Code { get; set; }
+        public string Code { get; }
 
         internal FormRecognizerError(string message, string code)
         {

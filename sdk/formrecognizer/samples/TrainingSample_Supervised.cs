@@ -31,41 +31,41 @@ namespace Azure.AI.FormRecognizer.Samples
 
             string trainingFilePath = "https://annelostorage01.blob.core.windows.net/container-formreco?sp=rl&st=2020-02-01T03:54:59Z&se=2020-02-02T03:54:59Z&sv=2019-02-02&sr=c&sig=%2FlZqrmWSI%2FZ%2B9TeWdJynZfGzQmLws9zz7NB5foEjPjg%3D";
 
-            TrainWithLabelsOperation op = await client.StartTrainingSupervisedModelAsync(trainingFilePath, new TrainingFileFilter());
+            TrainingWithLabelsOperation op = client.StartTrainingWithLabels(trainingFilePath, new TrainingFileFilter());
 
             Console.WriteLine($"Created model with id {op.Id}");
 
             Console.WriteLine("Waiting for completion...");
 
-            await op.WaitForCompletionAsync(TimeSpan.FromSeconds(1));
+            await op.WaitForCompletionAsync(TimeSpan.FromSeconds(1), default);
             if (op.HasValue)
             {
                 // TODO: How would this be used in a customer scenario?
-                LabeledTrainingResult value = op.Value;
+                TrainingWithLabelsResult value = op.Value;
 
-                Console.WriteLine($"Model Id is: {value.ModelId}");
-                Console.WriteLine($"Average model accuracy is: {value.AverageModelAccuracy}");
-                Console.WriteLine($"Model Creation Time: {value.CreationTime}");
+                Console.WriteLine($"Model Id is: {value.Model.ModelId}");
+                Console.WriteLine($"Average model accuracy is: {value.Model.AverageFieldAccuracy}");
+                Console.WriteLine($"Model Creation Time: {value.TrainingInfo.CompletionTime}");
 
                 Console.WriteLine("Fields and accuracies: ");
-                foreach (var field in value.FieldAccuracies)
+                foreach (var field in value.Model.FieldAccuracies)
                 {
                     Console.WriteLine($"Field: {field.FieldName}");
                     Console.WriteLine($"Accuracy: {field.Accuracy}");
                 }
 
                 Console.WriteLine("Document Training Results: ");
-                foreach (var documentTrainingResult in value.DocumentTrainingResults)
+                foreach (var trainingInputResults in value.TrainingInputResults)
                 {
-                    Console.WriteLine($"Document Name: {documentTrainingResult.DocumentName}");
-                    Console.WriteLine($"Number of pages trained: {documentTrainingResult.Pages}");
+                    Console.WriteLine($"Document Name: {trainingInputResults.DocumentName}");
+                    Console.WriteLine($"Number of pages trained: {trainingInputResults.TotalTrainedPages}");
 
                     // TODO: What does it mean for one of the training documents to fail?
-                    Console.WriteLine($"Training status for this document: {documentTrainingResult.Status}");
+                    Console.WriteLine($"Training status for this document: {trainingInputResults.SuccessStatus}");
 
                     // TODO: What do these contain and how will they be used by customers?
                     Console.WriteLine($"Document training errors: ");
-                    foreach (var error in documentTrainingResult.Errors)
+                    foreach (var error in trainingInputResults.TrainingInputErrors)
                     {
                         Console.WriteLine($"Error: {error.Code}; {error.Message}");
                     }

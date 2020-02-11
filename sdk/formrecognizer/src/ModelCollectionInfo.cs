@@ -7,23 +7,28 @@ namespace Azure.AI.FormRecognizer.Custom
 {
     /// <summary>
     /// </summary>
-    public class ModelCollectionInfo
+    public readonly struct ModelCollectionInfo
     {
-        internal ModelCollectionInfo() { }
+        internal ModelCollectionInfo(int modelCount, int subscriptionLimit, DateTimeOffset lastUpdateTime)
+        {
+            ModelCount = modelCount;
+            SubscriptionLimit = subscriptionLimit;
+            LastUpdateTime = lastUpdateTime;
+        }
 
         /// <summary>
         /// The number of custom models trained in this FormRecognizer resource.
         /// </summary>
-        public int ModelCount { get; internal set; }
+        public int ModelCount { get; }
 
         /// <summary>
         /// Limit.
         /// </summary>
-        public int SubscriptionLimit { get; internal set; }
+        public int SubscriptionLimit { get; }
 
         /// <summary>
         /// Last updated date.
         /// </summary>
-        internal DateTimeOffset LastUpdatedOn { get; set; }
+        internal DateTimeOffset LastUpdateTime { get; }
     }
 }

@@ -6,26 +6,28 @@ namespace Azure.AI.FormRecognizer.Custom
     /// <summary>
     /// Report for a custom model training field.
     /// </summary>
-    public class LabeledFieldAccuracy
+    public readonly struct LabeledFieldAccuracy
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LabeledFieldAccuracy"/> class.
+        /// </summary>
+        internal LabeledFieldAccuracy(string fieldName, float accuracy)
+        {
+            FieldName = fieldName;
+            Accuracy = accuracy;
+        }
+
         /// <summary>
         /// Training field name.
         /// </summary>
-        public string FieldName { get; internal set; }
+        public string FieldName { get; }
 
         // TODO: How is Accuracy different from Confidence?
 
         /// <summary>
         /// Estimated extraction accuracy for this field.
         /// </summary>
-        public float Accuracy { get; internal set; }
+        public float Accuracy { get; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LabeledFieldAccuracy"/> class.
-        /// </summary>
-        internal LabeledFieldAccuracy()
-        { }
-
-        internal static LabeledFieldAccuracy Create() => new LabeledFieldAccuracy();
     }
 }

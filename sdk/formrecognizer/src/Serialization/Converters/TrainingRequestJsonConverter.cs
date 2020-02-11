@@ -19,20 +19,20 @@ namespace Azure.AI.FormRecognizer.Serialization.Converters
         {
             writer.WriteStartObject();
             writer.WriteString("source", value.Source);
-            if (value.SourceFilter != default)
-            {
-                writer.WritePropertyName("sourceFilter");
-                writer.WriteStartObject();
-                if (value.SourceFilter.Prefix != default)
-                {
-                    writer.WriteString("prefix", value.SourceFilter.Prefix);
-                }
-                //if (value.SourceFilter.IncludeSubFolders.HasValue)
-                //{
-                //    writer.WriteBoolean("includeSubFolders", value.SourceFilter.IncludeSubFolders.Value);
-                //}
-                writer.WriteEndObject();
-            }
+            //if (value.SourceFilter != default)
+            //{
+            //    writer.WritePropertyName("sourceFilter");
+            //    writer.WriteStartObject();
+            //    if (value.SourceFilter.Prefix != default)
+            //    {
+            //        writer.WriteString("prefix", value.SourceFilter.Prefix);
+            //    }
+            //    //if (value.SourceFilter.IncludeSubFolders.HasValue)
+            //    //{
+            //    //    writer.WriteBoolean("includeSubFolders", value.SourceFilter.IncludeSubFolders.Value);
+            //    //}
+            //    writer.WriteEndObject();
+            //}
             if (value.UseLabelFile.HasValue)
             {
                 writer.WriteBoolean("useLabelFile", value.UseLabelFile.Value);

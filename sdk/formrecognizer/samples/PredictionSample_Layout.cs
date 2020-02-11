@@ -30,27 +30,31 @@ namespace Azure.AI.FormRecognizer.Samples
             string subscriptionKey = Environment.GetEnvironmentVariable("FORM_RECOGNIZER_SUBSCRIPTION_KEY");
 
             var credential = new CognitiveKeyCredential(subscriptionKey);
-            var client = new LayoutExtractionClient(new Uri(endpoint), credential, new FormRecognizerClientOptions());
+            var client = new LayoutRecognizerClient(new Uri(endpoint), credential, new FormRecognizerClientOptions());
 
             var filePath = @"C:\src\samples\cognitive\formrecognizer\sample_data\Test\Receipt_6.pdf";
             var stream = File.OpenRead(filePath);
 
-            LayoutExtractionResult result = await client.ExtractLayoutAsync(stream);
+            ExtractLayoutResult result = await client.ExtractLayoutAsync(stream);
 
             Console.WriteLine($"Form Inset Analysis found the following insets: ");
 
-            foreach (var table in result.ExtractedTables)
+            foreach (var page in result.Pages)
             {
-                Console.WriteLine($"Table on page {table.PageNumber} has {table.Rows} rows and {table.Columns} columns, and values:");
 
-                foreach (var cell in table.Cells)
+                foreach (var table in page.Tables)
                 {
-                    Console.WriteLine($"    ({cell.ColumnIndex}, {cell.RowIndex}): {cell.Text}");  // TODO: note, cell value not typed.
+                    Console.WriteLine($"Table on page {page.PageNumber} has {table.Rows} rows and {table.Columns} columns, and values:");
+
+                    foreach (var cell in table.Cells)
+                    {
+                        Console.WriteLine($"    ({cell.ColumnIndex}, {cell.RowIndex}): {cell.Text}");  // TODO: note, cell value not typed.
+                    }
                 }
             }
 
             // Print OCR Values
-            foreach (var page in result.TextDetails)
+            foreach (var page in result.RawPages)
             {
                 Console.WriteLine($"On page {page.PageNumber}: ");
 

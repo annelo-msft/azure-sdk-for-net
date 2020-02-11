@@ -42,16 +42,16 @@ namespace Azure.AI.FormRecognizer.Samples
             if (op.HasValue)
             {
                 // TODO: How would this be used in a customer scenario?
-                TrainingResult_original value = op.Value;
+                TrainingResult value = op.Value;
 
-                Console.WriteLine($"Model Id is: {value.ModelId}");
-                Console.WriteLine($"Model Creation Time: {value.CreationTime}");
+                Console.WriteLine($"Model Id is: {value.Model.ModelId}");
+                Console.WriteLine($"Model Creation Time: {value.TrainingInfo.CompletionTime}");
 
                 //// TODO: Is this relevant to unsupervised models?
                 //Console.WriteLine($"Average model accuracy is: {value.AverageModelAccuracy}");
 
                 Console.WriteLine("Identified fields in clusters: ");
-                foreach (var cluster in value.FormClusters)
+                foreach (var cluster in value.Model.FormClusters)
                 {
                     Console.WriteLine($"    Form Cluster : {cluster.FormClusterId}");
                     foreach (var fieldName in cluster.FieldNames)
@@ -70,14 +70,14 @@ namespace Azure.AI.FormRecognizer.Samples
                 //}
 
                 Console.WriteLine("Document Training Results: ");
-                foreach (var documentTrainingResult in value.DocumentTrainingResults)
+                foreach (var trainingInputResult in value.TrainingInputResults)
                 {
-                    Console.WriteLine($"Document Name: {documentTrainingResult.DocumentName}");
-                    Console.WriteLine($"Number of pages trained: {documentTrainingResult.Pages}");
-                    Console.WriteLine($"Training status for this document: {documentTrainingResult.Status}");
+                    Console.WriteLine($"Document Name: {trainingInputResult.DocumentName}");
+                    Console.WriteLine($"Number of pages trained: {trainingInputResult.TotalTrainedPages}");
+                    Console.WriteLine($"Training status for this document: {trainingInputResult.SuccessStatus}");
 
                     Console.WriteLine($"Document training errors: ");
-                    foreach (var error in documentTrainingResult.Errors)
+                    foreach (var error in trainingInputResult.TrainingInputErrors)
                     {
                         Console.WriteLine($"Error: {error.Code}; {error.Message}");
                     }

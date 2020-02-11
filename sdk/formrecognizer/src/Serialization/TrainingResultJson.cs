@@ -43,7 +43,7 @@ namespace Azure.AI.FormRecognizer.Serialization
             //}
             if (property.NameEquals("fields"))
             {
-                trainingResult.FieldAccuracies = ArrayJson.Read(property.Value, TrainingFieldJson.Read);
+                //trainingResult.FieldAccuracies = ArrayJson.Read(property.Value, TrainingFieldJson.Read);
             }
             else if (property.NameEquals("averageModelAccuracy"))
             {
@@ -51,7 +51,7 @@ namespace Azure.AI.FormRecognizer.Serialization
             }
             else if (property.NameEquals("errors"))
             {
-                trainingResult.Errors = ArrayJson.Read(property.Value, ErrorDetailsJson.Read);
+                //trainingResult.Errors = ArrayJson.Read(property.Value, ErrorDetailsJson.Read);
             }
         }
     }

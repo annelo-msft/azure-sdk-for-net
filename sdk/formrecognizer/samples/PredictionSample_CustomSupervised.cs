@@ -38,26 +38,31 @@ namespace Azure.AI.FormRecognizer.Samples
 
             //var op = await client.GetModelReference(modelId).StartAnalyzeAsync(stream, null, includeTextDetails: false);
 
-            PredefinedFieldsResult result = await client.ExtractPredefinedFieldsAsync(modelId, stream);
+            ExtractPredefinedFieldFormResult result = await client.ExtractPredefinedFieldFormAsync(modelId, stream);
 
             // Print form fields
             foreach (var form in result.Forms)
             {
-                Console.WriteLine($"In form found on pages {form.FormPageRange.Item1} - {form.FormPageRange.Item2}: ");
+                Console.WriteLine($"In form found on pages {form.PageRange.StartPageNumber} - {form.PageRange.EndPageNumber}: ");
 
-                foreach (var field in form.Fields)
+                foreach (var page in form.Pages)
                 {
-                    // TODO: Would it be better to implement ToString here, instead of making users write out "Text"?
 
-                    // This is what unsupervised looked like:
-                    // Console.WriteLine($"Found field {field.FieldName.Text} with value {field.FieldValue.Text}");
+                    foreach (var field in page.Fields)
+                    {
+                        // TODO: Would it be better to implement ToString here, instead of making users write out "Text"?
 
-                    Console.WriteLine($"Found field {field.Name} with value {field.Value}");
+                        // This is what unsupervised looked like:
+                        // Console.WriteLine($"Found field {field.FieldName.Text} with value {field.FieldValue.Text}");
+
+                        Console.WriteLine($"Found field {field.Name} with value {field.Value.Text}");
+                    }
                 }
+
             }
 
             // Print OCR Values
-            foreach (var page in result.TextDetails)
+            foreach (var page in result.RawPages)
             {
                 Console.WriteLine($"On page {page.PageNumber}: ");
 

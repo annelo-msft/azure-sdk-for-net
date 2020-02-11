@@ -67,7 +67,7 @@ namespace Azure.AI.FormRecognizer
             serializerOptions.Converters.Add(new ModelJsonConverter());
             serializerOptions.Converters.Add(new TrainingRequestJsonConverter());
             serializerOptions.Converters.Add(new AnalysisRequestJsonConverter());
-            serializerOptions.Converters.Add(new ErrorResponseJsonConverter());
+            //serializerOptions.Converters.Add(new ErrorResponseJsonConverter());
             serializerOptions.Converters.Add(new ModelListingJsonConverter());
         }
     }

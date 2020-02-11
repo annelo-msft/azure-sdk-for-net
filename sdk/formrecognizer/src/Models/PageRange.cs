@@ -5,16 +5,20 @@ namespace Azure.AI.FormRecognizer.Custom
 {
     /// <summary>
     /// </summary>
-    public class PageRange
+    public readonly struct PageRange
     {
-        internal PageRange() { }
+        internal PageRange(int startPageNumber, int endPageNumber)
+        {
+            StartPageNumber = startPageNumber;
+            EndPageNumber = endPageNumber;
+        }
 
         /// <summary>
         /// </summary>
-        public int StartPageNumber { get; internal set; }
+        public int StartPageNumber { get; }
 
         /// <summary>
         /// </summary>
-        public int EndPageNumber { get; internal set; }
+        public int EndPageNumber { get; }
     }
 }

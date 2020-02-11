@@ -29,13 +29,13 @@ namespace Azure.AI.FormRecognizer.Samples
             string subscriptionKey = Environment.GetEnvironmentVariable("FORM_RECOGNIZER_SUBSCRIPTION_KEY");
 
             var credential = new CognitiveKeyCredential(subscriptionKey);
-            var client = new ReceiptExtractionClient(new Uri(endpoint), credential, new FormRecognizerClientOptions());
+            var client = new ReceiptRecognizerClient(new Uri(endpoint), credential, new FormRecognizerClientOptions());
 
             var filePath = @"C:\src\samples\cognitive\formrecognizer\sample_data\Test\Receipt_6.pdf";
             var stream = File.OpenRead(filePath);
 
-            ExtractReceiptResult result = await client.ExtractReceiptAsync(stream, includeTextDetails: true);
-            ExtractedReceipt receipt = result.Receipt;
+            ExtractReceiptResult result = await client.ExtractReceiptAsync(stream, includeRawPageExtractions: true);
+            ExtractedReceipt receipt = result.Receipts[0];
 
             Console.WriteLine($"Receipt contained the following values: ");
 
@@ -57,7 +57,7 @@ namespace Azure.AI.FormRecognizer.Samples
             Console.WriteLine($"Total: {receipt.Total}");
 
             // Print OCR Values
-            foreach (var page in result.TextDetails)
+            foreach (var page in result.RawPages)
             {
                 Console.WriteLine($"On page {page.PageNumber}: ");
 
@@ -72,6 +72,7 @@ namespace Azure.AI.FormRecognizer.Samples
                 }
             }
 
+            //Was:
             //var keyText = op.Value.AnalyzeResult.PageResults[0].KeyValuePairs[0].Key.Text;
             //var valueText = op.Value.AnalyzeResult.PageResults[0].KeyValuePairs[0].Value.Text;
 
