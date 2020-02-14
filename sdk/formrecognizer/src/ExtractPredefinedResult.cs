@@ -5,18 +5,18 @@ using Azure.AI.FormRecognizer.Models;
 using Azure.AI.FormRecognizer.Prediction;
 using System;
 
-namespace Azure.AI.FormRecognizer.Custom
+namespace Azure.AI.FormRecognizer.Models
 {
     /// <summary>
     /// </summary>
-    public class ExtractPredefinedFieldFormResult
+    public class ExtractPredefinedResult
     {
         private AnalyzeOperation operation;
 
         /// <summary>
         /// </summary>
         /// <param name="operation"></param>
-        internal ExtractPredefinedFieldFormResult(AnalyzeOperation operation)
+        internal ExtractPredefinedResult(AnalyzeOperation operation)
         {
             this.operation = operation;
         }

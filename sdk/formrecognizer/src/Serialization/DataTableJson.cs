@@ -32,11 +32,11 @@ namespace Azure.AI.FormRecognizer.Serialization
         {
             if (property.NameEquals("rows"))
             {
-                dataTable.Rows = property.Value.GetInt32();
+                dataTable.RowCount = property.Value.GetInt32();
             }
             else if (property.NameEquals("columns"))
             {
-                dataTable.Columns = property.Value.GetInt32();
+                dataTable.ColumnCount = property.Value.GetInt32();
             }
             else if (property.NameEquals("cells"))
             {

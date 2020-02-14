@@ -5,7 +5,7 @@ using Azure.AI.FormRecognizer.Models;
 using System;
 using System.Collections.Generic;
 
-namespace Azure.AI.FormRecognizer.Custom
+namespace Azure.AI.FormRecognizer.Models
 {
     /// <summary>
     /// A set of predefined fields extracted from a form by a supervised learning model.

@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Azure.AI.FormRecognizer.Prebuilt
+namespace Azure.AI.FormRecognizer.Models
 {
     /// <summary>
     /// </summary>

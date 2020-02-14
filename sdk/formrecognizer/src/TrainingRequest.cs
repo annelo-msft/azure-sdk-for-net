@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using Azure.AI.FormRecognizer.Custom;
+using Azure.AI.FormRecognizer.Models;
 using System.Diagnostics;
 
 namespace Azure.AI.FormRecognizer

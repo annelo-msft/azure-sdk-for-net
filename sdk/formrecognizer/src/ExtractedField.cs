@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-namespace Azure.AI.FormRecognizer.Custom
+namespace Azure.AI.FormRecognizer.Models
 {
     /// <summary>
     /// </summary>
@@ -16,7 +16,8 @@ namespace Azure.AI.FormRecognizer.Custom
         /// <summary>
         /// A user defined label for the key/value pair entry.
         /// </summary>
-        internal string Label { get; set; }
+        internal string Label
+        { get; set; }
 
         /// <summary>
         /// </summary>

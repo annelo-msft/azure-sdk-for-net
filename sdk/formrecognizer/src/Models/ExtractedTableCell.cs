@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Azure.AI.FormRecognizer
+namespace Azure.AI.FormRecognizer.Models
 {
     // TODO: Solve referencing problem, wherein the table cell or other element
     // points back to the raw OCR TextElement.

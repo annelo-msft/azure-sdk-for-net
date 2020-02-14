@@ -3,7 +3,7 @@
 
 using Azure.AI.FormRecognizer.Custom;
 
-namespace Azure.AI.FormRecognizer.Prebuilt
+namespace Azure.AI.FormRecognizer.Models
 {
     /// <summary>
     /// </summary>

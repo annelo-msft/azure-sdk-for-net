@@ -5,7 +5,7 @@ using Azure.AI.FormRecognizer.Custom;
 using Azure.AI.FormRecognizer.Prediction;
 using System;
 
-namespace Azure.AI.FormRecognizer.Prebuilt
+namespace Azure.AI.FormRecognizer.Models
 {
     /// <summary>
     /// </summary>

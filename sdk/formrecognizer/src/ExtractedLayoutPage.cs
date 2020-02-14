@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-namespace Azure.AI.FormRecognizer.Prebuilt
+namespace Azure.AI.FormRecognizer.Models
 {
     // TODO: would it make sense to tighten the connection from this to ExtractedPage?
     // The only difference is that ExtractedPage has Fields, too.

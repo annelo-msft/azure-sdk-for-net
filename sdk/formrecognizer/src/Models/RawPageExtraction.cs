@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace Azure.AI.FormRecognizer
+namespace Azure.AI.FormRecognizer.Models
 {
     /// <summary>
     /// Output of the Optical Character Recognition engine, including text

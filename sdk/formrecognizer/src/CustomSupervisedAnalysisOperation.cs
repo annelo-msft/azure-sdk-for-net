@@ -3,6 +3,7 @@
 
 // TODO: Move to Common
 using Azure.AI.FormRecognizer.Custom;
+using Azure.AI.FormRecognizer.Models;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,7 +13,7 @@ namespace Azure.AI.FormRecognizer.Prediction
     /// <summary>
     /// Supervised custom model analyis operation
     /// </summary>
-    internal class CustomSupervisedAnalysisOperation : Operation<ExtractPredefinedFieldFormResult>
+    internal class CustomSupervisedAnalysisOperation : Operation<ExtractPredefinedResult>
     {
         private AnalyzeOperation _operation;
 
@@ -31,7 +32,7 @@ namespace Azure.AI.FormRecognizer.Prediction
         /// <summary>
         /// </summary>
 #pragma warning disable CA1065 // Do not raise exceptions in unexpected locations
-        public override ExtractPredefinedFieldFormResult Value => throw new NotImplementedException();
+        public override ExtractPredefinedResult Value => throw new NotImplementedException();
 #pragma warning restore CA1065 // Do not raise exceptions in unexpected locations
 
         /// <summary>
@@ -65,7 +66,7 @@ namespace Azure.AI.FormRecognizer.Prediction
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public override ValueTask<Response<ExtractPredefinedFieldFormResult>> WaitForCompletionAsync(CancellationToken cancellationToken = default)
+        public override ValueTask<Response<ExtractPredefinedResult>> WaitForCompletionAsync(CancellationToken cancellationToken = default)
             => throw new NotImplementedException();
 
         /// <summary>
@@ -73,7 +74,7 @@ namespace Azure.AI.FormRecognizer.Prediction
         /// <param name="pollingInterval"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public override ValueTask<Response<ExtractPredefinedFieldFormResult>> WaitForCompletionAsync(TimeSpan pollingInterval, CancellationToken cancellationToken = default)
+        public override ValueTask<Response<ExtractPredefinedResult>> WaitForCompletionAsync(TimeSpan pollingInterval, CancellationToken cancellationToken = default)
             => throw new NotImplementedException();
     }
 }

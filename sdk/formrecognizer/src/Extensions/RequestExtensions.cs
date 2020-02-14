@@ -10,6 +10,7 @@ using Azure.AI.FormRecognizer.Http;
 using System.Threading.Tasks;
 using System.Text;
 using Azure.AI.FormRecognizer.Prediction;
+using Azure.AI.FormRecognizer.Models;
 
 namespace Azure.AI.FormRecognizer.Extensions
 {

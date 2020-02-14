@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using Azure.AI.FormRecognizer.Prebuilt;
+using Azure.AI.FormRecognizer.Models;
 using Azure.AI.FormRecognizer.Prediction;
 using System;
 using System.IO;
@@ -12,13 +12,13 @@ namespace Azure.AI.FormRecognizer
 {
     /// <summary>
     /// </summary>
-    public class ReceiptRecognizerClient
+    public class ReceiptClient
     {
         private FormReceiptClient _formReceiptClient;
 
         /// <summary>
         /// </summary>
-        protected ReceiptRecognizerClient()
+        protected ReceiptClient()
         {
         }
 
@@ -27,7 +27,7 @@ namespace Azure.AI.FormRecognizer
         /// <param name="endpoint">Endpoint.</param>
         /// <param name="credential">Your assigned subscription key, copied from https://portal.azure.com/</param>
 #pragma warning disable AZC0007 // DO provide a minimal constructor that takes only the parameters required to connect to the service.
-        public ReceiptRecognizerClient(Uri endpoint, CognitiveKeyCredential credential)
+        public ReceiptClient(Uri endpoint, CognitiveKeyCredential credential)
 #pragma warning restore AZC0007 // DO provide a minimal constructor that takes only the parameters required to connect to the service.
             : this(endpoint, credential, new FormRecognizerClientOptions())
         {
@@ -39,7 +39,7 @@ namespace Azure.AI.FormRecognizer
         /// <param name="credential">Your assigned subscription key, copied from https://portal.azure.com/</param>
         /// <param name="options">Optional service parameters.</param>
 #pragma warning disable AZC0007 // DO provide a minimal constructor that takes only the parameters required to connect to the service.
-        public ReceiptRecognizerClient(Uri endpoint, CognitiveKeyCredential credential, FormRecognizerClientOptions options)
+        public ReceiptClient(Uri endpoint, CognitiveKeyCredential credential, FormRecognizerClientOptions options)
 #pragma warning restore AZC0007 // DO provide a minimal constructor that takes only the parameters required to connect to the service.
         {
             var temp = options.Version;

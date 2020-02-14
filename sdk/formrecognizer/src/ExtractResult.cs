@@ -4,15 +4,15 @@
 using Azure.AI.FormRecognizer.Prediction;
 using System;
 
-namespace Azure.AI.FormRecognizer.Custom
+namespace Azure.AI.FormRecognizer.Models
 {
     /// <summary>
     /// </summary>
-    public class ExtractFormResult
+    public class ExtractResult
     {
         private AnalyzeOperation operation;
 
-        internal ExtractFormResult(AnalyzeOperation operation)
+        internal ExtractResult(AnalyzeOperation operation)
         {
             this.operation = operation;
         }

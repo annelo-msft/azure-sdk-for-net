@@ -4,7 +4,7 @@
 using Azure.AI.FormRecognizer.Models;
 using System;
 
-namespace Azure.AI.FormRecognizer.Custom
+namespace Azure.AI.FormRecognizer.Models
 {
     /// <summary>
     /// </summary>

@@ -4,7 +4,7 @@
 using Azure.AI.FormRecognizer.Custom;
 using System.Collections.Generic;
 
-namespace Azure.AI.FormRecognizer
+namespace Azure.AI.FormRecognizer.Models
 {
     /// <summary>
     /// Represents a line of extracted text.

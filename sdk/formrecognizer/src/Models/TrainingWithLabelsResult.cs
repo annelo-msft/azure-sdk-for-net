@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 using Azure.AI.FormRecognizer.Models;
 using Azure.AI.FormRecognizer.Serialization.Converters;
 
-namespace Azure.AI.FormRecognizer.Custom
+namespace Azure.AI.FormRecognizer.Models
 {
     /// <summary>
     /// Custom Form Recognizer model.
