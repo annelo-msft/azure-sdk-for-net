@@ -8,17 +8,17 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Azure.AI.FormRecognizer
+namespace Azure.AI.FormRecognizer.Custom
 {
     /// <summary>
     /// </summary>
-    public class CustomRecognizerClient
+    public class CustomFormClient
     {
         private FormRecognizerClient_internal _formRecognizerClient;
 
         /// <summary>
         /// </summary>
-        protected CustomRecognizerClient()
+        protected CustomFormClient()
         {
         }
 
@@ -28,7 +28,7 @@ namespace Azure.AI.FormRecognizer
         /// <param name="endpoint">Endpoint.</param>
         /// <param name="credential">Your assigned subscription key, copied from https://portal.azure.com/</param>
 #pragma warning disable AZC0007 // DO provide a minimal constructor that takes only the parameters required to connect to the service.
-        public CustomRecognizerClient(Uri endpoint, CognitiveKeyCredential credential)
+        public CustomFormClient(Uri endpoint, CognitiveKeyCredential credential)
 #pragma warning restore AZC0007 // DO provide a minimal constructor that takes only the parameters required to connect to the service.
             : this(endpoint, credential, new FormRecognizerClientOptions())
         {
@@ -41,7 +41,7 @@ namespace Azure.AI.FormRecognizer
         /// <param name="credential">Your assigned subscription key, copied from https://portal.azure.com/</param>
         /// <param name="options">Optional service parameters.</param>
 #pragma warning disable AZC0007 // DO provide a minimal constructor that takes only the parameters required to connect to the service.
-        public CustomRecognizerClient(Uri endpoint, CognitiveKeyCredential credential, FormRecognizerClientOptions options)
+        public CustomFormClient(Uri endpoint, CognitiveKeyCredential credential, FormRecognizerClientOptions options)
 #pragma warning restore AZC0007 // DO provide a minimal constructor that takes only the parameters required to connect to the service.
         {
             var temp = options.Version;

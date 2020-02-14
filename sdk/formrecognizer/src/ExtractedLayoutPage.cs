@@ -17,11 +17,6 @@ namespace Azure.AI.FormRecognizer.Prebuilt
         public int PageNumber { get; internal set; }
 
         /// <summary>
-        /// Cluster identifier.
-        /// </summary>
-        public int FormClusterId { get; internal set; }
-
-        /// <summary>
         /// Output of the enhanced Optical Character Recognition engine, which identifies
         /// tables.
         /// </summary>

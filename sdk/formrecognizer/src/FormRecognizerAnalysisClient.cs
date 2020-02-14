@@ -16,7 +16,7 @@ namespace Azure.AI.FormRecognizer.Prediction
     {
         private FormRecognizerClient_internal _formRecognizerClient;
         private FormReceiptClient _formReceiptClient;
-        private FormLayoutClient _formLayoutClient;
+        private FormLayoutClient_internal _formLayoutClient;
 
         /// <summary>
         /// </summary>
@@ -45,7 +45,7 @@ namespace Azure.AI.FormRecognizer.Prediction
             var temp = options.Version;
             _formRecognizerClient = new FormRecognizerClient_internal(endpoint, credential, new FormRecognizerClientOptions());
             _formReceiptClient = new FormReceiptClient(endpoint, credential);
-            _formLayoutClient = new FormLayoutClient(endpoint, credential);
+            _formLayoutClient = new FormLayoutClient_internal(endpoint, credential);
         }
 
         /// <summary>

@@ -14,7 +14,7 @@ namespace Azure.AI.FormRecognizer
     /// </summary>
     public class LayoutRecognizerClient
     {
-        private FormLayoutClient _formLayoutClient;
+        private FormLayoutClient_internal _formLayoutClient;
 
         /// <summary>
         /// </summary>
@@ -43,7 +43,7 @@ namespace Azure.AI.FormRecognizer
 #pragma warning restore AZC0007 // DO provide a minimal constructor that takes only the parameters required to connect to the service.
         {
             var temp = options.Version;
-            _formLayoutClient = new FormLayoutClient(endpoint, credential, new FormLayoutClientOptions());
+            _formLayoutClient = new FormLayoutClient_internal(endpoint, credential, new FormLayoutClientOptions());
         }
 
         /// <summary>
