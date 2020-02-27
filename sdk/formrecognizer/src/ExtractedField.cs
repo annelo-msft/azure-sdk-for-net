@@ -5,23 +5,34 @@ namespace Azure.AI.FormRecognizer.Models
 {
     /// <summary>
     /// </summary>
-    public class ExtractedField
+    public readonly struct ExtractedField
     {
+        internal ExtractedField(string label, string name, float[] nameBoundingBox, string value, float[] valueBoundingBox, float confidence)
+        {
+            Label = label;
+            Name = name;
+            NameBoundingBox = nameBoundingBox;
+            Value = value;
+            ValueBoundingBox = valueBoundingBox;
+            Confidence = confidence;
+        }
+
+
+
         // TODO: What is the value of label if this is only in unsupervised learning?
         // Or is this used for supervised learning as well?
 
-        internal ExtractedField() { }
 
         // TODO: Label doesn't make sense on a field from an unsupervised model. Hint?
         /// <summary>
         /// A user defined label for the key/value pair entry.
         /// </summary>
         internal string Label
-        { get; set; }
+        { get; }
 
         /// <summary>
         /// </summary>
-        public string Name { get; internal set; }
+        public string Name { get; }
 
         /// <summary>
         /// </summary>
@@ -29,7 +40,7 @@ namespace Azure.AI.FormRecognizer.Models
 
         /// <summary>
         /// </summary>
-        public string Value { get; internal set; }
+        public string Value { get; }
 
         /// <summary>
         /// </summary>
@@ -39,6 +50,6 @@ namespace Azure.AI.FormRecognizer.Models
         /// <summary>
         /// Confidence value.
         /// </summary>
-        public float Confidence { get; internal set; }
+        public float Confidence { get; }
     }
 }

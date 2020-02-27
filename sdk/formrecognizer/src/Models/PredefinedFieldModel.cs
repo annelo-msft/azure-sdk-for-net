@@ -5,23 +5,28 @@ namespace Azure.AI.FormRecognizer.Models
 {
     /// <summary>
     /// </summary>
-    public class PredefinedFieldModel
+    public readonly struct PredefinedFieldModel
     {
-        internal PredefinedFieldModel() { }
+        internal PredefinedFieldModel(string modelId, float? averageFieldAccuracy, LabeledFieldAccuracy[] fieldAccuracies)
+        {
+            ModelId = modelId;
+            AverageFieldAccuracy = averageFieldAccuracy;
+            FieldAccuracies = fieldAccuracies;
+        }
 
         /// <summary>
         /// Model Id.
         /// </summary>
-        public string ModelId { get; internal set; }
+        public string ModelId { get; }
 
         /// <summary>
         /// Average accuracy.
         /// </summary>
-        public float? AverageFieldAccuracy { get; internal set; }
+        public float? AverageFieldAccuracy { get; }
 
         /// <summary>
         /// List of fields used to train the model and the train operation error reported by each.
         /// </summary>
-        public LabeledFieldAccuracy[] FieldAccuracies { get; internal set; }
+        public LabeledFieldAccuracy[] FieldAccuracies { get; }
     }
 }

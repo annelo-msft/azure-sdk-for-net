@@ -8,14 +8,19 @@ namespace Azure.AI.FormRecognizer.Models
     /// <summary>
     /// Represents an extracted word.
     /// </summary>
-    public class ExtractedWord
+    public readonly struct ExtractedWord
     {
-        internal ExtractedWord() { }
+        internal ExtractedWord(float confidence, string text, float[] boundingBox)
+        {
+            Confidence = confidence;
+            Text = text;
+            BoundingBox = boundingBox;
+        }
 
         /// <summary>
         /// Confidence value in the prediction of the word.
         /// </summary>
-        public float Confidence { get; internal set; }
+        public float Confidence { get; }
 
         /// <summary>
         /// The text content of the line.
