@@ -8,40 +8,42 @@ namespace Azure.AI.FormRecognizer.Models
 {
     /// <summary>
     /// </summary>
-    public class ExtractReceiptResult
+    public readonly struct ExtractReceiptResult
     {
-        private AnalyzeOperation operation;
+        private readonly AnalyzeOperation operation;
 
-        internal ExtractReceiptResult(AnalyzeOperation operation)
+        internal ExtractReceiptResult(AnalyzeOperation operation, AnalysisStatus status, DateTimeOffset lastUpdateTime, DateTimeOffset creationTime, ExtractedReceipt[] receipts)
         {
+            Status = status;
+            LastUpdateTime = lastUpdateTime;
+            CreationTime = creationTime;
+            Receipts = receipts;
+            //RawPages = rawPages;
+
             this.operation = operation;
         }
 
         /// <summary>
         /// Status of the operation.
         /// </summary>
-        internal AnalysisStatus Status { get; set; }
+        internal AnalysisStatus Status { get; }
 
         /// <summary>
         /// Date and time when the status was last updated.
         /// </summary>
-        internal DateTimeOffset LastUpdateTime { get; set; }
+        internal DateTimeOffset LastUpdateTime { get; }
 
         // TODO: do we need these timestamps or status for any customer scenario?
 
         /// <summary>
         /// Date and time when the analysis operation was submitted.
         /// </summary>
-        internal DateTimeOffset CreationTime { get; set; }
+        internal DateTimeOffset CreationTime { get; }
 
         /// <summary>
         /// </summary>
-        public ExtractedReceipt[] Receipts { get; internal set; }
+        public ExtractedReceipt[] Receipts { get; }
 
-        /// <summary>
-        /// Output of the Optical Character Recognition engine, including text
-        /// elements with bounding boxes, as well as page geometry, and page and line languages.
-        /// </summary>
-        public RawPageExtraction[] RawPages { get; internal set; }
+        //public RawPageExtraction[] RawPages { get; }
     }
 }

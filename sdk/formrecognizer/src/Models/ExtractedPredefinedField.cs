@@ -10,29 +10,40 @@ namespace Azure.AI.FormRecognizer.Models
 {
     /// <summary>
     /// </summary>
-    public class ExtractedPredefinedField
+    public readonly struct ExtractedPredefinedField
     {
-        internal ExtractedPredefinedField() { }
+        internal ExtractedPredefinedField(string name, string value, float[] valueBoundingBox, PredefinedFieldValueType type, float confidence)
+        {
+            Name = name;
+            Value = value;
+            ValueBoundingBox = valueBoundingBox;
+            Type = type;
+            Confidence = confidence;
+        }
 
         /// <summary>
         /// The name of the predefined field.
         /// </summary>
-        public string Name { get; internal set; }
+        public string Name { get; }
 
         /// <summary>
         /// The value of the predefined field.
         /// </summary>
-        public ExtractedText Value { get; internal set; }
+        public string Value { get; }
+
+        /// <summary>
+        /// </summary>
+        public float[] ValueBoundingBox { get; }
 
         /// <summary>
         /// Type of field value.
         /// </summary>
-        public PredefinedFieldValueType Type { get; internal set; }
+        public PredefinedFieldValueType Type { get; }
 
         // TODO: Should this go on Value?
         /// <summary>
         /// Confidence value.
         /// </summary>
-        public float Confidence { get; internal set; }
+        public float Confidence { get; }
     }
 }

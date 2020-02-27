@@ -27,16 +27,18 @@ namespace Azure.AI.FormRecognizer.Serialization
             return trainingDocument;
         }
 
+#pragma warning disable CA1801
         private static void ReadPropertyValue(ref TrainingInputResult trainingDocument, JsonProperty property)
+#pragma warning restore CA1801
         {
-            if (property.NameEquals("documentName"))
-            {
-                trainingDocument.DocumentName = property.Value.GetString();
-            }
-            else if (property.NameEquals("pages"))
-            {
-                trainingDocument.TotalTrainedPages = property.Value.GetInt32();
-            }
+            //if (property.NameEquals("documentName"))
+            //{
+            //    trainingDocument.DocumentName = property.Value.GetString();
+            //}
+            //else if (property.NameEquals("pages"))
+            //{
+            //    trainingDocument.TotalTrainedPages = property.Value.GetInt32();
+            //}
             //else if (property.NameEquals("errors"))
             //{
             //    trainingDocument.Errors = ArrayJson.Read(property.Value, ErrorDetailsJson.Read);

@@ -9,18 +9,22 @@ namespace Azure.AI.FormRecognizer.Models
 {
     /// <summary>
     /// </summary>
-    public class TrainedFormCluster
+    public readonly struct TrainedFormCluster
     {
-        internal TrainedFormCluster() { }
+        internal TrainedFormCluster(int formClusterId, IReadOnlyCollection<string> fieldNames)
+        {
+            FormClusterId = formClusterId;
+            FieldNames = fieldNames;
+        }
 
         /// <summary>
         /// Cluster Id
         /// </summary>
-        public int FormClusterId { get; internal set; }
+        public int FormClusterId { get; }
 
         /// <summary>
         /// Names of the fields extracted from forms in this cluster.
         /// </summary>
-        public IEnumerable<string> FieldNames { get; internal set; }
+        public IReadOnlyCollection<string> FieldNames { get; }
     }
 }

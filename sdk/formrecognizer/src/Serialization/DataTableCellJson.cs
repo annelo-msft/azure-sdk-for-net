@@ -22,40 +22,44 @@ namespace Azure.AI.FormRecognizer.Serialization
             return dataTableCell;
         }
 
+#pragma warning disable IDE0060 // Remove unused parameter
+#pragma warning disable CA1801
         private static void ReadPropertyValue(ref ExtractedTableCell dataTable, JsonProperty property)
+#pragma warning restore IDE0060 // Remove unused parameter
+#pragma warning restore CA1801
         {
-            if (property.NameEquals("rowIndex"))
-            {
-                dataTable.RowIndex = property.Value.GetInt32();
-            }
-            else if (property.NameEquals("columnIndex"))
-            {
-                dataTable.ColumnIndex = property.Value.GetInt32();
-            }
-            else if (property.NameEquals("rowSpan"))
-            {
-                dataTable.RowSpan = property.Value.GetInt32();
-            }
-            else if (property.NameEquals("columnSpan"))
-            {
-                dataTable.ColumnSpan = property.Value.GetInt32();
-            }
-            //else if (property.NameEquals("elements"))
+            //if (property.NameEquals("rowIndex"))
             //{
-            //    dataTable.ElementReferences = ArrayJson.ReadStrings(property.Value);
+            //    dataTable.RowIndex = property.Value.GetInt32();
             //}
-            else if (property.NameEquals("isHeader"))
-            {
-                dataTable.IsHeader = property.Value.GetBoolean();
-            }
-            else if (property.NameEquals("isFooter"))
-            {
-                dataTable.IsFooter = property.Value.GetBoolean();
-            }
-            else if (property.NameEquals("confidence"))
-            {
-                dataTable.Confidence = property.Value.GetSingle();
-            }
+            //else if (property.NameEquals("columnIndex"))
+            //{
+            //    dataTable.ColumnIndex = property.Value.GetInt32();
+            //}
+            //else if (property.NameEquals("rowSpan"))
+            //{
+            //    dataTable.RowSpan = property.Value.GetInt32();
+            //}
+            //else if (property.NameEquals("columnSpan"))
+            //{
+            //    dataTable.ColumnSpan = property.Value.GetInt32();
+            //}
+            ////else if (property.NameEquals("elements"))
+            ////{
+            ////    dataTable.ElementReferences = ArrayJson.ReadStrings(property.Value);
+            ////}
+            //else if (property.NameEquals("isHeader"))
+            //{
+            //    dataTable.IsHeader = property.Value.GetBoolean();
+            //}
+            //else if (property.NameEquals("isFooter"))
+            //{
+            //    dataTable.IsFooter = property.Value.GetBoolean();
+            //}
+            //else if (property.NameEquals("confidence"))
+            //{
+            //    dataTable.Confidence = property.Value.GetSingle();
+            //}
             //else if (property.NameEquals("text"))
             //{
             //    TextElementJson.ReadText(dataTable, property.Value);

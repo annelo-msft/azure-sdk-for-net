@@ -6,27 +6,33 @@ namespace Azure.AI.FormRecognizer.Models
     /// <summary>
     /// Custom Form Recognizer model.
     /// </summary>
-    public class TrainingResult
+    public readonly struct TrainingResult
     {
-        internal TrainingResult() { }
+        internal TrainingResult(TrainedModel model, ModelTrainingInfo trainingInfo, TrainingInputResult[] trainingInputResults, FormRecognizerError[] trainingErrors)
+        {
+            Model = model;
+            TrainingInfo = trainingInfo;
+            TrainingInputResults = trainingInputResults;
+            TrainingErrors = trainingErrors;
+        }
 
         /// <summary>
         /// </summary>
-        public TrainedModel Model { get; internal set; }
+        public TrainedModel Model { get; }
 
         /// <summary>
         /// </summary>
-        public ModelTrainingInfo TrainingInfo { get; internal set; }
+        public ModelTrainingInfo TrainingInfo { get; }
 
         /// <summary>
         /// List of the documents used to train the model and any errors reported in each document.
         /// </summary>
-        public TrainingInputResult[] TrainingInputResults { get; internal set; }
+        public TrainingInputResult[] TrainingInputResults { get; }
 
         /// <summary>
         /// Errors returned during the training operation.
         /// </summary>
-        public FormRecognizerError[] TrainingErrors { get; internal set; }
+        public FormRecognizerError[] TrainingErrors { get; }
 
         internal static TrainingResult Create() => new TrainingResult();
     }

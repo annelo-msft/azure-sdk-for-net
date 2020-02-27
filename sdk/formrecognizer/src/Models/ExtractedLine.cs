@@ -9,7 +9,7 @@ namespace Azure.AI.FormRecognizer.Models
     /// <summary>
     /// Represents a line of extracted text.
     /// </summary>
-    public class ExtractedLine : ExtractedText
+    public class ExtractedLine
     {
         internal ExtractedLine() { }
 
@@ -18,6 +18,16 @@ namespace Azure.AI.FormRecognizer.Models
         /// </summary>
         /// <value></value>
         public FormTextLanguage Language { get; internal set; }
+
+        /// <summary>
+        /// The text content of the line.
+        /// </summary>
+        public string Text { get; }
+
+        /// <summary>
+        /// Bounding box of the extracted line.
+        /// </summary>
+        public float[] BoundingBox { get; }
 
         /// <summary>
         /// List of words extracted from the line.

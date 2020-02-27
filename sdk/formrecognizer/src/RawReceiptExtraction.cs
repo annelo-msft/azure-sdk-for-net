@@ -7,48 +7,60 @@ namespace Azure.AI.FormRecognizer.Models
 {
     /// <summary>
     /// </summary>
-    public class RawReceiptExtraction
+    public readonly struct RawReceiptExtraction
     {
-        internal RawReceiptExtraction() { }
+        internal RawReceiptExtraction(ExtractedPredefinedField merchantName, ExtractedPredefinedField merchantAddress, ExtractedPredefinedField merchantPhoneNumber, ExtractedPredefinedField transactionDate, ExtractedPredefinedField transactionTime, RawReceiptItemExtraction items, ExtractedPredefinedField subtotal, ExtractedPredefinedField tax, ExtractedPredefinedField tip, ExtractedPredefinedField total)
+        {
+            MerchantName = merchantName;
+            MerchantAddress = merchantAddress;
+            MerchantPhoneNumber = merchantPhoneNumber;
+            TransactionDate = transactionDate;
+            TransactionTime = transactionTime;
+            Items = items;
+            Subtotal = subtotal;
+            Tax = tax;
+            Tip = tip;
+            Total = total;
+        }
 
         /// <summary>
         /// </summary>
-        public ExtractedPredefinedField MerchantName { get; internal set; }
+        public ExtractedPredefinedField MerchantName { get; }
 
         /// <summary>
         /// </summary>
-        public ExtractedPredefinedField MerchantAddress { get; internal set; }
+        public ExtractedPredefinedField MerchantAddress { get; }
 
         /// <summary>
         /// </summary>
-        public ExtractedPredefinedField MerchantPhoneNumber { get; internal set; }
+        public ExtractedPredefinedField MerchantPhoneNumber { get; }
 
         /// <summary>
         /// </summary>
-        public ExtractedPredefinedField TransactionDate { get; internal set; }
+        public ExtractedPredefinedField TransactionDate { get; }
 
         /// <summary>
         /// </summary>
-        public ExtractedPredefinedField TransactionTime { get; internal set; }
+        public ExtractedPredefinedField TransactionTime { get; }
 
         /// <summary>
         /// </summary>
-        public RawReceiptItemExtraction Items { get; internal set; }
+        public RawReceiptItemExtraction Items { get; }
 
         /// <summary>
         /// </summary>
-        public ExtractedPredefinedField Subtotal { get; internal set; }
+        public ExtractedPredefinedField Subtotal { get; }
 
         /// <summary>
         /// </summary>
-        public ExtractedPredefinedField Tax { get; internal set; }
+        public ExtractedPredefinedField Tax { get; }
 
         /// <summary>
         /// </summary>
-        public ExtractedPredefinedField Tip { get; internal set; }
+        public ExtractedPredefinedField Tip { get; }
 
         /// <summary>
         /// </summary>
-        public ExtractedPredefinedField Total { get; internal set; }
+        public ExtractedPredefinedField Total { get; }
     }
 }

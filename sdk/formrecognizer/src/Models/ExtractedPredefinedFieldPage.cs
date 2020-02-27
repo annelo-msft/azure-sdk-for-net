@@ -5,23 +5,28 @@ namespace Azure.AI.FormRecognizer.Models
 {
     /// <summary>
     /// </summary>
-    public class ExtractedPredefinedFieldPage
+    public readonly struct ExtractedPredefinedFieldPage
     {
-        internal ExtractedPredefinedFieldPage() { }
+        internal ExtractedPredefinedFieldPage(int pageNumber, ExtractedPredefinedField[] fields, ExtractedTable[] tables)
+        {
+            PageNumber = pageNumber;
+            Fields = fields;
+            Tables = tables;
+        }
 
         /// <summary>
         /// Page number.
         /// </summary>
-        public int PageNumber { get; internal set; }
+        public int PageNumber { get;  }
 
         /// <summary>
         /// </summary>
-        public ExtractedPredefinedField[] Fields { get; internal set; }
+        public ExtractedPredefinedField[] Fields { get;  }
 
         /// <summary>
         /// Output of the enhanced Optical Character Recognition engine, which identifies
         /// tables.
         /// </summary>
-        public ExtractedTable[] Tables { get; internal set; }
+        public ExtractedTable[] Tables { get;  }
     }
 }

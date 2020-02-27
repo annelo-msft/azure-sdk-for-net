@@ -5,20 +5,25 @@ namespace Azure.AI.FormRecognizer.Models
 {
     /// <summary>
     /// </summary>
-    public class ReceiptItem
+    public readonly struct ReceiptItem
     {
-        internal ReceiptItem() { }
+        internal ReceiptItem(int quantity, string name, float totalPrice)
+        {
+            Quantity = quantity;
+            Name = name;
+            TotalPrice = totalPrice;
+        }
 
         /// <summary>
         /// </summary>
-        public int Quantity { get; internal set; }
+        public int Quantity { get; }
 
         /// <summary>
         /// </summary>
-        public string Name { get; internal set; }
+        public string Name { get; }
 
         /// <summary>
         /// </summary>
-        public float TotalPrice { get; internal set; }
+        public float TotalPrice { get; }
     }
 }

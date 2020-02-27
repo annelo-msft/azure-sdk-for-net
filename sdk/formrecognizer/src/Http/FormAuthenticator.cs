@@ -4,6 +4,7 @@
 using System;
 using System.Threading.Tasks;
 using Azure.AI.FormRecognizer.Arguments;
+using Azure.AI.FormRecognizer.Models;
 using Azure.Core;
 using Azure.Core.Pipeline;
 

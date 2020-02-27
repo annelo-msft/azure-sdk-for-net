@@ -7,19 +7,23 @@ namespace Azure.AI.FormRecognizer.Models
     // The only difference is that ExtractedPage has Fields, too.
     /// <summary>
     /// </summary>
-    public class ExtractedLayoutPage
+    public readonly struct ExtractedLayoutPage
     {
-        internal ExtractedLayoutPage() { }
+        internal ExtractedLayoutPage(int pageNumber, ExtractedTable[] tables)
+        {
+            PageNumber = pageNumber;
+            Tables = tables;
+        }
 
         /// <summary>
         /// Page number.
         /// </summary>
-        public int PageNumber { get; internal set; }
+        public int PageNumber { get;  }
 
         /// <summary>
         /// Output of the enhanced Optical Character Recognition engine, which identifies
         /// tables.
         /// </summary>
-        public ExtractedTable[] Tables { get; internal set; }
+        public ExtractedTable[] Tables { get;  }
     }
 }

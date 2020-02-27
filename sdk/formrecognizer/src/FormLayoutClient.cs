@@ -66,8 +66,9 @@ namespace Azure.AI.FormRecognizer
         /// <returns></returns>
         public virtual ExtractLayoutResult ExtractLayout(Stream stream, FormContentType? contentType = null, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
         {
-            AnalyzeOperation operation = _formLayoutClient.StartAnalyze(stream, contentType, includeRawPageExtractions, cancellationToken);
-            return new ExtractLayoutResult(operation);
+            throw new NotImplementedException();
+            //AnalyzeOperation operation = _formLayoutClient.StartAnalyze(stream, contentType, includeRawPageExtractions, cancellationToken);
+            //return new ExtractLayoutResult(operation);
         }
 
 
@@ -91,13 +92,11 @@ namespace Azure.AI.FormRecognizer
         public virtual async Task<ExtractLayoutResult> ExtractLayoutAsync(Stream stream, FormContentType? contentType, bool includeRawPageExtractions, CancellationToken cancellationToken = default)
         {
 
+            await Task.Run(() => { }).ConfigureAwait(false);
+            throw new NotImplementedException();
 
-
-
-
-
-            AnalyzeOperation op = await _formLayoutClient.StartAnalyzeAsync(stream, contentType, includeRawPageExtractions, cancellationToken).ConfigureAwait(false);
-            return new ExtractLayoutResult(op);
+            //AnalyzeOperation op = await _formLayoutClient.StartAnalyzeAsync(stream, contentType, includeRawPageExtractions, cancellationToken).ConfigureAwait(false);
+            //return new ExtractLayoutResult(op);
         }
 
         /// <summary>
@@ -118,8 +117,10 @@ namespace Azure.AI.FormRecognizer
         /// <returns></returns>
         public virtual ExtractLayoutResult ExtractLayout(Uri uri, bool includeRawPageExtractions, CancellationToken cancellationToken = default)
         {
-            AnalyzeOperation operation = _formLayoutClient.StartAnalyze(uri, includeRawPageExtractions, cancellationToken);
-            return new ExtractLayoutResult(operation);
+            throw new NotImplementedException();
+
+            //AnalyzeOperation operation = _formLayoutClient.StartAnalyze(uri, includeRawPageExtractions, cancellationToken);
+            //return new ExtractLayoutResult(operation);
         }
 
 
@@ -130,7 +131,11 @@ namespace Azure.AI.FormRecognizer
         /// <returns></returns>
         public virtual async Task<ExtractLayoutResult> ExtractLayoutAsync(Uri uri, CancellationToken cancellationToken = default)
         {
-            return await ExtractLayoutAsync(uri, false, cancellationToken).ConfigureAwait(false);
+            await Task.Run(() => { }).ConfigureAwait(false);
+
+            throw new NotImplementedException();
+
+            //return await ExtractLayoutAsync(uri, false, cancellationToken).ConfigureAwait(false);
         }
 
 
@@ -142,8 +147,13 @@ namespace Azure.AI.FormRecognizer
         /// <returns></returns>
         public virtual async Task<ExtractLayoutResult> ExtractLayoutAsync(Uri uri, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
         {
-            AnalyzeOperation op = await _formLayoutClient.StartAnalyzeAsync(uri, includeRawPageExtractions, cancellationToken).ConfigureAwait(false);
-            return new ExtractLayoutResult(op);
+
+            await Task.Run(() => { }).ConfigureAwait(false);
+            throw new NotImplementedException();
+
+
+            //AnalyzeOperation op = await _formLayoutClient.StartAnalyzeAsync(uri, includeRawPageExtractions, cancellationToken).ConfigureAwait(false);
+            //return new ExtractLayoutResult(op);
         }
     }
 }

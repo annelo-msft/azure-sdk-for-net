@@ -55,8 +55,9 @@ namespace Azure.AI.FormRecognizer
         /// <returns></returns>
         public virtual ExtractReceiptResult ExtractReceipt(Stream stream, FormContentType? contentType = null, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
         {
-            AnalyzeOperation operation = _formReceiptClient.StartAnalyze(stream, contentType, includeRawPageExtractions, cancellationToken);
-            return new ExtractReceiptResult(operation);
+            throw new NotImplementedException();
+            //AnalyzeOperation operation = _formReceiptClient.StartAnalyze(stream, contentType, includeRawPageExtractions, cancellationToken);
+            //return new ExtractReceiptResult(operation);
         }
 
         /// <summary>
@@ -68,8 +69,10 @@ namespace Azure.AI.FormRecognizer
         /// <returns></returns>
         public virtual async Task<ExtractReceiptResult> ExtractReceiptAsync(Stream stream, FormContentType? contentType = null, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
         {
-            AnalyzeOperation op = await _formReceiptClient.StartAnalyzeAsync(stream, contentType, includeRawPageExtractions, cancellationToken).ConfigureAwait(false);
-            return new ExtractReceiptResult(op);
+            await Task.Run(() => { }).ConfigureAwait(false);
+            throw new NotImplementedException();
+            //AnalyzeOperation op = await _formReceiptClient.StartAnalyzeAsync(stream, contentType, includeRawPageExtractions, cancellationToken).ConfigureAwait(false);
+            //return new ExtractReceiptResult(op);
         }
 
         /// <summary>
@@ -80,8 +83,9 @@ namespace Azure.AI.FormRecognizer
         /// <returns></returns>
         public virtual ExtractReceiptResult ExtractReceipt(Uri uri, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
         {
-            AnalyzeOperation op = _formReceiptClient.StartAnalyze(uri, includeRawPageExtractions, cancellationToken);
-            return new ExtractReceiptResult(op);
+            throw new NotImplementedException();
+            //AnalyzeOperation op = _formReceiptClient.StartAnalyze(uri, includeRawPageExtractions, cancellationToken);
+            //return new ExtractReceiptResult(op);
         }
 
         /// <summary>
@@ -92,8 +96,10 @@ namespace Azure.AI.FormRecognizer
         /// <returns></returns>
         public virtual async Task<ExtractReceiptResult> ExtractReceiptAsync(Uri uri, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
         {
-            AnalyzeOperation op = await _formReceiptClient.StartAnalyzeAsync(uri, includeRawPageExtractions, cancellationToken).ConfigureAwait(false);
-            return new ExtractReceiptResult(op);
+            await Task.Run(() => { }).ConfigureAwait(false);
+            throw new NotImplementedException();
+            //AnalyzeOperation op = await _formReceiptClient.StartAnalyzeAsync(uri, includeRawPageExtractions, cancellationToken).ConfigureAwait(false);
+            //return new ExtractReceiptResult(op);
         }
     }
 }

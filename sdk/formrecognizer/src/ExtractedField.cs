@@ -21,11 +21,19 @@ namespace Azure.AI.FormRecognizer.Models
 
         /// <summary>
         /// </summary>
-        public ExtractedText Name { get; internal set; }
+        public string Name { get; internal set; }
 
         /// <summary>
         /// </summary>
-        public ExtractedText Value { get; internal set; }
+        public float[] NameBoundingBox { get; }
+
+        /// <summary>
+        /// </summary>
+        public string Value { get; internal set; }
+
+        /// <summary>
+        /// </summary>
+        public float[] ValueBoundingBox { get; }
 
         // TODO: Should Confidence go on BoundedText?  Should it be ExtractedText?
         /// <summary>

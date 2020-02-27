@@ -8,41 +8,48 @@ namespace Azure.AI.FormRecognizer.Models
 {
     /// <summary>
     /// </summary>
-    public class ExtractResult
+    public readonly struct ExtractResult
     {
-        private AnalyzeOperation operation;
+        private readonly AnalyzeOperation operation;
 
-        internal ExtractResult(AnalyzeOperation operation)
+        internal ExtractResult(AnalyzeOperation operation, AnalysisStatus status, DateTimeOffset lastUpdateTime, DateTimeOffset creationTime, ExtractedPage[] pages)
         {
             this.operation = operation;
+            Status = status;
+            LastUpdateTime = lastUpdateTime;
+            CreationTime = creationTime;
+            Pages = pages;
+            //RawPages = rawPages;
         }
+
+
+        //internal ExtractResult(AnalyzeOperation operation)
+        //{
+        //    this.operation = operation;
+        //}
 
         /// <summary>
         /// Status of the operation.
         /// </summary>
-        internal AnalysisStatus Status { get; set; }
+        internal AnalysisStatus Status { get; }
 
         /// <summary>
         /// Date and time when the status was last updated.
         /// </summary>
-        internal DateTimeOffset LastUpdateTime { get; set; }
+        internal DateTimeOffset LastUpdateTime { get; }
 
         // TODO: do we need these timestamps or status for any customer scenario?
 
         /// <summary>
         /// Date and time when the analysis operation was submitted.
         /// </summary>
-        internal DateTimeOffset CreationTime { get; set; }
+        internal DateTimeOffset CreationTime { get; }
 
         /// <summary>
         /// Page-level information extracted from the input.
         /// </summary>
-        public ExtractedPage[] Pages { get; internal set; }
+        public ExtractedPage[] Pages { get; }
 
-        /// <summary>
-        /// Output of the Optical Character Recognition engine, including text
-        /// elements with bounding boxes, as well as page geometry, and page and line languages.
-        /// </summary>
-        public RawPageExtraction[] RawPages { get; internal set; }
+        //public RawPageExtraction[] RawPages { get;  }
     }
 }

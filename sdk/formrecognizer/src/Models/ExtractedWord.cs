@@ -8,18 +8,29 @@ namespace Azure.AI.FormRecognizer.Models
     /// <summary>
     /// Represents an extracted word.
     /// </summary>
-    public class ExtractedWord : ExtractedText
+    public class ExtractedWord
     {
+        internal ExtractedWord() { }
+
         /// <summary>
         /// Confidence value in the prediction of the word.
         /// </summary>
         public float Confidence { get; internal set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ExtractedWord"/> class.
+        /// The text content of the line.
         /// </summary>
-        internal ExtractedWord()
-        { }
+        public string Text { get; }
+
+        /// <summary>
+        /// Bounding box of the extracted line.
+        /// </summary>
+        public float[] BoundingBox { get; }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="word"></param>
+        public static implicit operator string(ExtractedWord word) => word.Text;
 
         internal static ExtractedWord Create() => new ExtractedWord();
     }

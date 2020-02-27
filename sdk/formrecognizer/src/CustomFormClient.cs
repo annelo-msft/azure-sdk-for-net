@@ -192,8 +192,9 @@ namespace Azure.AI.FormRecognizer.Custom
         /// <returns></returns>
         public virtual ExtractPredefinedResult ExtractPredefined(string modelId, Stream stream, FormContentType? contentType = null, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
         {
-            AnalyzeOperation op = _formRecognizerClient.GetModelReference(modelId).StartAnalyze(stream, contentType, includeRawPageExtractions, cancellationToken);
-            return new ExtractPredefinedResult(op);
+            throw new NotImplementedException();
+            //AnalyzeOperation op = _formRecognizerClient.GetModelReference(modelId).StartAnalyze(stream, contentType, includeRawPageExtractions, cancellationToken);
+            //return new ExtractPredefinedResult(op);
         }
 
         /// <summary>
@@ -206,8 +207,11 @@ namespace Azure.AI.FormRecognizer.Custom
         /// <returns></returns>
         public virtual async Task<ExtractPredefinedResult> ExtractPredefinedAsync(string modelId, Stream stream, FormContentType? contentType = null, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
         {
-            AnalyzeOperation op = await _formRecognizerClient.GetModelReference(modelId).StartAnalyzeAsync(stream, contentType, includeRawPageExtractions, cancellationToken).ConfigureAwait(false);
-            return new ExtractPredefinedResult(op);
+            await Task.Run(() => { }).ConfigureAwait(false);
+            throw new NotImplementedException();
+
+            //AnalyzeOperation op = await _formRecognizerClient.GetModelReference(modelId).StartAnalyzeAsync(stream, contentType, includeRawPageExtractions, cancellationToken).ConfigureAwait(false);
+            //return new ExtractPredefinedResult(op);
         }
 
         /// <summary>
@@ -219,8 +223,9 @@ namespace Azure.AI.FormRecognizer.Custom
         /// <returns></returns>
         public virtual ExtractPredefinedResult ExtractPredefined(string modelId, Uri uri, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
         {
-            AnalyzeOperation op = _formRecognizerClient.GetModelReference(modelId).StartAnalyze(uri, includeRawPageExtractions, cancellationToken);
-            return new ExtractPredefinedResult(op);
+            throw new NotImplementedException();
+            //AnalyzeOperation op = _formRecognizerClient.GetModelReference(modelId).StartAnalyze(uri, includeRawPageExtractions, cancellationToken);
+            //return new ExtractPredefinedResult(op);
         }
 
         /// <summary>
@@ -232,8 +237,11 @@ namespace Azure.AI.FormRecognizer.Custom
         /// <returns></returns>
         public virtual async Task<ExtractPredefinedResult> ExtractPredefinedAsync(string modelId, Uri uri, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
         {
-            AnalyzeOperation operation = await _formRecognizerClient.GetModelReference(modelId).StartAnalyzeAsync(uri, includeRawPageExtractions, cancellationToken).ConfigureAwait(false);
-            return new ExtractPredefinedResult(operation);
+            await Task.Run(() => { }).ConfigureAwait(false);
+            throw new NotImplementedException();
+
+            //AnalyzeOperation operation = await _formRecognizerClient.GetModelReference(modelId).StartAnalyzeAsync(uri, includeRawPageExtractions, cancellationToken).ConfigureAwait(false);
+            //return new ExtractPredefinedResult(operation);
         }
 
         /// <summary>
@@ -246,8 +254,9 @@ namespace Azure.AI.FormRecognizer.Custom
         /// <returns></returns>
         public virtual ExtractResult Extract(string modelId, Stream stream, FormContentType? contentType = null, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
         {
-            AnalyzeOperation operation = _formRecognizerClient.GetModelReference(modelId).StartAnalyze(stream, contentType, includeRawPageExtractions, cancellationToken);
-            return new ExtractResult(operation);
+            throw new NotImplementedException();
+            //AnalyzeOperation operation = _formRecognizerClient.GetModelReference(modelId).StartAnalyze(stream, contentType, includeRawPageExtractions, cancellationToken);
+            //return new ExtractResult(operation);
         }
 
         /// <summary>
@@ -260,8 +269,11 @@ namespace Azure.AI.FormRecognizer.Custom
         /// <returns></returns>
         public virtual async Task<ExtractResult> ExtractAsync(string modelId, Stream stream, FormContentType? contentType = null, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
         {
-            AnalyzeOperation op = await _formRecognizerClient.GetModelReference(modelId).StartAnalyzeAsync(stream, contentType, includeRawPageExtractions, cancellationToken).ConfigureAwait(false);
-            return new ExtractResult(op);
+            await Task.Run(() => { }).ConfigureAwait(false);
+            throw new NotImplementedException();
+
+            //AnalyzeOperation op = await _formRecognizerClient.GetModelReference(modelId).StartAnalyzeAsync(stream, contentType, includeRawPageExtractions, cancellationToken).ConfigureAwait(false);
+            //return new ExtractResult(op);
         }
 
         /// <summary>
@@ -273,8 +285,9 @@ namespace Azure.AI.FormRecognizer.Custom
         /// <returns></returns>
         public virtual ExtractResult Extract(string modelId, Uri uri, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
         {
-            AnalyzeOperation op = _formRecognizerClient.GetModelReference(modelId).StartAnalyze(uri, includeRawPageExtractions, cancellationToken);
-            return new ExtractResult(op);
+            throw new NotImplementedException();
+            //AnalyzeOperation op = _formRecognizerClient.GetModelReference(modelId).StartAnalyze(uri, includeRawPageExtractions, cancellationToken);
+            //return new ExtractResult(op);
         }
 
         /// <summary>
@@ -286,8 +299,11 @@ namespace Azure.AI.FormRecognizer.Custom
         /// <returns></returns>
         public virtual async Task<ExtractResult> ExtractAsync(string modelId, Uri uri, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
         {
-            AnalyzeOperation op = await _formRecognizerClient.GetModelReference(modelId).StartAnalyzeAsync(uri, includeRawPageExtractions, cancellationToken).ConfigureAwait(false);
-            return new ExtractResult(op);
+            await Task.Run(() => { }).ConfigureAwait(false);
+            throw new NotImplementedException();
+
+            //AnalyzeOperation op = await _formRecognizerClient.GetModelReference(modelId).StartAnalyzeAsync(uri, includeRawPageExtractions, cancellationToken).ConfigureAwait(false);
+            //return new ExtractResult(op);
         }
         #endregion Prediction
     }

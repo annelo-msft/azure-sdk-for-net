@@ -6,17 +6,25 @@ namespace Azure.AI.FormRecognizer.Models
     /// <summary>
     /// Report for a custom model training document.
     /// </summary>
-    public class TrainingInputResult
+    public readonly struct TrainingInputResult
     {
+        internal TrainingInputResult(string documentName, int totalTrainedPages, FormRecognizerError[] trainingInputErrors, TrainingInputSuccessStatus successStatus)
+        {
+            DocumentName = documentName;
+            TotalTrainedPages = totalTrainedPages;
+            TrainingInputErrors = trainingInputErrors;
+            SuccessStatus = successStatus;
+        }
+
         /// <summary>
         /// Name of training input document.
         /// </summary>
-        public string DocumentName { get; internal set; }
+        public string DocumentName { get; }
 
         /// <summary>
         /// Total number of pages trained.
         /// </summary>
-        public int TotalTrainedPages { get; internal set; }
+        public int TotalTrainedPages { get; }
 
         // TODO: Are these errors about the document, or the training operation, or ... ?
         // What are the possible values of these?  Would it be better to group these with
@@ -27,7 +35,7 @@ namespace Azure.AI.FormRecognizer.Models
         /// <summary>
         /// List of errors.
         /// </summary>
-        public FormRecognizerError[] TrainingInputErrors { get; internal set; }
+        public FormRecognizerError[] TrainingInputErrors { get; }
 
         // TODO: What does it mean for a training document to have failed or succeeded?
         // Is this in the context of either supervised or unsupervised models, or does it apply to both?
@@ -36,13 +44,7 @@ namespace Azure.AI.FormRecognizer.Models
         /// <summary>
         /// Status of the training operation.
         /// </summary>
-        public TrainingInputSuccessStatus SuccessStatus { get; internal set; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TrainingInputResult"/> class.
-        /// </summary>
-        internal TrainingInputResult()
-        { }
+        public TrainingInputSuccessStatus SuccessStatus { get; }
 
         internal static TrainingInputResult Create() => new TrainingInputResult();
     }

@@ -12,29 +12,35 @@ namespace Azure.AI.FormRecognizer.Models
     /// <summary>
     /// Custom Form Recognizer model.
     /// </summary>
-    public class TrainingWithLabelsResult
+    public readonly struct TrainingWithLabelsResult
     {
-        internal TrainingWithLabelsResult() { }
+        internal TrainingWithLabelsResult(PredefinedFieldModel model, ModelTrainingInfo trainingInfo, TrainingInputResult[] trainingInputResults, FormRecognizerError[] trainingErrors)
+        {
+            Model = model;
+            TrainingInfo = trainingInfo;
+            TrainingInputResults = trainingInputResults;
+            TrainingErrors = trainingErrors;
+        }
 
         /// <summary>
         /// </summary>
-        public PredefinedFieldModel Model { get; internal set; }
+        public PredefinedFieldModel Model { get; }
 
         /// <summary>
         /// </summary>
-        public ModelTrainingInfo TrainingInfo { get; internal set; }
+        public ModelTrainingInfo TrainingInfo { get; }
 
         /// <summary>
         /// List of the documents used to train the model and any errors reported in each document.
         /// </summary>
-        public TrainingInputResult[] TrainingInputResults { get; internal set; }
+        public TrainingInputResult[] TrainingInputResults { get; }
 
         // TODO: Do field accuracies apply only to supervised models?  How is this different from FormClusters?
 
         /// <summary>
         /// Errors returned during the training operation.
         /// </summary>
-        public FormRecognizerError[] TrainingErrors { get; internal set; }
+        public FormRecognizerError[] TrainingErrors { get; }
 
         internal static TrainingWithLabelsResult Create() => new TrainingWithLabelsResult();
     }

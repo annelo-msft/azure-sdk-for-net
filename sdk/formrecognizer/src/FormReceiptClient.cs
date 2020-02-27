@@ -3,6 +3,7 @@
 
 using System;
 using Azure.AI.FormRecognizer.Http;
+using Azure.AI.FormRecognizer.Models;
 using Azure.AI.FormRecognizer.Prediction;
 using Azure.Core;
 

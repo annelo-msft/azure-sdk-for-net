@@ -23,25 +23,27 @@ namespace Azure.AI.FormRecognizer.Serialization
 
             if (dataTable.Cells == default)
             {
-                dataTable.Cells = Array.Empty<ExtractedTableCell>();
+                //dataTable.Cells = Array.Empty<ExtractedTableCell>();
             }
             return dataTable;
         }
 
+#pragma warning disable CA1801
         private static void ReadPropertyValue(ref ExtractedTable dataTable, JsonProperty property)
+#pragma warning restore CA1801
         {
-            if (property.NameEquals("rows"))
-            {
-                dataTable.RowCount = property.Value.GetInt32();
-            }
-            else if (property.NameEquals("columns"))
-            {
-                dataTable.ColumnCount = property.Value.GetInt32();
-            }
-            else if (property.NameEquals("cells"))
-            {
-                dataTable.Cells = ArrayJson.Read(property.Value, DataTableCellJson.Read);
-            }
+            //if (property.NameEquals("rows"))
+            //{
+            //    dataTable.RowCount = property.Value.GetInt32();
+            //}
+            //else if (property.NameEquals("columns"))
+            //{
+            //    dataTable.ColumnCount = property.Value.GetInt32();
+            //}
+            //else if (property.NameEquals("cells"))
+            //{
+            //    dataTable.Cells = ArrayJson.Read(property.Value, DataTableCellJson.Read);
+            //}
         }
     }
 }

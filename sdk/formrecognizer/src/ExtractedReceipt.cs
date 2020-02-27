@@ -10,56 +10,70 @@ namespace Azure.AI.FormRecognizer.Models
 {
     /// <summary>
     /// </summary>
-    public class ExtractedReceipt
+    public readonly struct ExtractedReceipt
     {
-        internal ExtractedReceipt() { }
+        internal ExtractedReceipt(ReceiptType receiptType, string merchantName, string merchantAddress, string merchantPhoneNumber, DateTime transactionDate, DateTime transactionTime, ReceiptItem[] items, float subtotal, float tax, float tip, float total, RawReceiptExtraction rawFields)
+        {
+            ReceiptType = receiptType;
+            MerchantName = merchantName;
+            MerchantAddress = merchantAddress;
+            MerchantPhoneNumber = merchantPhoneNumber;
+            TransactionDate = transactionDate;
+            TransactionTime = transactionTime;
+            Items = items;
+            Subtotal = subtotal;
+            Tax = tax;
+            Tip = tip;
+            Total = total;
+            RawFields = rawFields;
+        }
 
         /// <summary>
         /// </summary>
-        public ReceiptType ReceiptType { get; internal set; }
+        public ReceiptType ReceiptType { get;  }
 
         /// <summary>
         /// </summary>
-        public string MerchantName { get; internal set; }
+        public string MerchantName { get;  }
 
         /// <summary>
         /// </summary>
-        public string MerchantAddress { get; internal set; }
+        public string MerchantAddress { get;  }
 
         /// <summary>
         /// </summary>
-        public string MerchantPhoneNumber { get; internal set; }
+        public string MerchantPhoneNumber { get;  }
 
         /// <summary>
         /// </summary>
-        public DateTime TransactionDate { get; internal set; }
+        public DateTime TransactionDate { get;  }
 
         /// <summary>
         /// </summary>
-        public DateTime TransactionTime { get; internal set; }
+        public DateTime TransactionTime { get;  }
 
         /// <summary>
         /// </summary>
-        public ReceiptItem[] Items { get; internal set; }
+        public ReceiptItem[] Items { get;  }
 
         /// <summary>
         /// </summary>
-        public float Subtotal { get; internal set; }
+        public float Subtotal { get;  }
 
         /// <summary>
         /// </summary>
-        public float Tax { get; internal set; }
+        public float Tax { get;  }
 
         /// <summary>
         /// </summary>
-        public float Tip { get; internal set; }
+        public float Tip { get;  }
 
         /// <summary>
         /// </summary>
-        public float Total { get; internal set; }
+        public float Total { get;  }
 
         /// <summary>
         /// </summary>
-        public RawReceiptExtraction RawFields { get; internal set; }
+        public RawReceiptExtraction RawFields { get;  }
     }
 }
