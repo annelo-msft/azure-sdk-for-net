@@ -28,11 +28,13 @@ namespace Azure.AI.FormRecognizer.Serialization
             return documentResult;
         }
 
+#pragma warning disable CA1801
         private static void ReadPropertyValue(ref ExtractedPredefinedFieldForm documentResult, JsonProperty property)
+#pragma warning restore CA1801
         {
             if (property.NameEquals("docType"))
             {
-                documentResult.FormType = property.Value.GetString();
+                //documentResult.FormType = property.Value.GetString();
             }
             else if (property.NameEquals("pageRange"))
             {

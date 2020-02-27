@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using System;
+using System.Collections.Generic;
 
 namespace Azure.AI.FormRecognizer.Models
 {
@@ -45,7 +46,7 @@ namespace Azure.AI.FormRecognizer.Models
         /// <summary>
         /// List of cells contained in the table.
         /// </summary>
-        public ExtractedTableCell[] Cells { get; }
+        public IReadOnlyList<ExtractedTableCell> Cells { get; }
 
         internal static ExtractedTable Create() => new ExtractedTable();
     }

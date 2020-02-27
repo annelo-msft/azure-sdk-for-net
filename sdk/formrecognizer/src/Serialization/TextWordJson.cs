@@ -23,8 +23,10 @@ namespace Azure.AI.FormRecognizer.Serialization
             return textWord;
         }
 
+#pragma warning disable CA1801
         private static void ReadPropertyValue(ref ExtractedWord textWord, JsonProperty property)
         {
+#pragma warning restore CA1801
             //if (property.NameEquals("text"))
             //{
             //    TextElementJson.ReadText(textWord, property.Value);
@@ -35,7 +37,7 @@ namespace Azure.AI.FormRecognizer.Serialization
             //}
             if (property.NameEquals("confidence"))
             {
-                textWord.Confidence = property.Value.GetSingle();
+                //textWord.Confidence = property.Value.GetSingle();
             }
         }
     }

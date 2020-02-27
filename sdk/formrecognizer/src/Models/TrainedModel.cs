@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using System.Collections.Generic;
+
 namespace Azure.AI.FormRecognizer.Models
 {
     /// <summary>
@@ -23,6 +25,6 @@ namespace Azure.AI.FormRecognizer.Models
         /// </summary>
         // TODO: Question - will this be populated for supervised models?
         // If not, we should probably break FRCustomModel into supervised and unsupervised custom models.s
-        public TrainedFormCluster[] FormClusters { get; }
+        public IReadOnlyList<TrainedFormCluster> FormClusters { get; }
     }
 }

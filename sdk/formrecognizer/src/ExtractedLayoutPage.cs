@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using System.Collections.Generic;
+
 namespace Azure.AI.FormRecognizer.Models
 {
     // TODO: would it make sense to tighten the connection from this to ExtractedPage?
@@ -9,7 +11,7 @@ namespace Azure.AI.FormRecognizer.Models
     /// </summary>
     public readonly struct ExtractedLayoutPage
     {
-        internal ExtractedLayoutPage(int pageNumber, ExtractedTable[] tables)
+        internal ExtractedLayoutPage(int pageNumber, IReadOnlyList<ExtractedTable> tables)
         {
             PageNumber = pageNumber;
             Tables = tables;
@@ -24,6 +26,6 @@ namespace Azure.AI.FormRecognizer.Models
         /// Output of the enhanced Optical Character Recognition engine, which identifies
         /// tables.
         /// </summary>
-        public ExtractedTable[] Tables { get;  }
+        public IReadOnlyList<ExtractedTable> Tables { get;  }
     }
 }

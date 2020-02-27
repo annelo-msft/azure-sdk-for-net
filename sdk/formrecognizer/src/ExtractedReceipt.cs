@@ -30,50 +30,50 @@ namespace Azure.AI.FormRecognizer.Models
 
         /// <summary>
         /// </summary>
-        public ReceiptType ReceiptType { get;  }
+        public ReceiptType ReceiptType { get; }
 
         /// <summary>
         /// </summary>
-        public string MerchantName { get;  }
+        public string MerchantName { get; }
 
         /// <summary>
         /// </summary>
-        public string MerchantAddress { get;  }
+        public string MerchantAddress { get; }
 
         /// <summary>
         /// </summary>
-        public string MerchantPhoneNumber { get;  }
+        public string MerchantPhoneNumber { get; }
 
         /// <summary>
         /// </summary>
-        public DateTime TransactionDate { get;  }
+        public DateTime TransactionDate { get; }
 
         /// <summary>
         /// </summary>
-        public DateTime TransactionTime { get;  }
+        public DateTime TransactionTime { get; }
 
         /// <summary>
         /// </summary>
-        public ReceiptItem[] Items { get;  }
+        public IReadOnlyList<ReceiptItem> Items { get; }
 
         /// <summary>
         /// </summary>
-        public float Subtotal { get;  }
+        public float Subtotal { get; }
 
         /// <summary>
         /// </summary>
-        public float Tax { get;  }
+        public float Tax { get; }
 
         /// <summary>
         /// </summary>
-        public float Tip { get;  }
+        public float Tip { get; }
 
         /// <summary>
         /// </summary>
-        public float Total { get;  }
+        public float Total { get; }
 
         /// <summary>
         /// </summary>
-        public RawReceiptExtraction RawFields { get;  }
+        public RawReceiptExtraction RawFields { get; }
     }
 }

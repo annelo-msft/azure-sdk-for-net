@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using System.Collections.Generic;
+
 namespace Azure.AI.FormRecognizer.Models
 {
     /// <summary>
@@ -35,7 +37,7 @@ namespace Azure.AI.FormRecognizer.Models
         /// <summary>
         /// List of errors.
         /// </summary>
-        public FormRecognizerError[] TrainingInputErrors { get; }
+        public IReadOnlyList<FormRecognizerError> TrainingInputErrors { get; }
 
         // TODO: What does it mean for a training document to have failed or succeeded?
         // Is this in the context of either supervised or unsupervised models, or does it apply to both?

@@ -3,6 +3,7 @@
 
 using Azure.AI.FormRecognizer.Prediction;
 using System;
+using System.Collections.Generic;
 
 namespace Azure.AI.FormRecognizer.Models
 {
@@ -48,7 +49,7 @@ namespace Azure.AI.FormRecognizer.Models
         /// <summary>
         /// Page-level information extracted from the input.
         /// </summary>
-        public ExtractedPage[] Pages { get; }
+        public IReadOnlyList<ExtractedPage> Pages { get; }
 
         //public RawPageExtraction[] RawPages { get;  }
     }

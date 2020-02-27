@@ -4,6 +4,7 @@
 using Azure.AI.FormRecognizer.Models;
 using Azure.AI.FormRecognizer.Prediction;
 using System;
+using System.Collections.Generic;
 
 namespace Azure.AI.FormRecognizer.Models
 {
@@ -43,7 +44,7 @@ namespace Azure.AI.FormRecognizer.Models
         /// <summary>
         /// Information extracted from each form in the input file.
         /// </summary>
-        public ExtractedPredefinedFieldForm[] Forms { get;  }
+        public IReadOnlyList<ExtractedPredefinedFieldForm> Forms { get;  }
 
         // TODO: would it be better to put this in Forms?  It should go there logically, but I like having all
         // AnalysisResults having OCR output at the top level.

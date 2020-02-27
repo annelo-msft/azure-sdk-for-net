@@ -33,7 +33,7 @@ namespace Azure.AI.FormRecognizer.Models
 
         /// <summary>
         /// </summary>
-        public ExtractedPredefinedFieldPage[] Pages { get; }
+        public IReadOnlyList<ExtractedPredefinedFieldPage> Pages { get; }
 
         internal static ExtractedPredefinedFieldForm Create() => new ExtractedPredefinedFieldForm();
     }

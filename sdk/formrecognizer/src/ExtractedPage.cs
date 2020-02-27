@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using System.Collections.Generic;
+
 namespace Azure.AI.FormRecognizer.Models
 {
     /// <summary>
@@ -30,12 +32,12 @@ namespace Azure.AI.FormRecognizer.Models
         /// <summary>
         /// List of key-value pairs extracted from the page.
         /// </summary>
-        public ExtractedField[] Fields { get;  }
+        public IReadOnlyList<ExtractedField> Fields { get;  }
 
         /// <summary>
         /// Output of the enhanced Optical Character Recognition engine, which identifies
         /// tables.
         /// </summary>
-        public ExtractedTable[] Tables { get;  }
+        public IReadOnlyList<ExtractedTable> Tables { get;  }
     }
 }

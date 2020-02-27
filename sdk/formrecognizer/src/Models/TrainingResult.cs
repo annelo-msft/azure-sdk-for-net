@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using System.Collections.Generic;
+
 namespace Azure.AI.FormRecognizer.Models
 {
     /// <summary>
@@ -27,12 +29,12 @@ namespace Azure.AI.FormRecognizer.Models
         /// <summary>
         /// List of the documents used to train the model and any errors reported in each document.
         /// </summary>
-        public TrainingInputResult[] TrainingInputResults { get; }
+        public IReadOnlyList<TrainingInputResult> TrainingInputResults { get; }
 
         /// <summary>
         /// Errors returned during the training operation.
         /// </summary>
-        public FormRecognizerError[] TrainingErrors { get; }
+        public IReadOnlyList<FormRecognizerError> TrainingErrors { get; }
 
         internal static TrainingResult Create() => new TrainingResult();
     }

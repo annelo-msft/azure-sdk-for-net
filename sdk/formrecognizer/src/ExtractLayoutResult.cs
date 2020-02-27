@@ -4,6 +4,7 @@
 using Azure.AI.FormRecognizer.Custom;
 using Azure.AI.FormRecognizer.Prediction;
 using System;
+using System.Collections.Generic;
 
 namespace Azure.AI.FormRecognizer.Models
 {
@@ -43,7 +44,7 @@ namespace Azure.AI.FormRecognizer.Models
         /// <summary>
         /// Table output of the enhanced Optical Character Recognition engine.
         /// </summary>
-        public ExtractedLayoutPage[] Pages { get;  }
+        public IReadOnlyList<ExtractedLayoutPage> Pages { get;  }
 
         //public RawPageExtraction[] RawPages { get;  }
     }

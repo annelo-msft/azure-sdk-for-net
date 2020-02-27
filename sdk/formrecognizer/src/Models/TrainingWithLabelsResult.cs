@@ -33,14 +33,14 @@ namespace Azure.AI.FormRecognizer.Models
         /// <summary>
         /// List of the documents used to train the model and any errors reported in each document.
         /// </summary>
-        public TrainingInputResult[] TrainingInputResults { get; }
+        public IReadOnlyList<TrainingInputResult> TrainingInputResults { get; }
 
         // TODO: Do field accuracies apply only to supervised models?  How is this different from FormClusters?
 
         /// <summary>
         /// Errors returned during the training operation.
         /// </summary>
-        public FormRecognizerError[] TrainingErrors { get; }
+        public IReadOnlyList<FormRecognizerError> TrainingErrors { get; }
 
         internal static TrainingWithLabelsResult Create() => new TrainingWithLabelsResult();
     }
