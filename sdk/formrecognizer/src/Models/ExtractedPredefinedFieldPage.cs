@@ -7,6 +7,8 @@ namespace Azure.AI.FormRecognizer.Models
     /// </summary>
     public class ExtractedPredefinedFieldPage
     {
+        internal ExtractedPredefinedFieldPage() { }
+
         /// <summary>
         /// Page number.
         /// </summary>

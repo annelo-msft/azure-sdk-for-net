@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using System;
+
 namespace Azure.AI.FormRecognizer.Models
 {
     /// <summary>
@@ -9,6 +11,19 @@ namespace Azure.AI.FormRecognizer.Models
     public class ExtractedTable
     {
         internal ExtractedTable() { }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="i"></param>
+        /// <param name="j"></param>
+        /// <returns></returns>
+        public ExtractedTableCell this[int i, int j]
+        {
+#pragma warning disable CA1065 // Do not raise exceptions in unexpected locations
+            get { throw new NotImplementedException(); }
+#pragma warning restore CA1065 // Do not raise exceptions in unexpected locations
+            set { throw new NotImplementedException(); }
+        }
 
         /// <summary>
         /// Number of rows.

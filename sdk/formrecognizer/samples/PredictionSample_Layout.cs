@@ -1,7 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using Azure.AI.FormRecognizer.Prebuilt;
+using Azure.AI.FormRecognizer;
+using Azure.AI.FormRecognizer.Models;
 using System;
 using System.IO;
 using System.Text;
@@ -26,11 +27,30 @@ namespace Azure.AI.FormRecognizer.Samples
 
         private static async Task Analyze()
         {
+
+
+
+
+            Azure.AI.FormRecognizer.Custom.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             string endpoint = Environment.GetEnvironmentVariable("FORM_RECOGNIZER_ENDPOINT");
             string subscriptionKey = Environment.GetEnvironmentVariable("FORM_RECOGNIZER_SUBSCRIPTION_KEY");
 
             var credential = new CognitiveKeyCredential(subscriptionKey);
-            var client = new LayoutRecognizerClient(new Uri(endpoint), credential, new FormRecognizerClientOptions());
+            var client = new FormLayoutClient(new Uri(endpoint), credential, new FormRecognizerClientOptions());
 
             var filePath = @"C:\src\samples\cognitive\formrecognizer\sample_data\Test\Receipt_6.pdf";
             var stream = File.OpenRead(filePath);
@@ -44,7 +64,7 @@ namespace Azure.AI.FormRecognizer.Samples
 
                 foreach (var table in page.Tables)
                 {
-                    Console.WriteLine($"Table on page {page.PageNumber} has {table.Rows} rows and {table.Columns} columns, and values:");
+                    Console.WriteLine($"Table on page {page.PageNumber} has {table.RowCount} rows and {table.ColumnCount} columns, and values:");
 
                     foreach (var cell in table.Cells)
                     {

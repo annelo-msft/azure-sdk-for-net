@@ -88,8 +88,14 @@ namespace Azure.AI.FormRecognizer
         /// <param name="includeRawPageExtractions"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public virtual async Task<ExtractLayoutResult> ExtractLayoutAsync(Stream stream, FormContentType? contentType = null, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
+        public virtual async Task<ExtractLayoutResult> ExtractLayoutAsync(Stream stream, FormContentType? contentType, bool includeRawPageExtractions, CancellationToken cancellationToken = default)
         {
+
+
+
+
+
+
             AnalyzeOperation op = await _formLayoutClient.StartAnalyzeAsync(stream, contentType, includeRawPageExtractions, cancellationToken).ConfigureAwait(false);
             return new ExtractLayoutResult(op);
         }
@@ -110,7 +116,7 @@ namespace Azure.AI.FormRecognizer
         /// <param name="includeRawPageExtractions"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public virtual ExtractLayoutResult ExtractLayout(Uri uri, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
+        public virtual ExtractLayoutResult ExtractLayout(Uri uri, bool includeRawPageExtractions, CancellationToken cancellationToken = default)
         {
             AnalyzeOperation operation = _formLayoutClient.StartAnalyze(uri, includeRawPageExtractions, cancellationToken);
             return new ExtractLayoutResult(operation);

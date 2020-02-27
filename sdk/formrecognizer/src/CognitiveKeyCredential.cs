@@ -4,7 +4,7 @@
 using System.Threading.Tasks;
 using Azure.Core;
 
-namespace Azure.AI.FormRecognizer
+namespace Azure.AI.FormRecognizer.Models
 {
     /// <summary>
     /// A <see cref="CognitiveKeyCredential"/> is a subscription key used to authenticate the Form Recognizer service.
