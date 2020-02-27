@@ -17,7 +17,7 @@ namespace Azure.AI.FormRecognizer.Models
         /// The detected language of the line, if different from the overall page language.
         /// </summary>
         /// <value></value>
-        public FormTextLanguage Language { get; internal set; }
+        public string Language { get; internal set; }
 
         /// <summary>
         /// The text content of the line.
