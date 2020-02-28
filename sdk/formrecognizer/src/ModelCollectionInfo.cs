@@ -15,7 +15,7 @@ namespace Azure.AI.FormRecognizer.Models
         {
             ModelCount = modelCount;
             SubscriptionLimit = subscriptionLimit;
-            LastUpdateTime = lastUpdateTime;
+            LastUpdatedOn = lastUpdateTime;
         }
 
         /// <summary>
@@ -31,6 +31,6 @@ namespace Azure.AI.FormRecognizer.Models
         /// <summary>
         /// Last updated date.
         /// </summary>
-        internal DateTimeOffset LastUpdateTime { get; }
+        public DateTimeOffset LastUpdatedOn { get; }
     }
 }

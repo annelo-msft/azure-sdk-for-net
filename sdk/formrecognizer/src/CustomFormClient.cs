@@ -13,14 +13,14 @@ namespace Azure.AI.FormRecognizer.Custom
     /// <summary>
     /// </summary>
 #pragma warning disable SA1649 // File name should match first type name
-    public class CustomModelClient
+    public class CustomFormClient
 #pragma warning restore SA1649 // File name should match first type name
     {
         private FormRecognizerClient_internal _formRecognizerClient;
 
         /// <summary>
         /// </summary>
-        protected CustomModelClient()
+        protected CustomFormClient()
         {
         }
 
@@ -30,7 +30,7 @@ namespace Azure.AI.FormRecognizer.Custom
         /// <param name="endpoint">Endpoint.</param>
         /// <param name="credential">Your assigned subscription key, copied from https://portal.azure.com/</param>
 #pragma warning disable AZC0007 // DO provide a minimal constructor that takes only the parameters required to connect to the service.
-        public CustomModelClient(Uri endpoint, CognitiveKeyCredential credential)
+        public CustomFormClient(Uri endpoint, CognitiveKeyCredential credential)
 #pragma warning restore AZC0007 // DO provide a minimal constructor that takes only the parameters required to connect to the service.
             : this(endpoint, credential, new FormRecognizerClientOptions())
         {
@@ -43,7 +43,7 @@ namespace Azure.AI.FormRecognizer.Custom
         /// <param name="credential">Your assigned subscription key, copied from https://portal.azure.com/</param>
         /// <param name="options">Optional service parameters.</param>
 #pragma warning disable AZC0007 // DO provide a minimal constructor that takes only the parameters required to connect to the service.
-        public CustomModelClient(Uri endpoint, CognitiveKeyCredential credential, FormRecognizerClientOptions options)
+        public CustomFormClient(Uri endpoint, CognitiveKeyCredential credential, FormRecognizerClientOptions options)
 #pragma warning restore AZC0007 // DO provide a minimal constructor that takes only the parameters required to connect to the service.
         {
             var temp = options.Version;
