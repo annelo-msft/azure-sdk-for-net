@@ -4,6 +4,7 @@
 using Azure.AI.FormRecognizer.Models;
 using Azure.AI.FormRecognizer.Prediction;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -53,7 +54,7 @@ namespace Azure.AI.FormRecognizer
         /// <param name="includeRawPageExtractions"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public virtual Response<ExtractReceiptResult> ExtractReceipt(Stream stream, FormContentType? contentType = null, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
+        public virtual Response<IReadOnlyList<ExtractedReceipt>> ExtractReceipt(Stream stream, FormContentType? contentType = null, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
             //AnalyzeOperation operation = _formReceiptClient.StartAnalyze(stream, contentType, includeRawPageExtractions, cancellationToken);
@@ -67,7 +68,7 @@ namespace Azure.AI.FormRecognizer
         /// <param name="includeRawPageExtractions"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public virtual async Task<Response<ExtractReceiptResult>> ExtractReceiptAsync(Stream stream, FormContentType? contentType = null, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
+        public virtual async Task<Response<IReadOnlyList<ExtractedReceipt>>> ExtractReceiptAsync(Stream stream, FormContentType? contentType = null, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
         {
             await Task.Run(() => { }).ConfigureAwait(false);
             throw new NotImplementedException();
@@ -81,7 +82,7 @@ namespace Azure.AI.FormRecognizer
         /// <param name="includeRawPageExtractions"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public virtual Response<ExtractReceiptResult> ExtractReceipt(Uri uri, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
+        public virtual Response<IReadOnlyList<ExtractedReceipt>> ExtractReceipt(Uri uri, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
             //AnalyzeOperation op = _formReceiptClient.StartAnalyze(uri, includeRawPageExtractions, cancellationToken);
@@ -94,7 +95,7 @@ namespace Azure.AI.FormRecognizer
         /// <param name="includeRawPageExtractions"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public virtual async Task<Response<ExtractReceiptResult>> ExtractReceiptAsync(Uri uri, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
+        public virtual async Task<Response<IReadOnlyList<ExtractedReceipt>>> ExtractReceiptAsync(Uri uri, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
         {
             await Task.Run(() => { }).ConfigureAwait(false);
             throw new NotImplementedException();

@@ -9,7 +9,7 @@ namespace Azure.AI.FormRecognizer.Models
 {
     /// <summary>
     /// </summary>
-    public readonly struct ExtractReceiptResult
+    internal readonly struct ExtractReceiptResult
     {
         private readonly AnalyzeOperation operation;
 
@@ -43,7 +43,7 @@ namespace Azure.AI.FormRecognizer.Models
 
         /// <summary>
         /// </summary>
-        public IReadOnlyCollection<ExtractedReceipt> Receipts { get; }
+        public IReadOnlyList<ExtractedReceipt> Receipts { get; }
 
         //public RawPageExtraction[] RawPages { get; }
     }

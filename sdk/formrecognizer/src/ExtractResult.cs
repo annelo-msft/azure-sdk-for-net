@@ -9,11 +9,13 @@ namespace Azure.AI.FormRecognizer.Models
 {
     /// <summary>
     /// </summary>
-    public readonly struct ExtractResult
+#pragma warning disable SA1649 // File name should match first type name
+    public readonly struct ExtractedForm
+#pragma warning restore SA1649 // File name should match first type name
     {
         private readonly AnalyzeOperation operation;
 
-        internal ExtractResult(AnalyzeOperation operation, AnalysisStatus status, DateTimeOffset lastUpdateTime, DateTimeOffset creationTime, ExtractedPage[] pages)
+        internal ExtractedForm(AnalyzeOperation operation, AnalysisStatus status, DateTimeOffset lastUpdateTime, DateTimeOffset creationTime, ExtractedPage[] pages)
         {
             this.operation = operation;
             Status = status;

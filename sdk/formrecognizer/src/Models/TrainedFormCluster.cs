@@ -13,7 +13,7 @@ namespace Azure.AI.FormRecognizer.Models
     public readonly struct RecognizableForm
 #pragma warning restore SA1649 // File name should match first type name
     {
-        internal RecognizableForm(int formClusterId, IReadOnlyCollection<string> fieldNames)
+        internal RecognizableForm(int formClusterId, IReadOnlyList<string> fieldNames)
         {
             RecognizableFormId = formClusterId;
             FieldNames = fieldNames;
@@ -27,6 +27,6 @@ namespace Azure.AI.FormRecognizer.Models
         /// <summary>
         /// Names of the fields extracted from forms in this cluster.
         /// </summary>
-        public IReadOnlyCollection<string> FieldNames { get; }
+        public IReadOnlyList<string> FieldNames { get; }
     }
 }

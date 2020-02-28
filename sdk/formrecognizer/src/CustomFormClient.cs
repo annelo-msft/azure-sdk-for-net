@@ -12,13 +12,15 @@ namespace Azure.AI.FormRecognizer.Custom
 {
     /// <summary>
     /// </summary>
-    public class CustomFormClient
+#pragma warning disable SA1649 // File name should match first type name
+    public class CustomModelClient
+#pragma warning restore SA1649 // File name should match first type name
     {
         private FormRecognizerClient_internal _formRecognizerClient;
 
         /// <summary>
         /// </summary>
-        protected CustomFormClient()
+        protected CustomModelClient()
         {
         }
 
@@ -28,7 +30,7 @@ namespace Azure.AI.FormRecognizer.Custom
         /// <param name="endpoint">Endpoint.</param>
         /// <param name="credential">Your assigned subscription key, copied from https://portal.azure.com/</param>
 #pragma warning disable AZC0007 // DO provide a minimal constructor that takes only the parameters required to connect to the service.
-        public CustomFormClient(Uri endpoint, CognitiveKeyCredential credential)
+        public CustomModelClient(Uri endpoint, CognitiveKeyCredential credential)
 #pragma warning restore AZC0007 // DO provide a minimal constructor that takes only the parameters required to connect to the service.
             : this(endpoint, credential, new FormRecognizerClientOptions())
         {
@@ -41,7 +43,7 @@ namespace Azure.AI.FormRecognizer.Custom
         /// <param name="credential">Your assigned subscription key, copied from https://portal.azure.com/</param>
         /// <param name="options">Optional service parameters.</param>
 #pragma warning disable AZC0007 // DO provide a minimal constructor that takes only the parameters required to connect to the service.
-        public CustomFormClient(Uri endpoint, CognitiveKeyCredential credential, FormRecognizerClientOptions options)
+        public CustomModelClient(Uri endpoint, CognitiveKeyCredential credential, FormRecognizerClientOptions options)
 #pragma warning restore AZC0007 // DO provide a minimal constructor that takes only the parameters required to connect to the service.
         {
             var temp = options.Version;
@@ -125,7 +127,7 @@ namespace Azure.AI.FormRecognizer.Custom
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public virtual Pageable<ModelTrainingStatus> GetTrainingStatusByModel(CancellationToken cancellationToken = default)
+        public virtual Pageable<ModelTrainingStatus> GetModelsTrainingStatus(CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
@@ -134,7 +136,7 @@ namespace Azure.AI.FormRecognizer.Custom
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public virtual AsyncPageable<ModelTrainingStatus> GetTrainingStatusByModelAsync(CancellationToken cancellationToken = default)
+        public virtual AsyncPageable<ModelTrainingStatus> GetModelsTrainingStatusAsync(CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
@@ -190,7 +192,7 @@ namespace Azure.AI.FormRecognizer.Custom
         /// <param name="includeRawPageExtractions"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public virtual Response<ExtractLabeledResult> ExtractLabeled(string modelId, Stream stream, FormContentType? contentType = null, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
+        public virtual Response<ExtractedLabeledForm> ExtractLabeledForm(string modelId, Stream stream, FormContentType? contentType = null, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
             //AnalyzeOperation op = _formRecognizerClient.GetModelReference(modelId).StartAnalyze(stream, contentType, includeRawPageExtractions, cancellationToken);
@@ -204,7 +206,7 @@ namespace Azure.AI.FormRecognizer.Custom
         /// <param name="includeRawPageExtractions"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public virtual async Task<Response<ExtractLabeledResult>> ExtractLabeledAsync(string modelId, Stream stream, FormContentType? contentType = null, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
+        public virtual async Task<Response<ExtractedLabeledForm>> ExtractLabeledFormAsync(string modelId, Stream stream, FormContentType? contentType = null, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
         {
             await Task.Run(() => { }).ConfigureAwait(false);
             throw new NotImplementedException();
@@ -219,7 +221,7 @@ namespace Azure.AI.FormRecognizer.Custom
         /// <param name="includeRawPageExtractions"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public virtual Response<ExtractLabeledResult> ExtractLabeled(string modelId, Uri uri, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
+        public virtual Response<ExtractedLabeledForm> ExtractLabeledForm(string modelId, Uri uri, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
             //AnalyzeOperation op = _formRecognizerClient.GetModelReference(modelId).StartAnalyze(uri, includeRawPageExtractions, cancellationToken);
@@ -232,7 +234,7 @@ namespace Azure.AI.FormRecognizer.Custom
         /// <param name="includeRawPageExtractions"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public virtual async Task<Response<ExtractLabeledResult>> ExtractLabeledAsync(string modelId, Uri uri, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
+        public virtual async Task<Response<ExtractedLabeledForm>> ExtractLabeledFormAsync(string modelId, Uri uri, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
         {
             await Task.Run(() => { }).ConfigureAwait(false);
             throw new NotImplementedException();
@@ -248,7 +250,7 @@ namespace Azure.AI.FormRecognizer.Custom
         /// <param name="includeRawPageExtractions"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public virtual Response<ExtractResult> Extract(string modelId, Stream stream, FormContentType? contentType = null, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
+        public virtual Response<ExtractedForm> ExtractForm(string modelId, Stream stream, FormContentType? contentType = null, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
             //AnalyzeOperation operation = _formRecognizerClient.GetModelReference(modelId).StartAnalyze(stream, contentType, includeRawPageExtractions, cancellationToken);
@@ -263,7 +265,7 @@ namespace Azure.AI.FormRecognizer.Custom
         /// <param name="includeRawPageExtractions"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public virtual async Task<Response<ExtractResult>> ExtractAsync(string modelId, Stream stream, FormContentType? contentType = null, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
+        public virtual async Task<Response<ExtractedForm>> ExtractFormAsync(string modelId, Stream stream, FormContentType? contentType = null, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
         {
             await Task.Run(() => { }).ConfigureAwait(false);
             throw new NotImplementedException();
@@ -279,7 +281,7 @@ namespace Azure.AI.FormRecognizer.Custom
         /// <param name="includeRawPageExtractions"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public virtual Response<ExtractResult> Extract(string modelId, Uri uri, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
+        public virtual Response<ExtractedForm> ExtractForm(string modelId, Uri uri, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
             //AnalyzeOperation op = _formRecognizerClient.GetModelReference(modelId).StartAnalyze(uri, includeRawPageExtractions, cancellationToken);
@@ -293,7 +295,7 @@ namespace Azure.AI.FormRecognizer.Custom
         /// <param name="includeRawPageExtractions"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public virtual async Task<Response<ExtractResult>> ExtractAsync(string modelId, Uri uri, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
+        public virtual async Task<Response<ExtractedForm>> ExtractFormAsync(string modelId, Uri uri, bool includeRawPageExtractions = false, CancellationToken cancellationToken = default)
         {
             await Task.Run(() => { }).ConfigureAwait(false);
             throw new NotImplementedException();
