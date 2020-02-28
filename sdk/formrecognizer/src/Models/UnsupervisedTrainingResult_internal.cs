@@ -43,12 +43,12 @@ namespace Azure.AI.FormRecognizer.Custom
         /// </summary>
         // TODO: Question - will this be populated for supervised models?
         // If not, we should probably break FRCustomModel into supervised and unsupervised custom models.s
-        public ICollection<RecognizableForm> FormClusters { get; internal set; }
+        public ICollection<RecognizedForm> FormClusters { get; internal set; }
 
         /// <summary>
         /// List of the documents used to train the model and any errors reported in each document.
         /// </summary>
-        public TrainingInputResult[] DocumentTrainingResults { get; internal set; }
+        public TrainingDocumentInfo[] DocumentTrainingResults { get; internal set; }
 
         // TODO: Do field accuracies apply only to supervised models?  How is this different from FormClusters?
 

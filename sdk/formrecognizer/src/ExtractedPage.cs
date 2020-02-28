@@ -10,10 +10,9 @@ namespace Azure.AI.FormRecognizer.Models
     /// </summary>
     public readonly struct ExtractedPage
     {
-        internal ExtractedPage(int pageNumber, int formClusterId, ExtractedField[] fields, ExtractedTable[] tables)
+        internal ExtractedPage(int pageNumber, ExtractedField[] fields, ExtractedTable[] tables)
         {
             PageNumber = pageNumber;
-            RecognizedFormId = formClusterId;
             Fields = fields;
             Tables = tables;
         }
@@ -23,10 +22,6 @@ namespace Azure.AI.FormRecognizer.Models
         /// Page number.
         /// </summary>
         public int PageNumber { get;  }
-
-        /// <summary>
-        /// </summary>
-        public int RecognizedFormId { get;  }
 
         /// <summary>
         /// List of key-value pairs extracted from the page.

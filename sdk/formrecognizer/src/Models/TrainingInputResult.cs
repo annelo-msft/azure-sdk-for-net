@@ -8,9 +8,11 @@ namespace Azure.AI.FormRecognizer.Models
     /// <summary>
     /// Report for a custom model training document.
     /// </summary>
-    public readonly struct TrainingInputResult
+#pragma warning disable SA1649 // File name should match first type name
+    public readonly struct TrainingDocumentInfo
+#pragma warning restore SA1649 // File name should match first type name
     {
-        internal TrainingInputResult(string documentName, int totalTrainedPages, FormRecognizerError[] trainingInputErrors, TrainingInputSuccessStatus successStatus)
+        internal TrainingDocumentInfo(string documentName, int totalTrainedPages, FormRecognizerError[] trainingInputErrors, TrainingInputSuccessStatus successStatus)
         {
             DocumentName = documentName;
             TotalTrainedPages = totalTrainedPages;
@@ -48,6 +50,6 @@ namespace Azure.AI.FormRecognizer.Models
         /// </summary>
         public TrainingInputSuccessStatus SuccessStatus { get; }
 
-        internal static TrainingInputResult Create() => new TrainingInputResult();
+        internal static TrainingDocumentInfo Create() => new TrainingDocumentInfo();
     }
 }

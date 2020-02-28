@@ -12,7 +12,7 @@ namespace Azure.AI.FormRecognizer.Models
     /// </summary>
     public readonly struct ExtractedReceipt
     {
-        internal ExtractedReceipt(ReceiptType receiptType, string merchantName, string merchantAddress, string merchantPhoneNumber, DateTime transactionDate, DateTime transactionTime, ReceiptItem[] items, float subtotal, float tax, float tip, float total, RawReceiptExtraction rawFields)
+        internal ExtractedReceipt(ReceiptType receiptType, string merchantName, string merchantAddress, string merchantPhoneNumber, DateTime transactionDate, DateTime transactionTime, ExtractedReceiptItem[] items, float subtotal, float tax, float tip, float total, RawReceiptExtraction rawFields)
         {
             ReceiptType = receiptType;
             MerchantName = merchantName;
@@ -54,7 +54,7 @@ namespace Azure.AI.FormRecognizer.Models
 
         /// <summary>
         /// </summary>
-        public IReadOnlyList<ReceiptItem> Items { get; }
+        public IReadOnlyList<ExtractedReceiptItem> Items { get; }
 
         /// <summary>
         /// </summary>

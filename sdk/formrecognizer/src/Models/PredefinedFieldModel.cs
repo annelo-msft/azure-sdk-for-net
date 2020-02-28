@@ -6,14 +6,16 @@ namespace Azure.AI.FormRecognizer.Models
     /// <summary>
     /// </summary>
 #pragma warning disable SA1649 // File name should match first type name
-    public readonly struct LabeledModel
+    public readonly struct CustomLabeledModel
 #pragma warning restore SA1649 // File name should match first type name
     {
-        internal LabeledModel(string modelId, float? averageFieldAccuracy, LabeledFieldAccuracy[] fieldAccuracies)
+        internal CustomLabeledModel(string modelId, float? averageFieldAccuracy, LabeledFieldAccuracy[] fieldAccuracies, ModelTrainingStatus trainingStatus, TrainingInfo trainingInfo)
         {
             ModelId = modelId;
             AverageFieldAccuracy = averageFieldAccuracy;
             FieldAccuracies = fieldAccuracies;
+            TrainingStatus = trainingStatus;
+            TrainingInfo = trainingInfo;
         }
 
         /// <summary>
@@ -30,5 +32,13 @@ namespace Azure.AI.FormRecognizer.Models
         /// List of fields used to train the model and the train operation error reported by each.
         /// </summary>
         public LabeledFieldAccuracy[] FieldAccuracies { get; }
+
+        /// <summary>
+        /// </summary>
+        public ModelTrainingStatus TrainingStatus { get; }
+
+        /// <summary>
+        /// </summary>
+        public TrainingInfo TrainingInfo { get; }
     }
 }

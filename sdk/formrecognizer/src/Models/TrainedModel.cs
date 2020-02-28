@@ -11,10 +11,12 @@ namespace Azure.AI.FormRecognizer.Models
     public readonly struct CustomModel
 #pragma warning restore SA1649 // File name should match first type name
     {
-        internal CustomModel(string modelId, RecognizableForm[] formClusters)
+        internal CustomModel(string modelId, IReadOnlyList<RecognizedForm> recognizableForms, ModelTrainingStatus trainingStatus, TrainingInfo trainingInfo)
         {
             ModelId = modelId;
-            RecognizableForms = formClusters;
+            RecognizedForms = recognizableForms;
+            TrainingStatus = trainingStatus;
+            TrainingInfo = trainingInfo;
         }
 
         /// <summary>
@@ -27,8 +29,14 @@ namespace Azure.AI.FormRecognizer.Models
         /// </summary>
         // TODO: Question - will this be populated for supervised models?
         // If not, we should probably break FRCustomModel into supervised and unsupervised custom models.s
-        public IReadOnlyList<RecognizableForm> RecognizableForms { get; }
+        public IReadOnlyList<RecognizedForm> RecognizedForms { get; }
 
+        /// <summary>
+        /// </summary>
+        public ModelTrainingStatus TrainingStatus { get; }
 
+        /// <summary>
+        /// </summary>
+        public TrainingInfo TrainingInfo { get; }
     }
 }

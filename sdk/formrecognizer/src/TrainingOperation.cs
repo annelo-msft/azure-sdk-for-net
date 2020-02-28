@@ -9,7 +9,7 @@ namespace Azure.AI.FormRecognizer.Models
 {
     /// <summary>
     /// </summary>
-    public class TrainingOperation : Operation<TrainingResult>
+    public class TrainingOperation : Operation<CustomModel>
     {
         private TrainingOperation_internal _operation;
 
@@ -24,7 +24,9 @@ namespace Azure.AI.FormRecognizer.Models
 
         /// <summary>
         /// </summary>
-        public override TrainingResult Value => _operation.Value;
+#pragma warning disable CA1065 // Do not raise exceptions in unexpected locations
+        public override CustomModel Value => throw new NotImplementedException();
+#pragma warning restore CA1065 // Do not raise exceptions in unexpected locations
 
         /// <summary>
         /// </summary>
@@ -57,15 +59,15 @@ namespace Azure.AI.FormRecognizer.Models
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public override ValueTask<Response<TrainingResult>> WaitForCompletionAsync(CancellationToken cancellationToken = default)
-            => _operation.WaitForCompletionAsync(cancellationToken);
+        public override ValueTask<Response<CustomModel>> WaitForCompletionAsync(CancellationToken cancellationToken = default)
+            => throw new NotImplementedException();
 
         /// <summary>
         /// </summary>
         /// <param name="pollingInterval"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public override ValueTask<Response<TrainingResult>> WaitForCompletionAsync(TimeSpan pollingInterval, CancellationToken cancellationToken = default)
-            => _operation.WaitForCompletionAsync(pollingInterval, cancellationToken);
+        public override ValueTask<Response<CustomModel>> WaitForCompletionAsync(TimeSpan pollingInterval, CancellationToken cancellationToken = default)
+            => throw new NotImplementedException();
     }
 }

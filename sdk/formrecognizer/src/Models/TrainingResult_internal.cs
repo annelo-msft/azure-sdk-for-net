@@ -15,7 +15,7 @@ namespace Azure.AI.FormRecognizer.Models
         /// <summary>
         /// List of the documents used to train the model and any errors reported in each document.
         /// </summary>
-        public TrainingInputResult[] TrainingDocumentResults { get; internal set; }
+        public TrainingDocumentInfo[] TrainingDocumentResults { get; internal set; }
 
         // TODO: Does Fields apply only to supervised models?  How is this different from FormClusters?
 

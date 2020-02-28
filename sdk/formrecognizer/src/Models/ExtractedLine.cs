@@ -9,15 +9,21 @@ namespace Azure.AI.FormRecognizer.Models
     /// <summary>
     /// Represents a line of extracted text.
     /// </summary>
-    public class ExtractedLine
+    public readonly struct ExtractedLine
     {
-        internal ExtractedLine() { }
+        internal ExtractedLine(string language, string text, float[] boundingBox, IReadOnlyList<ExtractedWord> words)
+        {
+            Language = language;
+            Text = text;
+            BoundingBox = boundingBox;
+            Words = words;
+        }
 
         /// <summary>
         /// The detected language of the line, if different from the overall page language.
         /// </summary>
         /// <value></value>
-        public string Language { get; internal set; }
+        public string Language { get;  }
 
         /// <summary>
         /// The text content of the line.
@@ -32,7 +38,7 @@ namespace Azure.AI.FormRecognizer.Models
         /// <summary>
         /// List of words extracted from the line.
         /// </summary>
-        public IList<ExtractedWord> Words { get; internal set; }
+        public IReadOnlyList<ExtractedWord> Words { get; }
 
         internal static ExtractedLine Create() => new ExtractedLine();
     }

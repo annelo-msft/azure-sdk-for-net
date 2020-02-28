@@ -5,9 +5,11 @@ namespace Azure.AI.FormRecognizer.Models
 {
     /// <summary>
     /// </summary>
-    public readonly struct ReceiptItem
+#pragma warning disable SA1649 // File name should match first type name
+    public readonly struct ExtractedReceiptItem
+#pragma warning restore SA1649 // File name should match first type name
     {
-        internal ReceiptItem(int quantity, string name, float totalPrice)
+        internal ExtractedReceiptItem(int quantity, string name, float totalPrice)
         {
             Quantity = quantity;
             Name = name;

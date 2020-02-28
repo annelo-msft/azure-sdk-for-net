@@ -10,9 +10,9 @@ namespace Azure.AI.FormRecognizer.Serialization
 {
     internal class TrainingDocumentJson
     {
-        public static TrainingInputResult Read(JsonElement root)
+        public static TrainingDocumentInfo Read(JsonElement root)
         {
-            var trainingDocument = TrainingInputResult.Create();
+            var trainingDocument = TrainingDocumentInfo.Create();
             if (root.ValueKind == JsonValueKind.Object)
             {
                 foreach (JsonProperty property in root.EnumerateObject())
@@ -28,7 +28,7 @@ namespace Azure.AI.FormRecognizer.Serialization
         }
 
 #pragma warning disable CA1801
-        private static void ReadPropertyValue(ref TrainingInputResult trainingDocument, JsonProperty property)
+        private static void ReadPropertyValue(ref TrainingDocumentInfo trainingDocument, JsonProperty property)
 #pragma warning restore CA1801
         {
             //if (property.NameEquals("documentName"))

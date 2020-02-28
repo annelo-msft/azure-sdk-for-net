@@ -13,10 +13,10 @@ namespace Azure.AI.FormRecognizer.Models
     /// Custom Form Recognizer model.
     /// </summary>
 #pragma warning disable SA1649 // File name should match first type name
-    public readonly struct LabeledTrainingResult
+    internal readonly struct LabeledTrainingResult
 #pragma warning restore SA1649 // File name should match first type name
     {
-        internal LabeledTrainingResult(LabeledModel model, ModelTrainingStatus trainingInfo, TrainingInputResult[] trainingInputResults, FormRecognizerError[] trainingErrors)
+        internal LabeledTrainingResult(CustomLabeledModel model, ModelTrainingStatus trainingInfo, TrainingDocumentInfo[] trainingInputResults, FormRecognizerError[] trainingErrors)
         {
             Model = model;
             TrainingInfo = trainingInfo;
@@ -26,7 +26,7 @@ namespace Azure.AI.FormRecognizer.Models
 
         /// <summary>
         /// </summary>
-        public LabeledModel Model { get; }
+        public CustomLabeledModel Model { get; }
 
         /// <summary>
         /// </summary>
@@ -35,7 +35,7 @@ namespace Azure.AI.FormRecognizer.Models
         /// <summary>
         /// List of the documents used to train the model and any errors reported in each document.
         /// </summary>
-        public IReadOnlyList<TrainingInputResult> TrainingInputResults { get; }
+        public IReadOnlyList<TrainingDocumentInfo> TrainingInputResults { get; }
 
         // TODO: Do field accuracies apply only to supervised models?  How is this different from FormClusters?
 

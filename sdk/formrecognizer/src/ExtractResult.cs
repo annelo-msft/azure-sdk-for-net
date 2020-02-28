@@ -15,21 +15,15 @@ namespace Azure.AI.FormRecognizer.Models
     {
         private readonly AnalyzeOperation operation;
 
-        internal ExtractedForm(AnalyzeOperation operation, AnalysisStatus status, DateTimeOffset lastUpdateTime, DateTimeOffset creationTime, ExtractedPage[] pages)
+        internal ExtractedForm(AnalyzeOperation operation, AnalysisStatus status, DateTimeOffset lastUpdateTime, DateTimeOffset creationTime, int recognizedFormId, IReadOnlyList<ExtractedPage> pages)
         {
             this.operation = operation;
             Status = status;
             LastUpdateTime = lastUpdateTime;
             CreationTime = creationTime;
+            RecognizedFormId = recognizedFormId;
             Pages = pages;
-            //RawPages = rawPages;
         }
-
-
-        //internal ExtractResult(AnalyzeOperation operation)
-        //{
-        //    this.operation = operation;
-        //}
 
         /// <summary>
         /// Status of the operation.
@@ -47,6 +41,10 @@ namespace Azure.AI.FormRecognizer.Models
         /// Date and time when the analysis operation was submitted.
         /// </summary>
         internal DateTimeOffset CreationTime { get; }
+
+        /// <summary>
+        /// </summary>
+        public int RecognizedFormId { get; }
 
         /// <summary>
         /// Page-level information extracted from the input.
