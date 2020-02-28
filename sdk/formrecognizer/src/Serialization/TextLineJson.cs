@@ -10,9 +10,9 @@ namespace Azure.AI.FormRecognizer.Serialization
 {
     internal class TextLineJson
     {
-        public static ExtractedLine Read(JsonElement root)
+        public static RawExtractedLine Read(JsonElement root)
         {
-            var textLine = ExtractedLine.Create();
+            var textLine = RawExtractedLine.Create();
             if (root.ValueKind == JsonValueKind.Object)
             {
                 foreach (JsonProperty property in root.EnumerateObject())
@@ -28,7 +28,7 @@ namespace Azure.AI.FormRecognizer.Serialization
         }
 
 #pragma warning disable CA1801
-        private static void ReadPropertyValue(ref ExtractedLine textLine, JsonProperty property)
+        private static void ReadPropertyValue(ref RawExtractedLine textLine, JsonProperty property)
 #pragma warning restore CA1801
         {
             //if (property.NameEquals("text"))

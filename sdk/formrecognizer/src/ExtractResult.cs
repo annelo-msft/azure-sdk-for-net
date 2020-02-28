@@ -21,7 +21,7 @@ namespace Azure.AI.FormRecognizer.Models
             Status = status;
             LastUpdateTime = lastUpdateTime;
             CreationTime = creationTime;
-            RecognizedFormId = recognizedFormId;
+            KnownFormId = recognizedFormId;
             Pages = pages;
         }
 
@@ -44,7 +44,7 @@ namespace Azure.AI.FormRecognizer.Models
 
         /// <summary>
         /// </summary>
-        public int RecognizedFormId { get; }
+        public int KnownFormId { get; }
 
         /// <summary>
         /// Page-level information extracted from the input.

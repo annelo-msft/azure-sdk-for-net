@@ -11,11 +11,12 @@ namespace Azure.AI.FormRecognizer.Models
     public readonly struct ExtractedLabeledPage
 #pragma warning restore SA1649 // File name should match first type name
     {
-        internal ExtractedLabeledPage(int pageNumber, ExtractedLabeledField[] fields, ExtractedTable[] tables)
+        internal ExtractedLabeledPage(int pageNumber, ExtractedLabeledField[] fields, ExtractedTable[] tables, RawExtractedPageInfo pageInfo)
         {
             PageNumber = pageNumber;
             Fields = fields;
             Tables = tables;
+            RawPageInfo = pageInfo;
         }
 
         /// <summary>
@@ -32,5 +33,9 @@ namespace Azure.AI.FormRecognizer.Models
         /// tables.
         /// </summary>
         public IReadOnlyList<ExtractedTable> Tables { get;  }
+
+        /// <summary>
+        /// </summary>
+        public RawExtractedPageInfo RawPageInfo { get; }
     }
 }

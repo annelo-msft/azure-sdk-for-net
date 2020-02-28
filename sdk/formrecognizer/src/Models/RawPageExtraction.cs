@@ -9,9 +9,11 @@ namespace Azure.AI.FormRecognizer.Models
     /// Output of the Optical Character Recognition engine, including text
     /// elements with bounding boxes, as well as page geometry, and page and line languages.
     /// </summary>
-    public class RawPageExtraction
+#pragma warning disable SA1649 // File name should match first type name
+    public class RawExtractedPageInfo
+#pragma warning restore SA1649 // File name should match first type name
     {
-        internal RawPageExtraction() { }
+        internal RawExtractedPageInfo() { }
 
         /// <summary>
         /// The 1-based page number in the input document.
@@ -52,9 +54,9 @@ namespace Azure.AI.FormRecognizer.Models
         /// As the sorting order depends on the detected text, it may change across images and OCR version updates. Thus, business logic
         /// should be built upon the actual line location instead of order.
         /// </summary>
-        public IReadOnlyList<ExtractedLine> Lines { get; internal set; }
+        //public IReadOnlyList<ExtractedLine> Lines { get; internal set; }
 
 
-        internal static RawPageExtraction Create() => new RawPageExtraction();
+        internal static RawExtractedPageInfo Create() => new RawExtractedPageInfo();
     }
 }

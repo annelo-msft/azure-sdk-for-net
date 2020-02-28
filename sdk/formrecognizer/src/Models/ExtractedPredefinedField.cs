@@ -14,19 +14,20 @@ namespace Azure.AI.FormRecognizer.Models
     public readonly struct ExtractedLabeledField
 #pragma warning restore SA1649 // File name should match first type name
     {
-        internal ExtractedLabeledField(string name, string value, float[] valueBoundingBox, LabeledFieldValueType type, float confidence)
+        internal ExtractedLabeledField(string label, string value, float[] valueBoundingBox, LabeledFieldValueType type, float confidence, RawExtractedLine rawExtractedField)
         {
-            Name = name;
+            Label = label;
             Value = value;
             ValueBoundingBox = valueBoundingBox;
             Type = type;
             Confidence = confidence;
+            RawFieldExtraction = rawExtractedField;
         }
 
         /// <summary>
         /// The name of the predefined field.
         /// </summary>
-        public string Name { get; }
+        public string Label { get; }
 
         /// <summary>
         /// The value of the predefined field.
@@ -47,5 +48,9 @@ namespace Azure.AI.FormRecognizer.Models
         /// Confidence value.
         /// </summary>
         public float Confidence { get; }
+
+        /// <summary>
+        /// </summary>
+        public RawExtractedLine RawFieldExtraction { get; }
     }
 }

@@ -8,9 +8,11 @@ namespace Azure.AI.FormRecognizer.Models
     /// <summary>
     /// Represents an extracted word.
     /// </summary>
-    public readonly struct ExtractedWord
+#pragma warning disable SA1649 // File name should match first type name
+    public readonly struct RawExtractedWord
+#pragma warning restore SA1649 // File name should match first type name
     {
-        internal ExtractedWord(float confidence, string text, float[] boundingBox)
+        internal RawExtractedWord(float confidence, string text, float[] boundingBox)
         {
             Confidence = confidence;
             Text = text;
@@ -35,8 +37,8 @@ namespace Azure.AI.FormRecognizer.Models
         /// <summary>
         /// </summary>
         /// <param name="word"></param>
-        public static implicit operator string(ExtractedWord word) => word.Text;
+        public static implicit operator string(RawExtractedWord word) => word.Text;
 
-        internal static ExtractedWord Create() => new ExtractedWord();
+        internal static RawExtractedWord Create() => new RawExtractedWord();
     }
 }

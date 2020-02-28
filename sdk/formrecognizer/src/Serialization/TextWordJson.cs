@@ -10,9 +10,9 @@ namespace Azure.AI.FormRecognizer.Serialization
 {
     internal class TextWordJson
     {
-        public static ExtractedWord Read(JsonElement root)
+        public static RawExtractedWord Read(JsonElement root)
         {
-            var textWord = ExtractedWord.Create();
+            var textWord = RawExtractedWord.Create();
             if (root.ValueKind == JsonValueKind.Object)
             {
                 foreach (JsonProperty property in root.EnumerateObject())
@@ -24,7 +24,7 @@ namespace Azure.AI.FormRecognizer.Serialization
         }
 
 #pragma warning disable CA1801
-        private static void ReadPropertyValue(ref ExtractedWord textWord, JsonProperty property)
+        private static void ReadPropertyValue(ref RawExtractedWord textWord, JsonProperty property)
         {
 #pragma warning restore CA1801
             //if (property.NameEquals("text"))

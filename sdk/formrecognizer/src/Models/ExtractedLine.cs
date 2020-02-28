@@ -9,9 +9,11 @@ namespace Azure.AI.FormRecognizer.Models
     /// <summary>
     /// Represents a line of extracted text.
     /// </summary>
-    public readonly struct ExtractedLine
+#pragma warning disable SA1649 // File name should match first type name
+    public readonly struct RawExtractedLine
+#pragma warning restore SA1649 // File name should match first type name
     {
-        internal ExtractedLine(string language, string text, float[] boundingBox, IReadOnlyList<ExtractedWord> words)
+        internal RawExtractedLine(string language, string text, float[] boundingBox, IReadOnlyList<RawExtractedWord> words)
         {
             Language = language;
             Text = text;
@@ -38,8 +40,8 @@ namespace Azure.AI.FormRecognizer.Models
         /// <summary>
         /// List of words extracted from the line.
         /// </summary>
-        public IReadOnlyList<ExtractedWord> Words { get; }
+        public IReadOnlyList<RawExtractedWord> Words { get; }
 
-        internal static ExtractedLine Create() => new ExtractedLine();
+        internal static RawExtractedLine Create() => new RawExtractedLine();
     }
 }

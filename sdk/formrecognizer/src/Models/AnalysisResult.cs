@@ -22,7 +22,7 @@ namespace Azure.AI.FormRecognizer.Prediction
         /// <summary>
         /// Text extracted from the input.
         /// </summary>
-        public RawPageExtraction[] ReadResults { get; internal set; }
+        public RawExtractedPageInfo[] ReadResults { get; internal set; }
 
         /// <summary>
         /// Page-level information extracted from the input.

@@ -11,10 +11,11 @@ namespace Azure.AI.FormRecognizer.Models
     /// </summary>
     public readonly struct ExtractedLayoutPage
     {
-        internal ExtractedLayoutPage(int pageNumber, IReadOnlyList<ExtractedTable> tables)
+        internal ExtractedLayoutPage(int pageNumber, IReadOnlyList<ExtractedTable> tables, RawExtractedPageInfo rawPageInfo)
         {
             PageNumber = pageNumber;
             Tables = tables;
+            RawPageInfo = rawPageInfo;
         }
 
         /// <summary>
@@ -27,5 +28,9 @@ namespace Azure.AI.FormRecognizer.Models
         /// tables.
         /// </summary>
         public IReadOnlyList<ExtractedTable> Tables { get;  }
+
+        /// <summary>
+        /// </summary>
+        public RawExtractedPageInfo RawPageInfo { get; }
     }
 }

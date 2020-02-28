@@ -10,9 +10,9 @@ namespace Azure.AI.FormRecognizer.Serialization
 {
     internal class ReadResultJson
     {
-        public static RawPageExtraction Read(JsonElement root)
+        public static RawExtractedPageInfo Read(JsonElement root)
         {
-            var readResult = RawPageExtraction.Create();
+            var readResult = RawExtractedPageInfo.Create();
             if (root.ValueKind == JsonValueKind.Object)
             {
                 foreach (JsonProperty property in root.EnumerateObject())
@@ -20,14 +20,14 @@ namespace Azure.AI.FormRecognizer.Serialization
                     ReadPropertyValue(ref readResult, property);
                 }
             }
-            if (readResult.Lines == default)
-            {
-                readResult.Lines = Array.Empty<ExtractedLine>();
-            }
+            //if (readResult.Lines == default)
+            //{
+            //    readResult.Lines = Array.Empty<ExtractedLine>();
+            //}
             return readResult;
         }
 
-        private static void ReadPropertyValue(ref RawPageExtraction readResult, JsonProperty property)
+        private static void ReadPropertyValue(ref RawExtractedPageInfo readResult, JsonProperty property)
         {
             if (property.NameEquals("page"))
             {

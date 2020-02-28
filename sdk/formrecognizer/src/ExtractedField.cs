@@ -1,13 +1,15 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using System.Collections.Generic;
+
 namespace Azure.AI.FormRecognizer.Models
 {
     /// <summary>
     /// </summary>
     public readonly struct ExtractedField
     {
-        internal ExtractedField(string label, string name, float[] nameBoundingBox, string value, float[] valueBoundingBox, float confidence)
+        internal ExtractedField(string label, string name, float[] nameBoundingBox, string value, float[] valueBoundingBox, float confidence, RawExtractedLine rawLineExtraction)
         {
             Label = label;
             Name = name;
@@ -15,9 +17,8 @@ namespace Azure.AI.FormRecognizer.Models
             Value = value;
             ValueBoundingBox = valueBoundingBox;
             Confidence = confidence;
+            RawFieldExtraction = rawLineExtraction;
         }
-
-
 
         // TODO: What is the value of label if this is only in unsupervised learning?
         // Or is this used for supervised learning as well?
@@ -51,5 +52,9 @@ namespace Azure.AI.FormRecognizer.Models
         /// Confidence value.
         /// </summary>
         public float Confidence { get; }
+
+        /// <summary>
+        /// </summary>
+        public RawExtractedLine RawFieldExtraction { get; }
     }
 }
