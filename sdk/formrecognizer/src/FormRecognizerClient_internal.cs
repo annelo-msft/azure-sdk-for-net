@@ -266,7 +266,7 @@ namespace Azure.AI.FormRecognizer
         /// Asynchronously get summary of all models.
         /// </summary>
         /// <param name="cancellationToken">Optional cancellation token.</param>
-        public async virtual Task<Response<ModelsSummary>> GetSummaryAsync(CancellationToken cancellationToken = default)
+        public async virtual Task<Response<ModelsSummary_internal>> GetSummaryAsync(CancellationToken cancellationToken = default)
         {
             using (var request = _pipeline.CreateListModelsRequest(op: "summary"))
             using (var response = await _pipeline.SendRequestAsync(request, cancellationToken).ConfigureAwait(false))
@@ -281,7 +281,7 @@ namespace Azure.AI.FormRecognizer
         /// Get summary of all models.
         /// </summary>
         /// <param name="cancellationToken">Optional cancellation token.</param>
-        public virtual Response<ModelsSummary> GetSummary(CancellationToken cancellationToken = default)
+        public virtual Response<ModelsSummary_internal> GetSummary(CancellationToken cancellationToken = default)
         {
             using (var request = _pipeline.CreateListModelsRequest(op: "summary"))
             using (var response = _pipeline.SendRequest(request, cancellationToken))

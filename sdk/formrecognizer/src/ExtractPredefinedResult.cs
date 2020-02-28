@@ -10,11 +10,13 @@ namespace Azure.AI.FormRecognizer.Models
 {
     /// <summary>
     /// </summary>
-    public readonly struct ExtractPredefinedResult
+#pragma warning disable SA1649 // File name should match first type name
+    public readonly struct ExtractLabeledResult
+#pragma warning restore SA1649 // File name should match first type name
     {
         private readonly AnalyzeOperation operation;
 
-        internal ExtractPredefinedResult(AnalyzeOperation operation, AnalysisStatus status, DateTimeOffset lastUpdateTime, DateTimeOffset creationTime, ExtractedPredefinedFieldForm[] forms)
+        internal ExtractLabeledResult(AnalyzeOperation operation, AnalysisStatus status, DateTimeOffset lastUpdateTime, DateTimeOffset creationTime, ExtractedLabeledForm[] forms)
         {
             this.operation = operation;
             Status = status;
@@ -44,7 +46,7 @@ namespace Azure.AI.FormRecognizer.Models
         /// <summary>
         /// Information extracted from each form in the input file.
         /// </summary>
-        public IReadOnlyList<ExtractedPredefinedFieldForm> Forms { get;  }
+        public IReadOnlyList<ExtractedLabeledForm> Forms { get;  }
 
         // TODO: would it be better to put this in Forms?  It should go there logically, but I like having all
         // AnalysisResults having OCR output at the top level.

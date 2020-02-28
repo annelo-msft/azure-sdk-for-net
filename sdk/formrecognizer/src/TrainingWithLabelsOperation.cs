@@ -9,11 +9,13 @@ namespace Azure.AI.FormRecognizer.Models
 {
     /// <summary>
     /// </summary>
-    public class TrainingWithLabelsOperation : Operation<TrainingWithLabelsResult>
+#pragma warning disable SA1649 // File name should match first type name
+    public class LabeledTrainingOperation : Operation<LabeledTrainingResult>
+#pragma warning restore SA1649 // File name should match first type name
     {
         private TrainingOperation_internal _operation;
 
-        internal TrainingWithLabelsOperation(TrainingOperation_internal operation)
+        internal LabeledTrainingOperation(TrainingOperation_internal operation)
         {
             _operation = operation;
         }
@@ -25,7 +27,7 @@ namespace Azure.AI.FormRecognizer.Models
         /// <summary>
         /// </summary>
 #pragma warning disable CA1065 // Do not raise exceptions in unexpected locations
-        public override TrainingWithLabelsResult Value => throw new NotImplementedException();
+        public override LabeledTrainingResult Value => throw new NotImplementedException();
 #pragma warning restore CA1065 // Do not raise exceptions in unexpected locations
 
         /// <summary>
@@ -59,7 +61,7 @@ namespace Azure.AI.FormRecognizer.Models
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public override ValueTask<Response<TrainingWithLabelsResult>> WaitForCompletionAsync(CancellationToken cancellationToken = default)
+        public override ValueTask<Response<LabeledTrainingResult>> WaitForCompletionAsync(CancellationToken cancellationToken = default)
             => throw new NotImplementedException();
 
         /// <summary>
@@ -67,7 +69,7 @@ namespace Azure.AI.FormRecognizer.Models
         /// <param name="pollingInterval"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public override ValueTask<Response<TrainingWithLabelsResult>> WaitForCompletionAsync(TimeSpan pollingInterval, CancellationToken cancellationToken = default)
+        public override ValueTask<Response<LabeledTrainingResult>> WaitForCompletionAsync(TimeSpan pollingInterval, CancellationToken cancellationToken = default)
            => throw new NotImplementedException();
     }
 }

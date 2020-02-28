@@ -8,9 +8,9 @@ namespace Azure.AI.FormRecognizer.Serialization
 {
     internal class ModelsSummaryJson
     {
-        public static ModelsSummary Read(JsonElement root)
+        public static ModelsSummary_internal Read(JsonElement root)
         {
-            var modelsSummary = ModelsSummary.Create();
+            var modelsSummary = ModelsSummary_internal.Create();
             if (root.ValueKind == JsonValueKind.Object)
             {
                 foreach (JsonProperty property in root.EnumerateObject())
@@ -21,7 +21,7 @@ namespace Azure.AI.FormRecognizer.Serialization
             return modelsSummary;
         }
 
-        private static void ReadPropertyValue(ref ModelsSummary modelsSummary, JsonProperty property)
+        private static void ReadPropertyValue(ref ModelsSummary_internal modelsSummary, JsonProperty property)
         {
             if (property.NameEquals("count"))
             {

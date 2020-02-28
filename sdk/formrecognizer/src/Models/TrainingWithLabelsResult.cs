@@ -12,9 +12,11 @@ namespace Azure.AI.FormRecognizer.Models
     /// <summary>
     /// Custom Form Recognizer model.
     /// </summary>
-    public readonly struct TrainingWithLabelsResult
+#pragma warning disable SA1649 // File name should match first type name
+    public readonly struct LabeledTrainingResult
+#pragma warning restore SA1649 // File name should match first type name
     {
-        internal TrainingWithLabelsResult(PredefinedFieldModel model, ModelTrainingInfo trainingInfo, TrainingInputResult[] trainingInputResults, FormRecognizerError[] trainingErrors)
+        internal LabeledTrainingResult(LabeledModel model, ModelTrainingStatus trainingInfo, TrainingInputResult[] trainingInputResults, FormRecognizerError[] trainingErrors)
         {
             Model = model;
             TrainingInfo = trainingInfo;
@@ -24,11 +26,11 @@ namespace Azure.AI.FormRecognizer.Models
 
         /// <summary>
         /// </summary>
-        public PredefinedFieldModel Model { get; }
+        public LabeledModel Model { get; }
 
         /// <summary>
         /// </summary>
-        public ModelTrainingInfo TrainingInfo { get; }
+        public ModelTrainingStatus TrainingInfo { get; }
 
         /// <summary>
         /// List of the documents used to train the model and any errors reported in each document.
@@ -42,6 +44,6 @@ namespace Azure.AI.FormRecognizer.Models
         /// </summary>
         public IReadOnlyList<FormRecognizerError> TrainingErrors { get; }
 
-        internal static TrainingWithLabelsResult Create() => new TrainingWithLabelsResult();
+        internal static LabeledTrainingResult Create() => new LabeledTrainingResult();
     }
 }

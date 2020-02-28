@@ -43,7 +43,7 @@ namespace Azure.AI.FormRecognizer.Custom
         /// </summary>
         // TODO: Question - will this be populated for supervised models?
         // If not, we should probably break FRCustomModel into supervised and unsupervised custom models.s
-        public ICollection<TrainedFormCluster> FormClusters { get; internal set; }
+        public ICollection<RecognizableForm> FormClusters { get; internal set; }
 
         /// <summary>
         /// List of the documents used to train the model and any errors reported in each document.

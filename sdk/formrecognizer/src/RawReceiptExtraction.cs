@@ -9,7 +9,7 @@ namespace Azure.AI.FormRecognizer.Models
     /// </summary>
     public readonly struct RawReceiptExtraction
     {
-        internal RawReceiptExtraction(ExtractedPredefinedField merchantName, ExtractedPredefinedField merchantAddress, ExtractedPredefinedField merchantPhoneNumber, ExtractedPredefinedField transactionDate, ExtractedPredefinedField transactionTime, RawReceiptItemExtraction items, ExtractedPredefinedField subtotal, ExtractedPredefinedField tax, ExtractedPredefinedField tip, ExtractedPredefinedField total)
+        internal RawReceiptExtraction(ExtractedLabeledField merchantName, ExtractedLabeledField merchantAddress, ExtractedLabeledField merchantPhoneNumber, ExtractedLabeledField transactionDate, ExtractedLabeledField transactionTime, RawReceiptItemExtraction items, ExtractedLabeledField subtotal, ExtractedLabeledField tax, ExtractedLabeledField tip, ExtractedLabeledField total)
         {
             MerchantName = merchantName;
             MerchantAddress = merchantAddress;
@@ -25,23 +25,23 @@ namespace Azure.AI.FormRecognizer.Models
 
         /// <summary>
         /// </summary>
-        public ExtractedPredefinedField MerchantName { get; }
+        public ExtractedLabeledField MerchantName { get; }
 
         /// <summary>
         /// </summary>
-        public ExtractedPredefinedField MerchantAddress { get; }
+        public ExtractedLabeledField MerchantAddress { get; }
 
         /// <summary>
         /// </summary>
-        public ExtractedPredefinedField MerchantPhoneNumber { get; }
+        public ExtractedLabeledField MerchantPhoneNumber { get; }
 
         /// <summary>
         /// </summary>
-        public ExtractedPredefinedField TransactionDate { get; }
+        public ExtractedLabeledField TransactionDate { get; }
 
         /// <summary>
         /// </summary>
-        public ExtractedPredefinedField TransactionTime { get; }
+        public ExtractedLabeledField TransactionTime { get; }
 
         /// <summary>
         /// </summary>
@@ -49,18 +49,18 @@ namespace Azure.AI.FormRecognizer.Models
 
         /// <summary>
         /// </summary>
-        public ExtractedPredefinedField Subtotal { get; }
+        public ExtractedLabeledField Subtotal { get; }
 
         /// <summary>
         /// </summary>
-        public ExtractedPredefinedField Tax { get; }
+        public ExtractedLabeledField Tax { get; }
 
         /// <summary>
         /// </summary>
-        public ExtractedPredefinedField Tip { get; }
+        public ExtractedLabeledField Tip { get; }
 
         /// <summary>
         /// </summary>
-        public ExtractedPredefinedField Total { get; }
+        public ExtractedLabeledField Total { get; }
     }
 }

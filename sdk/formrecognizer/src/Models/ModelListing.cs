@@ -13,7 +13,7 @@ namespace Azure.AI.FormRecognizer.Models
         /// <summary>
         /// Summary of models.
         /// </summary>
-        public ModelsSummary Summary { get; internal set; }
+        public ModelsSummary_internal Summary { get; internal set; }
 
         /// <summary>
         /// Page of models.

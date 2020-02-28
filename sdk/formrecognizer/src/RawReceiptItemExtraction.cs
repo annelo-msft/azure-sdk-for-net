@@ -9,7 +9,7 @@ namespace Azure.AI.FormRecognizer.Models
     /// </summary>
     public readonly struct RawReceiptItemExtraction
     {
-        internal RawReceiptItemExtraction(ExtractedPredefinedField quantity, ExtractedPredefinedField name, ExtractedPredefinedField totalPrice)
+        internal RawReceiptItemExtraction(ExtractedLabeledField quantity, ExtractedLabeledField name, ExtractedLabeledField totalPrice)
         {
             Quantity = quantity;
             Name = name;
@@ -18,14 +18,14 @@ namespace Azure.AI.FormRecognizer.Models
 
         /// <summary>
         /// </summary>
-        public ExtractedPredefinedField Quantity { get; }
+        public ExtractedLabeledField Quantity { get; }
 
         /// <summary>
         /// </summary>
-        public ExtractedPredefinedField Name { get; }
+        public ExtractedLabeledField Name { get; }
 
         /// <summary>
         /// </summary>
-        public ExtractedPredefinedField TotalPrice { get; }
+        public ExtractedLabeledField TotalPrice { get; }
     }
 }

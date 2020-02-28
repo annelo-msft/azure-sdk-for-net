@@ -7,9 +7,11 @@ namespace Azure.AI.FormRecognizer.Models
 {
     /// <summary>
     /// </summary>
-    public readonly struct ModelCollectionInfo
+#pragma warning disable SA1649 // File name should match first type name
+    public readonly struct ModelsSummary
+#pragma warning restore SA1649 // File name should match first type name
     {
-        internal ModelCollectionInfo(int modelCount, int subscriptionLimit, DateTimeOffset lastUpdateTime)
+        internal ModelsSummary(int modelCount, int subscriptionLimit, DateTimeOffset lastUpdateTime)
         {
             ModelCount = modelCount;
             SubscriptionLimit = subscriptionLimit;

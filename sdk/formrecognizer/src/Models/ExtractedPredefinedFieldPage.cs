@@ -7,9 +7,11 @@ namespace Azure.AI.FormRecognizer.Models
 {
     /// <summary>
     /// </summary>
-    public readonly struct ExtractedPredefinedFieldPage
+#pragma warning disable SA1649 // File name should match first type name
+    public readonly struct ExtractedLabeledPage
+#pragma warning restore SA1649 // File name should match first type name
     {
-        internal ExtractedPredefinedFieldPage(int pageNumber, ExtractedPredefinedField[] fields, ExtractedTable[] tables)
+        internal ExtractedLabeledPage(int pageNumber, ExtractedLabeledField[] fields, ExtractedTable[] tables)
         {
             PageNumber = pageNumber;
             Fields = fields;
@@ -23,7 +25,7 @@ namespace Azure.AI.FormRecognizer.Models
 
         /// <summary>
         /// </summary>
-        public IReadOnlyList<ExtractedPredefinedField> Fields { get;  }
+        public IReadOnlyList<ExtractedLabeledField> Fields { get;  }
 
         /// <summary>
         /// Output of the enhanced Optical Character Recognition engine, which identifies

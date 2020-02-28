@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -8,7 +8,7 @@ namespace Azure.AI.FormRecognizer.Models
     /// <summary>
     /// Models summary
     /// </summary>
-    internal class ModelsSummary
+    internal class ModelsSummary_internal
     {
         /// <summary>
         /// Count.
@@ -26,11 +26,11 @@ namespace Azure.AI.FormRecognizer.Models
         public DateTimeOffset LastUpdatedOn { get; internal set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ModelsSummary"/> class.
+        /// Initializes a new instance of the <see cref="ModelsSummary_internal"/> class.
         /// </summary>
-        protected ModelsSummary()
+        protected ModelsSummary_internal()
         { }
 
-        internal static ModelsSummary Create() => new ModelsSummary();
+        internal static ModelsSummary_internal Create() => new ModelsSummary_internal();
     }
 }

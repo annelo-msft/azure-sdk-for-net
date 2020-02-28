@@ -10,9 +10,11 @@ namespace Azure.AI.FormRecognizer.Models
 {
     /// <summary>
     /// </summary>
-    public readonly struct ExtractedPredefinedField
+#pragma warning disable SA1649 // File name should match first type name
+    public readonly struct ExtractedLabeledField
+#pragma warning restore SA1649 // File name should match first type name
     {
-        internal ExtractedPredefinedField(string name, string value, float[] valueBoundingBox, PredefinedFieldValueType type, float confidence)
+        internal ExtractedLabeledField(string name, string value, float[] valueBoundingBox, LabeledFieldValueType type, float confidence)
         {
             Name = name;
             Value = value;
@@ -38,7 +40,7 @@ namespace Azure.AI.FormRecognizer.Models
         /// <summary>
         /// Type of field value.
         /// </summary>
-        public PredefinedFieldValueType Type { get; }
+        public LabeledFieldValueType Type { get; }
 
         // TODO: Should this go on Value?
         /// <summary>

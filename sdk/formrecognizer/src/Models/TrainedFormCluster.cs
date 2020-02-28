@@ -9,18 +9,20 @@ namespace Azure.AI.FormRecognizer.Models
 {
     /// <summary>
     /// </summary>
-    public readonly struct TrainedFormCluster
+#pragma warning disable SA1649 // File name should match first type name
+    public readonly struct RecognizableForm
+#pragma warning restore SA1649 // File name should match first type name
     {
-        internal TrainedFormCluster(int formClusterId, IReadOnlyCollection<string> fieldNames)
+        internal RecognizableForm(int formClusterId, IReadOnlyCollection<string> fieldNames)
         {
-            FormClusterId = formClusterId;
+            RecognizableFormId = formClusterId;
             FieldNames = fieldNames;
         }
 
         /// <summary>
         /// Cluster Id
         /// </summary>
-        public int FormClusterId { get; }
+        public int RecognizableFormId { get; }
 
         /// <summary>
         /// Names of the fields extracted from forms in this cluster.

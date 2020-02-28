@@ -5,9 +5,11 @@ namespace Azure.AI.FormRecognizer.Models
 {
     /// <summary>
     /// </summary>
-    public readonly struct PredefinedFieldModel
+#pragma warning disable SA1649 // File name should match first type name
+    public readonly struct LabeledModel
+#pragma warning restore SA1649 // File name should match first type name
     {
-        internal PredefinedFieldModel(string modelId, float? averageFieldAccuracy, LabeledFieldAccuracy[] fieldAccuracies)
+        internal LabeledModel(string modelId, float? averageFieldAccuracy, LabeledFieldAccuracy[] fieldAccuracies)
         {
             ModelId = modelId;
             AverageFieldAccuracy = averageFieldAccuracy;

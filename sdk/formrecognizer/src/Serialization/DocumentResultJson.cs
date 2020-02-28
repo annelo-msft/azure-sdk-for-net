@@ -11,9 +11,9 @@ namespace Azure.AI.FormRecognizer.Serialization
 {
     internal class DocumentResultJson
     {
-        public static ExtractedPredefinedFieldForm Read(JsonElement root)
+        public static ExtractedLabeledForm Read(JsonElement root)
         {
-            var documentResult = ExtractedPredefinedFieldForm.Create();
+            var documentResult = ExtractedLabeledForm.Create();
             if (root.ValueKind == JsonValueKind.Object)
             {
                 foreach (JsonProperty property in root.EnumerateObject())
@@ -29,7 +29,7 @@ namespace Azure.AI.FormRecognizer.Serialization
         }
 
 #pragma warning disable CA1801
-        private static void ReadPropertyValue(ref ExtractedPredefinedFieldForm documentResult, JsonProperty property)
+        private static void ReadPropertyValue(ref ExtractedLabeledForm documentResult, JsonProperty property)
 #pragma warning restore CA1801
         {
             if (property.NameEquals("docType"))

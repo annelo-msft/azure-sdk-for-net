@@ -95,7 +95,7 @@ namespace Azure.AI.FormRecognizer
         /// <param name="filter"></param>
         /// <param name="labelFile"></param>
         /// <param name="cancellationToken"></param>
-        public virtual TrainingWithLabelsOperation StartTrainingSupervisedModel(string source, TrainingFileFilter filter, string labelFile, CancellationToken cancellationToken = default)
+        public virtual LabeledTrainingOperation StartTrainingSupervisedModel(string source, TrainingFileFilter filter, string labelFile, CancellationToken cancellationToken = default)
         {
             var operation = _formRecognizerClient.StartTraining(new TrainingRequest()
             {
@@ -104,7 +104,7 @@ namespace Azure.AI.FormRecognizer
                 UseLabelFile = (labelFile != null) // TODO pass through.
             });
 
-            return new TrainingWithLabelsOperation(operation);
+            return new LabeledTrainingOperation(operation);
         }
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace Azure.AI.FormRecognizer
         /// <param name="filter"></param>
         /// <param name="labelFile"></param>
         /// <param name="cancellationToken"></param>
-        public virtual async Task<TrainingWithLabelsOperation> StartTrainingSupervisedModelAsync(string source, TrainingFileFilter filter, string labelFile, CancellationToken cancellationToken = default)
+        public virtual async Task<LabeledTrainingOperation> StartTrainingSupervisedModelAsync(string source, TrainingFileFilter filter, string labelFile, CancellationToken cancellationToken = default)
         {
             var operation = await _formRecognizerClient.StartTrainingAsync(new TrainingRequest()
             {
@@ -122,7 +122,7 @@ namespace Azure.AI.FormRecognizer
                 UseLabelFile = (labelFile != null) // TODO pass through.
             }, cancellationToken).ConfigureAwait(false);
 
-            return new TrainingWithLabelsOperation(operation);
+            return new LabeledTrainingOperation(operation);
         }
 
         /// <summary>
@@ -130,10 +130,10 @@ namespace Azure.AI.FormRecognizer
         /// <param name="operationId"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public virtual TrainingWithLabelsOperation StartTrainingSupervisedModel(string operationId, CancellationToken cancellationToken = default)
+        public virtual LabeledTrainingOperation StartTrainingSupervisedModel(string operationId, CancellationToken cancellationToken = default)
         {
             var operation = _formRecognizerClient.StartTraining(operationId, cancellationToken);
-            return new TrainingWithLabelsOperation(operation);
+            return new LabeledTrainingOperation(operation);
         }
     }
 }
