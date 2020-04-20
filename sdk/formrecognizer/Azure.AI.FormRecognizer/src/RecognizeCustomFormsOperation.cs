@@ -96,10 +96,21 @@ namespace Azure.AI.FormRecognizer.Models
                 // https://github.com/Azure/azure-sdk-for-net/issues/10386
                 // TODO: Add reasonable null checks.
 
-                if (update.Value.Status == OperationStatus.Succeeded || update.Value.Status == OperationStatus.Failed)
+                if (update.Value.Status == OperationStatus.Succeeded)
                 {
                     _hasCompleted = true;
                     _value = ConvertToRecognizedForms(update.Value.AnalyzeResult);
+                }
+                else if (update.Value.Status == OperationStatus.Failed)
+                {
+                    _hasCompleted = true;
+
+                    foreach (var error in update.Value.AnalyzeResult.Errors)
+                    {
+
+                    }
+
+                    throw _serviceClient.ClientDiagnostics.CreateRequestFailedExceptionWithContent(update.GetRawResponse(), "RecognizeCustomForms request failed.");
                 }
 
                 _response = update.GetRawResponse();

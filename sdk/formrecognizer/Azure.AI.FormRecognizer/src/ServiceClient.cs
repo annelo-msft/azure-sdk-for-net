@@ -7,12 +7,15 @@ using System.Threading.Tasks;
 using Azure.AI.FormRecognizer.Models;
 using Azure.AI.FormRecognizer.Training;
 using Azure.Core;
+using Azure.Core.Pipeline;
 
 namespace Azure.AI.FormRecognizer
 {
     [CodeGenClient("")]
     internal partial class ServiceClient
     {
+        public ClientDiagnostics ClientDiagnostics => _clientDiagnostics;
+
         /// <summary> Get information about all custom models. </summary>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public Pageable<CustomFormModelInfo> GetCustomModelsPageableModelInfo(CancellationToken cancellationToken = default)
