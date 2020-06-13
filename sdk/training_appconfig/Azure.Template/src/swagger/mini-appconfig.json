@@ -1,0 +1,132 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0",
+    "title": "Mini App Config"
+  },
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/kv/{key}": {
+      "get": {
+        "tags": [
+          "KeyValues"
+        ],
+        "summary": "Gets a single key-value.",
+        "operationId": "GetKeyValue",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "description": "The key of the key-value to retrieve.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/ApiVersion"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/KeyValue"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "KeyValue": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "content_type": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "last_modified": {
+          "format": "date-time",
+          "type": "string"
+        }
+      }
+    },
+    "Error": {
+      "description": "Azure App Configuration error object.",
+      "properties": {
+        "type": {
+          "description": "The type of the error.",
+          "type": "string"
+        },
+        "title": {
+          "description": "A brief summary of the error.",
+          "type": "string"
+        },
+        "name": {
+          "description": "The name of the parameter that resulted in the error.",
+          "type": "string"
+        },
+        "detail": {
+          "description": "A detailed description of the error.",
+          "type": "string"
+        },
+        "status": {
+          "description": "The HTTP status code that the error maps to.",
+          "type": "integer"
+        }
+      },
+      "readOnly": true
+    }
+  },
+  "parameters": {
+    "SyncTokens": {
+      "name": "Sync-Token",
+      "in": "header",
+      "description": "Used to guarantee real-time consistency between requests.",
+      "type": "string"
+    },
+    "ApiVersion": {
+      "name": "api-version",
+      "in": "query",
+      "description": "The API version to be used with the HTTP request.",
+      "required": true,
+      "type": "string"
+    },
+    "Endpoint": {
+      "name": "endpoint",
+      "in": "path",
+      "description": "The endpoint of the App Configuration instance to send requests to.",
+      "required": true,
+      "type": "string",
+      "x-ms-skip-url-encoding": true,
+      "x-ms-parameter-location": "client"
+    }
+  },
+  "x-ms-parameterized-host": {
+    "hostTemplate": "{endpoint}",
+    "useSchemePrefix": false,
+    "parameters": [
+      {
+        "$ref": "#/parameters/Endpoint"
+      }
+    ]
+  }
+}
