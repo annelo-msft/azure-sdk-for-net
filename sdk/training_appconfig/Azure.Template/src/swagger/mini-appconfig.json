@@ -71,6 +71,7 @@
     },
     "Error": {
       "description": "Azure App Configuration error object.",
+      "type": "object",
       "properties": {
         "type": {
           "description": "The type of the error.",

@@ -4,7 +4,7 @@ Run `dotnet msbuild /t:GenerateCode` to generate code.
 
 ``` yaml
 input-file:
-    -  $(this-folder)/swagger/mini-secrets.json
+    -  $(this-folder)/swagger/mini-appconfig.json
 
 public-clients: true
 ```
