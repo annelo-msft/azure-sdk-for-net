@@ -8,6 +8,9 @@
     <!-- These supressions should be removed in a production library -->
     <NoWarn>$(NoWarn);CA1812;AZC0001;CS1591</NoWarn>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="ServiceClient_old.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="System.Text.Json" />
