@@ -25,12 +25,12 @@ namespace Azure.Learn.AppConfig
         }
 #pragma warning restore CA1801
 
-        public virtual Response<KeyValue> GetKeyValue(string key, CancellationToken cancellationToken = default)
+        public virtual Response<ConfigurationSetting> GetConfigurationSetting(string key, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public virtual async Task<Response<KeyValue>> GetKeyValueAsync(string key, CancellationToken cancellationToken = default)
+        public virtual async Task<Response<ConfigurationSetting>> GetConfigurationSettingAsync(string key, CancellationToken cancellationToken = default)
         {
             await Task.Run(() => {}).ConfigureAwait(false);
             throw new NotImplementedException();
