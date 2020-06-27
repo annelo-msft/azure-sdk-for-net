@@ -14,60 +14,22 @@ namespace Azure.Learn.AppConfig.Models
     {
         internal static Error DeserializeError(JsonElement element)
         {
-            string type = default;
-            string title = default;
-            string name = default;
-            string detail = default;
-            int? status = default;
+            string code = default;
+            string message = default;
             foreach (var property in element.EnumerateObject())
             {
-                if (property.NameEquals("type"))
+                if (property.NameEquals("code"))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
-                    type = property.Value.GetString();
+                    code = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("title"))
+                if (property.NameEquals("message"))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
-                    title = property.Value.GetString();
-                    continue;
-                }
-                if (property.NameEquals("name"))
-                {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
-                    name = property.Value.GetString();
-                    continue;
-                }
-                if (property.NameEquals("detail"))
-                {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
-                    detail = property.Value.GetString();
-                    continue;
-                }
-                if (property.NameEquals("status"))
-                {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
-                    status = property.Value.GetInt32();
+                    message = property.Value.GetString();
                     continue;
                 }
             }
-            return new Error(type, title, name, detail, status);
+            return new Error(code, message);
         }
     }
 }

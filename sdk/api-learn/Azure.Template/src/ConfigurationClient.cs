@@ -9,27 +9,34 @@ using Azure.Learn.AppConfig.Models;
 
 namespace Azure.Learn.AppConfig
 {
+    /// <summary>The sample AppConfig client.</summary>
     public class ConfigurationClient
     {
-        protected ConfigurationClient()
-        {
-        }
 
+        /// <summary>Initializes a new instance of the <see cref="ConfigurationClient"/>.</summary>
         public ConfigurationClient(Uri endpoint, TokenCredential credential) : this(endpoint, credential, new ConfigurationClientOptions())
         {
         }
 
+        /// <summary>Initializes a new instance of the <see cref="ConfigurationClient"/>.</summary>
 #pragma warning disable CA1801
         public ConfigurationClient(Uri endpoint, TokenCredential credential, ConfigurationClientOptions options)
         {
         }
 #pragma warning restore CA1801
 
+        /// <summary> Initializes a new instance of ConfigurationClient for mocking. </summary>
+        protected ConfigurationClient()
+        {
+        }
+
+        /// <summary>Retrieve a <see cref="ConfigurationSetting"/> from the configuration store.</summary>
         public virtual Response<ConfigurationSetting> GetConfigurationSetting(string key, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>Retrieve a <see cref="ConfigurationSetting"/> from the configuration store.</summary>
         public virtual async Task<Response<ConfigurationSetting>> GetConfigurationSettingAsync(string key, CancellationToken cancellationToken = default)
         {
             await Task.Run(() => {}).ConfigureAwait(false);

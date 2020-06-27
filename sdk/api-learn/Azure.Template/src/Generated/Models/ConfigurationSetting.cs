@@ -18,10 +18,10 @@ namespace Azure.Learn.AppConfig.Models
         }
 
         /// <summary> Initializes a new instance of ConfigurationSetting. </summary>
-        /// <param name="key"> . </param>
-        /// <param name="contentType"> . </param>
-        /// <param name="value"> . </param>
-        /// <param name="lastModified"> . </param>
+        /// <param name="key"> The unique id of the key-value. </param>
+        /// <param name="contentType"> The content type of the value. </param>
+        /// <param name="value"> The value of the key-value. </param>
+        /// <param name="lastModified"> The time the key-value was last modified. </param>
         internal ConfigurationSetting(string key, string contentType, string value, DateTimeOffset? lastModified)
         {
             Key = key;
@@ -29,6 +29,10 @@ namespace Azure.Learn.AppConfig.Models
             Value = value;
             LastModified = lastModified;
         }
+
+        /// <summary> The unique id of the key-value. </summary>
+        public string Key { get; }
+        /// <summary> The time the key-value was last modified. </summary>
         public DateTimeOffset? LastModified { get; }
     }
 }
