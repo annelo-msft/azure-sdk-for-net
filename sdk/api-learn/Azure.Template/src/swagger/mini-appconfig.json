@@ -1,0 +1,187 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0",
+        "title": "Mini App Config"
+    },
+    "paths": {
+        "/kv/{key}": {
+            "get": {
+                "tags": [
+                    "KeyValues"
+                ],
+                "summary": "Gets a single key-value.",
+                "operationId": "GetKeyValue",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "key",
+                        "in": "path",
+                        "description": "The key of the key-value to retrieve.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/ApiVersion"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/KeyValue"
+                        },
+                        "headers": {
+                            "ETag": {
+                                "description": "An identifier representing the returned state of the resource.",
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Error response describing why the operation failed",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "KeyValues"
+                ],
+                "summary": "Creates or updates a key-value.",
+                "operationId": "PutKeyValue",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "key",
+                        "in": "path",
+                        "description": "The key of the key-value to create.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "setting",
+                        "in": "body",
+                        "description": "The key-value to create.",
+                        "schema": {
+                            "$ref": "#/definitions/KeyValue"
+                        }
+                    },
+                    {
+                        "$ref": "#/parameters/ApiVersion"
+                    },
+                    {
+                        "name": "If-Match",
+                        "in": "header",
+                        "description": "Used to perform an operation only if the targeted resource's etag matches the value provided.",
+                        "type": "string"
+                    },
+                    {
+                        "name": "If-None-Match",
+                        "in": "header",
+                        "description": "Used to perform an operation only if the targeted resource's etag does not match the value provided.",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/KeyValue"
+                        },
+                        "headers": {
+                            "ETag": {
+                                "description": "An identifier representing the returned state of the resource.",
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Error response describing why the operation failed",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "KeyValue": {
+            "type": "object",
+            "properties": {
+                "key": {
+                    "description": "The unique id of the key-value.",
+                    "type": "string"
+                },
+                "content_type": {
+                    "description": "The content type of the value.",
+                    "type": "string"
+                },
+                "value": {
+                    "description": "The value of the key-value.",
+                    "type": "string"
+                },
+                "last_modified": {
+                    "description": "The time the key-value was last modified.",
+                    "format": "date-time",
+                    "type": "string"
+                }
+            }
+        },
+        "Error": {
+            "type": "object",
+            "required": [
+                "code",
+                "message"
+            ],
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "parameters": {
+        "ApiVersion": {
+            "name": "api-version",
+            "in": "query",
+            "description": "The API version to be used with the HTTP request.",
+            "required": true,
+            "type": "string"
+        },
+        "Endpoint": {
+            "name": "endpoint",
+            "in": "path",
+            "description": "The endpoint of the App Configuration instance to send requests to.",
+            "required": true,
+            "type": "string",
+            "x-ms-skip-url-encoding": true,
+            "x-ms-parameter-location": "client"
+        }
+    },
+    "x-ms-parameterized-host": {
+        "hostTemplate": "{endpoint}",
+        "useSchemePrefix": false,
+        "parameters": [
+            {
+                "$ref": "#/parameters/Endpoint"
+            }
+        ]
+    }
+}
