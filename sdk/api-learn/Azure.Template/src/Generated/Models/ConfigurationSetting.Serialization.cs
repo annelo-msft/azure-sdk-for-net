@@ -11,34 +11,8 @@ using Azure.Core;
 
 namespace Azure.Learn.AppConfig.Models
 {
-    public partial class ConfigurationSetting : IUtf8JsonSerializable
+    public partial class ConfigurationSetting
     {
-        void IUtf8JsonSerializable.Write(Utf8JsonWriter writer)
-        {
-            writer.WriteStartObject();
-            if (Key != null)
-            {
-                writer.WritePropertyName("key");
-                writer.WriteStringValue(Key);
-            }
-            if (ContentType != null)
-            {
-                writer.WritePropertyName("content_type");
-                writer.WriteStringValue(ContentType);
-            }
-            if (Value != null)
-            {
-                writer.WritePropertyName("value");
-                writer.WriteStringValue(Value);
-            }
-            if (LastModified != null)
-            {
-                writer.WritePropertyName("last_modified");
-                writer.WriteStringValue(LastModified.Value, "O");
-            }
-            writer.WriteEndObject();
-        }
-
         internal static ConfigurationSetting DeserializeConfigurationSetting(JsonElement element)
         {
             string key = default;

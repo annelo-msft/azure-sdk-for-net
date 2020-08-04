@@ -35,6 +35,77 @@
                         "description": "Success",
                         "schema": {
                             "$ref": "#/definitions/KeyValue"
+                        },
+                        "headers": {
+                            "ETag": {
+                                "description": "An identifier representing the returned state of the resource.",
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Error response describing why the operation failed",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "KeyValues"
+                ],
+                "summary": "Creates or updates a key-value.",
+                "operationId": "PutKeyValue",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "key",
+                        "in": "path",
+                        "description": "The key of the key-value to create.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "setting",
+                        "in": "body",
+                        "description": "The key-value to create.",
+                        "schema": {
+                            "$ref": "#/definitions/KeyValue"
+                        }
+                    },
+                    {
+                        "$ref": "#/parameters/ApiVersion"
+                    },
+                    {
+                        "name": "If-Match",
+                        "in": "header",
+                        "description": "Used to perform an operation only if the targeted resource's etag matches the value provided.",
+                        "type": "string"
+                    },
+                    {
+                        "name": "If-None-Match",
+                        "in": "header",
+                        "description": "Used to perform an operation only if the targeted resource's etag does not match the value provided.",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/KeyValue"
+                        },
+                        "headers": {
+                            "ETag": {
+                                "description": "An identifier representing the returned state of the resource.",
+                                "type": "string"
+                            }
                         }
                     },
                     "default": {

@@ -13,7 +13,7 @@ namespace Azure.Learn.AppConfig.Models
     public partial class ConfigurationSetting
     {
         /// <summary> Initializes a new instance of ConfigurationSetting. </summary>
-        public ConfigurationSetting()
+        internal ConfigurationSetting()
         {
         }
 
@@ -31,8 +31,12 @@ namespace Azure.Learn.AppConfig.Models
         }
 
         /// <summary> The unique id of the key-value. </summary>
-        public string Key { get; set; }
+        public string Key { get; }
+        /// <summary> The content type of the value. </summary>
+        public string ContentType { get; }
+        /// <summary> The value of the key-value. </summary>
+        public string Value { get; }
         /// <summary> The time the key-value was last modified. </summary>
-        public DateTimeOffset? LastModified { get; set; }
+        public DateTimeOffset? LastModified { get; }
     }
 }

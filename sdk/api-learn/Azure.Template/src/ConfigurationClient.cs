@@ -42,18 +42,5 @@ namespace Azure.Learn.AppConfig
             await Task.Run(() => {}).ConfigureAwait(false);
             throw new NotImplementedException();
         }
-
-        /// <summary>Retrieve a <see cref="ConfigurationSetting"/> from the configuration store.</summary>
-        public virtual Response<ConfigurationSetting> GetConfigurationSetting(string key, CancellationToken cancellationToken = default)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>Retrieve a <see cref="ConfigurationSetting"/> from the configuration store.</summary>
-        public virtual async Task<Response<ConfigurationSetting>> GetConfigurationSettingAsync(string key, CancellationToken cancellationToken = default)
-        {
-            await Task.Run(() => { }).ConfigureAwait(false);
-            throw new NotImplementedException();
-        }
     }
 }
