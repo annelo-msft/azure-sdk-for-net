@@ -1,0 +1,10 @@
+# Generated code configuration
+
+Run `dotnet msbuild /t:GenerateCode` to generate code.
+
+``` yaml
+input-file:
+    -  $(this-folder)/swagger/computation.json
+
+public-clients: true
+```
