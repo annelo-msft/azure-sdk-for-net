@@ -41,7 +41,7 @@ namespace Azure.Template.Tests.Samples
         public async Task UpdateCacheAsync(ServiceClient client, Dictionary<string, KeyValue> settingCache)
         {
             settingCache["FontColor"] = await client.GetKeyValueAsync("FontColor", null, null, null, settingCache["FontColor"].Etag);
-            settingCache["GreetingText"] = await client.GetKeyValueAsync("GreetingText", null, null, null, settingCache["FontColor"].Etag););
+            settingCache["GreetingText"] = await client.GetKeyValueAsync("GreetingText", null, null, null, settingCache["FontColor"].Etag);
         }
 
         public void WriteToConsole(Dictionary<string, KeyValue> settingCache)
