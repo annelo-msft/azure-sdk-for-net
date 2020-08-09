@@ -5,7 +5,7 @@
         "version": "1.1"
     },
     "consumes": [ "application/json" ],
-    "produces": [ "application/json" ],
+    "produces": [ "application/json" ],    
     "paths": {
         "/ComputeNodes": {
             "parameters": [
@@ -29,6 +29,10 @@
                             "$ref": "#/definitions/Error"
                         }
                     }
+                },
+                "x-ms-pageable": {
+                    "nextLinkName": "nextLink",
+                    "itemName": "value"
                 }
             }
         },

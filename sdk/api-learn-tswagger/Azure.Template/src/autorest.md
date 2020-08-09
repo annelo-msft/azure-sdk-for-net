@@ -6,5 +6,5 @@ Run `dotnet msbuild /t:GenerateCode` to generate code.
 input-file:
     -  $(this-folder)/swagger/computation.json
 
-public-clients: false
+public-clients: true
 ```
