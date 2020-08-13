@@ -8,7 +8,7 @@ using Azure.Core;
 using Azure.Core.Pipeline;
 using Azure.Template.Models;
 
-namespace Azure.Template
+namespace Azure.Learn.AppConfig
 {
     /// <summary>
     /// The sample secrets client.
