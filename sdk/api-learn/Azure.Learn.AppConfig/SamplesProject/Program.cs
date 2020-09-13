@@ -10,7 +10,8 @@ namespace SamplesProject
         {
             GetConfigurationSetting();
 
-            Console.WriteLine("Complete.");
+            Console.WriteLine();
+            Console.WriteLine("Done.");
             Console.ReadLine();
         }
 
@@ -22,8 +23,12 @@ namespace SamplesProject
             ConfigurationSetting color = client.GetConfigurationSetting("FontColor");
             ConfigurationSetting greeting = client.GetConfigurationSetting("GreetingText");
 
+            ConsoleColor priorColor = Console.ForegroundColor;
+
             Console.ForegroundColor = (ConsoleColor)Enum.Parse(typeof(ConsoleColor), color.Value);
             Console.WriteLine(greeting.Value);
+
+            Console.ForegroundColor = priorColor;
         }
 
     }

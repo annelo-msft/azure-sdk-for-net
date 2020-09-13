@@ -15,6 +15,7 @@ namespace Azure.Learn.AppConfig
     public class ConfigurationClient
     {
         private ServiceRestClient _serviceRestClient = null;
+        private ClientDiagnostics _clientDiagnostics = null;
 
         /// <summary>Initializes a new instance of the <see cref="ConfigurationClient"/>.</summary>
         public ConfigurationClient(Uri endpoint, TokenCredential credential) : this(endpoint, credential, new ConfigurationClientOptions())
@@ -28,7 +29,7 @@ namespace Azure.Learn.AppConfig
             Argument.AssertNotNull(credential, nameof(credential));
             Argument.AssertNotNull(options, nameof(options));
 
-            string scope = $"{endpoint.AbsolutePath}/.default";
+            string scope = $"{endpoint.AbsoluteUri}.default";
 
             ClientDiagnostics diagnostics = new ClientDiagnostics(options);
             var pipeline = HttpPipelineBuilder.Build(options, new BearerTokenAuthenticationPolicy(credential, scope));
@@ -43,7 +44,20 @@ namespace Azure.Learn.AppConfig
         /// <summary>Retrieve a <see cref="ConfigurationSetting"/> from the configuration store.</summary>
         public virtual Response<ConfigurationSetting> GetConfigurationSetting(string key, string label = null, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            Argument.AssertNotNull(key, nameof(key));
+
+            using DiagnosticScope scope = _clientDiagnostics.CreateScope($"{nameof(ConfigurationClient)}.{nameof(GetConfigurationSetting)}");
+            scope.Start();
+            try
+            {
+                ResponseWithHeaders<ConfigurationSetting, ServiceGetKeyValueHeaders> responseWithHeaders = _serviceRestClient.GetKeyValue(key, label, acceptDatetime: null, ifMatch: null, ifNoneMatch: null, select: null, cancellationToken);
+                return Response.FromValue(responseWithHeaders.Value, responseWithHeaders.GetRawResponse());
+            }
+            catch (Exception ex)
+            {
+                scope.Failed(ex);
+                throw;
+            }
         }
 
         /// <summary>Retrieve a <see cref="ConfigurationSetting"/> from the configuration store.</summary>
