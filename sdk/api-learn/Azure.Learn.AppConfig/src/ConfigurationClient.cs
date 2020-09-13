@@ -63,8 +63,20 @@ namespace Azure.Learn.AppConfig
         /// <summary>Retrieve a <see cref="ConfigurationSetting"/> from the configuration store.</summary>
         public virtual async Task<Response<ConfigurationSetting>> GetConfigurationSettingAsync(string key, string label = null, CancellationToken cancellationToken = default)
         {
-            await Task.Yield();
-            throw new NotImplementedException();
+            Argument.AssertNotNull(key, nameof(key));
+
+            using DiagnosticScope scope = _clientDiagnostics.CreateScope($"{nameof(ConfigurationClient)}.{nameof(GetConfigurationSetting)}");
+            scope.Start();
+            try
+            {
+                ResponseWithHeaders<ConfigurationSetting, ServiceGetKeyValueHeaders> responseWithHeaders = await _serviceRestClient.GetKeyValueAsync(key, label, acceptDatetime: null, ifMatch: null, ifNoneMatch: null, select: null, cancellationToken).ConfigureAwait(false);
+                return Response.FromValue(responseWithHeaders.Value, responseWithHeaders.GetRawResponse());
+            }
+            catch (Exception ex)
+            {
+                scope.Failed(ex);
+                throw;
+            }
         }
 
         /// <summary>Conditionally retrieve a <see cref="ConfigurationSetting"/> from the configuration store if the setting has been changed since it was last retrieved.</summary>
