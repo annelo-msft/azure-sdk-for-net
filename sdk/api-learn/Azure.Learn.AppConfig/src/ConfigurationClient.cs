@@ -29,11 +29,13 @@ namespace Azure.Learn.AppConfig
             Argument.AssertNotNull(credential, nameof(credential));
             Argument.AssertNotNull(options, nameof(options));
 
+            options ??= new ConfigurationClientOptions();
+
             string scope = $"{endpoint.AbsoluteUri}.default";
 
-            ClientDiagnostics diagnostics = new ClientDiagnostics(options);
+            _clientDiagnostics = new ClientDiagnostics(options);
             var pipeline = HttpPipelineBuilder.Build(options, new BearerTokenAuthenticationPolicy(credential, scope));
-            _serviceRestClient = new ServiceRestClient(diagnostics, pipeline, endpoint.AbsoluteUri);
+            _serviceRestClient = new ServiceRestClient(_clientDiagnostics, pipeline, endpoint.AbsoluteUri);
         }
 
         /// <summary> Initializes a new instance of ConfigurationClient for mocking. </summary>
