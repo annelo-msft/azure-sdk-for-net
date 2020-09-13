@@ -5,6 +5,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Azure.Core;
+using Azure.Core.Pipeline;
 
 namespace Azure.Learn.AppConfig
 {
@@ -13,17 +14,26 @@ namespace Azure.Learn.AppConfig
     /// </summary>
     public class ConfigurationClient
     {
+        private ServiceRestClient _serviceRestClient = null;
+
         /// <summary>Initializes a new instance of the <see cref="ConfigurationClient"/>.</summary>
         public ConfigurationClient(Uri endpoint, TokenCredential credential) : this(endpoint, credential, new ConfigurationClientOptions())
         {
         }
 
         /// <summary>Initializes a new instance of the <see cref="ConfigurationClient"/>.</summary>
-#pragma warning disable CA1801 // Parameter is never used
         public ConfigurationClient(Uri endpoint, TokenCredential credential, ConfigurationClientOptions options)
         {
+            Argument.AssertNotNull(endpoint, nameof(endpoint));
+            Argument.AssertNotNull(credential, nameof(credential));
+            Argument.AssertNotNull(options, nameof(options));
+
+            string scope = $"{endpoint.AbsolutePath}/.default";
+
+            ClientDiagnostics diagnostics = new ClientDiagnostics(options);
+            var pipeline = HttpPipelineBuilder.Build(options, new BearerTokenAuthenticationPolicy(credential, scope));
+            _serviceRestClient = new ServiceRestClient(diagnostics, pipeline, endpoint.AbsoluteUri);
         }
-#pragma warning restore CA1801 // Parameter is never used
 
         /// <summary> Initializes a new instance of ConfigurationClient for mocking. </summary>
         protected ConfigurationClient()
