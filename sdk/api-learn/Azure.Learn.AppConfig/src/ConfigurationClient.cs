@@ -84,14 +84,39 @@ namespace Azure.Learn.AppConfig
         /// <summary>Conditionally retrieve a <see cref="ConfigurationSetting"/> from the configuration store if the setting has been changed since it was last retrieved.</summary>
         public virtual Response<ConfigurationSetting> GetConfigurationSetting(ConfigurationSetting setting, bool onlyIfChanged = false, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            Argument.AssertNotNull(setting, nameof(setting));
+
+            using DiagnosticScope scope = _clientDiagnostics.CreateScope($"{nameof(ConfigurationClient)}.{nameof(GetConfigurationSetting)}");
+            scope.Start();
+            try
+            {
+                ResponseWithHeaders<ConfigurationSetting, ServiceGetKeyValueHeaders> responseWithHeaders = _serviceRestClient.GetKeyValue(setting.Key, setting.Label, acceptDatetime: null, ifMatch: null, ifNoneMatch: $"\"{setting.ETag.ToString()}\"", select: null, cancellationToken);
+                return Response.FromValue(responseWithHeaders.Value, responseWithHeaders.GetRawResponse());
+            }
+            catch (Exception ex)
+            {
+                scope.Failed(ex);
+                throw;
+            }
         }
 
         /// <summary>Conditionally retrieve a <see cref="ConfigurationSetting"/> from the configuration store if the setting has been changed since it was last retrieved.</summary>
         public virtual async Task<Response<ConfigurationSetting>> GetConfigurationSettingAsync(ConfigurationSetting setting, bool onlyIfChanged = false, CancellationToken cancellationToken = default)
         {
-            await Task.Yield();
-            throw new NotImplementedException();
+            Argument.AssertNotNull(setting, nameof(setting));
+
+            using DiagnosticScope scope = _clientDiagnostics.CreateScope($"{nameof(ConfigurationClient)}.{nameof(GetConfigurationSetting)}");
+            scope.Start();
+            try
+            {
+                ResponseWithHeaders<ConfigurationSetting, ServiceGetKeyValueHeaders> responseWithHeaders = await _serviceRestClient.GetKeyValueAsync(setting.Key, setting.Label, acceptDatetime: null, ifMatch: null, ifNoneMatch: $"\"{setting.ETag.ToString()}\"", select: null, cancellationToken).ConfigureAwait(false);
+                return Response.FromValue(responseWithHeaders.Value, responseWithHeaders.GetRawResponse());
+            }
+            catch (Exception ex)
+            {
+                scope.Failed(ex);
+                throw;
+            }
         }
     }
 }
