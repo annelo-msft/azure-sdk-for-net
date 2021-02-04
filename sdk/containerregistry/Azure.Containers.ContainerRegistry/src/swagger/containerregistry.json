@@ -384,6 +384,15 @@
       }
     },
     "/v2/{name}/blobs/uploads/": {
+      "get": {
+        "description":"",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
       "post": {
         "tags": [
           "Layer"
