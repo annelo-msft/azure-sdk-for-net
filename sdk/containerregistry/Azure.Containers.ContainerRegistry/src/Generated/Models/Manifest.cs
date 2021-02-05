@@ -8,7 +8,7 @@
 namespace Azure.Containers.ContainerRegistry.Models
 {
     /// <summary> Returns the requested manifest file. </summary>
-    public partial class Manifest
+    internal partial class Manifest
     {
         /// <summary> Initializes a new instance of Manifest. </summary>
         public Manifest()

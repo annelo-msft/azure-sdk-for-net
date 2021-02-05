@@ -48,6 +48,7 @@
     <Compile Include="$(AzureCoreSharedSources)AzureResourceProviderNamespaceAttribute.cs" Link="Shared\%(RecursiveDir)\%(Filename)%(Extension)" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Blobs\Models\" />
     <Folder Include="swagger\" />
   </ItemGroup>
 
