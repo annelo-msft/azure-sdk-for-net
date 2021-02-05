@@ -14,23 +14,19 @@ using Azure.Core.Pipeline;
 
 namespace Azure.Containers.ContainerRegistry
 {
-    /// <summary> The Registry service client. </summary>
-    public partial class RegistryClient
+    /// <summary> The ContainerRegistry service client. </summary>
+    public partial class ContainerRegistryClient
     {
         private readonly ClientDiagnostics _clientDiagnostics;
         private readonly HttpPipeline _pipeline;
-        internal RegistryRestClient RestClient { get; }
-        /// <summary> Initializes a new instance of RegistryClient for mocking. </summary>
-        protected RegistryClient()
-        {
-        }
-        /// <summary> Initializes a new instance of RegistryClient. </summary>
+        internal ContainerRegistryRestClient RestClient { get; }
+        /// <summary> Initializes a new instance of ContainerRegistryClient. </summary>
         /// <param name="clientDiagnostics"> The handler for diagnostic messaging in the client. </param>
         /// <param name="pipeline"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
         /// <param name="url"> Registry login URL. </param>
-        internal RegistryClient(ClientDiagnostics clientDiagnostics, HttpPipeline pipeline, string url)
+        internal ContainerRegistryClient(ClientDiagnostics clientDiagnostics, HttpPipeline pipeline, string url)
         {
-            RestClient = new RegistryRestClient(clientDiagnostics, pipeline, url);
+            RestClient = new ContainerRegistryRestClient(clientDiagnostics, pipeline, url);
             _clientDiagnostics = clientDiagnostics;
             _pipeline = pipeline;
         }
@@ -39,7 +35,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual async Task<Response> CheckDockerV2SupportAsync(CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("RegistryClient.CheckDockerV2Support");
+            using var scope = _clientDiagnostics.CreateScope("ContainerRegistryClient.CheckDockerV2Support");
             scope.Start();
             try
             {
@@ -56,7 +52,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Response CheckDockerV2Support(CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("RegistryClient.CheckDockerV2Support");
+            using var scope = _clientDiagnostics.CreateScope("ContainerRegistryClient.CheckDockerV2Support");
             scope.Start();
             try
             {
@@ -75,7 +71,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual async Task<Response<Repositories>> GetRepositoriesAsync(string last = null, int? n = null, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("RegistryClient.GetRepositories");
+            using var scope = _clientDiagnostics.CreateScope("ContainerRegistryClient.GetRepositories");
             scope.Start();
             try
             {
@@ -94,7 +90,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Response<Repositories> GetRepositories(string last = null, int? n = null, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("RegistryClient.GetRepositories");
+            using var scope = _clientDiagnostics.CreateScope("ContainerRegistryClient.GetRepositories");
             scope.Start();
             try
             {
@@ -112,7 +108,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual async Task<Response<RepositoryAttributes>> GetRepositoryAttributesAsync(string name, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("RegistryClient.GetRepositoryAttributes");
+            using var scope = _clientDiagnostics.CreateScope("ContainerRegistryClient.GetRepositoryAttributes");
             scope.Start();
             try
             {
@@ -130,7 +126,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Response<RepositoryAttributes> GetRepositoryAttributes(string name, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("RegistryClient.GetRepositoryAttributes");
+            using var scope = _clientDiagnostics.CreateScope("ContainerRegistryClient.GetRepositoryAttributes");
             scope.Start();
             try
             {
@@ -148,7 +144,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual async Task<Response<DeletedRepository>> DeleteRepositoryAsync(string name, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("RegistryClient.DeleteRepository");
+            using var scope = _clientDiagnostics.CreateScope("ContainerRegistryClient.DeleteRepository");
             scope.Start();
             try
             {
@@ -166,7 +162,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Response<DeletedRepository> DeleteRepository(string name, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("RegistryClient.DeleteRepository");
+            using var scope = _clientDiagnostics.CreateScope("ContainerRegistryClient.DeleteRepository");
             scope.Start();
             try
             {
@@ -185,7 +181,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual async Task<Response> UpdateRepositoryAttributesAsync(string name, ChangeableAttributes value = null, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("RegistryClient.UpdateRepositoryAttributes");
+            using var scope = _clientDiagnostics.CreateScope("ContainerRegistryClient.UpdateRepositoryAttributes");
             scope.Start();
             try
             {
@@ -204,7 +200,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Response UpdateRepositoryAttributes(string name, ChangeableAttributes value = null, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("RegistryClient.UpdateRepositoryAttributes");
+            using var scope = _clientDiagnostics.CreateScope("ContainerRegistryClient.UpdateRepositoryAttributes");
             scope.Start();
             try
             {

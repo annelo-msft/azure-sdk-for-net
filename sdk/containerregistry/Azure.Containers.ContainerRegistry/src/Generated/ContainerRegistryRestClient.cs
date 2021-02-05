@@ -16,18 +16,18 @@ using Azure.Core.Pipeline;
 
 namespace Azure.Containers.ContainerRegistry
 {
-    internal partial class RegistryRestClient
+    internal partial class ContainerRegistryRestClient
     {
         private string url;
         private ClientDiagnostics _clientDiagnostics;
         private HttpPipeline _pipeline;
 
-        /// <summary> Initializes a new instance of RegistryRestClient. </summary>
+        /// <summary> Initializes a new instance of ContainerRegistryRestClient. </summary>
         /// <param name="clientDiagnostics"> The handler for diagnostic messaging in the client. </param>
         /// <param name="pipeline"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
         /// <param name="url"> Registry login URL. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="url"/> is null. </exception>
-        public RegistryRestClient(ClientDiagnostics clientDiagnostics, HttpPipeline pipeline, string url)
+        public ContainerRegistryRestClient(ClientDiagnostics clientDiagnostics, HttpPipeline pipeline, string url)
         {
             if (url == null)
             {
@@ -107,11 +107,11 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="last"> Query parameter for the last item in previous query. Result set will include values lexically after last. </param>
         /// <param name="n"> query parameter for max number of items. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public async Task<ResponseWithHeaders<Repositories, RegistryGetRepositoriesHeaders>> GetRepositoriesAsync(string last = null, int? n = null, CancellationToken cancellationToken = default)
+        public async Task<ResponseWithHeaders<Repositories, ContainerRegistryGetRepositoriesHeaders>> GetRepositoriesAsync(string last = null, int? n = null, CancellationToken cancellationToken = default)
         {
             using var message = CreateGetRepositoriesRequest(last, n);
             await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
-            var headers = new RegistryGetRepositoriesHeaders(message.Response);
+            var headers = new ContainerRegistryGetRepositoriesHeaders(message.Response);
             switch (message.Response.Status)
             {
                 case 200:
@@ -130,11 +130,11 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="last"> Query parameter for the last item in previous query. Result set will include values lexically after last. </param>
         /// <param name="n"> query parameter for max number of items. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public ResponseWithHeaders<Repositories, RegistryGetRepositoriesHeaders> GetRepositories(string last = null, int? n = null, CancellationToken cancellationToken = default)
+        public ResponseWithHeaders<Repositories, ContainerRegistryGetRepositoriesHeaders> GetRepositories(string last = null, int? n = null, CancellationToken cancellationToken = default)
         {
             using var message = CreateGetRepositoriesRequest(last, n);
             _pipeline.Send(message, cancellationToken);
-            var headers = new RegistryGetRepositoriesHeaders(message.Response);
+            var headers = new ContainerRegistryGetRepositoriesHeaders(message.Response);
             switch (message.Response.Status)
             {
                 case 200:

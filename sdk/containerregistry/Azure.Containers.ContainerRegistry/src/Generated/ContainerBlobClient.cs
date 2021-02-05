@@ -14,23 +14,23 @@ using Azure.Core.Pipeline;
 
 namespace Azure.Containers.ContainerRegistry
 {
-    /// <summary> The Blob service client. </summary>
-    public partial class BlobClient
+    /// <summary> The ContainerBlob service client. </summary>
+    public partial class ContainerBlobClient
     {
         private readonly ClientDiagnostics _clientDiagnostics;
         private readonly HttpPipeline _pipeline;
-        internal BlobRestClient RestClient { get; }
-        /// <summary> Initializes a new instance of BlobClient for mocking. </summary>
-        protected BlobClient()
+        internal ContainerBlobRestClient RestClient { get; }
+        /// <summary> Initializes a new instance of ContainerBlobClient for mocking. </summary>
+        protected ContainerBlobClient()
         {
         }
-        /// <summary> Initializes a new instance of BlobClient. </summary>
+        /// <summary> Initializes a new instance of ContainerBlobClient. </summary>
         /// <param name="clientDiagnostics"> The handler for diagnostic messaging in the client. </param>
         /// <param name="pipeline"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
         /// <param name="url"> Registry login URL. </param>
-        internal BlobClient(ClientDiagnostics clientDiagnostics, HttpPipeline pipeline, string url)
+        internal ContainerBlobClient(ClientDiagnostics clientDiagnostics, HttpPipeline pipeline, string url)
         {
-            RestClient = new BlobRestClient(clientDiagnostics, pipeline, url);
+            RestClient = new ContainerBlobRestClient(clientDiagnostics, pipeline, url);
             _clientDiagnostics = clientDiagnostics;
             _pipeline = pipeline;
         }
@@ -41,7 +41,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual async Task<Response<Stream>> GetBlobAsync(string name, string digest, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("BlobClient.GetBlob");
+            using var scope = _clientDiagnostics.CreateScope("ContainerBlobClient.GetBlob");
             scope.Start();
             try
             {
@@ -60,7 +60,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Response<Stream> GetBlob(string name, string digest, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("BlobClient.GetBlob");
+            using var scope = _clientDiagnostics.CreateScope("ContainerBlobClient.GetBlob");
             scope.Start();
             try
             {
@@ -79,7 +79,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual async Task<Response> CheckBlobExistsAsync(string name, string digest, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("BlobClient.CheckBlobExists");
+            using var scope = _clientDiagnostics.CreateScope("ContainerBlobClient.CheckBlobExists");
             scope.Start();
             try
             {
@@ -98,7 +98,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Response CheckBlobExists(string name, string digest, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("BlobClient.CheckBlobExists");
+            using var scope = _clientDiagnostics.CreateScope("ContainerBlobClient.CheckBlobExists");
             scope.Start();
             try
             {
@@ -117,7 +117,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual async Task<Response<Stream>> DeleteBlobAsync(string name, string digest, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("BlobClient.DeleteBlob");
+            using var scope = _clientDiagnostics.CreateScope("ContainerBlobClient.DeleteBlob");
             scope.Start();
             try
             {
@@ -136,7 +136,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Response<Stream> DeleteBlob(string name, string digest, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("BlobClient.DeleteBlob");
+            using var scope = _clientDiagnostics.CreateScope("ContainerBlobClient.DeleteBlob");
             scope.Start();
             try
             {
@@ -156,7 +156,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual async Task<Response> MountBlobAsync(string name, string @from, string mount, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("BlobClient.MountBlob");
+            using var scope = _clientDiagnostics.CreateScope("ContainerBlobClient.MountBlob");
             scope.Start();
             try
             {
@@ -176,7 +176,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Response MountBlob(string name, string @from, string mount, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("BlobClient.MountBlob");
+            using var scope = _clientDiagnostics.CreateScope("ContainerBlobClient.MountBlob");
             scope.Start();
             try
             {
@@ -194,7 +194,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual async Task<Response> GetUploadStatusAsync(string location, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("BlobClient.GetUploadStatus");
+            using var scope = _clientDiagnostics.CreateScope("ContainerBlobClient.GetUploadStatus");
             scope.Start();
             try
             {
@@ -212,7 +212,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Response GetUploadStatus(string location, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("BlobClient.GetUploadStatus");
+            using var scope = _clientDiagnostics.CreateScope("ContainerBlobClient.GetUploadStatus");
             scope.Start();
             try
             {
@@ -231,7 +231,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual async Task<Response> UploadChunkAsync(string location, Stream value, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("BlobClient.UploadChunk");
+            using var scope = _clientDiagnostics.CreateScope("ContainerBlobClient.UploadChunk");
             scope.Start();
             try
             {
@@ -250,7 +250,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Response UploadChunk(string location, Stream value, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("BlobClient.UploadChunk");
+            using var scope = _clientDiagnostics.CreateScope("ContainerBlobClient.UploadChunk");
             scope.Start();
             try
             {
@@ -270,7 +270,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual async Task<Response> CompleteUploadAsync(string digest, string location, Stream value = null, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("BlobClient.CompleteUpload");
+            using var scope = _clientDiagnostics.CreateScope("ContainerBlobClient.CompleteUpload");
             scope.Start();
             try
             {
@@ -290,7 +290,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Response CompleteUpload(string digest, string location, Stream value = null, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("BlobClient.CompleteUpload");
+            using var scope = _clientDiagnostics.CreateScope("ContainerBlobClient.CompleteUpload");
             scope.Start();
             try
             {
@@ -308,7 +308,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual async Task<Response> CancelUploadAsync(string location, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("BlobClient.CancelUpload");
+            using var scope = _clientDiagnostics.CreateScope("ContainerBlobClient.CancelUpload");
             scope.Start();
             try
             {
@@ -326,7 +326,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Response CancelUpload(string location, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("BlobClient.CancelUpload");
+            using var scope = _clientDiagnostics.CreateScope("ContainerBlobClient.CancelUpload");
             scope.Start();
             try
             {
@@ -344,7 +344,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual async Task<Response> StartUploadAsync(string name, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("BlobClient.StartUpload");
+            using var scope = _clientDiagnostics.CreateScope("ContainerBlobClient.StartUpload");
             scope.Start();
             try
             {
@@ -362,7 +362,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Response StartUpload(string name, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("BlobClient.StartUpload");
+            using var scope = _clientDiagnostics.CreateScope("ContainerBlobClient.StartUpload");
             scope.Start();
             try
             {
@@ -382,7 +382,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual async Task<Response<Stream>> GetChunkAsync(string name, string digest, string range, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("BlobClient.GetChunk");
+            using var scope = _clientDiagnostics.CreateScope("ContainerBlobClient.GetChunk");
             scope.Start();
             try
             {
@@ -402,7 +402,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Response<Stream> GetChunk(string name, string digest, string range, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("BlobClient.GetChunk");
+            using var scope = _clientDiagnostics.CreateScope("ContainerBlobClient.GetChunk");
             scope.Start();
             try
             {
@@ -422,7 +422,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual async Task<Response> CheckChunkExistsAsync(string name, string digest, string range, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("BlobClient.CheckChunkExists");
+            using var scope = _clientDiagnostics.CreateScope("ContainerBlobClient.CheckChunkExists");
             scope.Start();
             try
             {
@@ -442,7 +442,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Response CheckChunkExists(string name, string digest, string range, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("BlobClient.CheckChunkExists");
+            using var scope = _clientDiagnostics.CreateScope("ContainerBlobClient.CheckChunkExists");
             scope.Start();
             try
             {

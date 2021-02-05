@@ -16,18 +16,18 @@ using Azure.Core.Pipeline;
 
 namespace Azure.Containers.ContainerRegistry
 {
-    internal partial class RepositoryRestClient
+    internal partial class ContainerRepositoryRestClient
     {
         private string url;
         private ClientDiagnostics _clientDiagnostics;
         private HttpPipeline _pipeline;
 
-        /// <summary> Initializes a new instance of RepositoryRestClient. </summary>
+        /// <summary> Initializes a new instance of ContainerRepositoryRestClient. </summary>
         /// <param name="clientDiagnostics"> The handler for diagnostic messaging in the client. </param>
         /// <param name="pipeline"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
         /// <param name="url"> Registry login URL. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="url"/> is null. </exception>
-        public RepositoryRestClient(ClientDiagnostics clientDiagnostics, HttpPipeline pipeline, string url)
+        public ContainerRepositoryRestClient(ClientDiagnostics clientDiagnostics, HttpPipeline pipeline, string url)
         {
             if (url == null)
             {
@@ -151,7 +151,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="payload"> Manifest body, can take v1 or v2 values depending on accept header. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/>, <paramref name="reference"/>, or <paramref name="payload"/> is null. </exception>
-        public async Task<ResponseWithHeaders<object, RepositoryCreateManifestHeaders>> CreateManifestAsync(string name, string reference, Manifest payload, CancellationToken cancellationToken = default)
+        public async Task<ResponseWithHeaders<object, ContainerRepositoryCreateManifestHeaders>> CreateManifestAsync(string name, string reference, Manifest payload, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {
@@ -168,7 +168,7 @@ namespace Azure.Containers.ContainerRegistry
 
             using var message = CreateCreateManifestRequest(name, reference, payload);
             await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
-            var headers = new RepositoryCreateManifestHeaders(message.Response);
+            var headers = new ContainerRepositoryCreateManifestHeaders(message.Response);
             switch (message.Response.Status)
             {
                 case 201:
@@ -189,7 +189,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="payload"> Manifest body, can take v1 or v2 values depending on accept header. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/>, <paramref name="reference"/>, or <paramref name="payload"/> is null. </exception>
-        public ResponseWithHeaders<object, RepositoryCreateManifestHeaders> CreateManifest(string name, string reference, Manifest payload, CancellationToken cancellationToken = default)
+        public ResponseWithHeaders<object, ContainerRepositoryCreateManifestHeaders> CreateManifest(string name, string reference, Manifest payload, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {
@@ -206,7 +206,7 @@ namespace Azure.Containers.ContainerRegistry
 
             using var message = CreateCreateManifestRequest(name, reference, payload);
             _pipeline.Send(message, cancellationToken);
-            var headers = new RepositoryCreateManifestHeaders(message.Response);
+            var headers = new ContainerRepositoryCreateManifestHeaders(message.Response);
             switch (message.Response.Status)
             {
                 case 201:
