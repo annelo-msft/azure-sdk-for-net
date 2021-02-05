@@ -10,14 +10,14 @@ using Azure.Core;
 
 namespace Azure.Containers.ContainerRegistry
 {
-    internal class BlobDeleteHeaders
+    internal class RegistryGetRepositoriesHeaders
     {
         private readonly Response _response;
-        public BlobDeleteHeaders(Response response)
+        public RegistryGetRepositoriesHeaders(Response response)
         {
             _response = response;
         }
-        /// <summary> Digest of the targeted content for the request. </summary>
-        public string DockerContentDigest => _response.Headers.TryGetValue("Docker-Content-Digest", out string value) ? value : null;
+        /// <summary> next paginated result. </summary>
+        public string Link => _response.Headers.TryGetValue("Link", out string value) ? value : null;
     }
 }

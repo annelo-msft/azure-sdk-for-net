@@ -10,10 +10,10 @@ using Azure.Core;
 
 namespace Azure.Containers.ContainerRegistry
 {
-    internal class BlobGetHeaders
+    internal class BlobCheckBlobExistsHeaders
     {
         private readonly Response _response;
-        public BlobGetHeaders(Response response)
+        public BlobCheckBlobExistsHeaders(Response response)
         {
             _response = response;
         }

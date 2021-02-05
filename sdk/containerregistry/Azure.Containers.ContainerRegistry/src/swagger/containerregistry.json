@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "Azure Container Registry",
+    "title": "Container Registry",
     "description": "Metadata API definition for the Azure Container Registry runtime",
     "version": "2019-08-15-preview"
   },
@@ -58,7 +58,7 @@
 	  "Registry"
         ],
         "description": "Tells whether this Docker Registry instance supports Docker Registry HTTP API v2",
-        "operationId": "V2Support_Check",
+        "operationId": "Registry_CheckDockerV2Support",
         "x-ms-examples": {
           "Check Docker Registry V2 Support": {
             "$ref": "./examples/GetDockerRegistryV2Support.json"
@@ -88,7 +88,7 @@
             "$ref": "./examples/GetManifest.json"
           }
         },
-        "operationId": "GetManifest",
+        "operationId": "Repository_GetManifest",
         "parameters": [
           {
             "$ref": "#/parameters/ImageName"
@@ -133,7 +133,7 @@
         "consumes": [
           "application/vnd.docker.distribution.manifest.v2+json"
         ],
-        "operationId": "CreateManifest",
+        "operationId": "Repository_CreateManifest",
         "parameters": [
           {
             "$ref": "#/parameters/ImageName"
@@ -184,7 +184,7 @@
             "$ref": "./examples/DeleteManifest.json"
           }
         },
-        "operationId": "DeleteManifest",
+        "operationId": "Repository_DeleteManifest",
         "parameters": [
           {
             "$ref": "#/parameters/ImageName"
@@ -228,7 +228,7 @@
           }
         },
         "description": "Retrieve the blob from the registry identified by digest.",
-        "operationId": "GetBlob",
+        "operationId": "Blob_GetBlob",
         "responses": {
           "200": {
             "description": "The blob identified by digest is available. The blob content will be present in the body of the response.",
@@ -271,7 +271,7 @@
           "Blob"
         ],
         "description": "Same as GET, except only the headers are returned.",
-        "operationId": "CheckBlobExists",
+        "operationId": "Blob_CheckBlobExists",
         "x-ms-examples": {
           "Head for a Blob Chunk": {
             "$ref": "./examples/CheckBlob.json"
@@ -333,7 +333,7 @@
         "tags": [
           "Blob"
         ],
-        "operationId": "DeleteBlob",
+        "operationId": "Blob_DeleteBlob",
         "x-ms-examples": {
           "Delete a blob": {
             "$ref": "./examples/DeleteBlob.json"
@@ -364,22 +364,12 @@
       }
     },
     "/v2/{name}/blobs/uploads/": {
-      "get": {
-        "description":"",
-        "operationId": "GetUploadsInProgress",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
       "post": {
         "tags": [
           "Blob"
         ],
         "description": "Mount a blob identified by the `mount` parameter from another repository.",
-        "operationId": "MountBlob",
+        "operationId": "Blob_MountBlob",
         "x-ms-examples": {
           "Mount a blob from repository": {
             "$ref": "./examples/MountBlob.json"
@@ -434,7 +424,7 @@
           }
         ],
         "description": "Retrieve status of upload identified by uuid. The primary purpose of this endpoint is to resolve the current status of a resumable upload.",
-        "operationId": "GetUploadStatus",
+        "operationId": "Blob_GetUploadStatus",
         "x-ms-examples": {
           "Get blob status": {
             "$ref": "./examples/GetBlobStatus.json"
@@ -473,7 +463,7 @@
           "Blob"
         ],
         "description": "Upload a stream of data without completing the upload.",
-        "operationId": "UploadBlobChunk",
+        "operationId": "Blob_UploadChunk",
         "x-ms-examples": {
           "Upload Blob": {
             "$ref": "./examples/UploadBlob.json"
@@ -524,7 +514,7 @@
           "application/octet-stream"
         ],
         "description": "Complete the upload, providing all the data in the body, if necessary. A request without a body will just complete the upload with previously uploaded content.",
-        "operationId": "CompleteUpload",
+        "operationId": "Blob_CompleteUpload",
         "x-ms-examples": {
           "End a blob upload": {
             "$ref": "./examples/EndBlobUpload.json"
@@ -577,7 +567,7 @@
           }
         ],
         "description": "Cancel outstanding upload processes, releasing associated resources. If this is not called, the unfinished uploads will eventually timeout.",
-        "operationId": "CancelUpload",
+        "operationId": "Blob_CancelUpload",
         "x-ms-examples": {
           "End a blob upload": {
             "$ref": "./examples/CancelBlobUpload.json"
@@ -602,7 +592,7 @@
           "Registry"
         ],
         "description": "List repositories",
-        "operationId": "GetRepositories",
+        "operationId": "Registry_GetRepositories",
         "x-ms-examples": {
           "Get repositories in a registry": {
             "$ref": "./examples/GetRepositoryList.json"
@@ -644,7 +634,7 @@
           "Registry"
         ],
         "description": "Get repository attributes",
-        "operationId": "GetRepositoryAttributes",
+        "operationId": "Registry_GetRepositoryAttributes",
         "x-ms-examples": {
           "Get details of repository": {
             "$ref": "./examples/GetRepositoryAttributes.json"
@@ -675,7 +665,7 @@
           "Registry"
         ],
         "description": "Delete the repository identified by `name`",
-        "operationId": "DeleteRepository",
+        "operationId": "Registry_DeleteRepository",
         "x-ms-examples": {
           "Delete a repository": {
             "$ref": "./examples/DeleteAcrRepository.json"
@@ -706,7 +696,7 @@
           "Registry"
         ],
         "description": "Update the attribute identified by `name` where `reference` is the name of the repository.",
-        "operationId": "UpdateRepositoryAttributes",
+        "operationId": "Registry_UpdateRepositoryAttributes",
         "x-ms-examples": {
           "Update repository attributes": {
             "$ref": "./examples/UpdateRepositoryAttributes.json"
@@ -748,7 +738,7 @@
           "Repository"
         ],
         "description": "List tags of a repository",
-        "operationId": "GetTags",
+        "operationId": "Repository_GetTags",
         "x-ms-examples": {
           "Get tags of a repository": {
             "$ref": "./examples/GetTagList.json"
@@ -793,7 +783,7 @@
           "Repository"
         ],
         "description": "Get tag attributes by tag",
-        "operationId": "GetTagAttributes",
+        "operationId": "Repository_GetTagAttributes",
         "x-ms-examples": {
           "Get tag attributes": {
             "$ref": "./examples/GetTagAttributes.json"
@@ -827,7 +817,7 @@
           "Repository"
         ],
         "description": "Update tag attributes",
-        "operationId": "UpdateTagAttributes",
+        "operationId": "Repository_UpdateTagAttributes",
         "consumes": [
           "application/json"
         ],
@@ -864,7 +854,7 @@
           "Repository"
         ],
         "description": "Delete tag",
-        "operationId": "DeleteTag",
+        "operationId": "Repository_DeleteTag",
         "consumes": [
           "application/json"
         ],
@@ -900,7 +890,7 @@
           "Repository"
         ],
         "description": "List manifests of a repository",
-        "operationId": "GetManifests",
+        "operationId": "Repository_GetManifests",
         "x-ms-examples": {
           "Get list of available manifests": {
             "$ref": "./examples/GetManifestList.json"
@@ -942,7 +932,7 @@
           "Repository"
         ],
         "description": "Get manifest attributes",
-        "operationId": "GetManifestAttributes",
+        "operationId": "Repository_GetManifestAttributes",
         "x-ms-examples": {
           "Get manifest attributes": {
             "$ref": "./examples/GetManifestAttributes.json"
@@ -976,7 +966,7 @@
           "Repository"
         ],
         "description": "Update attributes of a manifest",
-        "operationId": "UpdateManifestAttributes",
+        "operationId": "Repository_UpdateManifestAttributes",
         "consumes": [
           "application/json"
         ],
@@ -1018,7 +1008,7 @@
           "Blob"
         ],
         "description": "Initiate a resumable blob upload with an empty request body.",
-        "operationId": "StartBlobUpload",
+        "operationId": "Blob_StartUpload",
         "x-ms-examples": {
           "Start a blob upload": {
             "$ref": "./examples/StartBlobUpload.json"
@@ -1065,7 +1055,7 @@
           "Blob"
         ],
         "description": "Retrieve the blob from the registry identified by `digest`. This endpoint may also support RFC7233 compliant range requests. Support can be detected by issuing a HEAD request. If the header `Accept-Range: bytes` is returned, range requests can be used to fetch partial content.",
-        "operationId": "GetBlobChunk",
+        "operationId": "Blob_GetChunk",
         "parameters": [
           {
             "$ref": "#/parameters/ImageName"
@@ -1126,7 +1116,7 @@
           }
         ],
         "description": "Same as GET, except only the headers are returned.",
-        "operationId": "CheckBlobChunkExists",
+        "operationId": "Blob_CheckChunkExists",
         "x-ms-examples": {
           "Get headers without blob Chunk": {
             "$ref": "./examples/CheckBlobChunk.json"

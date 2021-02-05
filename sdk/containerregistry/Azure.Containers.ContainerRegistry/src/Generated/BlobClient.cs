@@ -39,13 +39,13 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="name"> Name of the image (including the namespace). </param>
         /// <param name="digest"> Digest of a BLOB. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response<Stream>> GetAsync(string name, string digest, CancellationToken cancellationToken = default)
+        public virtual async Task<Response<Stream>> GetBlobAsync(string name, string digest, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("BlobClient.Get");
+            using var scope = _clientDiagnostics.CreateScope("BlobClient.GetBlob");
             scope.Start();
             try
             {
-                return await RestClient.GetAsync(name, digest, cancellationToken).ConfigureAwait(false);
+                return await RestClient.GetBlobAsync(name, digest, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception e)
             {
@@ -58,13 +58,13 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="name"> Name of the image (including the namespace). </param>
         /// <param name="digest"> Digest of a BLOB. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response<Stream> Get(string name, string digest, CancellationToken cancellationToken = default)
+        public virtual Response<Stream> GetBlob(string name, string digest, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("BlobClient.Get");
+            using var scope = _clientDiagnostics.CreateScope("BlobClient.GetBlob");
             scope.Start();
             try
             {
-                return RestClient.Get(name, digest, cancellationToken);
+                return RestClient.GetBlob(name, digest, cancellationToken);
             }
             catch (Exception e)
             {
@@ -77,13 +77,13 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="name"> Name of the image (including the namespace). </param>
         /// <param name="digest"> Digest of a BLOB. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response> CheckAsync(string name, string digest, CancellationToken cancellationToken = default)
+        public virtual async Task<Response> CheckBlobExistsAsync(string name, string digest, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("BlobClient.Check");
+            using var scope = _clientDiagnostics.CreateScope("BlobClient.CheckBlobExists");
             scope.Start();
             try
             {
-                return (await RestClient.CheckAsync(name, digest, cancellationToken).ConfigureAwait(false)).GetRawResponse();
+                return (await RestClient.CheckBlobExistsAsync(name, digest, cancellationToken).ConfigureAwait(false)).GetRawResponse();
             }
             catch (Exception e)
             {
@@ -96,13 +96,13 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="name"> Name of the image (including the namespace). </param>
         /// <param name="digest"> Digest of a BLOB. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response Check(string name, string digest, CancellationToken cancellationToken = default)
+        public virtual Response CheckBlobExists(string name, string digest, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("BlobClient.Check");
+            using var scope = _clientDiagnostics.CreateScope("BlobClient.CheckBlobExists");
             scope.Start();
             try
             {
-                return RestClient.Check(name, digest, cancellationToken).GetRawResponse();
+                return RestClient.CheckBlobExists(name, digest, cancellationToken).GetRawResponse();
             }
             catch (Exception e)
             {
@@ -115,13 +115,13 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="name"> Name of the image (including the namespace). </param>
         /// <param name="digest"> Digest of a BLOB. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response<Stream>> DeleteAsync(string name, string digest, CancellationToken cancellationToken = default)
+        public virtual async Task<Response<Stream>> DeleteBlobAsync(string name, string digest, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("BlobClient.Delete");
+            using var scope = _clientDiagnostics.CreateScope("BlobClient.DeleteBlob");
             scope.Start();
             try
             {
-                return await RestClient.DeleteAsync(name, digest, cancellationToken).ConfigureAwait(false);
+                return await RestClient.DeleteBlobAsync(name, digest, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception e)
             {
@@ -134,13 +134,13 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="name"> Name of the image (including the namespace). </param>
         /// <param name="digest"> Digest of a BLOB. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response<Stream> Delete(string name, string digest, CancellationToken cancellationToken = default)
+        public virtual Response<Stream> DeleteBlob(string name, string digest, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("BlobClient.Delete");
+            using var scope = _clientDiagnostics.CreateScope("BlobClient.DeleteBlob");
             scope.Start();
             try
             {
-                return RestClient.Delete(name, digest, cancellationToken);
+                return RestClient.DeleteBlob(name, digest, cancellationToken);
             }
             catch (Exception e)
             {
@@ -154,13 +154,13 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="from"> Name of the source repository. </param>
         /// <param name="mount"> Digest of blob to mount from the source repository. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response> MountAsync(string name, string @from, string mount, CancellationToken cancellationToken = default)
+        public virtual async Task<Response> MountBlobAsync(string name, string @from, string mount, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("BlobClient.Mount");
+            using var scope = _clientDiagnostics.CreateScope("BlobClient.MountBlob");
             scope.Start();
             try
             {
-                return (await RestClient.MountAsync(name, @from, mount, cancellationToken).ConfigureAwait(false)).GetRawResponse();
+                return (await RestClient.MountBlobAsync(name, @from, mount, cancellationToken).ConfigureAwait(false)).GetRawResponse();
             }
             catch (Exception e)
             {
@@ -174,13 +174,13 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="from"> Name of the source repository. </param>
         /// <param name="mount"> Digest of blob to mount from the source repository. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response Mount(string name, string @from, string mount, CancellationToken cancellationToken = default)
+        public virtual Response MountBlob(string name, string @from, string mount, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("BlobClient.Mount");
+            using var scope = _clientDiagnostics.CreateScope("BlobClient.MountBlob");
             scope.Start();
             try
             {
-                return RestClient.Mount(name, @from, mount, cancellationToken).GetRawResponse();
+                return RestClient.MountBlob(name, @from, mount, cancellationToken).GetRawResponse();
             }
             catch (Exception e)
             {
@@ -192,13 +192,13 @@ namespace Azure.Containers.ContainerRegistry
         /// <summary> Retrieve status of upload identified by uuid. The primary purpose of this endpoint is to resolve the current status of a resumable upload. </summary>
         /// <param name="location"> Link acquired from upload start or previous chunk. Note, do not include initial / (must do substring(1) ). </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response> GetStatusAsync(string location, CancellationToken cancellationToken = default)
+        public virtual async Task<Response> GetUploadStatusAsync(string location, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("BlobClient.GetStatus");
+            using var scope = _clientDiagnostics.CreateScope("BlobClient.GetUploadStatus");
             scope.Start();
             try
             {
-                return (await RestClient.GetStatusAsync(location, cancellationToken).ConfigureAwait(false)).GetRawResponse();
+                return (await RestClient.GetUploadStatusAsync(location, cancellationToken).ConfigureAwait(false)).GetRawResponse();
             }
             catch (Exception e)
             {
@@ -210,13 +210,13 @@ namespace Azure.Containers.ContainerRegistry
         /// <summary> Retrieve status of upload identified by uuid. The primary purpose of this endpoint is to resolve the current status of a resumable upload. </summary>
         /// <param name="location"> Link acquired from upload start or previous chunk. Note, do not include initial / (must do substring(1) ). </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response GetStatus(string location, CancellationToken cancellationToken = default)
+        public virtual Response GetUploadStatus(string location, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("BlobClient.GetStatus");
+            using var scope = _clientDiagnostics.CreateScope("BlobClient.GetUploadStatus");
             scope.Start();
             try
             {
-                return RestClient.GetStatus(location, cancellationToken).GetRawResponse();
+                return RestClient.GetUploadStatus(location, cancellationToken).GetRawResponse();
             }
             catch (Exception e)
             {
@@ -229,13 +229,13 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="location"> Link acquired from upload start or previous chunk. Note, do not include initial / (must do substring(1) ). </param>
         /// <param name="value"> Raw data of blob. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response> UploadAsync(string location, Stream value, CancellationToken cancellationToken = default)
+        public virtual async Task<Response> UploadChunkAsync(string location, Stream value, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("BlobClient.Upload");
+            using var scope = _clientDiagnostics.CreateScope("BlobClient.UploadChunk");
             scope.Start();
             try
             {
-                return (await RestClient.UploadAsync(location, value, cancellationToken).ConfigureAwait(false)).GetRawResponse();
+                return (await RestClient.UploadChunkAsync(location, value, cancellationToken).ConfigureAwait(false)).GetRawResponse();
             }
             catch (Exception e)
             {
@@ -248,13 +248,13 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="location"> Link acquired from upload start or previous chunk. Note, do not include initial / (must do substring(1) ). </param>
         /// <param name="value"> Raw data of blob. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response Upload(string location, Stream value, CancellationToken cancellationToken = default)
+        public virtual Response UploadChunk(string location, Stream value, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("BlobClient.Upload");
+            using var scope = _clientDiagnostics.CreateScope("BlobClient.UploadChunk");
             scope.Start();
             try
             {
-                return RestClient.Upload(location, value, cancellationToken).GetRawResponse();
+                return RestClient.UploadChunk(location, value, cancellationToken).GetRawResponse();
             }
             catch (Exception e)
             {
@@ -268,13 +268,13 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="location"> Link acquired from upload start or previous chunk. Note, do not include initial / (must do substring(1) ). </param>
         /// <param name="value"> Optional raw data of blob. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response> EndUploadAsync(string digest, string location, Stream value, CancellationToken cancellationToken = default)
+        public virtual async Task<Response> CompleteUploadAsync(string digest, string location, Stream value = null, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("BlobClient.EndUpload");
+            using var scope = _clientDiagnostics.CreateScope("BlobClient.CompleteUpload");
             scope.Start();
             try
             {
-                return (await RestClient.EndUploadAsync(digest, location, value, cancellationToken).ConfigureAwait(false)).GetRawResponse();
+                return (await RestClient.CompleteUploadAsync(digest, location, value, cancellationToken).ConfigureAwait(false)).GetRawResponse();
             }
             catch (Exception e)
             {
@@ -288,13 +288,13 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="location"> Link acquired from upload start or previous chunk. Note, do not include initial / (must do substring(1) ). </param>
         /// <param name="value"> Optional raw data of blob. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response EndUpload(string digest, string location, Stream value, CancellationToken cancellationToken = default)
+        public virtual Response CompleteUpload(string digest, string location, Stream value = null, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("BlobClient.EndUpload");
+            using var scope = _clientDiagnostics.CreateScope("BlobClient.CompleteUpload");
             scope.Start();
             try
             {
-                return RestClient.EndUpload(digest, location, value, cancellationToken).GetRawResponse();
+                return RestClient.CompleteUpload(digest, location, value, cancellationToken).GetRawResponse();
             }
             catch (Exception e)
             {
@@ -420,13 +420,13 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="digest"> Digest of a BLOB. </param>
         /// <param name="range"> Format : bytes=&lt;start&gt;-&lt;end&gt;,  HTTP Range header specifying blob chunk. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response> CheckChunkAsync(string name, string digest, string range, CancellationToken cancellationToken = default)
+        public virtual async Task<Response> CheckChunkExistsAsync(string name, string digest, string range, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("BlobClient.CheckChunk");
+            using var scope = _clientDiagnostics.CreateScope("BlobClient.CheckChunkExists");
             scope.Start();
             try
             {
-                return (await RestClient.CheckChunkAsync(name, digest, range, cancellationToken).ConfigureAwait(false)).GetRawResponse();
+                return (await RestClient.CheckChunkExistsAsync(name, digest, range, cancellationToken).ConfigureAwait(false)).GetRawResponse();
             }
             catch (Exception e)
             {
@@ -440,13 +440,13 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="digest"> Digest of a BLOB. </param>
         /// <param name="range"> Format : bytes=&lt;start&gt;-&lt;end&gt;,  HTTP Range header specifying blob chunk. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response CheckChunk(string name, string digest, string range, CancellationToken cancellationToken = default)
+        public virtual Response CheckChunkExists(string name, string digest, string range, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("BlobClient.CheckChunk");
+            using var scope = _clientDiagnostics.CreateScope("BlobClient.CheckChunkExists");
             scope.Start();
             try
             {
-                return RestClient.CheckChunk(name, digest, range, cancellationToken).GetRawResponse();
+                return RestClient.CheckChunkExists(name, digest, range, cancellationToken).GetRawResponse();
             }
             catch (Exception e)
             {
