@@ -10,15 +10,13 @@ using Azure.Core;
 
 namespace Azure.Containers.ContainerRegistry
 {
-    internal class ContainerBlobUploadChunkHeaders
+    internal class ContainerRegistryBlobGetUploadStatusHeaders
     {
         private readonly Response _response;
-        public ContainerBlobUploadChunkHeaders(Response response)
+        public ContainerRegistryBlobGetUploadStatusHeaders(Response response)
         {
             _response = response;
         }
-        /// <summary> Provided location for blob. </summary>
-        public string Location => _response.Headers.TryGetValue("Location", out string value) ? value : null;
         /// <summary> Range indicating the current progress of the upload. </summary>
         public string Range => _response.Headers.TryGetValue("Range", out string value) ? value : null;
         /// <summary> Identifies the docker upload uuid for the current request. </summary>

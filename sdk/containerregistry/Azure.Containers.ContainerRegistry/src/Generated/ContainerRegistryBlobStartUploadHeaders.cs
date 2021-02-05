@@ -10,10 +10,10 @@ using Azure.Core;
 
 namespace Azure.Containers.ContainerRegistry
 {
-    internal class ContainerBlobStartUploadHeaders
+    internal class ContainerRegistryBlobStartUploadHeaders
     {
         private readonly Response _response;
-        public ContainerBlobStartUploadHeaders(Response response)
+        public ContainerRegistryBlobStartUploadHeaders(Response response)
         {
             _response = response;
         }

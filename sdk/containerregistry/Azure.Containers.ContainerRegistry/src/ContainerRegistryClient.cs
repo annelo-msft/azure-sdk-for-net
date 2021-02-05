@@ -12,7 +12,7 @@ namespace Azure.Containers.ContainerRegistry
 {
     /// <summary>
     /// </summary>
-    public class ContainerRegistryClient
+    public partial class ContainerRegistryClient
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ContainerRegistryClient"/>.

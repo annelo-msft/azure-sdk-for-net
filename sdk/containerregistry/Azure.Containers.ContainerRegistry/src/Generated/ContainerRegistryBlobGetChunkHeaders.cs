@@ -10,10 +10,10 @@ using Azure.Core;
 
 namespace Azure.Containers.ContainerRegistry
 {
-    internal class ContainerBlobGetChunkHeaders
+    internal class ContainerRegistryBlobGetChunkHeaders
     {
         private readonly Response _response;
-        public ContainerBlobGetChunkHeaders(Response response)
+        public ContainerRegistryBlobGetChunkHeaders(Response response)
         {
             _response = response;
         }
