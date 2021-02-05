@@ -34,15 +34,15 @@
   "tags": [
     {
       "name": "Registry",
-      "description": ""
+      "description": "Registry Operations"
     },
     {
       "name": "Repository",
-      "description": ""
+      "description": "Repository Operations"
     },
     {
       "name": "Blob",
-      "description": ""
+      "description": "Blob Operations"
     }
   ],
   "schemes": [
@@ -55,6 +55,7 @@
     "/v2/": {
       "get": {
         "tags": [
+	  "Registry"
         ],
         "description": "Tells whether this Docker Registry instance supports Docker Registry HTTP API v2",
         "operationId": "V2Support_Check",
