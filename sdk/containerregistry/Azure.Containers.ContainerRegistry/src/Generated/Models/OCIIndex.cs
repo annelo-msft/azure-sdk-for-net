@@ -11,7 +11,7 @@ using Azure.Core;
 namespace Azure.Containers.ContainerRegistry.Models
 {
     /// <summary> Returns the requested OCI index file. </summary>
-    internal partial class OCIIndex : Manifest
+    internal partial class OCIIndex : Manifest_internal
     {
         /// <summary> Initializes a new instance of OCIIndex. </summary>
         public OCIIndex()

@@ -11,7 +11,7 @@ using Azure.Core;
 namespace Azure.Containers.ContainerRegistry.Models
 {
     /// <summary> Returns the requested OCI Manifest file. </summary>
-    internal partial class OCIManifest : Manifest
+    internal partial class OCIManifest : Manifest_internal
     {
         /// <summary> Initializes a new instance of OCIManifest. </summary>
         public OCIManifest()

@@ -8,16 +8,16 @@
 namespace Azure.Containers.ContainerRegistry.Models
 {
     /// <summary> Returns the requested manifest file. </summary>
-    internal partial class Manifest
+    internal partial class Manifest_internal
     {
         /// <summary> Initializes a new instance of Manifest. </summary>
-        public Manifest()
+        public Manifest_internal()
         {
         }
 
         /// <summary> Initializes a new instance of Manifest. </summary>
         /// <param name="schemaVersion"> Schema version. </param>
-        internal Manifest(int? schemaVersion)
+        internal Manifest_internal(int? schemaVersion)
         {
             SchemaVersion = schemaVersion;
         }

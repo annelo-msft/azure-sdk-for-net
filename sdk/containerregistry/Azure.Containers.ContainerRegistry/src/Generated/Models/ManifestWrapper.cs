@@ -11,7 +11,7 @@ using Azure.Core;
 namespace Azure.Containers.ContainerRegistry.Models
 {
     /// <summary> Returns the requested manifest file. </summary>
-    internal partial class ManifestWrapper : Manifest
+    internal partial class ManifestWrapper : Manifest_internal
     {
         /// <summary> Initializes a new instance of ManifestWrapper. </summary>
         public ManifestWrapper()
@@ -51,27 +51,5 @@ namespace Azure.Containers.ContainerRegistry.Models
             Signatures = signatures;
         }
 
-        /// <summary> Media type for this Manifest. </summary>
-        public string MediaType { get; set; }
-        /// <summary> (ManifestList, OCIIndex) List of V2 image layer information. </summary>
-        public IList<ManifestListAttributes> Manifests { get; }
-        /// <summary> (V2, OCI) Image config descriptor. </summary>
-        public Descriptor Config { get; set; }
-        /// <summary> (V2, OCI) List of V2 image layer information. </summary>
-        public IList<Descriptor> Layers { get; }
-        /// <summary> (OCI, OCIIndex) Additional metadata. </summary>
-        public Annotations Annotations { get; set; }
-        /// <summary> (V1) CPU architecture. </summary>
-        public string Architecture { get; set; }
-        /// <summary> (V1) Image name. </summary>
-        public string Name { get; set; }
-        /// <summary> (V1) Image tag. </summary>
-        public string Tag { get; set; }
-        /// <summary> (V1) List of layer information. </summary>
-        public IList<FsLayer> FsLayers { get; }
-        /// <summary> (V1) Image history. </summary>
-        public IList<History> History { get; }
-        /// <summary> (V1) Image signature. </summary>
-        public IList<ImageSignature> Signatures { get; }
     }
 }

@@ -8,10 +8,10 @@
 namespace Azure.Containers.ContainerRegistry.Models
 {
     /// <summary> Manifest attributes details. </summary>
-    internal partial class ManifestAttributes
+    internal partial class ManifestAttributes_internal
     {
         /// <summary> Initializes a new instance of ManifestAttributes. </summary>
-        internal ManifestAttributes()
+        internal ManifestAttributes_internal()
         {
         }
 
@@ -19,7 +19,7 @@ namespace Azure.Containers.ContainerRegistry.Models
         /// <param name="registry"> Registry name. </param>
         /// <param name="imageName"> Image name. </param>
         /// <param name="attributes"> Manifest attributes. </param>
-        internal ManifestAttributes(string registry, string imageName, ManifestAttributesBase attributes)
+        internal ManifestAttributes_internal(string registry, string imageName, ManifestAttributesBase attributes)
         {
             Registry = registry;
             ImageName = imageName;

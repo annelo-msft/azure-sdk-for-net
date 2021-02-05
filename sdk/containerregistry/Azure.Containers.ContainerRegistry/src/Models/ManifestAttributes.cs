@@ -3,16 +3,17 @@
 
 #nullable disable
 
+using System;
 using System.Collections.Generic;
 using Azure.Core;
 
 namespace Azure.Containers.ContainerRegistry.Models
 {
     /// <summary> Manifest attributes. </summary>
-    public class ManifestMetadata
+    public class ManifestAttributes
     {
         /// <summary> Initializes a new instance of AcrManifests. </summary>
-        internal ManifestMetadata()
+        internal ManifestAttributes()
         {
         }
 
@@ -20,21 +21,23 @@ namespace Azure.Containers.ContainerRegistry.Models
         ///// <summary> Registry name. </summary>
         //public string Registry { get; }
 
-        ///// <summary> Image name. </summary>
-        //public string ImageName { get; }
+        /// <summary> Image name. </summary>
+        public string ArtifactName { get; }
 
         /// <summary> Manifest. </summary>
-        public string Digest { get; }
+        public string ManifestDigest { get; }
 
         // TODO: does this apply to OCI and helm charts as well?  Call it image instead of artifact?
+        // TODO: what does null signify?
         /// <summary> Image size. </summary>
+        
         public long? ArtifactSize { get; }
 
         /// <summary> Created time. </summary>
-        public string CreatedTime { get; }
+        public DateTime CreatedTime { get; }
 
         /// <summary> Last update time. </summary>
-        public string LastUpdateTime { get; }
+        public DateTime LastUpdateTime { get; }
 
         /// <summary> CPU architecture. </summary>
         public string CpuArchitecture { get; }
@@ -42,7 +45,7 @@ namespace Azure.Containers.ContainerRegistry.Models
         /// <summary> Operating system. </summary>
         public string OperatingSystem { get; }
 
-        // TODO: extensible enum of poptions here?
+        // TODO: extensible enum of options here?
         /// <summary> Media type. </summary>
         public string MediaType { get; }
 

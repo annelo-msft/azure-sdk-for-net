@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Azure;
 using Azure.Containers.ContainerRegistry;
+using Azure.Containers.ContainerRegistry.Models;
 using Azure.Identity;
 
 namespace ContainerRegistrySamples
@@ -30,8 +31,11 @@ namespace ContainerRegistrySamples
             // TODO: I don't think we need name here, because we specified the image name as the repository in the constructor.  Is this correct?
             // TODO: This should be pageable
             // TODO: Pageable of what?  It's meta-data about the manifest, so let's call it ManifestInfo for now...
-            client.GetManifests()
-
+            AsyncPageable<ManifestAttributes> manifests = client.GetManifestsAsync();
+            await foreach (var manifest in manifests)
+            {
+                Console.WriteLine($"Manifest for {manifest.ArtifactName} is {manifest.ArtifactSize} bytes.");
+            }
         }
 
         public async Task ViewTagsInRepository()

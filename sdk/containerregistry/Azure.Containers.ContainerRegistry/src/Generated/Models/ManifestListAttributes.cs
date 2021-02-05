@@ -30,10 +30,13 @@ namespace Azure.Containers.ContainerRegistry.Models
 
         /// <summary> The MIME type of the referenced object. This will generally be application/vnd.docker.image.manifest.v2+json, but it could also be application/vnd.docker.image.manifest.v1+json. </summary>
         public string MediaType { get; set; }
+
         /// <summary> The size in bytes of the object. </summary>
         public long? Size { get; set; }
+
         /// <summary> The digest of the content, as defined by the Registry V2 HTTP API Specification. </summary>
         public string Digest { get; set; }
+
         /// <summary> The platform object describes the platform which the image in the manifest runs on. A full list of valid operating system and architecture values are listed in the Go language documentation for $GOOS and $GOARCH. </summary>
         public Platform Platform { get; set; }
     }

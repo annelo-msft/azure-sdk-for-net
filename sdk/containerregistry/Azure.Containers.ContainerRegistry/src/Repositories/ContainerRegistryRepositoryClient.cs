@@ -14,7 +14,7 @@ using Azure.Core;
 namespace Azure.Containers.ContainerRegistry
 {
     /// <summary> The ContainerRegistryRepository service client. </summary>
-    public partial class ContainerRegistryRepositoryClient
+    public class ContainerRegistryRepositoryClient
     {
         private readonly ClientDiagnostics _clientDiagnostics;
         private readonly HttpPipeline _pipeline;
@@ -88,7 +88,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="reference"> A tag or a digest, pointing to a specific image. </param>
         /// <param name="payload"> Manifest body, can take v1 or v2 values depending on accept header. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response<object>> CreateManifestAsync(string name, string reference, Manifest payload, CancellationToken cancellationToken = default)
+        public virtual async Task<Response<object>> CreateManifestAsync(string name, string reference, Manifest_internal payload, CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("ContainerRegistryRepositoryClient.CreateManifest");
             scope.Start();
@@ -108,7 +108,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="reference"> A tag or a digest, pointing to a specific image. </param>
         /// <param name="payload"> Manifest body, can take v1 or v2 values depending on accept header. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response<object> CreateManifest(string name, string reference, Manifest payload, CancellationToken cancellationToken = default)
+        public virtual Response<object> CreateManifest(string name, string reference, Manifest_internal payload, CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("ContainerRegistryRepositoryClient.CreateManifest");
             scope.Start();
@@ -342,13 +342,23 @@ namespace Azure.Containers.ContainerRegistry
             }
         }
 
+        public virtual Pageable<ManifestAttributes> GetManifests(CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual AsyncPageable<ManifestAttributes> GetManifestsAsync(CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary> List manifests of a repository. </summary>
         /// <param name="name"> Name of the image (including the namespace). </param>
         /// <param name="last"> Query parameter for the last item in previous query. Result set will include values lexically after last. </param>
         /// <param name="n"> query parameter for max number of items. </param>
         /// <param name="orderby"> orderby query parameter. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response<AcrManifests> GetManifests(string name, string last = null, int? n = null, string orderby = null, CancellationToken cancellationToken = default)
+        public virtual Response<ManifestAttributes> GetManifests(string name, string last = null, int? n = null, string orderby = null, CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("ContainerRegistryRepositoryClient.GetManifests");
             scope.Start();
@@ -368,7 +378,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="name"> Name of the image (including the namespace). </param>
         /// <param name="reference"> A tag or a digest, pointing to a specific image. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response<ManifestAttributes>> GetManifestAttributesAsync(string name, string reference, CancellationToken cancellationToken = default)
+        public virtual async Task<Response<ManifestAttributes_internal>> GetManifestAttributesAsync(string name, string reference, CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("ContainerRegistryRepositoryClient.GetManifestAttributes");
             scope.Start();
@@ -387,7 +397,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="name"> Name of the image (including the namespace). </param>
         /// <param name="reference"> A tag or a digest, pointing to a specific image. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response<ManifestAttributes> GetManifestAttributes(string name, string reference, CancellationToken cancellationToken = default)
+        public virtual Response<ManifestAttributes_internal> GetManifestAttributes(string name, string reference, CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("ContainerRegistryRepositoryClient.GetManifestAttributes");
             scope.Start();
