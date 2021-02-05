@@ -405,7 +405,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="reference"> Tag name. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> or <paramref name="reference"/> is null. </exception>
-        public async Task<Response<TagAttributes>> GetTagAttributesAsync(string name, string reference, CancellationToken cancellationToken = default)
+        public async Task<Response<TagAttributes_internal>> GetTagAttributesAsync(string name, string reference, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {
@@ -422,9 +422,9 @@ namespace Azure.Containers.ContainerRegistry
             {
                 case 200:
                     {
-                        TagAttributes value = default;
+                        TagAttributes_internal value = default;
                         using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
-                        value = TagAttributes.DeserializeTagAttributes(document.RootElement);
+                        value = TagAttributes_internal.DeserializeTagAttributes(document.RootElement);
                         return Response.FromValue(value, message.Response);
                     }
                 default:
@@ -437,7 +437,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="reference"> Tag name. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> or <paramref name="reference"/> is null. </exception>
-        public Response<TagAttributes> GetTagAttributes(string name, string reference, CancellationToken cancellationToken = default)
+        public Response<TagAttributes_internal> GetTagAttributes(string name, string reference, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {
@@ -454,9 +454,9 @@ namespace Azure.Containers.ContainerRegistry
             {
                 case 200:
                     {
-                        TagAttributes value = default;
+                        TagAttributes_internal value = default;
                         using var document = JsonDocument.Parse(message.Response.ContentStream);
-                        value = TagAttributes.DeserializeTagAttributes(document.RootElement);
+                        value = TagAttributes_internal.DeserializeTagAttributes(document.RootElement);
                         return Response.FromValue(value, message.Response);
                     }
                 default:

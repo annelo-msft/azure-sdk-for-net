@@ -29,22 +29,5 @@ namespace Azure.Containers.ContainerRegistry
         protected ContainerRegistryClient()
         {
         }
-
-        // TODO: what are the semantics of Create in our APIs?  Does it throw if the resource already exists?
-        // TODO: is there a user scenario where they would want to Set and override?  CreateIfNotExists?
-        // TODO: figure out what Track 2 semantics to copy; what is precedent here?  (What do I think?)
-        public virtual Response CreateManifest(string name, string reference, Manifest_internal payload, CancellationToken cancellationToken = default)
-        {
-            throw new NotImplementedException();
-        }
-
-        // TODO: dig into this ManifestWrapper type - will be need to simplify or restructure?
-        // TODO: Rename Manifest
-        // TODO: Rename Descriptor
-        // TODO: Rename Annotations
-        public virtual Response<ManifestWrapper> GetManifest(string name, string reference, Manifest_internal payload, CancellationToken cancellationToken = default)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

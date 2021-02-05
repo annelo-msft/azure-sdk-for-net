@@ -15,34 +15,14 @@ namespace Azure.Containers.ContainerRegistry.Models
         {
         }
 
-        /// <summary> Initializes a new instance of TagAttributesBase. </summary>
-        /// <param name="name"> Tag name. </param>
-        /// <param name="digest"> Tag digest. </param>
-        /// <param name="createdTime"> Tag created time. </param>
-        /// <param name="lastUpdateTime"> Tag last update time. </param>
-        /// <param name="signed"> Is signed. </param>
-        /// <param name="changeableAttributes"> Changeable attributes. </param>
-        internal TagAttributesBase(string name, string digest, string createdTime, string lastUpdateTime, bool? signed, ChangeableAttributes changeableAttributes)
-        {
-            Name = name;
-            Digest = digest;
-            CreatedTime = createdTime;
-            LastUpdateTime = lastUpdateTime;
-            Signed = signed;
-            ChangeableAttributes = changeableAttributes;
-        }
-
         /// <summary> Tag name. </summary>
         public string Name { get; }
+
         /// <summary> Tag digest. </summary>
         public string Digest { get; }
-        /// <summary> Tag created time. </summary>
-        public string CreatedTime { get; }
-        /// <summary> Tag last update time. </summary>
-        public string LastUpdateTime { get; }
+
         /// <summary> Is signed. </summary>
         public bool? Signed { get; }
-        /// <summary> Changeable attributes. </summary>
-        public ChangeableAttributes ChangeableAttributes { get; }
+
     }
 }

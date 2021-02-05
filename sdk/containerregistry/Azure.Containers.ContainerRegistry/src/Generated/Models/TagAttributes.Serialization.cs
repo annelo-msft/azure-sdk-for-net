@@ -10,9 +10,9 @@ using Azure.Core;
 
 namespace Azure.Containers.ContainerRegistry.Models
 {
-    internal partial class TagAttributes
+    internal partial class TagAttributes_internal
     {
-        internal static TagAttributes DeserializeTagAttributes(JsonElement element)
+        internal static TagAttributes_internal DeserializeTagAttributes(JsonElement element)
         {
             Optional<string> registry = default;
             Optional<string> imageName = default;
@@ -40,7 +40,7 @@ namespace Azure.Containers.ContainerRegistry.Models
                     continue;
                 }
             }
-            return new TagAttributes(registry.Value, imageName.Value, tag.Value);
+            return new TagAttributes_internal(registry.Value, imageName.Value, tag.Value);
         }
     }
 }

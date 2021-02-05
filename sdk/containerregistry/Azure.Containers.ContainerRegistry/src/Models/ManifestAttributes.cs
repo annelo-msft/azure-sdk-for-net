@@ -58,6 +58,6 @@ namespace Azure.Containers.ContainerRegistry.Models
         public IReadOnlyList<string> Tags { get; }
 
         /// <summary> Changeable attributes. </summary>
-        public ArtifactPermissions Permissions { get; }
+        public RegistryObjectPermissions Permissions { get; }
     }
 }

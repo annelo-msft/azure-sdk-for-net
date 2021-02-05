@@ -40,7 +40,20 @@ namespace ContainerRegistrySamples
 
         public async Task ViewTagsInRepository()
         {
+            var client = new ContainerRegistryRepositoryClient(new Uri("myacr.azurecr.io"), "hello-world", new DefaultAzureCredential());
 
+            // TODO: I don't think we need name here, because we specified the image name as the repository in the constructor.  Is this correct?
+            // TODO: This should be pageable
+            // TODO: Pageable of what?  It's meta-data about the manifest, so let's call it ManifestInfo for now...
+            AsyncPageable<TagAttributes> tags = client.GetTagsAsync();
+            await foreach (var tag in tags)
+            {
+                Console.WriteLine($"Tag {tag.Name} was last updated on {tag.LastUpdateTime} bytes.");
+            }
+
+            // TODO: Order by last update time
+            // TODO: Get tags for digest
+            // Note: these should use GetTagsOptions()
         }
     }
 }

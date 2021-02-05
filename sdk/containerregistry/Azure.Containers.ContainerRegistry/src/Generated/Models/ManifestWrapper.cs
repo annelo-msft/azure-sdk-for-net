@@ -13,43 +13,6 @@ namespace Azure.Containers.ContainerRegistry.Models
     /// <summary> Returns the requested manifest file. </summary>
     internal partial class ManifestWrapper : Manifest_internal
     {
-        /// <summary> Initializes a new instance of ManifestWrapper. </summary>
-        public ManifestWrapper()
-        {
-            Manifests = new ChangeTrackingList<ManifestListAttributes>();
-            Layers = new ChangeTrackingList<Descriptor>();
-            FsLayers = new ChangeTrackingList<FsLayer>();
-            History = new ChangeTrackingList<History>();
-            Signatures = new ChangeTrackingList<ImageSignature>();
-        }
-
-        /// <summary> Initializes a new instance of ManifestWrapper. </summary>
-        /// <param name="schemaVersion"> Schema version. </param>
-        /// <param name="mediaType"> Media type for this Manifest. </param>
-        /// <param name="manifests"> (ManifestList, OCIIndex) List of V2 image layer information. </param>
-        /// <param name="config"> (V2, OCI) Image config descriptor. </param>
-        /// <param name="layers"> (V2, OCI) List of V2 image layer information. </param>
-        /// <param name="annotations"> (OCI, OCIIndex) Additional metadata. </param>
-        /// <param name="architecture"> (V1) CPU architecture. </param>
-        /// <param name="name"> (V1) Image name. </param>
-        /// <param name="tag"> (V1) Image tag. </param>
-        /// <param name="fsLayers"> (V1) List of layer information. </param>
-        /// <param name="history"> (V1) Image history. </param>
-        /// <param name="signatures"> (V1) Image signature. </param>
-        internal ManifestWrapper(int? schemaVersion, string mediaType, IList<ManifestListAttributes> manifests, Descriptor config, IList<Descriptor> layers, Annotations annotations, string architecture, string name, string tag, IList<FsLayer> fsLayers, IList<History> history, IList<ImageSignature> signatures) : base(schemaVersion)
-        {
-            MediaType = mediaType;
-            Manifests = manifests;
-            Config = config;
-            Layers = layers;
-            Annotations = annotations;
-            Architecture = architecture;
-            Name = name;
-            Tag = tag;
-            FsLayers = fsLayers;
-            History = history;
-            Signatures = signatures;
-        }
 
     }
 }

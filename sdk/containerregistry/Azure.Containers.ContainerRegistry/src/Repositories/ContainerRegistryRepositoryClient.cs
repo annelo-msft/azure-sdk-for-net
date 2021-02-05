@@ -43,44 +43,45 @@ namespace Azure.Containers.ContainerRegistry
             _pipeline = pipeline;
         }
 
+        // TODO: Handle accept header story!
         /// <summary> Get the manifest identified by `name` and `reference` where `reference` can be a tag or digest. </summary>
-        /// <param name="name"> Name of the image (including the namespace). </param>
-        /// <param name="reference"> A tag or a digest, pointing to a specific image. </param>
         /// <param name="accept"> Accept header string delimited by comma. For example, application/vnd.docker.distribution.manifest.v2+json. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response<ManifestWrapper>> GetManifestAsync(string name, string reference, string accept = null, CancellationToken cancellationToken = default)
+        public virtual async Task<Response<ManifestAttributes>> GetManifestAttributesAsync(string repositoryName, string tagOrDigest, string accept = null, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("ContainerRegistryRepositoryClient.GetManifest");
-            scope.Start();
-            try
-            {
-                return await RestClient.GetManifestAsync(name, reference, accept, cancellationToken).ConfigureAwait(false);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
+            await Task.Run(() => { }, cancellationToken).ConfigureAwait(false);
+            throw new NotImplementedException();
+
+            //using var scope = _clientDiagnostics.CreateScope("ContainerRegistryRepositoryClient.GetManifest");
+            //scope.Start();
+            //try
+            //{
+            //    return await RestClient.GetManifestAsync(name, reference, accept, cancellationToken).ConfigureAwait(false);
+            //}
+            //catch (Exception e)
+            //{
+            //    scope.Failed(e);
+            //    throw;
+            //}
         }
 
         /// <summary> Get the manifest identified by `name` and `reference` where `reference` can be a tag or digest. </summary>
-        /// <param name="name"> Name of the image (including the namespace). </param>
-        /// <param name="reference"> A tag or a digest, pointing to a specific image. </param>
         /// <param name="accept"> Accept header string delimited by comma. For example, application/vnd.docker.distribution.manifest.v2+json. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response<ManifestWrapper> GetManifest(string name, string reference, string accept = null, CancellationToken cancellationToken = default)
+        public virtual Response<ManifestAttributes> GetManifestAttributes(string repositoryName, string tagOrDigest, string accept = null, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("ContainerRegistryRepositoryClient.GetManifest");
-            scope.Start();
-            try
-            {
-                return RestClient.GetManifest(name, reference, accept, cancellationToken);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
+            throw new NotImplementedException();
+            //using var scope = _clientDiagnostics.CreateScope("ContainerRegistryRepositoryClient.GetManifest");
+            //scope.Start();
+            //try
+            //{
+            //    return RestClient.GetManifest(name, reference, accept, cancellationToken);
+            //}
+            //catch (Exception e)
+            //{
+            //    scope.Failed(e);
+            //    throw;
+            //}
         }
 
         /// <summary> Put the manifest identified by `name` and `reference` where `reference` can be a tag or digest. </summary>
@@ -123,6 +124,23 @@ namespace Azure.Containers.ContainerRegistry
             }
         }
 
+        // TODO: what are the semantics of Create in our APIs?  Does it throw if the resource already exists?
+        // TODO: is there a user scenario where they would want to Set and override?  CreateIfNotExists?
+        // TODO: figure out what Track 2 semantics to copy; what is precedent here?  (What do I think?)
+        public virtual Response CreateManifest(string name, string reference, Manifest_internal payload, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        // TODO: dig into this ManifestWrapper type - will be need to simplify or restructure?
+        // TODO: Rename Manifest
+        // TODO: Rename Descriptor
+        // TODO: Rename Annotations
+        public virtual Response<ManifestWrapper> GetManifest(string name, string reference, Manifest_internal payload, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary> Delete the manifest identified by `name` and `reference`. Note that a manifest can _only_ be deleted by `digest`. </summary>
         /// <param name="name"> Name of the image (including the namespace). </param>
         /// <param name="reference"> A tag or a digest, pointing to a specific image. </param>
@@ -161,126 +179,69 @@ namespace Azure.Containers.ContainerRegistry
             }
         }
 
-        /// <summary> List tags of a repository. </summary>
-        /// <param name="name"> Name of the image (including the namespace). </param>
-        /// <param name="last"> Query parameter for the last item in previous query. Result set will include values lexically after last. </param>
-        /// <param name="n"> query parameter for max number of items. </param>
-        /// <param name="orderby"> orderby query parameter. </param>
-        /// <param name="digest"> filter by digest. </param>
-        /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response<TagList>> GetTagsAsync(string name, string last = null, int? n = null, string orderby = null, string digest = null, CancellationToken cancellationToken = default)
+        public virtual Pageable<TagAttributes> GetTags(CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("ContainerRegistryRepositoryClient.GetTags");
-            scope.Start();
-            try
-            {
-                return await RestClient.GetTagsAsync(name, last, n, orderby, digest, cancellationToken).ConfigureAwait(false);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
+            throw new NotImplementedException();
         }
 
-        /// <summary> List tags of a repository. </summary>
-        /// <param name="name"> Name of the image (including the namespace). </param>
-        /// <param name="last"> Query parameter for the last item in previous query. Result set will include values lexically after last. </param>
-        /// <param name="n"> query parameter for max number of items. </param>
-        /// <param name="orderby"> orderby query parameter. </param>
-        /// <param name="digest"> filter by digest. </param>
-        /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response<TagList> GetTags(string name, string last = null, int? n = null, string orderby = null, string digest = null, CancellationToken cancellationToken = default)
+        public virtual AsyncPageable<TagAttributes> GetTagsAsync(CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("ContainerRegistryRepositoryClient.GetTags");
-            scope.Start();
-            try
-            {
-                return RestClient.GetTags(name, last, n, orderby, digest, cancellationToken);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
+            throw new NotImplementedException();
         }
 
         /// <summary> Get tag attributes by tag. </summary>
-        /// <param name="name"> Name of the image (including the namespace). </param>
-        /// <param name="reference"> Tag name. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response<TagAttributes>> GetTagAttributesAsync(string name, string reference, CancellationToken cancellationToken = default)
+        public virtual async Task<Response<TagAttributes>> GetTagAttributesAsync(string repositoryName, string tagName, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("ContainerRegistryRepositoryClient.GetTagAttributes");
-            scope.Start();
-            try
-            {
-                return await RestClient.GetTagAttributesAsync(name, reference, cancellationToken).ConfigureAwait(false);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
+            await Task.Delay(1, cancellationToken).ConfigureAwait(false);
+            throw new NotImplementedException();
+
         }
 
         /// <summary> Get tag attributes by tag. </summary>
-        /// <param name="name"> Name of the image (including the namespace). </param>
-        /// <param name="reference"> Tag name. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response<TagAttributes> GetTagAttributes(string name, string reference, CancellationToken cancellationToken = default)
+        public virtual Response<TagAttributes> GetTagAttributes(string repositoryName, string tagName, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("ContainerRegistryRepositoryClient.GetTagAttributes");
-            scope.Start();
-            try
-            {
-                return RestClient.GetTagAttributes(name, reference, cancellationToken);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
+            throw new NotImplementedException();
         }
 
         /// <summary> Update tag attributes. </summary>
-        /// <param name="name"> Name of the image (including the namespace). </param>
-        /// <param name="reference"> Tag name. </param>
         /// <param name="value"> Repository attribute value. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response> UpdateTagAttributesAsync(string name, string reference, ChangeableAttributes value = null, CancellationToken cancellationToken = default)
+        public virtual async Task<Response> UpdateTagAttributesAsync(string repositoryName, string tagName, RegistryObjectPermissions value, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("ContainerRegistryRepositoryClient.UpdateTagAttributes");
-            scope.Start();
-            try
-            {
-                return await RestClient.UpdateTagAttributesAsync(name, reference, value, cancellationToken).ConfigureAwait(false);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
+            await Task.Delay(1, cancellationToken).ConfigureAwait(false);
+            throw new NotImplementedException();
+            //using var scope = _clientDiagnostics.CreateScope("ContainerRegistryRepositoryClient.UpdateTagAttributes");
+            //scope.Start();
+            //try
+            //{
+            //    return await RestClient.UpdateTagAttributesAsync(artifactName, tagName, value, cancellationToken).ConfigureAwait(false);
+            //}
+            //catch (Exception e)
+            //{
+            //    scope.Failed(e);
+            //    throw;
+            //}
         }
 
         /// <summary> Update tag attributes. </summary>
-        /// <param name="name"> Name of the image (including the namespace). </param>
-        /// <param name="reference"> Tag name. </param>
         /// <param name="value"> Repository attribute value. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response UpdateTagAttributes(string name, string reference, ChangeableAttributes value = null, CancellationToken cancellationToken = default)
+        public virtual Response UpdateTagAttributes(string repositoryName, string tagName, RegistryObjectPermissions value = null, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("ContainerRegistryRepositoryClient.UpdateTagAttributes");
-            scope.Start();
-            try
-            {
-                return RestClient.UpdateTagAttributes(name, reference, value, cancellationToken);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
+            throw new NotImplementedException();
+            //using var scope = _clientDiagnostics.CreateScope("ContainerRegistryRepositoryClient.UpdateTagAttributes");
+            //scope.Start();
+            //try
+            //{
+            //    return RestClient.UpdateTagAttributes(name, reference, value, cancellationToken);
+            //}
+            //catch (Exception e)
+            //{
+            //    scope.Failed(e);
+            //    throw;
+            //}
         }
 
         /// <summary> Delete tag. </summary>
@@ -321,27 +282,6 @@ namespace Azure.Containers.ContainerRegistry
             }
         }
 
-        /// <summary> List manifests of a repository. </summary>
-        /// <param name="name"> Name of the image (including the namespace). </param>
-        /// <param name="last"> Query parameter for the last item in previous query. Result set will include values lexically after last. </param>
-        /// <param name="n"> query parameter for max number of items. </param>
-        /// <param name="orderby"> orderby query parameter. </param>
-        /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response<AcrManifests>> GetManifestsAsync(string name, string last = null, int? n = null, string orderby = null, CancellationToken cancellationToken = default)
-        {
-            using var scope = _clientDiagnostics.CreateScope("ContainerRegistryRepositoryClient.GetManifests");
-            scope.Start();
-            try
-            {
-                return await RestClient.GetManifestsAsync(name, last, n, orderby, cancellationToken).ConfigureAwait(false);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
-        }
-
         public virtual Pageable<ManifestAttributes> GetManifests(CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
@@ -352,104 +292,58 @@ namespace Azure.Containers.ContainerRegistry
             throw new NotImplementedException();
         }
 
-        /// <summary> List manifests of a repository. </summary>
-        /// <param name="name"> Name of the image (including the namespace). </param>
-        /// <param name="last"> Query parameter for the last item in previous query. Result set will include values lexically after last. </param>
-        /// <param name="n"> query parameter for max number of items. </param>
-        /// <param name="orderby"> orderby query parameter. </param>
+        /// <summary> Get manifest attributes. </summary>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response<ManifestAttributes> GetManifests(string name, string last = null, int? n = null, string orderby = null, CancellationToken cancellationToken = default)
+        public virtual async Task<Response<ManifestAttributes>> GetManifestAttributesAsync(string repositoryName, string tagOrDigest, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("ContainerRegistryRepositoryClient.GetManifests");
-            scope.Start();
-            try
-            {
-                // TODO: Get name from client
-                return RestClient.GetManifests("ImageName", last, n, orderby, cancellationToken);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
+            await Task.Delay(1, cancellationToken).ConfigureAwait(false);
+            throw new NotImplementedException();
         }
 
         /// <summary> Get manifest attributes. </summary>
-        /// <param name="name"> Name of the image (including the namespace). </param>
-        /// <param name="reference"> A tag or a digest, pointing to a specific image. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response<ManifestAttributes_internal>> GetManifestAttributesAsync(string name, string reference, CancellationToken cancellationToken = default)
+        public virtual Response<ManifestAttributes> GetManifestAttributes(string repositoryName, string tagOrDigest, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("ContainerRegistryRepositoryClient.GetManifestAttributes");
-            scope.Start();
-            try
-            {
-                return await RestClient.GetManifestAttributesAsync(name, reference, cancellationToken).ConfigureAwait(false);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
-        }
-
-        /// <summary> Get manifest attributes. </summary>
-        /// <param name="name"> Name of the image (including the namespace). </param>
-        /// <param name="reference"> A tag or a digest, pointing to a specific image. </param>
-        /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response<ManifestAttributes_internal> GetManifestAttributes(string name, string reference, CancellationToken cancellationToken = default)
-        {
-            using var scope = _clientDiagnostics.CreateScope("ContainerRegistryRepositoryClient.GetManifestAttributes");
-            scope.Start();
-            try
-            {
-                return RestClient.GetManifestAttributes(name, reference, cancellationToken);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
+            throw new NotImplementedException();
         }
 
         /// <summary> Update attributes of a manifest. </summary>
-        /// <param name="name"> Name of the image (including the namespace). </param>
-        /// <param name="reference"> A tag or a digest, pointing to a specific image. </param>
-        /// <param name="value"> Repository attribute value. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response> UpdateManifestAttributesAsync(string name, string reference, ChangeableAttributes value = null, CancellationToken cancellationToken = default)
+        public virtual async Task<Response> UpdateManifestAttributesAsync(string repositoryName, string tagOrDigest, RegistryObjectPermissions value, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("ContainerRegistryRepositoryClient.UpdateManifestAttributes");
-            scope.Start();
-            try
-            {
-                return await RestClient.UpdateManifestAttributesAsync(name, reference, value, cancellationToken).ConfigureAwait(false);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
+            await Task.Delay(1, cancellationToken).ConfigureAwait(false);
+            throw new NotImplementedException();
+
+            //using var scope = _clientDiagnostics.CreateScope("ContainerRegistryRepositoryClient.UpdateManifestAttributes");
+            //scope.Start();
+            //try
+            //{
+            //    return await RestClient.UpdateManifestAttributesAsync(name, reference, value, cancellationToken).ConfigureAwait(false);
+            //}
+            //catch (Exception e)
+            //{
+            //    scope.Failed(e);
+            //    throw;
+            //}
         }
 
         /// <summary> Update attributes of a manifest. </summary>
-        /// <param name="name"> Name of the image (including the namespace). </param>
-        /// <param name="reference"> A tag or a digest, pointing to a specific image. </param>
-        /// <param name="value"> Repository attribute value. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response UpdateManifestAttributes(string name, string reference, ChangeableAttributes value = null, CancellationToken cancellationToken = default)
+        public virtual Response UpdateManifestAttributes(string repositoryName, string tagOrDigest, RegistryObjectPermissions value, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("ContainerRegistryRepositoryClient.UpdateManifestAttributes");
-            scope.Start();
-            try
-            {
-                return RestClient.UpdateManifestAttributes(name, reference, value, cancellationToken);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
+            throw new NotImplementedException();
+
+            //using var scope = _clientDiagnostics.CreateScope("ContainerRegistryRepositoryClient.UpdateManifestAttributes");
+            //scope.Start();
+            //try
+            //{
+            //    return RestClient.UpdateManifestAttributes(name, reference, value, cancellationToken);
+            //}
+            //catch (Exception e)
+            //{
+            //    scope.Failed(e);
+            //    throw;
+            //}
         }
     }
 }
