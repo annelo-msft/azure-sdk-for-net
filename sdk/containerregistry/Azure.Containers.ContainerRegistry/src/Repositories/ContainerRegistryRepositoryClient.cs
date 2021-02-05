@@ -20,11 +20,11 @@ namespace Azure.Containers.ContainerRegistry
         private readonly HttpPipeline _pipeline;
         internal ContainerRegistryRepositoryRestClient RestClient { get; }
 
-        public ContainerRegistryRepositoryClient(Uri endpoint, TokenCredential credential) : this(endpoint, credential, new ContainerRegistryClientOptions())
+        public ContainerRegistryRepositoryClient(Uri endpoint, string repositoryName, TokenCredential credential) : this(endpoint, repositoryName, credential, new ContainerRegistryClientOptions())
         {
         }
 
-        public ContainerRegistryRepositoryClient(Uri endpoint, TokenCredential credential, ContainerRegistryClientOptions options)
+        public ContainerRegistryRepositoryClient(Uri endpoint, string repositoryName, TokenCredential credential, ContainerRegistryClientOptions options)
         {
         }
 
@@ -354,7 +354,8 @@ namespace Azure.Containers.ContainerRegistry
             scope.Start();
             try
             {
-                return RestClient.GetManifests(name, last, n, orderby, cancellationToken);
+                // TODO: Get name from client
+                return RestClient.GetManifests("ImageName", last, n, orderby, cancellationToken);
             }
             catch (Exception e)
             {
