@@ -85,11 +85,9 @@ namespace Azure.Containers.ContainerRegistry
         }
 
         /// <summary> Put the manifest identified by `name` and `reference` where `reference` can be a tag or digest. </summary>
-        /// <param name="name"> Name of the image (including the namespace). </param>
-        /// <param name="reference"> A tag or a digest, pointing to a specific image. </param>
-        /// <param name="payload"> Manifest body, can take v1 or v2 values depending on accept header. </param>
+        // TODO: /// <param name="payload"> Manifest body, can take v1 or v2 values depending on accept header. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response<object>> CreateManifestAsync(string name, string reference, Manifest_internal payload, CancellationToken cancellationToken = default)
+        public virtual async Task<Response<object>> CreateManifestAttributesAsync(string repositoryName, string tagOrDigest, ManifestAttributes value, CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("ContainerRegistryRepositoryClient.CreateManifest");
             scope.Start();
@@ -128,15 +126,6 @@ namespace Azure.Containers.ContainerRegistry
         // TODO: is there a user scenario where they would want to Set and override?  CreateIfNotExists?
         // TODO: figure out what Track 2 semantics to copy; what is precedent here?  (What do I think?)
         public virtual Response CreateManifest(string name, string reference, Manifest_internal payload, CancellationToken cancellationToken = default)
-        {
-            throw new NotImplementedException();
-        }
-
-        // TODO: dig into this ManifestWrapper type - will be need to simplify or restructure?
-        // TODO: Rename Manifest
-        // TODO: Rename Descriptor
-        // TODO: Rename Annotations
-        public virtual Response<ManifestWrapper> GetManifest(string name, string reference, Manifest_internal payload, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
@@ -195,7 +184,6 @@ namespace Azure.Containers.ContainerRegistry
         {
             await Task.Delay(1, cancellationToken).ConfigureAwait(false);
             throw new NotImplementedException();
-
         }
 
         /// <summary> Get tag attributes by tag. </summary>
