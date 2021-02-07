@@ -10,13 +10,13 @@ using Azure.Core;
 
 namespace Azure.Containers.ContainerRegistry.Models
 {
-    internal partial class TagAttributes_internal
+    public partial class TagAttributes
     {
-        internal static TagAttributes_internal DeserializeTagAttributes(JsonElement element)
+        internal static TagAttributes DeserializeTagAttributes(JsonElement element)
         {
             Optional<string> registry = default;
             Optional<string> imageName = default;
-            Optional<TagAttributesBase> tag = default;
+            Optional<TagAttributes> tag = default;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("registry"))
@@ -36,11 +36,48 @@ namespace Azure.Containers.ContainerRegistry.Models
                         property.ThrowNonNullablePropertyIsNull();
                         continue;
                     }
-                    tag = TagAttributesBase.DeserializeTagAttributesBase(property.Value);
+                    tag = TagAttributes.DeserializeTagAttributes(property.Value);
                     continue;
                 }
             }
-            return new TagAttributes_internal(registry.Value, imageName.Value, tag.Value);
+            return new TagAttributes(registry.Value, imageName.Value, tag.Value);
+        }
+    }
+}
+                continue;
+                }
+                if (property.NameEquals("lastUpdateTime"))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        property.ThrowNonNullablePropertyIsNull();
+                        continue;
+                    }
+                    lastUpdateTime = property.Value.GetDateTime();
+                    continue;
+                }
+                if (property.NameEquals("signed"))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        property.ThrowNonNullablePropertyIsNull();
+                        continue;
+                    }
+                    signed = property.Value.GetBoolean();
+                    continue;
+                }
+                if (property.NameEquals("changeableAttributes"))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        property.ThrowNonNullablePropertyIsNull();
+                        continue;
+                    }
+                    changeableAttributes = ContentPermissions.DeserializeContentPermissions(property.Value);
+                    continue;
+                }
+            }
+            return new TagAttributes(name.Value, digest.Value, createdTime, lastUpdateTime, Optional.ToNullable(signed), changeableAttributes.Value);
         }
     }
 }

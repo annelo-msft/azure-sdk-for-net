@@ -7,19 +7,15 @@
 
 namespace Azure.Containers.ContainerRegistry.Models
 {
-    /// <summary> Tag attributes. </summary>
-    internal partial class TagAttributes_internal
+    /// <summary> Manifest attributes details. </summary>
+    public partial class ManifestAttributes
     {
-        /// <summary> Initializes a new instance of TagAttributes. </summary>
-        internal TagAttributes_internal()
-        {
-        }
 
-        /// <summary> Initializes a new instance of TagAttributes. </summary>
+        /// <summary> Initializes a new instance of ManifestAttributes. </summary>
         /// <param name="registry"> Registry name. </param>
         /// <param name="imageName"> Image name. </param>
-        /// <param name="attributes"> List of tag attribute details. </param>
-        internal TagAttributes_internal(string registry, string imageName, TagAttributesBase attributes)
+        /// <param name="attributes"> Manifest attributes. </param>
+        internal ManifestAttributes(string registry, string imageName, ManifestAttributesBase attributes)
         {
             Registry = registry;
             ImageName = imageName;
@@ -30,7 +26,7 @@ namespace Azure.Containers.ContainerRegistry.Models
         public string Registry { get; }
         /// <summary> Image name. </summary>
         public string ImageName { get; }
-        /// <summary> List of tag attribute details. </summary>
-        public TagAttributesBase Attributes { get; }
+        /// <summary> Manifest attributes. </summary>
+        public ManifestAttributesBase Attributes { get; }
     }
 }

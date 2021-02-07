@@ -11,7 +11,7 @@ using Azure.Core;
 namespace Azure.Containers.ContainerRegistry.Models
 {
     /// <summary> Returns the requested OCI Manifest file. </summary>
-    internal partial class OCIManifest : Manifest_internal
+    internal partial class OCIManifest : Manifest
     {
         /// <summary> Initializes a new instance of OCIManifest. </summary>
         public OCIManifest()
@@ -30,12 +30,5 @@ namespace Azure.Containers.ContainerRegistry.Models
             Layers = layers;
             Annotations = annotations;
         }
-
-        /// <summary> V2 image config descriptor. </summary>
-        public Descriptor Config { get; set; }
-        /// <summary> List of V2 image layer information. </summary>
-        public IList<Descriptor> Layers { get; }
-        /// <summary> Additional information provided through arbitrary metadata. </summary>
-        public Annotations Annotations { get; set; }
     }
 }

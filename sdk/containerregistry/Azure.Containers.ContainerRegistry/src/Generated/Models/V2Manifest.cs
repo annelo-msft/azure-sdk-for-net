@@ -11,7 +11,7 @@ using Azure.Core;
 namespace Azure.Containers.ContainerRegistry.Models
 {
     /// <summary> Returns the requested Docker V2 Manifest file. </summary>
-    internal partial class V2Manifest : Manifest_internal
+    internal partial class V2Manifest : Manifest
     {
         /// <summary> Initializes a new instance of V2Manifest. </summary>
         public V2Manifest()
@@ -30,12 +30,5 @@ namespace Azure.Containers.ContainerRegistry.Models
             Config = config;
             Layers = layers;
         }
-
-        /// <summary> Media type for this Manifest. </summary>
-        public string MediaType { get; set; }
-        /// <summary> V2 image config descriptor. </summary>
-        public Descriptor Config { get; set; }
-        /// <summary> List of V2 image layer information. </summary>
-        public IList<Descriptor> Layers { get; }
     }
 }

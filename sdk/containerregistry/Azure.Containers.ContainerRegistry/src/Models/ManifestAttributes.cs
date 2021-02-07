@@ -10,7 +10,7 @@ using Azure.Core;
 namespace Azure.Containers.ContainerRegistry.Models
 {
     /// <summary> Manifest attributes. </summary>
-    public class ManifestAttributes
+    public partial class ManifestAttributes
     {
         /// <summary> Initializes a new instance of AcrManifests. </summary>
         internal ManifestAttributes()
@@ -58,6 +58,6 @@ namespace Azure.Containers.ContainerRegistry.Models
         public IReadOnlyList<string> Tags { get; }
 
         /// <summary> Changeable attributes. </summary>
-        public RegistryObjectPermissions Permissions { get; }
+        public ContentPermissions Permissions { get; }
     }
 }

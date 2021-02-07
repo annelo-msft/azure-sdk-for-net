@@ -9,7 +9,7 @@ using Azure.Core;
 namespace Azure.Containers.ContainerRegistry.Models
 {
     [CodeGenModel("DeletedRepository")]
-    public class DeleteRepositoryResult
+    public partial class DeleteRepositoryResult
     {
     }
 }

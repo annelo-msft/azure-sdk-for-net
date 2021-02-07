@@ -5,43 +5,45 @@
 
 #nullable disable
 
-using System.Collections.Generic;
 using System.Text.Json;
 using Azure.Core;
 
 namespace Azure.Containers.ContainerRegistry.Models
 {
-    internal partial class ManifestWrapper : IUtf8JsonSerializable
+    internal partial class Manifest : IUtf8JsonSerializable
     {
         void IUtf8JsonSerializable.Write(Utf8JsonWriter writer)
         {
             writer.WriteStartObject();
-            if (Optional.IsDefined(MediaType))
+            if (Optional.IsDefined(SchemaVersion))
             {
-                writer.WritePropertyName("mediaType");
-                writer.WriteStringValue(MediaType);
+                writer.WritePropertyName("schemaVersion");
+                writer.WriteNumberValue(SchemaVersion.Value);
             }
-            if (Optional.IsCollectionDefined(Manifests))
+            writer.WriteEndObject();
+        }
+
+        internal static Manifest DeserializeManifest(JsonElement element)
+        {
+            Optional<int> schemaVersion = default;
+            foreach (var property in element.EnumerateObject())
             {
-                writer.WritePropertyName("manifests");
-                writer.WriteStartArray();
-                foreach (var item in Manifests)
+                if (property.NameEquals("schemaVersion"))
                 {
-                    writer.WriteObjectValue(item);
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        property.ThrowNonNullablePropertyIsNull();
+                        continue;
+                    }
+                    schemaVersion = property.Value.GetInt32();
+                    continue;
                 }
-                writer.WriteEndArray();
             }
-            if (Optional.IsDefined(Config))
-            {
-                writer.WritePropertyName("config");
-                writer.WriteObjectValue(Config);
-            }
-            if (Optional.IsCollectionDefined(Layers))
-            {
-                writer.WritePropertyName("layers");
-                writer.WriteStartArray();
-                foreach (var item in Layers)
-                {
+            return new Manifest(Optional.ToNullable(schemaVersion));
+        }
+    }
+}
+ {
                     writer.WriteObjectValue(item);
                 }
                 writer.WriteEndArray();
@@ -111,7 +113,7 @@ namespace Azure.Containers.ContainerRegistry.Models
             writer.WriteEndObject();
         }
 
-        internal static ManifestWrapper DeserializeManifestWrapper(JsonElement element)
+        internal static Manifest DeserializeManifest(JsonElement element)
         {
             Optional<string> mediaType = default;
             Optional<IList<ManifestListAttributes>> manifests = default;
@@ -179,7 +181,7 @@ namespace Azure.Containers.ContainerRegistry.Models
                         annotations = null;
                         continue;
                     }
-                    annotations = Annotations.DeserializeAnnotations(property.Value);
+                    annotations = Models.Annotations.DeserializeAnnotations(property.Value);
                     continue;
                 }
                 if (property.NameEquals("architecture"))
@@ -253,7 +255,7 @@ namespace Azure.Containers.ContainerRegistry.Models
                     continue;
                 }
             }
-            return new ManifestWrapper(Optional.ToNullable(schemaVersion), mediaType.Value, Optional.ToList(manifests), config.Value, Optional.ToList(layers), annotations.Value, architecture.Value, name.Value, tag.Value, Optional.ToList(fsLayers), Optional.ToList(history), Optional.ToList(signatures));
+            return new Manifest(Optional.ToNullable(schemaVersion), mediaType.Value, Optional.ToList(manifests), config.Value, Optional.ToList(layers), annotations.Value, architecture.Value, name.Value, tag.Value, Optional.ToList(fsLayers), Optional.ToList(history), Optional.ToList(signatures));
         }
     }
 }

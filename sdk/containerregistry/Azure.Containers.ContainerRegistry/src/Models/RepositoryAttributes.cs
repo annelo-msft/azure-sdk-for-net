@@ -16,6 +16,6 @@ namespace Azure.Containers.ContainerRegistry.Models
         
         // TODO: have RepositoryPermissions and TagPermissions separately?
         [CodeGenMember("ChangeableAttributes")]
-        public RegistryObjectPermissions Permissions { get; }
+        public ContentPermissions Permissions { get; }
     }
 }

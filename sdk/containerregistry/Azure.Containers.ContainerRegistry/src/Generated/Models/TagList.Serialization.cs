@@ -17,7 +17,7 @@ namespace Azure.Containers.ContainerRegistry.Models
         {
             Optional<string> registry = default;
             Optional<string> imageName = default;
-            Optional<IReadOnlyList<TagAttributesBase>> tags = default;
+            Optional<IReadOnlyList<TagAttributes>> tags = default;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("registry"))
@@ -37,10 +37,10 @@ namespace Azure.Containers.ContainerRegistry.Models
                         property.ThrowNonNullablePropertyIsNull();
                         continue;
                     }
-                    List<TagAttributesBase> array = new List<TagAttributesBase>();
+                    List<TagAttributes> array = new List<TagAttributes>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(TagAttributesBase.DeserializeTagAttributesBase(item));
+                        array.Add(TagAttributes.DeserializeTagAttributes(item));
                     }
                     tags = array;
                     continue;

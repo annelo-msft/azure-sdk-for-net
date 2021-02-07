@@ -31,7 +31,7 @@ namespace Azure.Containers.ContainerRegistry.Models
             Size = size;
             Digest = digest;
             Urls = urls;
-            Annotations = annotations;
+            //Annotations = annotations;
         }
 
         /// <summary> Layer media type. </summary>
@@ -42,7 +42,7 @@ namespace Azure.Containers.ContainerRegistry.Models
         public string Digest { get; set; }
         /// <summary> Specifies a list of URIs from which this object may be downloaded. </summary>
         public IList<string> Urls { get; }
-        /// <summary> Additional information provided through arbitrary metadata. </summary>
-        public Annotations Annotations { get; set; }
+        
+        //public Annotations Annotations { get; set; }
     }
 }

@@ -17,6 +17,6 @@ namespace Azure.Containers.ContainerRegistry.Models
         public DateTime LastUpdateTime { get; }
 
         [CodeGenMember("ChangeableAttributes")]
-        public RegistryObjectPermissions Permissions { get; }
+        public ContentPermissions Permissions { get; }
     }
 }

@@ -5,23 +5,42 @@
 
 #nullable disable
 
+using System;
+
 namespace Azure.Containers.ContainerRegistry.Models
 {
     /// <summary> Repository attributes. </summary>
-    internal partial class RepositoryAttributes
+    public partial class RepositoryAttributes
     {
         /// <summary> Initializes a new instance of RepositoryAttributes. </summary>
         internal RepositoryAttributes()
         {
         }
 
+        /// <summary> Initializes a new instance of RepositoryAttributes. </summary>
+        /// <param name="registry"> Registry name. </param>
+        /// <param name="imageName"> Image name. </param>
+        /// <param name="createdTime"> Image created time. </param>
+        /// <param name="lastUpdateTime"> Image last update time. </param>
+        /// <param name="manifestCount"> Number of the manifests. </param>
+        /// <param name="tagCount"> Number of the tags. </param>
+        /// <param name="permissions"> Changeable attributes. </param>
+        internal RepositoryAttributes(string registry, string imageName, DateTime createdTime, DateTime lastUpdateTime, int? manifestCount, int? tagCount, ContentPermissions permissions)
+        {
+            Registry = registry;
+            ImageName = imageName;
+            CreatedTime = createdTime;
+            LastUpdateTime = lastUpdateTime;
+            ManifestCount = manifestCount;
+            TagCount = tagCount;
+            Permissions = permissions;
+        }
 
         /// <summary> Registry name. </summary>
         public string Registry { get; }
         /// <summary> Image name. </summary>
         public string ImageName { get; }
-        /// <summary> Image created time. </summary>
-
+        /// <summary> Number of the manifests. </summary>
         public int? ManifestCount { get; }
         /// <summary> Number of the tags. </summary>
         public int? TagCount { get; }

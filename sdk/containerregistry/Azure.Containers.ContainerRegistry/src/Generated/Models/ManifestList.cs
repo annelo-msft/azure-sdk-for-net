@@ -11,7 +11,7 @@ using Azure.Core;
 namespace Azure.Containers.ContainerRegistry.Models
 {
     /// <summary> Returns the requested Docker multi-arch-manifest file. </summary>
-    internal partial class ManifestList : Manifest_internal
+    internal partial class ManifestList : Manifest
     {
         /// <summary> Initializes a new instance of ManifestList. </summary>
         public ManifestList()
@@ -28,10 +28,5 @@ namespace Azure.Containers.ContainerRegistry.Models
             MediaType = mediaType;
             Manifests = manifests;
         }
-
-        /// <summary> Media type for this Manifest. </summary>
-        public string MediaType { get; set; }
-        /// <summary> List of V2 image layer information. </summary>
-        public IList<ManifestListAttributes> Manifests { get; }
     }
 }

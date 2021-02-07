@@ -10,9 +10,9 @@ using Azure.Core;
 
 namespace Azure.Containers.ContainerRegistry.Models
 {
-    internal partial class ManifestAttributes_internal
+    public partial class ManifestAttributes
     {
-        internal static ManifestAttributes_internal DeserializeManifestAttributes(JsonElement element)
+        internal static ManifestAttributes DeserializeManifestAttributes(JsonElement element)
         {
             Optional<string> registry = default;
             Optional<string> imageName = default;
@@ -40,7 +40,7 @@ namespace Azure.Containers.ContainerRegistry.Models
                     continue;
                 }
             }
-            return new ManifestAttributes_internal(registry.Value, imageName.Value, manifest.Value);
+            return new ManifestAttributes(registry.Value, imageName.Value, manifest.Value);
         }
     }
 }

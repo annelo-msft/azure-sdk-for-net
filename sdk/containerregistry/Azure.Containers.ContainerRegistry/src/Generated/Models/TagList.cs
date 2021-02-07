@@ -16,14 +16,14 @@ namespace Azure.Containers.ContainerRegistry.Models
         /// <summary> Initializes a new instance of TagList. </summary>
         internal TagList()
         {
-            Tags = new ChangeTrackingList<TagAttributesBase>();
+            Tags = new ChangeTrackingList<TagAttributes>();
         }
 
         /// <summary> Initializes a new instance of TagList. </summary>
         /// <param name="registry"> Registry name. </param>
         /// <param name="imageName"> Image name. </param>
         /// <param name="tags"> List of tag attribute details. </param>
-        internal TagList(string registry, string imageName, IReadOnlyList<TagAttributesBase> tags)
+        internal TagList(string registry, string imageName, IReadOnlyList<TagAttributes> tags)
         {
             Registry = registry;
             ImageName = imageName;
@@ -35,6 +35,6 @@ namespace Azure.Containers.ContainerRegistry.Models
         /// <summary> Image name. </summary>
         public string ImageName { get; }
         /// <summary> List of tag attribute details. </summary>
-        public IReadOnlyList<TagAttributesBase> Tags { get; }
+        public IReadOnlyList<TagAttributes> Tags { get; }
     }
 }
