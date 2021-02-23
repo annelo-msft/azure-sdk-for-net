@@ -16,7 +16,7 @@ using Azure.Core.Pipeline;
 namespace Azure.Containers.ContainerRegistry
 {
     /// <summary> The ContainerRegistryRepository service client. </summary>
-    public partial class ContainerRepositoryClient
+    public partial class RepositoryClient
     {
         private readonly ClientDiagnostics _clientDiagnostics;
         private readonly HttpPipeline _pipeline;
@@ -25,20 +25,20 @@ namespace Azure.Containers.ContainerRegistry
         // Name of the image (including the namespace).
         private string _repositoryName;
 
-        public ContainerRepositoryClient(Uri endpoint, string repositoryName, TokenCredential credential) : this(endpoint, repositoryName, credential, new ContainerRegistryClientOptions())
+        public RepositoryClient(Uri endpoint, string repositoryName, TokenCredential credential) : this(endpoint, repositoryName, credential, new ContainerRegistryClientOptions())
         {
         }
 
-        public ContainerRepositoryClient(Uri endpoint, string repositoryName, TokenCredential credential, ContainerRegistryClientOptions options)
+        public RepositoryClient(Uri endpoint, string repositoryName, TokenCredential credential, ContainerRegistryClientOptions options)
         {
             _repositoryName = repositoryName;
         }
 
-        public ContainerRepositoryClient(Uri endpoint, string repositoryName, AzureAdminUserCredential credential) : this(endpoint, repositoryName, credential, new ContainerRegistryClientOptions())
+        public RepositoryClient(Uri endpoint, string repositoryName, AzureAdminUserCredential credential) : this(endpoint, repositoryName, credential, new ContainerRegistryClientOptions())
         {
         }
 
-        public ContainerRepositoryClient(Uri endpoint, string repositoryName, AzureAdminUserCredential credential, ContainerRegistryClientOptions options)
+        public RepositoryClient(Uri endpoint, string repositoryName, AzureAdminUserCredential credential, ContainerRegistryClientOptions options)
         {
             _repositoryName = repositoryName;
         }
@@ -48,24 +48,24 @@ namespace Azure.Containers.ContainerRegistry
         /// </summary>
         /// <param name="endpoint"></param>
         /// <param name="repositoryName"></param>
-        public ContainerRepositoryClient(Uri endpoint, string repositoryName) : this(endpoint, repositoryName, new ContainerRegistryClientOptions())
+        public RepositoryClient(Uri endpoint, string repositoryName) : this(endpoint, repositoryName, new ContainerRegistryClientOptions())
         {
         }
 
-        public ContainerRepositoryClient(Uri endpoint, string repositoryName, ContainerRegistryClientOptions options)
+        public RepositoryClient(Uri endpoint, string repositoryName, ContainerRegistryClientOptions options)
         {
             _repositoryName = repositoryName;
         }
 
         /// <summary> Initializes a new instance of ContainerRegistryRepositoryClient for mocking. </summary>
-        protected ContainerRepositoryClient()
+        protected RepositoryClient()
         {
         }
         /// <summary> Initializes a new instance of ContainerRegistryRepositoryClient. </summary>
         /// <param name="clientDiagnostics"> The handler for diagnostic messaging in the client. </param>
         /// <param name="pipeline"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
         /// <param name="url"> Registry login URL. </param>
-        internal ContainerRepositoryClient(ClientDiagnostics clientDiagnostics, HttpPipeline pipeline, string url)
+        internal RepositoryClient(ClientDiagnostics clientDiagnostics, HttpPipeline pipeline, string url)
         {
             RestClient = new ContainerRegistryRepositoryRestClient(clientDiagnostics, pipeline, url);
             _clientDiagnostics = clientDiagnostics;
@@ -143,13 +143,13 @@ namespace Azure.Containers.ContainerRegistry
         /// <summary> Delete the manifest identified by `name` and `reference`. Note that a manifest can _only_ be deleted by `digest`. </summary>
         /// <param name="name"> Name of the image (including the namespace). </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response> DeleteManifestAsync(string name, string digest, CancellationToken cancellationToken = default)
+        public virtual async Task<Response> DeleteArtifactAsync(string name, string manifestDigest, CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("ContainerRegistryRepositoryClient.DeleteManifest");
             scope.Start();
             try
             {
-                return await RestClient.DeleteManifestAsync(name, digest, cancellationToken).ConfigureAwait(false);
+                return await RestClient.DeleteManifestAsync(name, manifestDigest, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception e)
             {
@@ -161,13 +161,13 @@ namespace Azure.Containers.ContainerRegistry
         /// <summary> Delete the manifest identified by `name` and `reference`. Note that a manifest can _only_ be deleted by `digest`. </summary>
         /// <param name="name"> Name of the image (including the namespace). </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response DeleteManifest(string name, string digest, CancellationToken cancellationToken = default)
+        public virtual Response DeleteArtifact(string name, string manifestDigest, CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("ContainerRegistryRepositoryClient.DeleteManifest");
             scope.Start();
             try
             {
-                return RestClient.DeleteManifest(name, digest, cancellationToken);
+                return RestClient.DeleteManifest(name, manifestDigest, cancellationToken);
             }
             catch (Exception e)
             {
@@ -212,73 +212,6 @@ namespace Azure.Containers.ContainerRegistry
             //}
         }
 
-        /// <summary> Get tag attributes by tag. </summary>
-        /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response<TagAttributes>> GetTagAsync(string tagName, CancellationToken cancellationToken = default)
-        {
-            using var scope = _clientDiagnostics.CreateScope("ContainerRegistryRepositoryClient.GetTagAttributes");
-            scope.Start();
-            try
-            {
-                return await RestClient.GetTagAttributesAsync(_repositoryName, tagName, cancellationToken).ConfigureAwait(false);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
-        }
-
-        /// <summary> Get tag attributes by tag. </summary>
-        public virtual Response<TagAttributes> GetTag(string tagName, CancellationToken cancellationToken = default)
-        {
-            using var scope = _clientDiagnostics.CreateScope("ContainerRegistryRepositoryClient.GetTagAttributes");
-            scope.Start();
-            try
-            {
-                return RestClient.GetTagAttributes(_repositoryName, tagName, cancellationToken);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
-        }
-
-        /// <summary> Update tag attributes. </summary>
-        /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response> SetTagPermissionsAsync(string tagName, ContentPermissions permissions, CancellationToken cancellationToken = default)
-        {
-            using var scope = _clientDiagnostics.CreateScope("ContainerRegistryRepositoryClient.UpdateTagAttributes");
-            scope.Start();
-            try
-            {
-                return await RestClient.UpdateTagAttributesAsync(_repositoryName, tagName, permissions, cancellationToken).ConfigureAwait(false);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
-        }
-
-        /// <summary> Update tag attributes. </summary>
-        /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response SetTagPermissions(string tagName, ContentPermissions permissions, CancellationToken cancellationToken = default)
-        {
-            using var scope = _clientDiagnostics.CreateScope("ContainerRegistryRepositoryClient.UpdateTagAttributes");
-            scope.Start();
-            try
-            {
-                return RestClient.UpdateTagAttributes(_repositoryName, tagName, permissions, cancellationToken);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
-        }
-
         /// <summary> Delete tag. </summary>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual async Task<Response> DeleteTagAsync(string tagName, CancellationToken cancellationToken = default)
@@ -317,7 +250,7 @@ namespace Azure.Containers.ContainerRegistry
         // caller confusion?
         /// <summary> List manifests of a repository. </summary>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual AsyncPageable<ManifestAttributes> GetManifestsAsync(GetManifestOptions options = null, CancellationToken cancellationToken = default)
+        public virtual AsyncPageable<ArtifactAttributes> GetArtifactsAsync(GetArtifactOptions options = null, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
 
@@ -338,7 +271,7 @@ namespace Azure.Containers.ContainerRegistry
 
         /// <summary> List manifests of a repository. </summary>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Pageable<ManifestAttributes> GetManifests(GetManifestOptions options = null, CancellationToken cancellationToken = default)
+        public virtual Pageable<ArtifactAttributes> GetArtifacts(GetArtifactOptions options = null, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
 
@@ -357,70 +290,14 @@ namespace Azure.Containers.ContainerRegistry
             //}
         }
 
-        /// <summary> Get manifest attributes. </summary>
-        /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response<ManifestAttributes>> GetManifestAsync(string tagOrDigest, CancellationToken cancellationToken = default)
+        public virtual ArtifactClient GetArtifactClient(ArtifactReference reference)
         {
-            using var scope = _clientDiagnostics.CreateScope("ContainerRegistryRepositoryClient.GetManifestAttributes");
-            scope.Start();
-            try
-            {
-                return await RestClient.GetManifestAttributesAsync(_repositoryName, tagOrDigest, cancellationToken).ConfigureAwait(false);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
+            throw new NotImplementedException();
         }
 
-        /// <summary> Get manifest attributes. </summary>
-        /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response<ManifestAttributes> GetManifest(string tagOrDigest, CancellationToken cancellationToken = default)
+        public virtual TagClient GetTagClient(string tagName)
         {
-            using var scope = _clientDiagnostics.CreateScope("ContainerRegistryRepositoryClient.GetManifestAttributes");
-            scope.Start();
-            try
-            {
-                return RestClient.GetManifestAttributes(_repositoryName, tagOrDigest, cancellationToken);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
-        }
-
-        /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response> SetManifestPermissionsAsync(string tagOrDigest, ContentPermissions value, CancellationToken cancellationToken = default)
-        {
-            using var scope = _clientDiagnostics.CreateScope("ContainerRegistryRepositoryClient.UpdateManifestAttributes");
-            scope.Start();
-            try
-            {
-                return await RestClient.UpdateManifestAttributesAsync(_repositoryName, tagOrDigest, value, cancellationToken).ConfigureAwait(false);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
-        }
-
-        /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response SetManifestPermissions(string tagOrDigest, ContentPermissions value, CancellationToken cancellationToken = default)
-        {
-            using var scope = _clientDiagnostics.CreateScope("ContainerRegistryRepositoryClient.UpdateManifestAttributes");
-            scope.Start();
-            try
-            {
-                return RestClient.UpdateManifestAttributes(_repositoryName, tagOrDigest, value, cancellationToken);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
+            throw new NotImplementedException();
         }
 
         public virtual ArtifactStorageClient GetArtifactStorageClient()

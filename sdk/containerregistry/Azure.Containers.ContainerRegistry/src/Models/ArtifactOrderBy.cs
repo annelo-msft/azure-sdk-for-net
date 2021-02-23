@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Azure.Containers.ContainerRegistry.Models
 {
-    public enum ManifestOrderBy
+    public enum ArtifactOrderBy
     {
         LastUpdateTimeDescending,
         LastUpdateTimeAscending

@@ -40,14 +40,14 @@ namespace ContainerRegistrySamples
             {
                 Console.WriteLine($"Repository name: {repositoryName}");
 
-                ContainerRepositoryClient repositoryClient = registryClient.GetRepositoryClient(repositoryName);
-                AsyncPageable<ManifestAttributes> manifests = repositoryClient.GetManifestsAsync(
-                    new GetManifestOptions(orderBy: ManifestOrderBy.LastUpdateTimeDescending)
+                ArtifactClient repositoryClient = registryClient.GetRepositoryClient(repositoryName);
+                AsyncPageable<ArtifactAttributes> manifests = repositoryClient.GetManifestsAsync(
+                    new GetArtifactOptions(orderBy: ArtifactOrderBy.LastUpdateTimeDescending)
                 );
 
                 int manifestCount = 0;
                 int manifestsToKeep = 3;
-                await foreach (ManifestAttributes manifest in manifests)
+                await foreach (ArtifactAttributes manifest in manifests)
                 {
                     if (manifestCount >= manifestsToKeep)
                     { 
@@ -69,7 +69,7 @@ namespace ContainerRegistrySamples
 
         public async Task ViewManifestsInRepository()
         {
-            var client = new ContainerRepositoryClient(new Uri("myacr.azurecr.io"), "hello-world", new DefaultAzureCredential());
+            var client = new TagClient(new Uri("myacr.azurecr.io"), "hello-world", new DefaultAzureCredential());
 
             //// TODO: I don't think we need name here, because we specified the image name as the repository in the constructor.  Is this correct?
             //// TODO: This should be pageable

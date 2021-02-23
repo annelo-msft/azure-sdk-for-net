@@ -11,7 +11,7 @@ using Azure.Core;
 namespace Azure.Containers.ContainerRegistry.Storage.Models
 {
     /// <summary> Returns the requested manifest file. </summary>
-    internal partial class CombinedManifest : ImageManifest
+    internal partial class CombinedManifest : ArtifactManifest
     {
         /// <summary> Initializes a new instance of CombinedManifest. </summary>
         public CombinedManifest()

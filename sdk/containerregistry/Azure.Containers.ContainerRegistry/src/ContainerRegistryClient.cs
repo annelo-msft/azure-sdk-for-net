@@ -113,7 +113,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <summary> Get repository attributes. </summary>
         /// <param name="respositoryName"> Name of the image (including the namespace). </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response<RepositoryAttributes>> GetRepositoriesAsync(string respositoryName, CancellationToken cancellationToken = default)
+        public virtual async Task<Response<RepositoryAttributes>> GetRepositoryAsync(string respositoryName, CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("ContainerRegistryClient.GetRepositoryAttributes");
             scope.Start();
@@ -131,7 +131,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <summary> Get repository attributes. </summary>
         /// <param name="respositoryName"> Name of the image (including the namespace). </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response<RepositoryAttributes> GetRepositories(string respositoryName, CancellationToken cancellationToken = default)
+        public virtual Response<RepositoryAttributes> GetRepository(string respositoryName, CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("ContainerRegistryClient.GetRepositoryAttributes");
             scope.Start();
@@ -182,7 +182,7 @@ namespace Azure.Containers.ContainerRegistry
             }
         }
 
-        public virtual ContainerRepositoryClient GetRepositoryClient(string repositoryName)
+        public virtual RepositoryClient GetRepositoryClient(string repositoryName)
         {
             throw new NotImplementedException();
         }

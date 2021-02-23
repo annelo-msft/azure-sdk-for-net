@@ -11,7 +11,7 @@ using Azure.Core;
 namespace Azure.Containers.ContainerRegistry.Storage.Models
 {
     /// <summary> Returns the requested OCI Manifest file. </summary>
-    public partial class OciManifest : ImageManifest
+    public partial class OciManifest : ArtifactManifest
     {
         /// <summary> Initializes a new instance of OciManifest. </summary>
         public OciManifest()

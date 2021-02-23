@@ -18,7 +18,7 @@ namespace ContainerRegistrySamples
 
             Console.WriteLine($"Repository hello-world contains the following manifests:");
 
-            AsyncPageable<ManifestAttributes> manifests = repositoryClient.GetManifestsAsync();
+            AsyncPageable<ArtifactAttributes> manifests = repositoryClient.GetManifestsAsync();
             await foreach (var manifestAttributes in manifests)
             {
                 PrintManifestAttributes(manifestAttributes);
@@ -37,7 +37,7 @@ namespace ContainerRegistrySamples
 
 
             // By Tag
-            ManifestAttributes manifestAttributes = await repositoryClient.GetManifestAsync("latest");
+            ArtifactAttributes manifestAttributes = await repositoryClient.GetManifestAsync("latest");
 
             // TODO: tagOrDigest - would it make sense to model this as Byte[] or other binary output of SHA256 class in .NET?
             // By Digest
@@ -145,7 +145,7 @@ namespace ContainerRegistrySamples
         }
 
 
-        private void PrintManifestAttributes(ManifestAttributes manifestAttributes)
+        private void PrintManifestAttributes(ArtifactAttributes manifestAttributes)
         {
             // Print Manifest
             Console.WriteLine($"Manifest repository and digest are {manifestAttributes.ImageName}:{manifestAttributes.Digest}");
@@ -161,7 +161,7 @@ namespace ContainerRegistrySamples
             Console.WriteLine($"Manifest {manifestAttributes.ImageName}:{manifestAttributes.Digest} CPU architecture is {manifestAttributes.CpuArchitecture}.");
             Console.WriteLine($"Manifest {manifestAttributes.ImageName}:{manifestAttributes.Digest} OS is {manifestAttributes.OperatingSystem}.");
 
-            Console.WriteLine($"Manifest {manifestAttributes.ImageName}:{manifestAttributes.Digest} MediaType is {manifestAttributes.MediaType}.");
+            Console.WriteLine($"Manifest {manifestAttributes.ImageName}:{manifestAttributes.Digest} MediaType is {manifestAttributes.ManifestMediaType}.");
             Console.WriteLine($"Manifest {manifestAttributes.ImageName}:{manifestAttributes.Digest} ConfigMediaType is {manifestAttributes.ConfigMediaType}.");
 
             Console.WriteLine($"Manifest {manifestAttributes.ImageName}:{manifestAttributes.Digest} is tagged with the following tags:");

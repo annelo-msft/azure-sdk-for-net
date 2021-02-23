@@ -8,12 +8,12 @@
 namespace Azure.Containers.ContainerRegistry.Storage.Models
 {
     /// <summary> Returns the requested manifest file. </summary>
-    public partial class ImageManifest
+    public partial class ArtifactManifest
     {
 
-        /// <summary> Initializes a new instance of ImageManifest. </summary>
+        /// <summary> Initializes a new instance of ArtifactManifest. </summary>
         /// <param name="schemaVersion"> Schema version. </param>
-        internal ImageManifest(int schemaVersion)
+        internal ArtifactManifest(int schemaVersion)
         {
             SchemaVersion = schemaVersion;
         }

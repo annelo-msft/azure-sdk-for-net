@@ -11,7 +11,7 @@ using Azure.Core;
 namespace Azure.Containers.ContainerRegistry.Storage.Models
 {
     /// <summary> Returns the requested V1 manifest file. </summary>
-    public partial class DockerManifestV1 : ImageManifest
+    public partial class DockerManifestV1 : ArtifactManifest
     {
         /// <summary> Initializes a new instance of DockerManifestV1. </summary>
         public DockerManifestV1()

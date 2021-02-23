@@ -9,13 +9,20 @@ using Azure.Core;
 
 namespace Azure.Containers.ContainerRegistry.Models
 {
-    public partial class ManifestAttributes
+    [CodeGenModel("ManifestAttributes")]
+    public partial class ArtifactAttributes
     {
-        public string Digest { get { return Attributes.Digest; } }
+        [CodeGenMember("ImageName")]
+        public string Name { get; }
+
+        [CodeGenMember("Registry")]
+        public string RegistryName { get; }
+
+        public string ManifestDigest { get { return Attributes.Digest; } }
 
         // TODO: Why is this nullable?  does it need to be?
         // TODO: Size in Bytes?
-        public long? ImageSize { get { return Attributes.ImageSize.Value; } }
+        public long? ArtifactSize { get { return Attributes.ImageSize.Value; } }
 
         // TODO: Why is this nullable?  does it need to be?
         public DateTimeOffset? CreatedTime { get { return Attributes.CreatedTime.Value; } }
@@ -27,11 +34,10 @@ namespace Azure.Containers.ContainerRegistry.Models
 
         public string OperatingSystem { get { return Attributes.Os; } }
 
-        public ManifestMediaType MediaType { get { return Attributes.MediaType; } }
+        public ManifestMediaType ManifestMediaType { get { return Attributes.MediaType; } }
 
         public ConfigMediaType ConfigMediaType { get { return Attributes.ConfigMediaType; } }
 
-        // TODO: Ok to have this as a list and not a pageable?
         public IReadOnlyList<string> Tags { get { return Attributes.Tags; } }
 
         public ContentPermissions Permissions { get { return Attributes.ChangeableAttributes; } }

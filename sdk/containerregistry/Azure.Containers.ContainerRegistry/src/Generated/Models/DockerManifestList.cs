@@ -11,7 +11,7 @@ using Azure.Core;
 namespace Azure.Containers.ContainerRegistry.Storage.Models
 {
     /// <summary> Returns the requested Docker multi-arch-manifest file. </summary>
-    public partial class DockerManifestList : ImageManifest
+    public partial class DockerManifestList : ArtifactManifest
     {
         /// <summary> Initializes a new instance of DockerManifestList. </summary>
         public DockerManifestList()

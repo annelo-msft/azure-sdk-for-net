@@ -8,13 +8,13 @@ using System.Text;
 
 namespace Azure.Containers.ContainerRegistry.Models
 {
-    public class GetManifestOptions
+    public class GetArtifactOptions
     {
-        public GetManifestOptions(ManifestOrderBy orderBy)
+        public GetArtifactOptions(ArtifactOrderBy orderBy)
         {
             OrderBy = orderBy;
         }
         
-        public ManifestOrderBy OrderBy { get; }
+        public ArtifactOrderBy OrderBy { get; }
     }
 }

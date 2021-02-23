@@ -66,7 +66,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="accept"> Accept header string delimited by comma. For example, application/vnd.docker.distribution.manifest.v2+json. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> or <paramref name="reference"/> is null. </exception>
-        public async Task<Response<ImageManifest>> GetManifestAsync(string name, string reference, string accept = null, CancellationToken cancellationToken = default)
+        public async Task<Response<ArtifactManifest>> GetManifestAsync(string name, string reference, string accept = null, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {
@@ -83,9 +83,9 @@ namespace Azure.Containers.ContainerRegistry
             {
                 case 200:
                     {
-                        ImageManifest value = default;
+                        ArtifactManifest value = default;
                         using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
-                        value = ImageManifest.DeserializeImageManifest(document.RootElement);
+                        value = ArtifactManifest.DeserializeArtifactManifest(document.RootElement);
                         return Response.FromValue(value, message.Response);
                     }
                 default:
@@ -99,7 +99,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="accept"> Accept header string delimited by comma. For example, application/vnd.docker.distribution.manifest.v2+json. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> or <paramref name="reference"/> is null. </exception>
-        public Response<ImageManifest> GetManifest(string name, string reference, string accept = null, CancellationToken cancellationToken = default)
+        public Response<ArtifactManifest> GetManifest(string name, string reference, string accept = null, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {
@@ -116,9 +116,9 @@ namespace Azure.Containers.ContainerRegistry
             {
                 case 200:
                     {
-                        ImageManifest value = default;
+                        ArtifactManifest value = default;
                         using var document = JsonDocument.Parse(message.Response.ContentStream);
-                        value = ImageManifest.DeserializeImageManifest(document.RootElement);
+                        value = ArtifactManifest.DeserializeArtifactManifest(document.RootElement);
                         return Response.FromValue(value, message.Response);
                     }
                 default:
@@ -126,7 +126,7 @@ namespace Azure.Containers.ContainerRegistry
             }
         }
 
-        internal HttpMessage CreateCreateManifestRequest(string name, string reference, ImageManifest payload)
+        internal HttpMessage CreateCreateManifestRequest(string name, string reference, ArtifactManifest payload)
         {
             var message = _pipeline.CreateMessage();
             var request = message.Request;
@@ -152,7 +152,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="payload"> Manifest body, can take v1 or v2 values depending on accept header. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/>, <paramref name="reference"/>, or <paramref name="payload"/> is null. </exception>
-        public async Task<ResponseWithHeaders<object, ContainerRegistryRepositoryCreateManifestHeaders>> CreateManifestAsync(string name, string reference, ImageManifest payload, CancellationToken cancellationToken = default)
+        public async Task<ResponseWithHeaders<object, ContainerRegistryRepositoryCreateManifestHeaders>> CreateManifestAsync(string name, string reference, ArtifactManifest payload, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {
@@ -190,7 +190,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="payload"> Manifest body, can take v1 or v2 values depending on accept header. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/>, <paramref name="reference"/>, or <paramref name="payload"/> is null. </exception>
-        public ResponseWithHeaders<object, ContainerRegistryRepositoryCreateManifestHeaders> CreateManifest(string name, string reference, ImageManifest payload, CancellationToken cancellationToken = default)
+        public ResponseWithHeaders<object, ContainerRegistryRepositoryCreateManifestHeaders> CreateManifest(string name, string reference, ArtifactManifest payload, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {
@@ -722,7 +722,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="reference"> A tag or a digest, pointing to a specific image. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> or <paramref name="reference"/> is null. </exception>
-        public async Task<Response<ManifestAttributes>> GetManifestAttributesAsync(string name, string reference, CancellationToken cancellationToken = default)
+        public async Task<Response<ArtifactAttributes>> GetManifestAttributesAsync(string name, string reference, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {
@@ -739,9 +739,9 @@ namespace Azure.Containers.ContainerRegistry
             {
                 case 200:
                     {
-                        ManifestAttributes value = default;
+                        ArtifactAttributes value = default;
                         using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
-                        value = ManifestAttributes.DeserializeManifestAttributes(document.RootElement);
+                        value = ArtifactAttributes.DeserializeArtifactAttributes(document.RootElement);
                         return Response.FromValue(value, message.Response);
                     }
                 default:
@@ -754,7 +754,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="reference"> A tag or a digest, pointing to a specific image. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> or <paramref name="reference"/> is null. </exception>
-        public Response<ManifestAttributes> GetManifestAttributes(string name, string reference, CancellationToken cancellationToken = default)
+        public Response<ArtifactAttributes> GetManifestAttributes(string name, string reference, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {
@@ -771,9 +771,9 @@ namespace Azure.Containers.ContainerRegistry
             {
                 case 200:
                     {
-                        ManifestAttributes value = default;
+                        ArtifactAttributes value = default;
                         using var document = JsonDocument.Parse(message.Response.ContentStream);
-                        value = ManifestAttributes.DeserializeManifestAttributes(document.RootElement);
+                        value = ArtifactAttributes.DeserializeArtifactAttributes(document.RootElement);
                         return Response.FromValue(value, message.Response);
                     }
                 default:

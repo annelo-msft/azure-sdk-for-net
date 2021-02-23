@@ -11,7 +11,7 @@ using Azure.Core;
 namespace Azure.Containers.ContainerRegistry.Storage.Models
 {
     /// <summary> Returns the requested OCI index file. </summary>
-    public partial class OciIndex : ImageManifest
+    public partial class OciIndex : ArtifactManifest
     {
         /// <summary> Initializes a new instance of OciIndex. </summary>
         public OciIndex()
