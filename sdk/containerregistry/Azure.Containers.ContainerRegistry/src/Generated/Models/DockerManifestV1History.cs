@@ -10,10 +10,6 @@ namespace Azure.Containers.ContainerRegistry.Storage.Models
     /// <summary> A list of unstructured historical data for v1 compatibility. </summary>
     public partial class DockerManifestV1History
     {
-        /// <summary> Initializes a new instance of DockerManifestV1History. </summary>
-        public DockerManifestV1History()
-        {
-        }
 
         /// <summary> Initializes a new instance of DockerManifestV1History. </summary>
         /// <param name="v1Compatibility"> The raw v1 compatibility information. </param>
@@ -21,8 +17,5 @@ namespace Azure.Containers.ContainerRegistry.Storage.Models
         {
             V1Compatibility = v1Compatibility;
         }
-
-        /// <summary> The raw v1 compatibility information. </summary>
-        public string V1Compatibility { get; set; }
     }
 }

@@ -10,10 +10,6 @@ namespace Azure.Containers.ContainerRegistry.Storage.Models
     /// <summary> Signature of a signed manifest. </summary>
     public partial class DockerManifestV1ImageSignature
     {
-        /// <summary> Initializes a new instance of DockerManifestV1ImageSignature. </summary>
-        public DockerManifestV1ImageSignature()
-        {
-        }
 
         /// <summary> Initializes a new instance of DockerManifestV1ImageSignature. </summary>
         /// <param name="header"> A JSON web signature. </param>
@@ -25,12 +21,5 @@ namespace Azure.Containers.ContainerRegistry.Storage.Models
             Signature = signature;
             Protected = @protected;
         }
-
-        /// <summary> A JSON web signature. </summary>
-        public DockerManifestV1Jwk Header { get; set; }
-        /// <summary> A signature for the image manifest, signed by a libtrust private key. </summary>
-        public string Signature { get; set; }
-        /// <summary> The signed protected header. </summary>
-        public string Protected { get; set; }
     }
 }

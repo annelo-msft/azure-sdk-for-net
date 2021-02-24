@@ -74,9 +74,9 @@ namespace Azure.Containers.ContainerRegistry.Storage.Models
             Optional<string> architecture = default;
             Optional<string> name = default;
             Optional<string> tag = default;
-            Optional<IList<DockerManifestV1FsLayer>> fsLayers = default;
-            Optional<IList<DockerManifestV1History>> history = default;
-            Optional<IList<DockerManifestV1ImageSignature>> signatures = default;
+            Optional<IReadOnlyList<DockerManifestV1FsLayer>> fsLayers = default;
+            Optional<IReadOnlyList<DockerManifestV1History>> history = default;
+            Optional<IReadOnlyList<DockerManifestV1ImageSignature>> signatures = default;
             Optional<int> schemaVersion = default;
             foreach (var property in element.EnumerateObject())
             {

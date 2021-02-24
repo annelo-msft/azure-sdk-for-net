@@ -11,5 +11,12 @@ namespace Azure.Containers.ContainerRegistry.Storage.Models
     [CodeGenModel("FsLayer")]
     public sealed partial class DockerManifestV1FsLayer
     {
+        /// <summary> Initializes a new instance of DockerManifestV1FsLayer. </summary>
+        internal DockerManifestV1FsLayer()
+        {
+        }
+
+        /// <summary> SHA of an image layer. </summary>
+        public string BlobSum { get; }
     }
 }

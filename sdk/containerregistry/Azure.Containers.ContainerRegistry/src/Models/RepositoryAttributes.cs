@@ -16,5 +16,8 @@ namespace Azure.Containers.ContainerRegistry.Models
 
         [CodeGenMember("ChangeableAttributes")]
         public ContentPermissions Permissions { get; }
+
+        [CodeGenMember("ManifestCount")]
+        public int? ArtifactCount { get; }
     }
 }

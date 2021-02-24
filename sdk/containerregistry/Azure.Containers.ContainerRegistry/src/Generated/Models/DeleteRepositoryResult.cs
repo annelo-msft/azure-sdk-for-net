@@ -16,22 +16,17 @@ namespace Azure.Containers.ContainerRegistry.Models
         /// <summary> Initializes a new instance of DeleteRepositoryResult. </summary>
         internal DeleteRepositoryResult()
         {
-            ManifestsDeleted = new ChangeTrackingList<string>();
-            TagsDeleted = new ChangeTrackingList<string>();
+            DeletedArtifactManifestDigests = new ChangeTrackingList<string>();
+            DeletedTags = new ChangeTrackingList<string>();
         }
 
         /// <summary> Initializes a new instance of DeleteRepositoryResult. </summary>
-        /// <param name="manifestsDeleted"> SHA of the deleted image. </param>
-        /// <param name="tagsDeleted"> Tag of the deleted image. </param>
-        internal DeleteRepositoryResult(IReadOnlyList<string> manifestsDeleted, IReadOnlyList<string> tagsDeleted)
+        /// <param name="deletedArtifactManifestDigests"> SHA of the deleted image. </param>
+        /// <param name="deletedTags"> Tag of the deleted image. </param>
+        internal DeleteRepositoryResult(IReadOnlyList<string> deletedArtifactManifestDigests, IReadOnlyList<string> deletedTags)
         {
-            ManifestsDeleted = manifestsDeleted;
-            TagsDeleted = tagsDeleted;
+            DeletedArtifactManifestDigests = deletedArtifactManifestDigests;
+            DeletedTags = deletedTags;
         }
-
-        /// <summary> SHA of the deleted image. </summary>
-        public IReadOnlyList<string> ManifestsDeleted { get; }
-        /// <summary> Tag of the deleted image. </summary>
-        public IReadOnlyList<string> TagsDeleted { get; }
     }
 }

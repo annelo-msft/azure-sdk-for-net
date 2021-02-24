@@ -10,35 +10,5 @@ namespace Azure.Containers.ContainerRegistry.Storage.Models
     /// <summary> JSON web key parameter. </summary>
     public partial class DockerManifestV1JwkHeader
     {
-        /// <summary> Initializes a new instance of DockerManifestV1JwkHeader. </summary>
-        public DockerManifestV1JwkHeader()
-        {
-        }
-
-        /// <summary> Initializes a new instance of DockerManifestV1JwkHeader. </summary>
-        /// <param name="crv"> crv value. </param>
-        /// <param name="kid"> kid value. </param>
-        /// <param name="kty"> kty value. </param>
-        /// <param name="x"> x value. </param>
-        /// <param name="y"> y value. </param>
-        internal DockerManifestV1JwkHeader(string crv, string kid, string kty, string x, string y)
-        {
-            Crv = crv;
-            Kid = kid;
-            Kty = kty;
-            X = x;
-            Y = y;
-        }
-
-        /// <summary> crv value. </summary>
-        public string Crv { get; set; }
-        /// <summary> kid value. </summary>
-        public string Kid { get; set; }
-        /// <summary> kty value. </summary>
-        public string Kty { get; set; }
-        /// <summary> x value. </summary>
-        public string X { get; set; }
-        /// <summary> y value. </summary>
-        public string Y { get; set; }
     }
 }

@@ -22,16 +22,16 @@ namespace Azure.Containers.ContainerRegistry.Models
         /// <param name="name"> Image name. </param>
         /// <param name="createdTime"> Image created time. </param>
         /// <param name="lastUpdateTime"> Image last update time. </param>
-        /// <param name="manifestCount"> Number of the manifests. </param>
+        /// <param name="artifactCount"> Number of the manifests. </param>
         /// <param name="tagCount"> Number of the tags. </param>
         /// <param name="permissions"> Changeable attributes. </param>
-        internal RepositoryAttributes(string registry, string name, DateTimeOffset? createdTime, DateTimeOffset? lastUpdateTime, int? manifestCount, int? tagCount, ContentPermissions permissions)
+        internal RepositoryAttributes(string registry, string name, DateTimeOffset? createdTime, DateTimeOffset? lastUpdateTime, int? artifactCount, int? tagCount, ContentPermissions permissions)
         {
             Registry = registry;
             Name = name;
             CreatedTime = createdTime;
             LastUpdateTime = lastUpdateTime;
-            ManifestCount = manifestCount;
+            ArtifactCount = artifactCount;
             TagCount = tagCount;
             Permissions = permissions;
         }
@@ -42,8 +42,6 @@ namespace Azure.Containers.ContainerRegistry.Models
         public DateTimeOffset? CreatedTime { get; }
         /// <summary> Image last update time. </summary>
         public DateTimeOffset? LastUpdateTime { get; }
-        /// <summary> Number of the manifests. </summary>
-        public int? ManifestCount { get; }
         /// <summary> Number of the tags. </summary>
         public int? TagCount { get; }
     }

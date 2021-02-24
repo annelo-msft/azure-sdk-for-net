@@ -13,13 +13,6 @@ namespace Azure.Containers.ContainerRegistry.Storage.Models
     /// <summary> Returns the requested V1 manifest file. </summary>
     public partial class DockerManifestV1 : ArtifactManifest
     {
-        /// <summary> Initializes a new instance of DockerManifestV1. </summary>
-        public DockerManifestV1()
-        {
-            FsLayers = new ChangeTrackingList<DockerManifestV1FsLayer>();
-            History = new ChangeTrackingList<DockerManifestV1History>();
-            Signatures = new ChangeTrackingList<DockerManifestV1ImageSignature>();
-        }
 
         /// <summary> Initializes a new instance of DockerManifestV1. </summary>
         /// <param name="schemaVersion"> Schema version. </param>
@@ -29,7 +22,7 @@ namespace Azure.Containers.ContainerRegistry.Storage.Models
         /// <param name="fsLayers"> List of layer information. </param>
         /// <param name="history"> Image history. </param>
         /// <param name="signatures"> Image signature. </param>
-        internal DockerManifestV1(int schemaVersion, string cpuArchitecture, string name, string tag, IList<DockerManifestV1FsLayer> fsLayers, IList<DockerManifestV1History> history, IList<DockerManifestV1ImageSignature> signatures) : base(schemaVersion)
+        internal DockerManifestV1(int schemaVersion, string cpuArchitecture, string name, string tag, IReadOnlyList<DockerManifestV1FsLayer> fsLayers, IReadOnlyList<DockerManifestV1History> history, IReadOnlyList<DockerManifestV1ImageSignature> signatures) : base(schemaVersion)
         {
             CpuArchitecture = cpuArchitecture;
             Name = name;
@@ -38,15 +31,5 @@ namespace Azure.Containers.ContainerRegistry.Storage.Models
             History = history;
             Signatures = signatures;
         }
-        /// <summary> Image name. </summary>
-        public string Name { get; set; }
-        /// <summary> Image tag. </summary>
-        public string Tag { get; set; }
-        /// <summary> List of layer information. </summary>
-        public IList<DockerManifestV1FsLayer> FsLayers { get; }
-        /// <summary> Image history. </summary>
-        public IList<DockerManifestV1History> History { get; }
-        /// <summary> Image signature. </summary>
-        public IList<DockerManifestV1ImageSignature> Signatures { get; }
     }
 }

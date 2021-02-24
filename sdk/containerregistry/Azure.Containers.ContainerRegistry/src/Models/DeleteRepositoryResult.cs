@@ -11,5 +11,12 @@ namespace Azure.Containers.ContainerRegistry.Models
     [CodeGenModel("DeletedRepository")]
     public partial class DeleteRepositoryResult
     {
+        /// <summary> SHA of the deleted image. </summary>
+        [CodeGenMember("ManifestsDeleted")]
+        public IReadOnlyList<string> DeletedArtifactManifestDigests { get; }
+
+        /// <summary> Tag of the deleted image. </summary>
+        [CodeGenMember("TagsDeleted")]
+        public IReadOnlyList<string> DeletedTags { get; }
     }
 }

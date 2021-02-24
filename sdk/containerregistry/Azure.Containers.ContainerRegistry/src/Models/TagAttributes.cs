@@ -25,7 +25,7 @@ namespace Azure.Containers.ContainerRegistry.Models
 
         /// <summary> Is signed. </summary>
         [CodeGenMember("Signed")]
-        public bool IsSigned { get { return Attributes.Signed.Value; } }
+        internal bool IsSigned { get { return Attributes.Signed.Value; } }
 
         /// <summary> Changeable attributes. </summary>
         public ContentPermissions Permissions { get { return Attributes.ChangeableAttributes; } }

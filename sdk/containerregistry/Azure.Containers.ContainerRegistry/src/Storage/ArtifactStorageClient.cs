@@ -79,47 +79,50 @@ namespace Azure.Containers.ContainerRegistry.Storage
         // TODO: Confirm in FDG that IEnumerable is how to model this input collection
         /// <summary> Get the manifest identified by `name` and `reference` where `reference` can be a tag or digest. </summary>        
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response<ArtifactManifest>> GetManifestAsync(string tagOrDigest, IEnumerable<ManifestMediaType> acceptMediaTypes = null, CancellationToken cancellationToken = default)
+        public virtual async Task<Response<ArtifactManifest>> GetManifestAsync(ArtifactReference reference, IEnumerable<ManifestMediaType> acceptMediaTypes = null, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("ContainerRegistryRepositoryClient.GetManifest");
-            scope.Start();
+            await Task.Delay(0, cancellationToken).ConfigureAwait(false);
+            throw new NotImplementedException();
+            //using var scope = _clientDiagnostics.CreateScope("ContainerRegistryRepositoryClient.GetManifest");
+            //scope.Start();
 
-            // <param name="acceptMediaType"> Accept header string delimited by comma. For example, application/vnd.docker.distribution.manifest.v2+json. </param>
-            //TODO: pull media types from collection and create comma-delimited string.
-            string accept = string.Empty; // = CreateCommaDelimitedString(acceptMediaTypes)
-            // TODO: what is default behavior if accept it null/list is empty?
+            //// <param name="acceptMediaType"> Accept header string delimited by comma. For example, application/vnd.docker.distribution.manifest.v2+json. </param>
+            ////TODO: pull media types from collection and create comma-delimited string.
+            //string accept = string.Empty; // = CreateCommaDelimitedString(acceptMediaTypes)
+            //// TODO: what is default behavior if accept it null/list is empty?
 
-            try
-            {
-                return await RepositoryRestClient.GetManifestAsync(_repositoryName, tagOrDigest, accept, cancellationToken).ConfigureAwait(false);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
+            //try
+            //{
+            //    return await RepositoryRestClient.GetManifestAsync(_repositoryName, tagOrDigest, accept, cancellationToken).ConfigureAwait(false);
+            //}
+            //catch (Exception e)
+            //{
+            //    scope.Failed(e);
+            //    throw;
+            //}
         }
 
         /// <summary> Get the manifest identified by `name` and `reference` where `reference` can be a tag or digest. </summary>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response<ArtifactManifest> GetManifest(string tagOrDigest, IEnumerable<ManifestMediaType> acceptMediaTypes = null, CancellationToken cancellationToken = default)
+        public virtual Response<ArtifactManifest> GetManifest(ArtifactReference reference, IEnumerable<ManifestMediaType> acceptMediaTypes = null, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("ContainerRegistryRepositoryClient.GetManifest");
-            scope.Start();
+            throw new NotImplementedException();
+            //using var scope = _clientDiagnostics.CreateScope("ContainerRegistryRepositoryClient.GetManifest");
+            //scope.Start();
 
-            // <param name="acceptMediaType"> Accept header string delimited by comma. For example, application/vnd.docker.distribution.manifest.v2+json. </param>
-            //TODO: pull media types from collection and create comma-delimited string.
-            string accept = string.Empty; // = CreateCommaDelimitedString(acceptMediaTypes)
-            // TODO: what is default behavior if accept it null/list is empty?
-            try
-            {
-                return RepositoryRestClient.GetManifest(_repositoryName, tagOrDigest, accept, cancellationToken);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
+            //// <param name="acceptMediaType"> Accept header string delimited by comma. For example, application/vnd.docker.distribution.manifest.v2+json. </param>
+            ////TODO: pull media types from collection and create comma-delimited string.
+            //string accept = string.Empty; // = CreateCommaDelimitedString(acceptMediaTypes)
+            //// TODO: what is default behavior if accept it null/list is empty?
+            //try
+            //{
+            //    return RepositoryRestClient.GetManifest(_repositoryName, tagOrDigest, accept, cancellationToken);
+            //}
+            //catch (Exception e)
+            //{
+            //    scope.Failed(e);
+            //    throw;
+            //}
         }
 
         /// <summary> Put the manifest identified by tag. </summary>
@@ -384,35 +387,39 @@ namespace Azure.Containers.ContainerRegistry.Storage
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual async Task<Response> GetUploadStatusAsync(string location, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("ContainerRegistryBlobClient.GetUploadStatus");
-            scope.Start();
-            try
-            {
-                return (await RestClient.GetUploadStatusAsync(location, cancellationToken).ConfigureAwait(false)).GetRawResponse();
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
+            await Task.Delay(0, cancellationToken).ConfigureAwait(false);
+            throw new NotImplementedException();
+            //using var scope = _clientDiagnostics.CreateScope("ContainerRegistryBlobClient.GetUploadStatus");
+            //scope.Start();
+            //try
+            //{
+            //    return (await RestClient.GetUploadStatusAsync(location, cancellationToken).ConfigureAwait(false)).GetRawResponse();
+            //}
+            //catch (Exception e)
+            //{
+            //    scope.Failed(e);
+            //    throw;
+            //}
         }
 
         /// <summary> Retrieve status of upload identified by uuid. The primary purpose of this endpoint is to resolve the current status of a resumable upload. </summary>
         /// <param name="location"> Link acquired from upload start or previous chunk. Note, do not include initial / (must do substring(1) ). </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response GetUploadStatus(string location, CancellationToken cancellationToken = default)
+        public virtual Response<UploadStatusResult> GetUploadStatus(string location, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("ContainerRegistryBlobClient.GetUploadStatus");
-            scope.Start();
-            try
-            {
-                return RestClient.GetUploadStatus(location, cancellationToken).GetRawResponse();
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
+            throw new NotImplementedException();
+
+            //using var scope = _clientDiagnostics.CreateScope("ContainerRegistryBlobClient.GetUploadStatus");
+            //scope.Start();
+            //try
+            //{
+            //    return RestClient.GetUploadStatus(location, cancellationToken).GetRawResponse();
+            //}
+            //catch (Exception e)
+            //{
+            //    scope.Failed(e);
+            //    throw;
+            //}
         }
 
         //// See sample UploadBlobInOneRequest_Monolithic

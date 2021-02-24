@@ -11,5 +11,12 @@ namespace Azure.Containers.ContainerRegistry.Storage.Models
     [CodeGenModel("History")]
     public sealed partial class DockerManifestV1History
     {
+        /// <summary> Initializes a new instance of DockerManifestV1History. </summary>
+        internal DockerManifestV1History()
+        {
+        }
+
+        /// <summary> The raw v1 compatibility information. </summary>
+        public string V1Compatibility { get; }
     }
 }
