@@ -7,9 +7,9 @@ using System.Text;
 
 namespace Azure.Containers.ContainerRegistry.Storage.Models
 {
-    public class UploadStatusResult
+    public class UploadStatus
     {
-        internal UploadStatusResult(HttpRange range, Guid dockerUploadId)
+        internal UploadStatus(HttpRange range, Guid dockerUploadId)
         {
             Range = range;
             UploadId = dockerUploadId;

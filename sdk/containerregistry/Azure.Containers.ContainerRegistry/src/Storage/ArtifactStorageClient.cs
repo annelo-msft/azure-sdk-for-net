@@ -345,16 +345,14 @@ namespace Azure.Containers.ContainerRegistry.Storage
         }
 
         /// <summary> Mount a blob identified by the `mount` parameter from another repository. </summary>
-        /// <param name="from"> Name of the source repository. </param>
-        /// <param name="mount"> Digest of blob to mount from the source repository. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response> MountBlobAsync(string @from, string mount, CancellationToken cancellationToken = default)
+        public virtual async Task<Response> MountBlobAsync(string sourceRepository, string layerDigest, CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("ContainerRegistryBlobClient.MountBlob");
             scope.Start();
             try
             {
-                return (await RestClient.MountBlobAsync(_repositoryName, @from, mount, cancellationToken).ConfigureAwait(false)).GetRawResponse();
+                return (await RestClient.MountBlobAsync(_repositoryName, sourceRepository, layerDigest, cancellationToken).ConfigureAwait(false)).GetRawResponse();
             }
             catch (Exception e)
             {
@@ -364,16 +362,14 @@ namespace Azure.Containers.ContainerRegistry.Storage
         }
 
         /// <summary> Mount a blob identified by the `mount` parameter from another repository. </summary>
-        /// <param name="from"> Name of the source repository. </param>
-        /// <param name="mount"> Digest of blob to mount from the source repository. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response MountBlob(string @from, string mount, CancellationToken cancellationToken = default)
+        public virtual Response MountBlob(string sourceRepository, string layerDigest, CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("ContainerRegistryBlobClient.MountBlob");
             scope.Start();
             try
             {
-                return RestClient.MountBlob(_repositoryName, @from, mount, cancellationToken).GetRawResponse();
+                return RestClient.MountBlob(_repositoryName, sourceRepository, layerDigest, cancellationToken).GetRawResponse();
             }
             catch (Exception e)
             {
@@ -385,7 +381,7 @@ namespace Azure.Containers.ContainerRegistry.Storage
         /// <summary> Retrieve status of upload identified by uuid. The primary purpose of this endpoint is to resolve the current status of a resumable upload. </summary>
         /// <param name="location"> Link acquired from upload start or previous chunk. Note, do not include initial / (must do substring(1) ). </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response> GetUploadStatusAsync(string location, CancellationToken cancellationToken = default)
+        public virtual async Task<Response<UploadStatus>> GetUploadStatusAsync(string location, CancellationToken cancellationToken = default)
         {
             await Task.Delay(0, cancellationToken).ConfigureAwait(false);
             throw new NotImplementedException();
@@ -405,7 +401,7 @@ namespace Azure.Containers.ContainerRegistry.Storage
         /// <summary> Retrieve status of upload identified by uuid. The primary purpose of this endpoint is to resolve the current status of a resumable upload. </summary>
         /// <param name="location"> Link acquired from upload start or previous chunk. Note, do not include initial / (must do substring(1) ). </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response<UploadStatusResult> GetUploadStatus(string location, CancellationToken cancellationToken = default)
+        public virtual Response<UploadStatus> GetUploadStatus(string location, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
 
