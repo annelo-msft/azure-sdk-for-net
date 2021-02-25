@@ -4,7 +4,7 @@
 using System;
 using Azure.Core;
 
-namespace Azure.Containers.ContainerRegistry.Storage.Models
+namespace Azure.Containers.ContainerRegistry.Specialized
 {
     [CodeGenModel("Manifest")]
     public partial class ArtifactManifest

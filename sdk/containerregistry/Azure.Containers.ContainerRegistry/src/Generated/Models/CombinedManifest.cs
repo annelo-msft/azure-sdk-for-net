@@ -8,7 +8,7 @@
 using System.Collections.Generic;
 using Azure.Core;
 
-namespace Azure.Containers.ContainerRegistry.Storage.Models
+namespace Azure.Containers.ContainerRegistry.Specialized
 {
     /// <summary> Returns the requested manifest file. </summary>
     internal partial class CombinedManifest : ArtifactManifest

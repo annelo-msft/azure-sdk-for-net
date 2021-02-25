@@ -6,10 +6,10 @@ using System.Collections.Generic;
 using System.Text;
 using Azure.Core;
 
-namespace Azure.Containers.ContainerRegistry.Storage.Models
+namespace Azure.Containers.ContainerRegistry.Specialized
 {
-    [CodeGenModel("OCIIndex")]
-    public partial class OciIndex
+    [CodeGenModel("ManifestListAttributes")]
+    public partial class ManifestListAttributes
     {
     }
 }

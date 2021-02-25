@@ -6,12 +6,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Azure.Containers.ContainerRegistry.Models;
-using Azure.Containers.ContainerRegistry.Storage.Models;
 using Azure.Core;
 using Azure.Core.Pipeline;
 
-namespace Azure.Containers.ContainerRegistry.Storage
+namespace Azure.Containers.ContainerRegistry.Specialized
 {
     /// <summary> The RepositoryStorageClient service client. </summary>
     public partial class ArtifactStorageClient

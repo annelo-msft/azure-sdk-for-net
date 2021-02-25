@@ -8,7 +8,7 @@
 using System.Text.Json;
 using Azure.Core;
 
-namespace Azure.Containers.ContainerRegistry.Storage.Models
+namespace Azure.Containers.ContainerRegistry.Specialized
 {
     public partial class DockerManifestV1FsLayer : IUtf8JsonSerializable
     {

@@ -8,7 +8,7 @@
 using System.Collections.Generic;
 using Azure.Core;
 
-namespace Azure.Containers.ContainerRegistry.Models
+namespace Azure.Containers.ContainerRegistry
 {
     /// <summary> Deleted repository. </summary>
     public partial class DeleteRepositoryResult

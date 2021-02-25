@@ -6,10 +6,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Azure.Containers.ContainerRegistry.Models;
 using Azure.Core;
 
-namespace Azure.Containers.ContainerRegistry.Authentication
+namespace Azure.Containers.ContainerRegistry.Specialized
 {
     public class ContainerRegistryStsClient
     {

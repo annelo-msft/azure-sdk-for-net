@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using Azure.Core;
 
-namespace Azure.Containers.ContainerRegistry.Storage.Models
+namespace Azure.Containers.ContainerRegistry.Specialized
 {
     /// <summary> Docker V2 image layer descriptor including config and layers. </summary>
     public partial class ContentDescriptor

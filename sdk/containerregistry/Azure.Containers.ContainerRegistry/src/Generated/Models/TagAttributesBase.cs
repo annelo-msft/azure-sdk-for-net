@@ -7,7 +7,7 @@
 
 using System;
 
-namespace Azure.Containers.ContainerRegistry.Models
+namespace Azure.Containers.ContainerRegistry
 {
     /// <summary> Tag attribute details. </summary>
     internal partial class TagAttributesBase

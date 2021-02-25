@@ -35,8 +35,8 @@ namespace ContainerRegistrySamples
             Console.WriteLine($"Tag {tag.ImageName}:{tag.Name} was created at {tag.CreatedTime}");
             Console.WriteLine($"Tag {tag.ImageName}:{tag.Name} was last updated at {tag.LastUpdateTime}");
 
-            // TODO: What is the story here?
-            Console.WriteLine($"Tag IsSigned is {tag.IsSigned}");
+            // TODO: What is the story here? -- we won't expose this - content trust is being deprecated
+            //Console.WriteLine($"Tag IsSigned is {tag.IsSigned}");
 
             Console.WriteLine($"Tag {tag.ImageName}:{tag.Name} permissions are:");
             Console.WriteLine($"    CanList: {tag.Permissions.CanList}");

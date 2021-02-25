@@ -5,7 +5,7 @@
 
 #nullable disable
 
-namespace Azure.Containers.ContainerRegistry.Storage.Models
+namespace Azure.Containers.ContainerRegistry.Specialized
 {
     /// <summary> A list of unstructured historical data for v1 compatibility. </summary>
     public partial class DockerManifestV1History

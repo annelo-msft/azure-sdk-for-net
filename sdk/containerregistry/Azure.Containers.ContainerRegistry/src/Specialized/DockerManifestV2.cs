@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Azure.Core;
 
-namespace Azure.Containers.ContainerRegistry.Storage.Models
+namespace Azure.Containers.ContainerRegistry.Specialized
 {
     [CodeGenModel("V2Manifest")]
     public partial class DockerManifestV2

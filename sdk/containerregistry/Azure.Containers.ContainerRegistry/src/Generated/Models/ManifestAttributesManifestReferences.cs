@@ -5,7 +5,7 @@
 
 #nullable disable
 
-namespace Azure.Containers.ContainerRegistry.Models
+namespace Azure.Containers.ContainerRegistry
 {
     /// <summary> Manifest attributes details. </summary>
     internal partial class ManifestAttributesManifestReferences

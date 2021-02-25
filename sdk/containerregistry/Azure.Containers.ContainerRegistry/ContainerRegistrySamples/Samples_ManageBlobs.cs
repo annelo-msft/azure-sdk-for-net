@@ -7,10 +7,8 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Azure.Containers.ContainerRegistry;
-using Azure.Containers.ContainerRegistry.Storage;
-using Azure.Containers.ContainerRegistry.Models;
+using Azure.Containers.ContainerRegistry.Specialized;
 using Azure.Identity;
-using Azure.Containers.ContainerRegistry.Storage.Models;
 
 namespace ContainerRegistrySamples
 {

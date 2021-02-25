@@ -5,7 +5,7 @@
 
 #nullable disable
 
-namespace Azure.Containers.ContainerRegistry.Models
+namespace Azure.Containers.ContainerRegistry
 {
     /// <summary> Changeable attributes. </summary>
     internal partial class ManifestChangeableAttributes

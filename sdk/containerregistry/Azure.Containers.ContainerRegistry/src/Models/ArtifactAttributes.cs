@@ -4,10 +4,10 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Azure.Containers.ContainerRegistry.Storage.Models;
+using Azure.Containers.ContainerRegistry.Specialized;
 using Azure.Core;
 
-namespace Azure.Containers.ContainerRegistry.Models
+namespace Azure.Containers.ContainerRegistry
 {
     [CodeGenModel("ManifestAttributes")]
     public partial class ArtifactAttributes

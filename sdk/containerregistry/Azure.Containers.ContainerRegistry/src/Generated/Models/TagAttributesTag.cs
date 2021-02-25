@@ -5,7 +5,7 @@
 
 #nullable disable
 
-namespace Azure.Containers.ContainerRegistry.Models
+namespace Azure.Containers.ContainerRegistry
 {
     /// <summary> Tag. </summary>
     internal partial class TagAttributesTag

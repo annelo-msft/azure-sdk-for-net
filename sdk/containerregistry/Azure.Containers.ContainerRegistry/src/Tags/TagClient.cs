@@ -8,8 +8,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Azure;
-using Azure.Containers.ContainerRegistry.Models;
-using Azure.Containers.ContainerRegistry.Storage;
+using Azure.Containers.ContainerRegistry.Specialized;
 using Azure.Core;
 using Azure.Core.Pipeline;
 

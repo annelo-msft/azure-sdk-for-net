@@ -7,7 +7,7 @@
 
 using System;
 
-namespace Azure.Containers.ContainerRegistry.Models
+namespace Azure.Containers.ContainerRegistry
 {
     /// <summary> Repository attributes. </summary>
     public partial class RepositoryAttributes

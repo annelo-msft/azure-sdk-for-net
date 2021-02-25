@@ -7,7 +7,7 @@ using System.IO;
 using System.Text;
 using Azure.Core;
 
-namespace Azure.Containers.ContainerRegistry.Storage.Models
+namespace Azure.Containers.ContainerRegistry.Specialized
 {
     [CodeGenModel("Descriptor")]
     public partial class ContentDescriptor

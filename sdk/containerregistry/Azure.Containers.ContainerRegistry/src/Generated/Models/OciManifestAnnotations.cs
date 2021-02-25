@@ -10,7 +10,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Azure.Core;
 
-namespace Azure.Containers.ContainerRegistry.Storage.Models
+namespace Azure.Containers.ContainerRegistry.Specialized
 {
     /// <summary> Additional information provided through arbitrary metadata. </summary>
     public partial class OciManifestAnnotations : IDictionary<string, object>

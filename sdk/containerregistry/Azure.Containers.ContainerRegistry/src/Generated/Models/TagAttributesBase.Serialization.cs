@@ -9,7 +9,7 @@ using System;
 using System.Text.Json;
 using Azure.Core;
 
-namespace Azure.Containers.ContainerRegistry.Models
+namespace Azure.Containers.ContainerRegistry
 {
     internal partial class TagAttributesBase
     {

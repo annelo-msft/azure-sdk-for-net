@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using Azure.Core;
 
-namespace Azure.Containers.ContainerRegistry.Storage.Models
+namespace Azure.Containers.ContainerRegistry.Specialized
 {
     [CodeGenModel("ImageSignature")]
     public sealed partial class DockerManifestV1ImageSignature

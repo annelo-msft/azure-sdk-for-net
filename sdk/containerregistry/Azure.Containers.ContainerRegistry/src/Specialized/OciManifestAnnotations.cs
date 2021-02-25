@@ -6,10 +6,10 @@ using System.Collections.Generic;
 using System.Text;
 using Azure.Core;
 
-namespace Azure.Containers.ContainerRegistry.Storage.Models
+namespace Azure.Containers.ContainerRegistry.Specialized
 {
-    [CodeGenModel("ManifestList")]
-    public partial class DockerManifestList
+    [CodeGenModel("Annotations")]
+    public partial class OciManifestAnnotations
     {
     }
 }

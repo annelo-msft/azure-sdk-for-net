@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using Azure.Core;
 
-namespace Azure.Containers.ContainerRegistry.Models
+namespace Azure.Containers.ContainerRegistry.Specialized
 {
     [CodeGenModel("RefreshToken")]
     internal partial class AcrRefreshToken
