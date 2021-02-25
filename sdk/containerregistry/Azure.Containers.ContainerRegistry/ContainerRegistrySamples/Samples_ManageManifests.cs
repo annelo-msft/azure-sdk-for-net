@@ -18,10 +18,10 @@ namespace ContainerRegistrySamples
 
             Console.WriteLine($"Repository hello-world contains the following manifests:");
 
-            AsyncPageable<ArtifactAttributes> manifests = repositoryClient.GetManifestsAsync();
-            await foreach (var manifestAttributes in manifests)
+            AsyncPageable<ArtifactAttributes> artifacts = repositoryClient.GetArtifactsAsync();
+            await foreach (var artifact in artifacts)
             {
-                PrintManifestAttributes(manifestAttributes);
+                PrintManifestAttributes(artifact);
             }
         }
 
@@ -145,36 +145,36 @@ namespace ContainerRegistrySamples
         }
 
 
-        private void PrintManifestAttributes(ArtifactAttributes manifestAttributes)
+        private void ArtifactAttributes(ArtifactAttributes artifactAttributes)
         {
             // Print Manifest
-            Console.WriteLine($"Manifest repository and digest are {manifestAttributes.ImageName}:{manifestAttributes.Digest}");
-            Console.WriteLine($"Manifest registry is {manifestAttributes.Registry}");
+            Console.WriteLine($"Manifest repository and digest are {artifactAttributes.Name}:{artifactAttributes.Digest}");
+            Console.WriteLine($"Manifest registry is {artifactAttributes.Registry}");
 
-            Console.WriteLine($"Manifest {manifestAttributes.ImageName}:{manifestAttributes.Digest} was created at {manifestAttributes.CreatedTime}");
-            Console.WriteLine($"Manifest {manifestAttributes.ImageName}:{manifestAttributes.Digest} was last updated at {manifestAttributes.LastUpdateTime}");
+            Console.WriteLine($"Manifest {artifactAttributes.Name}:{artifactAttributes.Digest} was created at {artifactAttributes.CreatedTime}");
+            Console.WriteLine($"Manifest {artifactAttributes.Name}:{artifactAttributes.Digest} was last updated at {artifactAttributes.LastUpdateTime}");
 
             // TODO: is this the right unit on size?
-            Console.WriteLine($"Manifest {manifestAttributes.ImageName}:{manifestAttributes.Digest} is {manifestAttributes.ImageSize} bytes.");
+            Console.WriteLine($"Manifest {artifactAttributes.Name}:{artifactAttributes.Digest} is {artifactAttributes.ImageSize} bytes.");
 
             // TODO: better stated - image supports running on <architecture>?  What's the right verbiage here?
-            Console.WriteLine($"Manifest {manifestAttributes.ImageName}:{manifestAttributes.Digest} CPU architecture is {manifestAttributes.CpuArchitecture}.");
-            Console.WriteLine($"Manifest {manifestAttributes.ImageName}:{manifestAttributes.Digest} OS is {manifestAttributes.OperatingSystem}.");
+            Console.WriteLine($"Manifest {artifactAttributes.Name}:{artifactAttributes.Digest} CPU architecture is {artifactAttributes.CpuArchitecture}.");
+            Console.WriteLine($"Manifest {artifactAttributes.Name}:{artifactAttributes.Digest} OS is {artifactAttributes.OperatingSystem}.");
 
-            Console.WriteLine($"Manifest {manifestAttributes.ImageName}:{manifestAttributes.Digest} MediaType is {manifestAttributes.ManifestMediaType}.");
-            Console.WriteLine($"Manifest {manifestAttributes.ImageName}:{manifestAttributes.Digest} ConfigMediaType is {manifestAttributes.ConfigMediaType}.");
+            Console.WriteLine($"Manifest {artifactAttributes.Name}:{artifactAttributes.Digest} MediaType is {artifactAttributes.ManifestMediaType}.");
+            Console.WriteLine($"Manifest {artifactAttributes.Name}:{artifactAttributes.Digest} ConfigMediaType is {artifactAttributes.ConfigMediaType}.");
 
-            Console.WriteLine($"Manifest {manifestAttributes.ImageName}:{manifestAttributes.Digest} is tagged with the following tags:");
-            foreach (string tag in manifestAttributes.Tags)
+            Console.WriteLine($"Manifest {artifactAttributes.ImageName}:{artifactAttributes.Digest} is tagged with the following tags:");
+            foreach (string tag in artifactAttributes.Tags)
             {
                 Console.WriteLine(tag);
             }
 
-            Console.WriteLine($"Manifest {manifestAttributes.ImageName}:{manifestAttributes.Digest} permissions are:");
-            Console.WriteLine($"    CanList: {manifestAttributes.Permissions.CanList}");
-            Console.WriteLine($"    CanRead: {manifestAttributes.Permissions.CanRead}");
-            Console.WriteLine($"    CanWrite: {manifestAttributes.Permissions.CanWrite}");
-            Console.WriteLine($"    CanDelete: {manifestAttributes.Permissions.CanDelete}");
+            Console.WriteLine($"Manifest {artifactAttributes.ImageName}:{artifactAttributes.Digest} permissions are:");
+            Console.WriteLine($"    CanList: {artifactAttributes.Permissions.CanList}");
+            Console.WriteLine($"    CanRead: {artifactAttributes.Permissions.CanRead}");
+            Console.WriteLine($"    CanWrite: {artifactAttributes.Permissions.CanWrite}");
+            Console.WriteLine($"    CanDelete: {artifactAttributes.Permissions.CanDelete}");
         }
     }
 }

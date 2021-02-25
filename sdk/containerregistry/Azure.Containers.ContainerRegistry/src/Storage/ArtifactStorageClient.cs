@@ -346,13 +346,13 @@ namespace Azure.Containers.ContainerRegistry.Storage
 
         /// <summary> Mount a blob identified by the `mount` parameter from another repository. </summary>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response> MountBlobAsync(string sourceRepository, string layerDigest, CancellationToken cancellationToken = default)
+        public virtual async Task<Response> MountBlobAsync(string sourceRepository, string blobDigest, CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("ContainerRegistryBlobClient.MountBlob");
             scope.Start();
             try
             {
-                return (await RestClient.MountBlobAsync(_repositoryName, sourceRepository, layerDigest, cancellationToken).ConfigureAwait(false)).GetRawResponse();
+                return (await RestClient.MountBlobAsync(_repositoryName, sourceRepository, blobDigest, cancellationToken).ConfigureAwait(false)).GetRawResponse();
             }
             catch (Exception e)
             {
@@ -363,13 +363,13 @@ namespace Azure.Containers.ContainerRegistry.Storage
 
         /// <summary> Mount a blob identified by the `mount` parameter from another repository. </summary>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response MountBlob(string sourceRepository, string layerDigest, CancellationToken cancellationToken = default)
+        public virtual Response MountBlob(string sourceRepository, string blobDigest, CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("ContainerRegistryBlobClient.MountBlob");
             scope.Start();
             try
             {
-                return RestClient.MountBlob(_repositoryName, sourceRepository, layerDigest, cancellationToken).GetRawResponse();
+                return RestClient.MountBlob(_repositoryName, sourceRepository, blobDigest, cancellationToken).GetRawResponse();
             }
             catch (Exception e)
             {

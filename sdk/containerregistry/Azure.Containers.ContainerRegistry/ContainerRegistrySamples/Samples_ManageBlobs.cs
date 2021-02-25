@@ -20,7 +20,7 @@ namespace ContainerRegistrySamples
         {
             // Monolithic upload
             ContainerRegistryClient registryClient = new ContainerRegistryClient(new Uri("myacr.azurecr.io"), new DefaultAzureCredential());
-            ArtifactClient repositoryClient = registryClient.GetRepositoryClient("hello-world");
+            RepositoryClient repositoryClient = registryClient.GetRepositoryClient("hello-world");
             ArtifactStorageClient storageClient = repositoryClient.GetArtifactStorageClient();
 
             //POST INITIATE BLOB UPLOAD
@@ -43,7 +43,7 @@ namespace ContainerRegistrySamples
             //return uploadedLayerEnd.DockerContentDigest == digest;
 
             ContainerRegistryClient registryClient = new ContainerRegistryClient(new Uri("myacr.azurecr.io"), new DefaultAzureCredential());
-            ArtifactClient repositoryClient = registryClient.GetRepositoryClient("hello-world");
+            RepositoryClient repositoryClient = registryClient.GetRepositoryClient("hello-world");
             ArtifactStorageClient storageClient = repositoryClient.GetArtifactStorageClient();
 
 
@@ -62,7 +62,7 @@ namespace ContainerRegistrySamples
         public async Task UploadBlob_ResumableUploadInSeveralChunks()
         {
             ContainerRegistryClient registryClient = new ContainerRegistryClient(new Uri("myacr.azurecr.io"), new DefaultAzureCredential());
-            ArtifactClient repositoryClient = registryClient.GetRepositoryClient("hello-world");
+            RepositoryClient repositoryClient = registryClient.GetRepositoryClient("hello-world");
             ArtifactStorageClient storageClient = repositoryClient.GetArtifactStorageClient();
 
             CreateUploadResult uploadDetails = await storageClient.CreateUploadAsync();

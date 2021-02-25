@@ -22,17 +22,22 @@ namespace Azure.Containers.ContainerRegistry.Storage.Models
         }
 
         /// <summary> Layer media type. </summary>
-        public string MediaType { get; }
+        public string MediaType { get; set; }
         /// <summary> Layer size. </summary>
-        public long? Size { get; }
+        public long? Size { get; set; }
         /// <summary> Layer digest. </summary>
-        public string Digest { get; }
+        public string Digest { get; set; }
 
         /// <summary> Specifies a list of URIs from which this object may be downloaded. </summary>
         public IList<Uri> Urls { get; }
 
         /// <summary> Additional information provided through arbitrary metadata. </summary>
         public OciManifestAnnotations Annotations { get; }
+
+        public Stream ToStream()
+        {
+            throw new NotImplementedException();
+        }
 
         public static string ComputeDigest(Stream stream)
         {

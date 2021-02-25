@@ -18,13 +18,9 @@ namespace ContainerRegistrySamples
     {
         public async Task PushImageFromDirectory_DockerV2Manifest()
         {
-            //var registryClient = new ContainerRegistryClient(new Uri("myacr.azurecr.io"), new DefaultAzureCredential());
-            //var repositoryClient = registryClient.GetRepositoryClient("hello-world");
-            //var storageClient = repositoryClient.GetContainerStorageClient();
-
             ArtifactStorageClient client = new ArtifactStorageClient(new Uri("myacr.azurecr.io"), "hello-world", new DefaultAzureCredential());
 
-            string directory = @"c:\src\images\hello-world";
+            string directory = @"c:\path\to\image";
 
             if (!Directory.Exists(directory))
             {
@@ -93,6 +89,67 @@ namespace ContainerRegistrySamples
             // TODO: Is it a semantically different operation if I pass in a tag or a digest?
             // Note: this method will throw an exception if the content has been tampered with.
             await client.CreateManifestAsync(manifest);
+            
+        }
+
+
+        public async Task PushImageFromDirectory_DockerV2Manifest2()
+        {
+            ArtifactStorageClient client = new ArtifactStorageClient(new Uri("myacr.azurecr.io"), "hello-world", new DefaultAzureCredential());
+
+            string directory = @"c:\path\to\image";
+
+            if (!Directory.Exists(directory))
+            {
+                throw new Exception($"{directory} not found");
+            }
+
+            var manifestFilePath = Path.Join(directory, "manifest.json");
+            var configFilePath = Path.Join(directory, "config.json");
+
+
+            // Upload the config file
+            if (!File.Exists(configFilePath!))
+            {
+                throw new FileNotFoundException($"File not found.", manifestFilePath);
+            }
+
+            using (var fs = File.OpenRead(configFilePath))
+            {
+                CreateUploadResult upload = await client.CreateUploadAsync();
+                UploadChunkResult uploadChunkResult = await client.UploadChunkAsync(upload, fs);
+                CompleteUploadResult completeUploadResult = await client.CompleteUploadAsync(upload, ContentDescriptor.ComputeDigest(fs));
+            }
+
+            // Upload each layer.
+            foreach (var file in Directory.GetFiles(directory))
+            {
+                if (file == manifestFilePath && file == configFilePath)
+                {
+                    continue;
+                }
+
+                using (var fs = File.OpenRead(file))
+                {
+                    CreateUploadResult upload = await client.CreateUploadAsync();
+                    UploadChunkResult uploadChunkResult = await client.UploadChunkAsync(upload, fs);
+                    CompleteUploadResult completeUploadResult = await client.CompleteUploadAsync(upload, ContentDescriptor.ComputeDigest(fs));
+                }
+            }
+
+            if (!File.Exists(manifestFilePath))
+            {
+                throw new FileNotFoundException($"File not found.", manifestFilePath);
+            }
+
+            DockerManifestV2 manifest = null;
+            using (var fs = File.OpenRead(manifestFilePath))
+            {
+                manifest = DockerManifestV2.FromStream(fs);
+            }
+
+            // Finally, upload the manifest.
+            await client.CreateManifestAsync(manifest);
         }
 
         public async Task PushImage_DockerV2Manifest()
@@ -103,8 +160,45 @@ namespace ContainerRegistrySamples
 
             ArtifactStorageClient client = new ArtifactStorageClient(new Uri("myacr.azurecr.io"), "hello-world", new DefaultAzureCredential());
 
-            // TODO: what is the scenario for newing a Manifest up programmatically?
+            ContentDescriptor configDescriptor = new ContentDescriptor()
+            {
+                MediaType = (string)ConfigMediaType.DockerImageV1
+            };
 
+            using Stream configStream = configDescriptor.ToStream();
+            configDescriptor.Size = configStream.Length;
+            configDescriptor.Digest = ContentDescriptor.ComputeDigest(configStream);
+
+            CreateUploadResult upload = await client.CreateUploadAsync();
+            UploadChunkResult uploadChunkResult = await client.UploadChunkAsync(upload, configStream);
+            CompleteUploadResult completeUploadResult = await client.CompleteUploadAsync(upload, configDescriptor.Digest);
+
+            string layerFile = @"path\to\layer";
+
+            ContentDescriptor layerDescriptor = new ContentDescriptor()
+            {
+                // TODO: make an enum of these values
+                MediaType = "application/vnd.docker.image.rootfs.diff.tar.gzip",
+            };
+
+            using (var fs = File.OpenRead(layerFile))
+            {
+                layerDescriptor.Size = fs.Length;
+                layerDescriptor.Digest = ContentDescriptor.ComputeDigest(fs);
+                upload = await client.CreateUploadAsync();
+                uploadChunkResult = await client.UploadChunkAsync(upload, fs);
+                completeUploadResult = await client.CompleteUploadAsync(upload, ContentDescriptor.ComputeDigest(fs));
+            }
+
+            DockerManifestV2 manifest = new DockerManifestV2()
+            {
+                ConfigDescriptor = configDescriptor,
+                MediaType = ManifestMediaType.DockerManifestV2
+            };
+            
+            manifest.Layers.Add(layerDescriptor);
+
+            await client.CreateManifestAsync(manifest);
         }
 
         public async Task PushImageViaDockerCli()

@@ -11,12 +11,12 @@ namespace Azure.Containers.ContainerRegistry.Storage.Models
     {
         internal ArtifactManifest() { }
 
-        internal string Digest { get; }
+        internal string Digest { get; set; }
 
-        public ManifestMediaType MediaType { get; internal set; }
+        public ManifestMediaType MediaType { get; set; }
 
         /// <summary> Schema version. </summary>
-        public int SchemaVersion { get; }
+        public int SchemaVersion { get; set; }
 
         public DockerManifestV1 AsDockerManifestV1()
         {

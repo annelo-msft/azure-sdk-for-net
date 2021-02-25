@@ -40,24 +40,25 @@ namespace ContainerRegistrySamples
             {
                 Console.WriteLine($"Repository name: {repositoryName}");
 
-                ArtifactClient repositoryClient = registryClient.GetRepositoryClient(repositoryName);
-                AsyncPageable<ArtifactAttributes> manifests = repositoryClient.GetManifestsAsync(
+                RepositoryClient repositoryClient = registryClient.GetRepositoryClient(repositoryName);
+
+                AsyncPageable<ArtifactAttributes> artifacts = repositoryClient.GetArtifactsAsync(
                     new GetArtifactOptions(orderBy: ArtifactOrderBy.LastUpdateTimeDescending)
                 );
 
                 int manifestCount = 0;
                 int manifestsToKeep = 3;
-                await foreach (ArtifactAttributes manifest in manifests)
+                await foreach (ArtifactAttributes artifact in artifacts)
                 {
                     if (manifestCount >= manifestsToKeep)
                     { 
-                        Console.WriteLine($"Deleting manifest with digest {manifest.Digest}.");
+                        Console.WriteLine($"Deleting manifest with digest {artifact.ManifestDigest}.");
                         Console.WriteLine($"   This corresponds to the following tagged images: ");
-                        foreach (var tagName in manifest.Tags)
+                        foreach (var tagName in artifact.Tags)
                         {
-                            Console.WriteLine($"        {manifest.ImageName}:{tagName}");
+                            Console.WriteLine($"        {artifact.Name}:{tagName}");
                         }
-                        await repositoryClient.DeleteManifestAsync(repositoryName, manifest.Digest);
+                        await repositoryClient.DeleteArtifactAsync(repositoryName, artifact.ManifestDigest);
                     }
 
                     manifestCount++;
@@ -69,8 +70,6 @@ namespace ContainerRegistrySamples
 
         public async Task ViewManifestsInRepository()
         {
-            var client = new TagClient(new Uri("myacr.azurecr.io"), "hello-world", new DefaultAzureCredential());
-
             //// TODO: I don't think we need name here, because we specified the image name as the repository in the constructor.  Is this correct?
             //// TODO: This should be pageable
             //// TODO: Pageable of what?  It's meta-data about the manifest, so let's call it ManifestInfo for now...

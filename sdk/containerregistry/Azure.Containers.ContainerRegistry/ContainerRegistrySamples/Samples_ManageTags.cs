@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Azure;
@@ -101,9 +102,12 @@ namespace ContainerRegistrySamples
         {
             // We can only update the permissions component of the tag metadata - everything else is read-only
 
-            var registryClient = new ContainerRegistryClient(new Uri("myacr.azurecr.io"), new DefaultAzureCredential());
-            var repositoryClient = registryClient.GetRepositoryClient("hello-world");
-
+            ContainerRegistryClient registryClient = new ContainerRegistryClient(
+                new Uri("myacr.azurecr.io"),
+                new AzureAdminUserCredential("username", "password"));
+            RepositoryClient repositoryClient = registryClient.GetRepositoryClient("hello-world");
+            TagClient tagClient = repositoryClient.GetTagClient("v3");
+            
             ContentPermissions permissions = new ContentPermissions()
             {
                 CanList = true,
@@ -112,9 +116,20 @@ namespace ContainerRegistrySamples
                 CanDelete = false
             };
 
-            await repositoryClient.SetManifestPermissionsAsync("latest", permissions);
+            await tagClient.SetPermissionsAsync(permissions);
 
-            // TODO: show that trying to write to this tag fails.  Also, what is the bigger story here? 
+
+            ArtifactClient imageClient = repositoryClient.GetArtifactClient(new ArtifactReference("v3"));
+            Console.WriteLine($"Updating {imageClient.RepositoryName}:{imageClient.Reference.Tag}");
+            try
+            {
+                using FileStream fs = File.OpenRead(@"c:\path\to\image-manifest");
+                await imageClient.PushAsync(fs);
+            }
+            catch (RequestFailedException e)
+            {
+                Console.WriteLine($"Failed to push image.  Error was {e.Message}.");
+            }
         }
 
         public async Task DeleteTag()
