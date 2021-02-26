@@ -15,23 +15,22 @@ namespace Azure.Containers.ContainerRegistry
         public string Name { get; }
 
         [CodeGenMember("Registry")]
-        public string RegistryName { get; }
+        internal string RegistryName { get; }
 
-        public string ManifestDigest { get { return Attributes.Digest; } }
+        public string Digest { get { return Attributes.Digest; } }
 
-        // TODO: Why is this nullable?  does it need to be?
-        // TODO: Size in Bytes?
+        // Qn: Why is this nullable?  does it need to be?  Yes, it's null if the value is not known.
         public long? Size { get { return Attributes.ImageSize.Value; } }
 
-        // TODO: Why is this nullable?  does it need to be?
-        public DateTimeOffset? CreatedTime { get { return Attributes.CreatedTime.Value; } }
+        public DateTimeOffset CreatedTime { get { return Attributes.CreatedTime.Value; } }
 
-        // TODO: Why is this nullable?  does it need to be?
-        public DateTimeOffset? LastUpdateTime { get { return Attributes.LastUpdateTime.Value; } }
+        public DateTimeOffset LastUpdateTime { get { return Attributes.LastUpdateTime.Value; } }
 
         public string CpuArchitecture { get { return Attributes.Architecture; } }
 
         public string OperatingSystem { get { return Attributes.Os; } }
+
+        public IReadOnlyList<ChildItemProperties> RepositoryItems { get; }
 
         internal string ManifestMediaType { get { return Attributes.MediaType; } }
 

@@ -109,42 +109,6 @@ namespace Azure.Containers.ContainerRegistry
             throw new NotImplementedException();
         }
 
-        /// <summary> Get repository attributes. </summary>
-        /// <param name="respository"> Name of the image (including the namespace). </param>
-        /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response<RepositoryProperties>> GetRepositoryPropertiesAsync(string respository, CancellationToken cancellationToken = default)
-        {
-            using var scope = _clientDiagnostics.CreateScope("ContainerRegistryClient.GetRepositoryAttributes");
-            scope.Start();
-            try
-            {
-                return await RestClient.GetRepositoryAttributesAsync(respository, cancellationToken).ConfigureAwait(false);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
-        }
-
-        /// <summary> Get repository attributes. </summary>
-        /// <param name="respository"> Name of the image (including the namespace). </param>
-        /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response<RepositoryProperties> GetRepositoryProperties(string respository, CancellationToken cancellationToken = default)
-        {
-            using var scope = _clientDiagnostics.CreateScope("ContainerRegistryClient.GetRepositoryAttributes");
-            scope.Start();
-            try
-            {
-                return RestClient.GetRepositoryAttributes(respository, cancellationToken);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
-        }
-
         /// <summary> Delete the repository identified by `name`. </summary>
         /// <param name="respository"> Name of the image (including the namespace). </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>

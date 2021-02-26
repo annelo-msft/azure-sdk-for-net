@@ -13,7 +13,7 @@ namespace Azure.Containers.ContainerRegistry
     {
         /// <summary> SHA of the deleted image. </summary>
         [CodeGenMember("ManifestsDeleted")]
-        public IReadOnlyList<string> DeletedRepositoryItems { get; }
+        public IReadOnlyList<string> DeletedItemDigests { get; }
 
         /// <summary> Tag of the deleted image. </summary>
         [CodeGenMember("TagsDeleted")]

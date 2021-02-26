@@ -18,6 +18,15 @@ namespace Azure.Containers.ContainerRegistry
         public ContentPermissions Permissions { get; }
 
         [CodeGenMember("ManifestCount")]
-        public int? RepositoryItemCount { get; }
+        public int ItemCount { get; }
+
+        [CodeGenMember("CreatedTime")]
+        public DateTimeOffset CreatedTime { get; }
+        
+        [CodeGenMember("LastUpdateTime")]
+        public DateTimeOffset LastUpdateTime { get; }
+        
+        [CodeGenMember("TagCount")]
+        public int TagCount { get; }
     }
 }

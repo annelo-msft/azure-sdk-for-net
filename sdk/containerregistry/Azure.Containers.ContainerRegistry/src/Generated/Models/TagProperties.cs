@@ -17,18 +17,13 @@ namespace Azure.Containers.ContainerRegistry
 
         /// <summary> Initializes a new instance of TagProperties. </summary>
         /// <param name="registry"> Registry name. </param>
-        /// <param name="imageName"> Image name. </param>
+        /// <param name="repository"> Image name. </param>
         /// <param name="attributes"> List of tag attribute details. </param>
-        internal TagProperties(string registry, string imageName, TagAttributesBase attributes)
+        internal TagProperties(string registry, string repository, TagAttributesBase attributes)
         {
             Registry = registry;
-            ImageName = imageName;
+            Repository = repository;
             Attributes = attributes;
         }
-
-        /// <summary> Registry name. </summary>
-        public string Registry { get; }
-        /// <summary> Image name. </summary>
-        public string ImageName { get; }
     }
 }

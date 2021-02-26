@@ -85,7 +85,7 @@ namespace Azure.Containers.ContainerRegistry
                     continue;
                 }
             }
-            return new RepositoryProperties(registry.Value, imageName.Value, Optional.ToNullable(createdTime), Optional.ToNullable(lastUpdateTime), Optional.ToNullable(manifestCount), Optional.ToNullable(tagCount), changeableAttributes.Value);
+            return new RepositoryProperties(registry.Value, imageName.Value, createdTime, lastUpdateTime, manifestCount, tagCount, changeableAttributes.Value);
         }
     }
 }

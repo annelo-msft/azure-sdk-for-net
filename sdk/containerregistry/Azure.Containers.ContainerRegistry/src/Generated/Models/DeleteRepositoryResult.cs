@@ -16,16 +16,16 @@ namespace Azure.Containers.ContainerRegistry
         /// <summary> Initializes a new instance of DeleteRepositoryResult. </summary>
         internal DeleteRepositoryResult()
         {
-            DeletedRepositoryItems = new ChangeTrackingList<string>();
+            DeletedItemDigests = new ChangeTrackingList<string>();
             DeletedTags = new ChangeTrackingList<string>();
         }
 
         /// <summary> Initializes a new instance of DeleteRepositoryResult. </summary>
-        /// <param name="deletedRepositoryItems"> SHA of the deleted image. </param>
+        /// <param name="deletedItemDigests"> SHA of the deleted image. </param>
         /// <param name="deletedTags"> Tag of the deleted image. </param>
-        internal DeleteRepositoryResult(IReadOnlyList<string> deletedRepositoryItems, IReadOnlyList<string> deletedTags)
+        internal DeleteRepositoryResult(IReadOnlyList<string> deletedItemDigests, IReadOnlyList<string> deletedTags)
         {
-            DeletedRepositoryItems = deletedRepositoryItems;
+            DeletedItemDigests = deletedItemDigests;
             DeletedTags = deletedTags;
         }
     }
