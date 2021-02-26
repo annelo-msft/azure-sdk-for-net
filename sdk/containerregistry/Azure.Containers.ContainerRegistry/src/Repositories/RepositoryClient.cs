@@ -87,7 +87,7 @@ namespace Azure.Containers.ContainerRegistry
             throw new NotImplementedException();
         }
 
-        public virtual async Task<Response<RepositoryAttributes>> GetAttributesAsync(CancellationToken cancellationToken = default)
+        public virtual async Task<Response<RepositoryProperties>> GetPropertiesAsync(CancellationToken cancellationToken = default)
         {
             await Task.Delay(0, cancellationToken).ConfigureAwait(false);
             throw new NotImplementedException();
@@ -95,7 +95,7 @@ namespace Azure.Containers.ContainerRegistry
             // TODO: Get Repository Attributes
         }
 
-        public virtual Response<RepositoryAttributes> GetAttributes(CancellationToken cancellationToken = default)
+        public virtual Response<RepositoryProperties> GetProperties(CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
@@ -177,7 +177,7 @@ namespace Azure.Containers.ContainerRegistry
 
         /// <summary> List tags of a repository. </summary>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual AsyncPageable<TagAttributes> GetTagsAsync(GetTagOptions options = null, CancellationToken cancellationToken = default)
+        public virtual AsyncPageable<TagProperties> GetTagsAsync(GetTagOptions options = null, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
             //using var scope = _clientDiagnostics.CreateScope("ContainerRegistryRepositoryClient.GetTags");
@@ -195,7 +195,7 @@ namespace Azure.Containers.ContainerRegistry
 
         /// <summary> List tags of a repository. </summary>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Pageable<TagAttributes> GetTags(GetTagOptions options = null, CancellationToken cancellationToken = default)
+        public virtual Pageable<TagProperties> GetTags(GetTagOptions options = null, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
             //using var scope = _clientDiagnostics.CreateScope("ContainerRegistryRepositoryClient.GetTags");
@@ -249,7 +249,7 @@ namespace Azure.Containers.ContainerRegistry
         // caller confusion?
         /// <summary> List manifests of a repository. </summary>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual AsyncPageable<ArtifactAttributes> GetArtifactsAsync(GetArtifactOptions options = null, CancellationToken cancellationToken = default)
+        public virtual AsyncPageable<ArtifactProperties> GetArtifactsAsync(GetArtifactOptions options = null, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
 
@@ -270,7 +270,7 @@ namespace Azure.Containers.ContainerRegistry
 
         /// <summary> List manifests of a repository. </summary>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Pageable<ArtifactAttributes> GetArtifacts(GetArtifactOptions options = null, CancellationToken cancellationToken = default)
+        public virtual Pageable<ArtifactProperties> GetArtifacts(GetArtifactOptions options = null, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
 

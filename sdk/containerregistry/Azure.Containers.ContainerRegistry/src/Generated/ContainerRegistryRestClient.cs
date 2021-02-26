@@ -166,7 +166,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="name"> Name of the image (including the namespace). </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> is null. </exception>
-        public async Task<Response<RepositoryAttributes>> GetRepositoryAttributesAsync(string name, CancellationToken cancellationToken = default)
+        public async Task<Response<RepositoryProperties>> GetRepositoryAttributesAsync(string name, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {
@@ -179,9 +179,9 @@ namespace Azure.Containers.ContainerRegistry
             {
                 case 200:
                     {
-                        RepositoryAttributes value = default;
+                        RepositoryProperties value = default;
                         using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
-                        value = RepositoryAttributes.DeserializeRepositoryAttributes(document.RootElement);
+                        value = RepositoryProperties.DeserializeRepositoryProperties(document.RootElement);
                         return Response.FromValue(value, message.Response);
                     }
                 default:
@@ -193,7 +193,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="name"> Name of the image (including the namespace). </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> is null. </exception>
-        public Response<RepositoryAttributes> GetRepositoryAttributes(string name, CancellationToken cancellationToken = default)
+        public Response<RepositoryProperties> GetRepositoryAttributes(string name, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {
@@ -206,9 +206,9 @@ namespace Azure.Containers.ContainerRegistry
             {
                 case 200:
                     {
-                        RepositoryAttributes value = default;
+                        RepositoryProperties value = default;
                         using var document = JsonDocument.Parse(message.Response.ContentStream);
-                        value = RepositoryAttributes.DeserializeRepositoryAttributes(document.RootElement);
+                        value = RepositoryProperties.DeserializeRepositoryProperties(document.RootElement);
                         return Response.FromValue(value, message.Response);
                     }
                 default:

@@ -11,9 +11,9 @@ using Azure.Core;
 
 namespace Azure.Containers.ContainerRegistry
 {
-    public partial class RepositoryAttributes
+    public partial class RepositoryProperties
     {
-        internal static RepositoryAttributes DeserializeRepositoryAttributes(JsonElement element)
+        internal static RepositoryProperties DeserializeRepositoryProperties(JsonElement element)
         {
             Optional<string> registry = default;
             Optional<string> imageName = default;
@@ -85,7 +85,7 @@ namespace Azure.Containers.ContainerRegistry
                     continue;
                 }
             }
-            return new RepositoryAttributes(registry.Value, imageName.Value, Optional.ToNullable(createdTime), Optional.ToNullable(lastUpdateTime), Optional.ToNullable(manifestCount), Optional.ToNullable(tagCount), changeableAttributes.Value);
+            return new RepositoryProperties(registry.Value, imageName.Value, Optional.ToNullable(createdTime), Optional.ToNullable(lastUpdateTime), Optional.ToNullable(manifestCount), Optional.ToNullable(tagCount), changeableAttributes.Value);
         }
     }
 }

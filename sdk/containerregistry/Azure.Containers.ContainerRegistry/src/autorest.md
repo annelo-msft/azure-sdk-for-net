@@ -6,7 +6,7 @@ Run `dotnet build /t:GenerateCode` to generate code.
 input-file:
     -  $(this-folder)/swagger/containerregistry.json
 public-clients: false
-
+model-namespace: false
 ```
 
 ### Make generated models internal by default

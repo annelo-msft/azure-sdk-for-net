@@ -8,7 +8,8 @@ using Azure.Core;
 
 namespace Azure.Containers.ContainerRegistry
 {
-    public partial class TagAttributes
+    [CodeGenModel("TagAttributes")]
+    public partial class TagProperties
     {
         /// <summary> Tag name. </summary>
         public string Name { get { return Attributes.Name; } }

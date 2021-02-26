@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Azure;
 using Azure.Containers.ContainerRegistry;
-using Azure.Containers.ContainerRegistry.Models;
 using Azure.Identity;
 
 namespace ContainerRegistrySamples
@@ -19,14 +18,14 @@ namespace ContainerRegistrySamples
 
             // TODO: what is the story around tag signing?
 
-            AsyncPageable<TagAttributes> tags = repositoryClient.GetTagsAsync();
+            AsyncPageable<TagProperties> tags = repositoryClient.GetTagsAsync();
             await foreach (var tag in tags)
             {
                 PrintTagAttributes(tag);
             }
         }
 
-        private void PrintTagAttributes(TagAttributes tag)
+        private void PrintTagAttributes(TagProperties tag)
         {
             // Print Tag
             Console.WriteLine($"Tag repository and digest are {tag.ImageName}:{tag.Digest}");
@@ -50,7 +49,7 @@ namespace ContainerRegistrySamples
             var registryClient = new ContainerRegistryClient(new Uri("myacr.azurecr.io"), new DefaultAzureCredential());
             var repositoryClient = registryClient.GetRepositoryClient("hello-world");
 
-            AsyncPageable<TagAttributes> tags = repositoryClient.GetTagsAsync(new GetTagOptions(orderBy: TagOrderBy.LastUpdateTimeDescending));
+            AsyncPageable<TagProperties> tags = repositoryClient.GetTagsAsync(new GetTagOptions(orderBy: TagOrderBy.LastUpdateTimeDescending));
 
             // Note:
             // Set of orderby values can be found in the az acr client (see --orderby / Allowed values
@@ -64,7 +63,7 @@ namespace ContainerRegistrySamples
             //                              names.Allowed values: time_asc, time_desc.
             // From Teja: you can only sort by last update time, not created time
 
-            await foreach (TagAttributes tag in tags)
+            await foreach (TagProperties tag in tags)
             {
                 Console.WriteLine($"Updated {tag.LastUpdateTime}: Tag: {tag.Name}");
             }
@@ -75,12 +74,12 @@ namespace ContainerRegistrySamples
             var registryClient = new ContainerRegistryClient(new Uri("myacr.azurecr.io"), new DefaultAzureCredential());
             var repositoryClient = registryClient.GetRepositoryClient("hello-world");
 
-            AsyncPageable<TagAttributes> tags = repositoryClient.GetTagsAsync(new GetTagOptions(
+            AsyncPageable<TagProperties> tags = repositoryClient.GetTagsAsync(new GetTagOptions(
                 digest: "sha256:90659bf80b44ce6be8234e6ff90a1ac34acbeb826903b02cfa0da11c82cbc042"
                 ));
 
 
-            await foreach (TagAttributes tag in tags)
+            await foreach (TagProperties tag in tags)
             {
                 Console.WriteLine($"Updated {tag.LastUpdateTime}: Tag: {tag.Name}");
             }
@@ -93,7 +92,7 @@ namespace ContainerRegistrySamples
             var registryClient = new ContainerRegistryClient(new Uri("myacr.azurecr.io"), new DefaultAzureCredential());
             var repositoryClient = registryClient.GetRepositoryClient("hello-world");
 
-            TagAttributes tagAttributes = await repositoryClient.GetTagAsync("latest");
+            TagProperties tagAttributes = await repositoryClient.GetTagAsync("latest");
 
             PrintTagAttributes(tagAttributes);
         }

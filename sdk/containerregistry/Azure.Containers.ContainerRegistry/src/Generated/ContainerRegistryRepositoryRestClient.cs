@@ -405,7 +405,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="reference"> Tag name. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> or <paramref name="reference"/> is null. </exception>
-        public async Task<Response<TagAttributes>> GetTagAttributesAsync(string name, string reference, CancellationToken cancellationToken = default)
+        public async Task<Response<TagProperties>> GetTagAttributesAsync(string name, string reference, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {
@@ -422,9 +422,9 @@ namespace Azure.Containers.ContainerRegistry
             {
                 case 200:
                     {
-                        TagAttributes value = default;
+                        TagProperties value = default;
                         using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
-                        value = TagAttributes.DeserializeTagAttributes(document.RootElement);
+                        value = TagProperties.DeserializeTagProperties(document.RootElement);
                         return Response.FromValue(value, message.Response);
                     }
                 default:
@@ -437,7 +437,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="reference"> Tag name. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> or <paramref name="reference"/> is null. </exception>
-        public Response<TagAttributes> GetTagAttributes(string name, string reference, CancellationToken cancellationToken = default)
+        public Response<TagProperties> GetTagAttributes(string name, string reference, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {
@@ -454,9 +454,9 @@ namespace Azure.Containers.ContainerRegistry
             {
                 case 200:
                     {
-                        TagAttributes value = default;
+                        TagProperties value = default;
                         using var document = JsonDocument.Parse(message.Response.ContentStream);
-                        value = TagAttributes.DeserializeTagAttributes(document.RootElement);
+                        value = TagProperties.DeserializeTagProperties(document.RootElement);
                         return Response.FromValue(value, message.Response);
                     }
                 default:
@@ -721,7 +721,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="reference"> A tag or a digest, pointing to a specific image. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> or <paramref name="reference"/> is null. </exception>
-        public async Task<Response<ArtifactAttributes>> GetManifestAttributesAsync(string name, string reference, CancellationToken cancellationToken = default)
+        public async Task<Response<ArtifactProperties>> GetManifestAttributesAsync(string name, string reference, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {
@@ -738,9 +738,9 @@ namespace Azure.Containers.ContainerRegistry
             {
                 case 200:
                     {
-                        ArtifactAttributes value = default;
+                        ArtifactProperties value = default;
                         using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
-                        value = ArtifactAttributes.DeserializeArtifactAttributes(document.RootElement);
+                        value = ArtifactProperties.DeserializeArtifactProperties(document.RootElement);
                         return Response.FromValue(value, message.Response);
                     }
                 default:
@@ -753,7 +753,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="reference"> A tag or a digest, pointing to a specific image. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> or <paramref name="reference"/> is null. </exception>
-        public Response<ArtifactAttributes> GetManifestAttributes(string name, string reference, CancellationToken cancellationToken = default)
+        public Response<ArtifactProperties> GetManifestAttributes(string name, string reference, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {
@@ -770,9 +770,9 @@ namespace Azure.Containers.ContainerRegistry
             {
                 case 200:
                     {
-                        ArtifactAttributes value = default;
+                        ArtifactProperties value = default;
                         using var document = JsonDocument.Parse(message.Response.ContentStream);
-                        value = ArtifactAttributes.DeserializeArtifactAttributes(document.RootElement);
+                        value = ArtifactProperties.DeserializeArtifactProperties(document.RootElement);
                         return Response.FromValue(value, message.Response);
                     }
                 default:

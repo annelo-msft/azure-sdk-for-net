@@ -4,7 +4,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Azure;
 using Azure.Containers.ContainerRegistry;
-using Azure.Containers.ContainerRegistry.Models;
 using Azure.Identity;
 
 namespace ContainerRegistrySamples
@@ -18,7 +17,7 @@ namespace ContainerRegistrySamples
 
             Console.WriteLine($"Repository hello-world contains the following manifests:");
 
-            AsyncPageable<ArtifactAttributes> artifacts = repositoryClient.GetArtifactsAsync();
+            AsyncPageable<ArtifactProperties> artifacts = repositoryClient.GetArtifactsAsync();
             await foreach (var artifact in artifacts)
             {
                 PrintManifestAttributes(artifact);
@@ -37,7 +36,7 @@ namespace ContainerRegistrySamples
 
 
             // By Tag
-            ArtifactAttributes manifestAttributes = await repositoryClient.GetManifestAsync("latest");
+            ArtifactProperties manifestAttributes = await repositoryClient.GetManifestAsync("latest");
 
             // TODO: tagOrDigest - would it make sense to model this as Byte[] or other binary output of SHA256 class in .NET?
             // By Digest
@@ -145,7 +144,7 @@ namespace ContainerRegistrySamples
         }
 
 
-        private void ArtifactAttributes(ArtifactAttributes artifactAttributes)
+        private void ArtifactAttributes(ArtifactProperties artifactAttributes)
         {
             // Print Manifest
             Console.WriteLine($"Manifest repository and digest are {artifactAttributes.Name}:{artifactAttributes.Digest}");

@@ -91,7 +91,7 @@ namespace Azure.Containers.ContainerRegistry
             throw new NotImplementedException();
         }
 
-        public virtual async Task<Response<TagAttributes>> GetAttributesAsync(CancellationToken cancellationToken = default)
+        public virtual async Task<Response<TagProperties>> GetPropertiesAsync(CancellationToken cancellationToken = default)
         {
             await Task.Delay(0, cancellationToken).ConfigureAwait(false);
             throw new NotImplementedException();
@@ -99,7 +99,7 @@ namespace Azure.Containers.ContainerRegistry
             // TODO: Get Repository Attributes
         }
 
-        public virtual Response<TagAttributes> GetAttributes(CancellationToken cancellationToken = default)
+        public virtual Response<TagProperties> GetProperties(CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }

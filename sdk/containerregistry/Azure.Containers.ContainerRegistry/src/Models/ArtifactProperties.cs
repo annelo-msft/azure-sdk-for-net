@@ -10,7 +10,7 @@ using Azure.Core;
 namespace Azure.Containers.ContainerRegistry
 {
     [CodeGenModel("ManifestAttributes")]
-    public partial class ArtifactAttributes
+    public partial class ArtifactProperties
     {
         [CodeGenMember("ImageName")]
         public string Name { get; }

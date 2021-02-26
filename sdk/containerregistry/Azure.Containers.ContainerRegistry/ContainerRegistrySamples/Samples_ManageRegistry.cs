@@ -4,7 +4,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Azure;
 using Azure.Containers.ContainerRegistry;
-using Azure.Containers.ContainerRegistry.Models;
 using Azure.Identity;
 using System.Linq;
 
@@ -42,13 +41,13 @@ namespace ContainerRegistrySamples
 
                 RepositoryClient repositoryClient = registryClient.GetRepositoryClient(repositoryName);
 
-                AsyncPageable<ArtifactAttributes> artifacts = repositoryClient.GetArtifactsAsync(
+                AsyncPageable<ArtifactProperties> artifacts = repositoryClient.GetArtifactsAsync(
                     new GetArtifactOptions(orderBy: ArtifactOrderBy.LastUpdateTimeDescending)
                 );
 
                 int manifestCount = 0;
                 int manifestsToKeep = 3;
-                await foreach (ArtifactAttributes artifact in artifacts)
+                await foreach (ArtifactProperties artifact in artifacts)
                 {
                     if (manifestCount >= manifestsToKeep)
                     { 

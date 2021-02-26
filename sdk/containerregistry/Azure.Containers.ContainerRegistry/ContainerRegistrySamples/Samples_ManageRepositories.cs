@@ -4,7 +4,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Azure;
 using Azure.Containers.ContainerRegistry;
-using Azure.Containers.ContainerRegistry.Models;
 using Azure.Identity;
 
 namespace ContainerRegistrySamples
@@ -29,7 +28,7 @@ namespace ContainerRegistrySamples
             var client = new ContainerRegistryClient(new Uri("myacr.azurecr.io"), new DefaultAzureCredential());
             var repositoryClient = client.GetRepositoryClient("hello-world");
 
-            RepositoryAttributes attributes = await repositoryClient.GetAttributesAsync();
+            RepositoryProperties attributes = await repositoryClient.GetAttributesAsync();
 
             Console.WriteLine($"Repository name is {attributes.Name}");
             Console.WriteLine($"Repository registry is {attributes.Registry}");

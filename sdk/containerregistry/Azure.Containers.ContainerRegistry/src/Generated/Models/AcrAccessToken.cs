@@ -5,7 +5,7 @@
 
 #nullable disable
 
-namespace Azure.Containers.ContainerRegistry
+namespace Azure.Containers.ContainerRegistry.Specialized
 {
     /// <summary> The AccessToken. </summary>
     internal partial class AcrAccessToken

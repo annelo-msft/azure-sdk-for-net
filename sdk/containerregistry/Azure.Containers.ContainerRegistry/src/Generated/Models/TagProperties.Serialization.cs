@@ -10,13 +10,13 @@ using Azure.Core;
 
 namespace Azure.Containers.ContainerRegistry
 {
-    public partial class ArtifactAttributes
+    public partial class TagProperties
     {
-        internal static ArtifactAttributes DeserializeArtifactAttributes(JsonElement element)
+        internal static TagProperties DeserializeTagProperties(JsonElement element)
         {
             Optional<string> registry = default;
             Optional<string> imageName = default;
-            Optional<ManifestAttributesBase> manifest = default;
+            Optional<TagAttributesBase> tag = default;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("registry"))
@@ -29,18 +29,18 @@ namespace Azure.Containers.ContainerRegistry
                     imageName = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("manifest"))
+                if (property.NameEquals("tag"))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
                         property.ThrowNonNullablePropertyIsNull();
                         continue;
                     }
-                    manifest = ManifestAttributesBase.DeserializeManifestAttributesBase(property.Value);
+                    tag = TagAttributesBase.DeserializeTagAttributesBase(property.Value);
                     continue;
                 }
             }
-            return new ArtifactAttributes(registry.Value, imageName.Value, manifest.Value);
+            return new TagProperties(registry.Value, imageName.Value, tag.Value);
         }
     }
 }
