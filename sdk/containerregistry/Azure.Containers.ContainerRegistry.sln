@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29709.97
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.Containers.ContainerRegistry", "Azure.Containers.ContainerRegistry\src\Azure.Containers.ContainerRegistry.csproj", "{DE11C74E-C947-476F-AE8C-58AF4EEDD388}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.Containers.ContainerRegistry.Storage", "Azure.Containers.ContainerRegistry.Storage\src\Azure.Containers.ContainerRegistry.Storage.csproj", "{8DE6A332-333B-4CCD-8234-C8E675D3BBFD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DE11C74E-C947-476F-AE8C-58AF4EEDD388}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE11C74E-C947-476F-AE8C-58AF4EEDD388}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE11C74E-C947-476F-AE8C-58AF4EEDD388}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE11C74E-C947-476F-AE8C-58AF4EEDD388}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DE6A332-333B-4CCD-8234-C8E675D3BBFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DE6A332-333B-4CCD-8234-C8E675D3BBFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DE6A332-333B-4CCD-8234-C8E675D3BBFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DE6A332-333B-4CCD-8234-C8E675D3BBFD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A97F4B90-2591-4689-B1F8-5F21FE6D6CAE}
+	EndGlobalSection
+EndGlobal

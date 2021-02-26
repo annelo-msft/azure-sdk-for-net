@@ -60,3 +60,131 @@ directive:
   transform: >
     $["x-accessibility"] = "internal"
 ```
+
+``` yaml
+directive:
+  from: swagger-document
+  where: $.definitions.Platform
+  transform: >
+    $["x-accessibility"] = "internal"
+```
+
+``` yaml
+directive:
+  from: swagger-document
+  where: $.definitions.ManifestWrapper
+  transform: >
+    $["x-accessibility"] = "internal"
+```
+
+``` yaml
+directive:
+  from: swagger-document
+  where: $.definitions.Descriptor
+  transform: >
+    $["x-accessibility"] = "internal"
+```
+
+``` yaml
+directive:
+  from: swagger-document
+  where: $.definitions.ManifestList
+  transform: >
+    $["x-accessibility"] = "internal"
+```
+
+``` yaml
+directive:
+  from: swagger-document
+  where: $.definitions.V1Manifest
+  transform: >
+    $["x-accessibility"] = "internal"
+```
+
+``` yaml
+directive:
+  from: swagger-document
+  where: $.definitions.FsLayer
+  transform: >
+    $["x-accessibility"] = "internal"
+```
+
+``` yaml
+directive:
+  from: swagger-document
+  where: $.definitions.History
+  transform: >
+    $["x-accessibility"] = "internal"
+```
+
+``` yaml
+directive:
+  from: swagger-document
+  where: $.definitions.ImageSignature
+  transform: >
+    $["x-accessibility"] = "internal"
+```
+
+``` yaml
+directive:
+  from: swagger-document
+  where: $.definitions.JWK
+  transform: >
+    $["x-accessibility"] = "internal"
+```
+
+``` yaml
+directive:
+  from: swagger-document
+  where: $.definitions.JWKHeader
+  transform: >
+    $["x-accessibility"] = "internal"
+```
+
+``` yaml
+directive:
+  from: swagger-document
+  where: $.definitions.V2Manifest
+  transform: >
+    $["x-accessibility"] = "internal"
+```
+
+``` yaml
+directive:
+  from: swagger-document
+  where: $.definitions.ManifestListAttributes
+  transform: >
+    $["x-accessibility"] = "internal"
+```
+
+``` yaml
+directive:
+  from: swagger-document
+  where: $.definitions.OCIIndex
+  transform: >
+    $["x-accessibility"] = "internal"
+```
+
+``` yaml
+directive:
+  from: swagger-document
+  where: $.definitions.OCIManifest
+  transform: >
+    $["x-accessibility"] = "internal"
+```
+
+``` yaml
+directive:
+  from: swagger-document
+  where: $.definitions.Annotations
+  transform: >
+    $["x-accessibility"] = "internal"
+```
+
+``` yaml
+directive:
+  from: swagger-document
+  where: $.definitions.Manifest
+  transform: >
+    $["x-accessibility"] = "internal"
+```

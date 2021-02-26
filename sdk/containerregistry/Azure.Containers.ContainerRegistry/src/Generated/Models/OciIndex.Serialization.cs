@@ -9,9 +9,9 @@ using System.Collections.Generic;
 using System.Text.Json;
 using Azure.Core;
 
-namespace Azure.Containers.ContainerRegistry.Specialized
+namespace Azure.Containers.ContainerRegistry
 {
-    public partial class OciIndex : IUtf8JsonSerializable
+    internal partial class OCIIndex : IUtf8JsonSerializable
     {
         void IUtf8JsonSerializable.Write(Utf8JsonWriter writer)
         {
@@ -41,15 +41,15 @@ namespace Azure.Containers.ContainerRegistry.Specialized
             if (Optional.IsDefined(SchemaVersion))
             {
                 writer.WritePropertyName("schemaVersion");
-                writer.WriteNumberValue(SchemaVersion);
+                writer.WriteNumberValue(SchemaVersion.Value);
             }
             writer.WriteEndObject();
         }
 
-        internal static OciIndex DeserializeOciIndex(JsonElement element)
+        internal static OCIIndex DeserializeOCIIndex(JsonElement element)
         {
             Optional<IList<ManifestListAttributes>> manifests = default;
-            Optional<OciManifestAnnotations> annotations = default;
+            Optional<Annotations> annotations = default;
             Optional<int> schemaVersion = default;
             foreach (var property in element.EnumerateObject())
             {
@@ -75,7 +75,7 @@ namespace Azure.Containers.ContainerRegistry.Specialized
                         annotations = null;
                         continue;
                     }
-                    annotations = OciManifestAnnotations.DeserializeOciManifestAnnotations(property.Value);
+                    annotations = Annotations.DeserializeAnnotations(property.Value);
                     continue;
                 }
                 if (property.NameEquals("schemaVersion"))
@@ -89,7 +89,7 @@ namespace Azure.Containers.ContainerRegistry.Specialized
                     continue;
                 }
             }
-            return new OciIndex(schemaVersion, Optional.ToList(manifests), annotations.Value);
+            return new OCIIndex(Optional.ToNullable(schemaVersion), Optional.ToList(manifests), annotations.Value);
         }
     }
 }

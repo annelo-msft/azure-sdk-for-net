@@ -8,9 +8,9 @@
 using System.Text.Json;
 using Azure.Core;
 
-namespace Azure.Containers.ContainerRegistry.Specialized
+namespace Azure.Containers.ContainerRegistry
 {
-    public partial class ManifestListAttributes : IUtf8JsonSerializable
+    internal partial class ManifestListAttributes : IUtf8JsonSerializable
     {
         void IUtf8JsonSerializable.Write(Utf8JsonWriter writer)
         {
@@ -43,7 +43,7 @@ namespace Azure.Containers.ContainerRegistry.Specialized
             Optional<string> mediaType = default;
             Optional<long> size = default;
             Optional<string> digest = default;
-            Optional<RuntimePlatform> platform = default;
+            Optional<Platform> platform = default;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("mediaType"))
@@ -73,7 +73,7 @@ namespace Azure.Containers.ContainerRegistry.Specialized
                         property.ThrowNonNullablePropertyIsNull();
                         continue;
                     }
-                    platform = RuntimePlatform.DeserializeRuntimePlatform(property.Value);
+                    platform = Platform.DeserializePlatform(property.Value);
                     continue;
                 }
             }

@@ -9,17 +9,17 @@ using System.Collections.Generic;
 using System.Text.Json;
 using Azure.Core;
 
-namespace Azure.Containers.ContainerRegistry.Specialized
+namespace Azure.Containers.ContainerRegistry
 {
-    public partial class OciManifest : IUtf8JsonSerializable
+    internal partial class OCIManifest : IUtf8JsonSerializable
     {
         void IUtf8JsonSerializable.Write(Utf8JsonWriter writer)
         {
             writer.WriteStartObject();
-            if (Optional.IsDefined(ConfigDescriptor))
+            if (Optional.IsDefined(Config))
             {
                 writer.WritePropertyName("config");
-                writer.WriteObjectValue(ConfigDescriptor);
+                writer.WriteObjectValue(Config);
             }
             if (Optional.IsCollectionDefined(Layers))
             {
@@ -46,16 +46,16 @@ namespace Azure.Containers.ContainerRegistry.Specialized
             if (Optional.IsDefined(SchemaVersion))
             {
                 writer.WritePropertyName("schemaVersion");
-                writer.WriteNumberValue(SchemaVersion);
+                writer.WriteNumberValue(SchemaVersion.Value);
             }
             writer.WriteEndObject();
         }
 
-        internal static OciManifest DeserializeOciManifest(JsonElement element)
+        internal static OCIManifest DeserializeOCIManifest(JsonElement element)
         {
-            Optional<ContentDescriptor> config = default;
-            Optional<IList<ContentDescriptor>> layers = default;
-            Optional<OciManifestAnnotations> annotations = default;
+            Optional<Descriptor> config = default;
+            Optional<IList<Descriptor>> layers = default;
+            Optional<Annotations> annotations = default;
             Optional<int> schemaVersion = default;
             foreach (var property in element.EnumerateObject())
             {
@@ -66,7 +66,7 @@ namespace Azure.Containers.ContainerRegistry.Specialized
                         property.ThrowNonNullablePropertyIsNull();
                         continue;
                     }
-                    config = ContentDescriptor.DeserializeContentDescriptor(property.Value);
+                    config = Descriptor.DeserializeDescriptor(property.Value);
                     continue;
                 }
                 if (property.NameEquals("layers"))
@@ -76,10 +76,10 @@ namespace Azure.Containers.ContainerRegistry.Specialized
                         property.ThrowNonNullablePropertyIsNull();
                         continue;
                     }
-                    List<ContentDescriptor> array = new List<ContentDescriptor>();
+                    List<Descriptor> array = new List<Descriptor>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(ContentDescriptor.DeserializeContentDescriptor(item));
+                        array.Add(Descriptor.DeserializeDescriptor(item));
                     }
                     layers = array;
                     continue;
@@ -91,7 +91,7 @@ namespace Azure.Containers.ContainerRegistry.Specialized
                         annotations = null;
                         continue;
                     }
-                    annotations = OciManifestAnnotations.DeserializeOciManifestAnnotations(property.Value);
+                    annotations = Annotations.DeserializeAnnotations(property.Value);
                     continue;
                 }
                 if (property.NameEquals("schemaVersion"))
@@ -105,7 +105,7 @@ namespace Azure.Containers.ContainerRegistry.Specialized
                     continue;
                 }
             }
-            return new OciManifest(schemaVersion, config.Value, Optional.ToList(layers), annotations.Value);
+            return new OCIManifest(Optional.ToNullable(schemaVersion), config.Value, Optional.ToList(layers), annotations.Value);
         }
     }
 }
