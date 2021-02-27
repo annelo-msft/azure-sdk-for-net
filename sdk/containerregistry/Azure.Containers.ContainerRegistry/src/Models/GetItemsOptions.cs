@@ -8,9 +8,9 @@ using System.Text;
 
 namespace Azure.Containers.ContainerRegistry
 {
-    public class GetRepositoryItemOptions
+    public class GetItemsOptions
     {
-        public GetRepositoryItemOptions(RepositoryItemOrderBy orderBy)
+        public GetItemsOptions(RepositoryItemOrderBy orderBy)
         {
             OrderBy = orderBy;
         }

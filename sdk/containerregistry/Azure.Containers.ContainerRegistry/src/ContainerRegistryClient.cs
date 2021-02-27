@@ -99,6 +99,8 @@ namespace Azure.Containers.ContainerRegistry
 
         public Uri Endpoint { get; }
 
+        public string Registry { get; }
+
         public virtual Pageable<string> GetRepositories(CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();

@@ -72,6 +72,8 @@ namespace Azure.Containers.ContainerRegistry
 
         public Uri Endpoint { get; }
 
+        public string Registry { get; }
+
         public string Repository {  get { return _repository; } }
 
         public virtual async Task<Response> DeleteAsync(CancellationToken cancellationToken = default)
@@ -177,7 +179,7 @@ namespace Azure.Containers.ContainerRegistry
         // caller confusion?
         /// <summary> List manifests of a repository. </summary>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual AsyncPageable<RepositoryItemProperties> GetItemPropertiesAsync(GetRepositoryItemOptions options = null, CancellationToken cancellationToken = default)
+        public virtual AsyncPageable<RepositoryItemProperties> GetItemsAsync(GetItemsOptions options = null, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
 
@@ -198,7 +200,7 @@ namespace Azure.Containers.ContainerRegistry
 
         /// <summary> List manifests of a repository. </summary>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Pageable<RepositoryItemProperties> GetItemProperties(GetRepositoryItemOptions options = null, CancellationToken cancellationToken = default)
+        public virtual Pageable<RepositoryItemProperties> GetItems(GetItemsOptions options = null, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
 
@@ -217,7 +219,7 @@ namespace Azure.Containers.ContainerRegistry
             //}
         }
 
-        public virtual RepositoryItemClient GetRepositoryItemClient(string reference)
+        public virtual RepositoryItemClient GetRepositoryItemClient(string tagOrDigest)
         {
             throw new NotImplementedException();
         }

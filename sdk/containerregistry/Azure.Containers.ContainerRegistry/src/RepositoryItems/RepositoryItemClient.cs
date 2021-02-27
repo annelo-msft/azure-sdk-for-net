@@ -22,19 +22,16 @@ namespace Azure.Containers.ContainerRegistry
         internal ContainerRegistryRepositoryRestClient RestClient { get; }
 
         private string _repository;
-        private string _digest;
+        private string _itemReference;
 
-        public RepositoryItemClient(Uri endpoint, string respository, string reference, TokenCredential credential) : this(endpoint, respository, reference, credential, new ContainerRegistryClientOptions())
+        public RepositoryItemClient(Uri endpoint, string respository, string tagOrDigest, TokenCredential credential) : this(endpoint, respository, tagOrDigest, credential, new ContainerRegistryClientOptions())
         {
         }
 
-        public RepositoryItemClient(Uri endpoint, string respository, string reference, TokenCredential credential, ContainerRegistryClientOptions options)
+        public RepositoryItemClient(Uri endpoint, string respository, string tagOrDigest, TokenCredential credential, ContainerRegistryClientOptions options)
         {
             _repository = respository;
-            if (IsDigest(reference))
-            {
-                _digest = reference;
-            }
+            _itemReference = tagOrDigest;
         }
 
         private bool IsDigest(string reference)
@@ -42,17 +39,14 @@ namespace Azure.Containers.ContainerRegistry
             throw new NotImplementedException();
         }
 
-        public RepositoryItemClient(Uri endpoint, string respository, string reference, ContainerRegistryUserCredential credential) : this(endpoint, respository, reference, credential, new ContainerRegistryClientOptions())
+        public RepositoryItemClient(Uri endpoint, string respository, string tagOrDigest, ContainerRegistryUserCredential credential) : this(endpoint, respository, tagOrDigest, credential, new ContainerRegistryClientOptions())
         {
         }
 
-        public RepositoryItemClient(Uri endpoint, string respository, string reference, ContainerRegistryUserCredential credential, ContainerRegistryClientOptions options)
+        public RepositoryItemClient(Uri endpoint, string respository, string tagOrDigest, ContainerRegistryUserCredential credential, ContainerRegistryClientOptions options)
         {
             _repository = respository;
-            if (IsDigest(reference))
-            {
-                _digest = reference;
-            }
+            _itemReference = tagOrDigest;
         }
 
         /// <summary>
@@ -60,17 +54,14 @@ namespace Azure.Containers.ContainerRegistry
         /// </summary>
         /// <param name="endpoint"></param>
         /// <param name="respository"></param>
-        public RepositoryItemClient(Uri endpoint, string respository, string reference) : this(endpoint, respository, reference, new ContainerRegistryClientOptions())
+        public RepositoryItemClient(Uri endpoint, string respository, string tagOrDigest) : this(endpoint, respository, tagOrDigest, new ContainerRegistryClientOptions())
         {
         }
 
-        public RepositoryItemClient(Uri endpoint, string respository, string reference, ContainerRegistryClientOptions options)
+        public RepositoryItemClient(Uri endpoint, string respository, string tagOrDigest, ContainerRegistryClientOptions options)
         {
             _repository = respository;
-            if (IsDigest(reference))
-            {
-                _digest = reference;
-            }
+            _itemReference = tagOrDigest;
         }
 
         /// <summary> Initializes a new instance of ContainerRegistryRepositoryClient for mocking. </summary>
@@ -91,9 +82,25 @@ namespace Azure.Containers.ContainerRegistry
 
         public Uri Endpoint { get; }
 
+        public string Registry { get; }
+
         public string Repository { get { return _repository; } }
 
-        public string Digest {  get { return _digest; } }
+        //public virtual async Task<Response<string>> GetDigestAsync(CancellationToken cancellationToken = default)
+        //{
+        //    await Task.Delay(0, cancellationToken).ConfigureAwait(false);
+        //    throw new NotImplementedException();
+
+        //    // We'll return our cached version of this if we have it, or make a REST API call to get it if needed.
+        //}
+
+        //public virtual Response<string> GetDigest(CancellationToken cancellationToken = default)
+        //{
+        //    throw new NotImplementedException();
+
+        //    // We'll return our cached version of this if we have it, or make a REST API call to get it if needed.
+        //    // TODO: is this precedented elsewhere in the SDK
+        //}
 
         /// <summary> List tags of a repository. </summary>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
@@ -189,13 +196,11 @@ namespace Azure.Containers.ContainerRegistry
             throw new NotImplementedException();
         }
 
-        /// <summary> Update the attribute identified by `name` where `reference` is the name of the repository. </summary>
-        /// <param name="value"> Repository attribute value. </param>
-        /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual async Task<Response> SetPermissionsAsync(ContentPermissions value, CancellationToken cancellationToken = default)
         {
             await Task.Delay(0, cancellationToken).ConfigureAwait(false);
             throw new NotImplementedException();
+
             //using var scope = _clientDiagnostics.CreateScope("ContainerRegistryClient.UpdateRepositoryAttributes");
             //scope.Start();
             //try
