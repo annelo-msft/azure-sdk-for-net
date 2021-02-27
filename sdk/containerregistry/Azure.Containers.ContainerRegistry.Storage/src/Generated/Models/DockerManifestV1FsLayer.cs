@@ -5,7 +5,7 @@
 
 #nullable disable
 
-namespace Azure.Containers.ContainerRegistry.Specialized
+namespace Azure.Containers.ContainerRegistry.Storage
 {
     /// <summary> Image layer information. </summary>
     public partial class DockerManifestV1FsLayer

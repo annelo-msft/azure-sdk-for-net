@@ -7,7 +7,6 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Azure.Containers.ContainerRegistry;
-using Azure.Containers.ContainerRegistry.Specialized;
 using Azure.Identity;
 
 namespace ContainerRegistrySamples
@@ -19,7 +18,7 @@ namespace ContainerRegistrySamples
             // Monolithic upload
             ContainerRegistryClient registryClient = new ContainerRegistryClient(new Uri("myacr.azurecr.io"), new DefaultAzureCredential());
             RepositoryClient repositoryClient = registryClient.GetRepositoryClient("hello-world");
-            ArtifactStorageClient storageClient = repositoryClient.GetArtifactStorageClient();
+            ContainerRegistryStorageClient storageClient = repositoryClient.GetContainerRegistryStorageClient();
 
             //POST INITIATE BLOB UPLOAD
             // Initiate a resumable blob upload. If successful, an upload location will be provided to complete the upload.
@@ -42,7 +41,7 @@ namespace ContainerRegistrySamples
 
             ContainerRegistryClient registryClient = new ContainerRegistryClient(new Uri("myacr.azurecr.io"), new DefaultAzureCredential());
             RepositoryClient repositoryClient = registryClient.GetRepositoryClient("hello-world");
-            ArtifactStorageClient storageClient = repositoryClient.GetArtifactStorageClient();
+            ContainerRegistryStorageClient storageClient = repositoryClient.GetContainerRegistryStorageClient();
 
 
             // TODO: Will calling this "Start" name cause confusion with our LRO patterns?
@@ -61,7 +60,7 @@ namespace ContainerRegistrySamples
         {
             ContainerRegistryClient registryClient = new ContainerRegistryClient(new Uri("myacr.azurecr.io"), new DefaultAzureCredential());
             RepositoryClient repositoryClient = registryClient.GetRepositoryClient("hello-world");
-            ArtifactStorageClient storageClient = repositoryClient.GetArtifactStorageClient();
+            ContainerRegistryStorageClient storageClient = repositoryClient.GetContainerRegistryStorageClient();
 
             CreateUploadResult uploadDetails = await storageClient.CreateUploadAsync();
             bool haveChunks = true;  // TODO: how do I know?  Who decides how to break things into chunks and why?

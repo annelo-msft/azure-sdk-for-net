@@ -5,7 +5,7 @@
 
 #nullable disable
 
-namespace Azure.Containers.ContainerRegistry.Specialized
+namespace Azure.Containers.ContainerRegistry.Storage
 {
     /// <summary> Signature of a signed manifest. </summary>
     public partial class DockerManifestV1ImageSignature

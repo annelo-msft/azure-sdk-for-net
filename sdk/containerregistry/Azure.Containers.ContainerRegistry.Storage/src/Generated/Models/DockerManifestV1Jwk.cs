@@ -5,7 +5,7 @@
 
 #nullable disable
 
-namespace Azure.Containers.ContainerRegistry.Specialized
+namespace Azure.Containers.ContainerRegistry.Storage
 {
     /// <summary> A JSON web signature. </summary>
     public partial class DockerManifestV1Jwk

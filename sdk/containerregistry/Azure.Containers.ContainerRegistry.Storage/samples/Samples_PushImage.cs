@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Azure;
 using Azure.Containers.ContainerRegistry;
-using Azure.Containers.ContainerRegistry.Specialized;
+using Azure.Containers.ContainerRegistry.Storage;
 using Azure.Identity;
 
 namespace ContainerRegistrySamples
@@ -15,7 +15,7 @@ namespace ContainerRegistrySamples
     {
         public async Task PushImageFromDirectory_DockerV2Manifest()
         {
-            ArtifactStorageClient client = new ArtifactStorageClient(new Uri("myacr.azurecr.io"), "hello-world", new DefaultAzureCredential());
+            ContainerRegistryStorageClient client = new ContainerRegistryStorageClient(new Uri("myacr.azurecr.io"), "hello-world", new DefaultAzureCredential());
 
             string directory = @"c:\path\to\image";
 
@@ -92,7 +92,7 @@ namespace ContainerRegistrySamples
 
         public async Task PushImageFromDirectory_DockerV2Manifest2()
         {
-            ArtifactStorageClient client = new ArtifactStorageClient(new Uri("myacr.azurecr.io"), "hello-world", new DefaultAzureCredential());
+            ContainerRegistryStorageClient client = new ContainerRegistryStorageClient(new Uri("myacr.azurecr.io"), "hello-world", new DefaultAzureCredential());
 
             string directory = @"c:\path\to\image";
 
@@ -155,7 +155,7 @@ namespace ContainerRegistrySamples
             //var repositoryClient = registryClient.GetRepositoryClient("hello-world");
             //var storageClient = repositoryClient.GetContainerStorageClient();
 
-            ArtifactStorageClient client = new ArtifactStorageClient(new Uri("myacr.azurecr.io"), "hello-world", new DefaultAzureCredential());
+            ContainerRegistryStorageClient client = new ContainerRegistryStorageClient(new Uri("myacr.azurecr.io"), "hello-world", new DefaultAzureCredential());
 
             ContentDescriptor configDescriptor = new ContentDescriptor()
             {
@@ -198,21 +198,21 @@ namespace ContainerRegistrySamples
             await client.CreateManifestAsync(manifest);
         }
 
-        public async Task PushImageViaDockerCli()
-        {
-            // TODO: Make this look more like what our tests have
-            string userName = Environment.GetEnvironmentVariable("ADMIN_USER_NAME");
-            string password = Environment.GetEnvironmentVariable("ADMIN_PASSWORD");
+        //public async Task PushImageViaDockerCli()
+        //{
+        //    // TODO: Make this look more like what our tests have
+        //    string userName = Environment.GetEnvironmentVariable("ADMIN_USER_NAME");
+        //    string password = Environment.GetEnvironmentVariable("ADMIN_PASSWORD");
 
-            ContainerRegistryStsClient stsClient = new ContainerRegistryStsClient(new Uri("myacr.azurecr.io"), new ContainerRegistryUserCredential(userName, password));
+        //    ContainerRegistryStsClient stsClient = new ContainerRegistryStsClient(new Uri("myacr.azurecr.io"), new ContainerRegistryUserCredential(userName, password));
 
-            // TODO: validate this scenario is required, e.g.
-            // What is the scenario where the Docker daemon isn't running in your environment, but the Docker CLI is provided?
-            Process loginCmd = Process.Start("docker.exe", arguments: $"login {stsClient.Endpoint} --username 00000000-0000-0000-0000-000000000000 --password {stsClient.GetAccessToken()}");
-            loginCmd.WaitForExit();
+        //    // TODO: validate this scenario is required, e.g.
+        //    // What is the scenario where the Docker daemon isn't running in your environment, but the Docker CLI is provided?
+        //    Process loginCmd = Process.Start("docker.exe", arguments: $"login {stsClient.Endpoint} --username 00000000-0000-0000-0000-000000000000 --password {stsClient.GetAccessToken()}");
+        //    loginCmd.WaitForExit();
 
-            Process pushCmd = Process.Start("docker.exe", arguments: $"push {stsClient.Endpoint}/hello-world:v1");
-            loginCmd.WaitForExit();
-        }
+        //    Process pushCmd = Process.Start("docker.exe", arguments: $"push {stsClient.Endpoint}/hello-world:v1");
+        //    loginCmd.WaitForExit();
+        //}
     }
 }
