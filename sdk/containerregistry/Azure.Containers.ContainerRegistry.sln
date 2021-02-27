@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.Containers.ContainerR
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.Containers.ContainerRegistry.Storage", "Azure.Containers.ContainerRegistry.Storage\src\Azure.Containers.ContainerRegistry.Storage.csproj", "{8DE6A332-333B-4CCD-8234-C8E675D3BBFD}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContainerRegistrySamples", "Azure.Containers.ContainerRegistry\samples\ContainerRegistrySamples.csproj", "{A8344DB9-D30F-4F3B-AFD0-21F8AC5F4FC5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContainerRegistryStorageSamples", "Azure.Containers.ContainerRegistry.Storage\samples\ContainerRegistryStorageSamples.csproj", "{F3417D2C-BC79-40EC-9929-BFAB62B3C686}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{8DE6A332-333B-4CCD-8234-C8E675D3BBFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8DE6A332-333B-4CCD-8234-C8E675D3BBFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8DE6A332-333B-4CCD-8234-C8E675D3BBFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8344DB9-D30F-4F3B-AFD0-21F8AC5F4FC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8344DB9-D30F-4F3B-AFD0-21F8AC5F4FC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8344DB9-D30F-4F3B-AFD0-21F8AC5F4FC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8344DB9-D30F-4F3B-AFD0-21F8AC5F4FC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3417D2C-BC79-40EC-9929-BFAB62B3C686}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3417D2C-BC79-40EC-9929-BFAB62B3C686}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3417D2C-BC79-40EC-9929-BFAB62B3C686}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3417D2C-BC79-40EC-9929-BFAB62B3C686}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

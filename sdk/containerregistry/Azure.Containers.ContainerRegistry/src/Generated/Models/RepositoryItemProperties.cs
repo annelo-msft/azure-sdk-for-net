@@ -16,14 +16,17 @@ namespace Azure.Containers.ContainerRegistry
         }
 
         /// <summary> Initializes a new instance of RepositoryItemProperties. </summary>
-        /// <param name="registryName"> Registry name. </param>
+        /// <param name="registry"> Registry name. </param>
         /// <param name="name"> Image name. </param>
         /// <param name="attributes"> Manifest attributes. </param>
-        internal RepositoryItemProperties(string registryName, string name, ManifestAttributesBase attributes)
+        internal RepositoryItemProperties(string registry, string name, ManifestAttributesBase attributes)
         {
-            RegistryName = registryName;
+            Registry = registry;
             Name = name;
             Attributes = attributes;
         }
+
+        /// <summary> Registry name. </summary>
+        public string Registry { get; }
     }
 }

@@ -24,13 +24,13 @@ namespace Azure.Containers.ContainerRegistry
         private string _repository;
         private string _itemReference;
 
-        public RepositoryItemClient(Uri endpoint, string respository, string tagOrDigest, TokenCredential credential) : this(endpoint, respository, tagOrDigest, credential, new ContainerRegistryClientOptions())
+        public RepositoryItemClient(Uri endpoint, string repository, string tagOrDigest, TokenCredential credential) : this(endpoint, repository, tagOrDigest, credential, new ContainerRegistryClientOptions())
         {
         }
 
-        public RepositoryItemClient(Uri endpoint, string respository, string tagOrDigest, TokenCredential credential, ContainerRegistryClientOptions options)
+        public RepositoryItemClient(Uri endpoint, string repository, string tagOrDigest, TokenCredential credential, ContainerRegistryClientOptions options)
         {
-            _repository = respository;
+            _repository = repository;
             _itemReference = tagOrDigest;
         }
 
@@ -39,13 +39,13 @@ namespace Azure.Containers.ContainerRegistry
             throw new NotImplementedException();
         }
 
-        public RepositoryItemClient(Uri endpoint, string respository, string tagOrDigest, ContainerRegistryUserCredential credential) : this(endpoint, respository, tagOrDigest, credential, new ContainerRegistryClientOptions())
+        public RepositoryItemClient(Uri endpoint, string repository, string tagOrDigest, ContainerRegistryUserCredential credential) : this(endpoint, repository, tagOrDigest, credential, new ContainerRegistryClientOptions())
         {
         }
 
-        public RepositoryItemClient(Uri endpoint, string respository, string tagOrDigest, ContainerRegistryUserCredential credential, ContainerRegistryClientOptions options)
+        public RepositoryItemClient(Uri endpoint, string repository, string tagOrDigest, ContainerRegistryUserCredential credential, ContainerRegistryClientOptions options)
         {
-            _repository = respository;
+            _repository = repository;
             _itemReference = tagOrDigest;
         }
 
@@ -53,14 +53,14 @@ namespace Azure.Containers.ContainerRegistry
         /// anonymous access
         /// </summary>
         /// <param name="endpoint"></param>
-        /// <param name="respository"></param>
-        public RepositoryItemClient(Uri endpoint, string respository, string tagOrDigest) : this(endpoint, respository, tagOrDigest, new ContainerRegistryClientOptions())
+        /// <param name="repository"></param>
+        public RepositoryItemClient(Uri endpoint, string repository, string tagOrDigest) : this(endpoint, repository, tagOrDigest, new ContainerRegistryClientOptions())
         {
         }
 
-        public RepositoryItemClient(Uri endpoint, string respository, string tagOrDigest, ContainerRegistryClientOptions options)
+        public RepositoryItemClient(Uri endpoint, string repository, string tagOrDigest, ContainerRegistryClientOptions options)
         {
-            _repository = respository;
+            _repository = repository;
             _itemReference = tagOrDigest;
         }
 
@@ -205,7 +205,7 @@ namespace Azure.Containers.ContainerRegistry
             //scope.Start();
             //try
             //{
-            //    return await RestClient.UpdateRepositoryAttributesAsync(respository, value, cancellationToken).ConfigureAwait(false);
+            //    return await RestClient.UpdateRepositoryAttributesAsync(repository, value, cancellationToken).ConfigureAwait(false);
             //}
             //catch (Exception e)
             //{
@@ -224,7 +224,7 @@ namespace Azure.Containers.ContainerRegistry
             //scope.Start();
             //try
             //{
-            //    return RestClient.UpdateRepositoryAttributes(respository, value, cancellationToken);
+            //    return RestClient.UpdateRepositoryAttributes(repository, value, cancellationToken);
             //}
             //catch (Exception e)
             //{

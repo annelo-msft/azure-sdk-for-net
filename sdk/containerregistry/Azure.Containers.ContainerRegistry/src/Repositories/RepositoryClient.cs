@@ -219,7 +219,7 @@ namespace Azure.Containers.ContainerRegistry
             //}
         }
 
-        public virtual RepositoryItemClient GetRepositoryItemClient(string tagOrDigest)
+        public virtual RepositoryItemClient GetItemClient(string tagOrDigest)
         {
             throw new NotImplementedException();
         }

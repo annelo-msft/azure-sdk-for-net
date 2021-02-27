@@ -25,5 +25,8 @@ namespace Azure.Containers.ContainerRegistry
             Repository = repository;
             Attributes = attributes;
         }
+
+        /// <summary> Registry name. </summary>
+        public string Registry { get; }
     }
 }

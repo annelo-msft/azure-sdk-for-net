@@ -14,9 +14,6 @@ namespace Azure.Containers.ContainerRegistry
         [CodeGenMember("ImageName")]
         public string Name { get; }
 
-        [CodeGenMember("Registry")]
-        internal string RegistryName { get; }
-
         public string Digest { get { return Attributes.Digest; } }
 
         // Qn: Why is this nullable?  does it need to be?  Yes, it's null if the value is not known.

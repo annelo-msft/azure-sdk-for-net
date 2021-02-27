@@ -11,17 +11,6 @@ namespace ContainerRegistrySamples
 {
     public class Sample_ManageRegistry
     {
-        public async Task ViewRepositories()
-        {
-            var client = new ContainerRegistryClient(new Uri("myacr.azurecr.io"), new DefaultAzureCredential());
-
-            AsyncPageable<string> repositories = client.GetRepositoryNamesAsync();
-            await foreach (var repository in repositories)
-            {
-                Console.WriteLine($"Repository name is {repository}");
-            }
-        }
-
         public async Task DeleteStaleImages()
         {
             // I would like to create a script that scans all my repositories on ACR, and delete all the old docker images, 
@@ -34,40 +23,51 @@ namespace ContainerRegistrySamples
 
             ContainerRegistryClient registryClient = new ContainerRegistryClient(new Uri("myacr.azurecr.io"), new DefaultAzureCredential());
             
-            AsyncPageable<string> repositoryNames = registryClient.GetRepositoryNamesAsync();
-            await foreach (var repositoryName in repositoryNames)
+            AsyncPageable<string> repositories = registryClient.GetRepositoriesAsync();
+            await foreach (var repository in repositories)
             {
-                Console.WriteLine($"Repository name: {repositoryName}");
+                Console.WriteLine($"Repository name: {repository}");
 
-                RepositoryClient repositoryClient = registryClient.GetRepositoryClient(repositoryName);
+                RepositoryClient repositoryClient = registryClient.GetRepositoryClient(repository);
 
-                AsyncPageable<RepositoryItemProperties> artifacts = repositoryClient.GetArtifactsAsync(
-                    new GetArtifactOptions(orderBy: RepositoryItemOrderBy.LastUpdateTimeDescending)
+                AsyncPageable<RepositoryItemProperties> items = repositoryClient.GetItemsAsync(
+                    new GetItemsOptions(orderBy: RepositoryItemOrderBy.LastUpdateTimeDescending)
                 );
 
-                int manifestCount = 0;
-                int manifestsToKeep = 3;
-                await foreach (RepositoryItemProperties artifact in artifacts)
+                int itemCount = 0;
+                int itemsToKeep = 3;
+                await foreach (RepositoryItemProperties item in items)
                 {
-                    if (manifestCount >= manifestsToKeep)
+                    if (itemCount++ >= itemsToKeep)
                     { 
-                        Console.WriteLine($"Deleting manifest with digest {artifact.ManifestDigest}.");
+                        Console.WriteLine($"Deleting item with digest {item.Digest}.");
                         Console.WriteLine($"   This corresponds to the following tagged images: ");
-                        foreach (var tagName in artifact.Tags)
+                        foreach (var tagName in item.Tags)
                         {
-                            Console.WriteLine($"        {artifact.Name}:{tagName}");
+                            Console.WriteLine($"        {item.Name}:{tagName}");
                         }
-                        await repositoryClient.DeleteArtifactAsync(repositoryName, artifact.ManifestDigest);
+                        await repositoryClient.DeleteItemAsync(item.Digest);
                     }
 
-                    manifestCount++;
-
-                    // TODO: the service does its own garbage collection, I think, so I don't think you need to delete the blob, but confirm this
+                    // This will delete the manifest, but not the item layers unless there are no remaining references to them
                 }
             }
         }
 
-        public async Task ViewManifestsInRepository()
+        public async Task ViewRepositories()
+        {
+            var client = new ContainerRegistryClient(new Uri("myacr.azurecr.io"), new DefaultAzureCredential());
+
+            AsyncPageable<string> repositories = client.GetRepositoriesAsync();
+
+            Console.WriteLine($"Registry contains these repositories:");
+            await foreach (var repository in repositories)
+            {
+                Console.WriteLine($"    {repository}");
+            }
+        }
+
+        public async Task ViewItemsInRepository()
         {
             //// TODO: I don't think we need name here, because we specified the image name as the repository in the constructor.  Is this correct?
             //// TODO: This should be pageable
@@ -79,7 +79,7 @@ namespace ContainerRegistrySamples
             //}
         }
 
-        public async Task ViewTagsInRepository()
+        public async Task ViewItemTags()
         {
             //var client = new ContainerRegistryRepositoryClient(new Uri("myacr.azurecr.io"), "hello-world", new DefaultAzureCredential());
 

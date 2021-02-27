@@ -112,15 +112,15 @@ namespace Azure.Containers.ContainerRegistry
         }
 
         /// <summary> Delete the repository identified by `name`. </summary>
-        /// <param name="respository"> Name of the image (including the namespace). </param>
+        /// <param name="repository"> Name of the image (including the namespace). </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response<DeleteRepositoryResult>> DeleteRepositoryAsync(string respository, CancellationToken cancellationToken = default)
+        public virtual async Task<Response<DeleteRepositoryResult>> DeleteRepositoryAsync(string repository, CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("ContainerRegistryClient.DeleteRepository");
             scope.Start();
             try
             {
-                return await RestClient.DeleteRepositoryAsync(respository, cancellationToken).ConfigureAwait(false);
+                return await RestClient.DeleteRepositoryAsync(repository, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception e)
             {
@@ -130,15 +130,15 @@ namespace Azure.Containers.ContainerRegistry
         }
 
         /// <summary> Delete the repository identified by `name`. </summary>
-        /// <param name="respository"> Name of the image (including the namespace). </param>
+        /// <param name="repository"> Name of the image (including the namespace). </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response<DeleteRepositoryResult> DeleteRepository(string respository, CancellationToken cancellationToken = default)
+        public virtual Response<DeleteRepositoryResult> DeleteRepository(string repository, CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("ContainerRegistryClient.DeleteRepository");
             scope.Start();
             try
             {
-                return RestClient.DeleteRepository(respository, cancellationToken);
+                return RestClient.DeleteRepository(repository, cancellationToken);
             }
             catch (Exception e)
             {
@@ -147,7 +147,7 @@ namespace Azure.Containers.ContainerRegistry
             }
         }
 
-        public virtual RepositoryClient GetRepositoryClient(string respository)
+        public virtual RepositoryClient GetRepositoryClient(string repository)
         {
             throw new NotImplementedException();
         }

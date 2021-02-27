@@ -32,9 +32,6 @@ namespace Azure.Containers.ContainerRegistry
         /// <summary> Changeable attributes. </summary>
         public ContentPermissions Permissions { get { return Attributes.ChangeableAttributes; } }
 
-        [CodeGenMember("Registry")]
-        internal string Registry { get; }
-
         [CodeGenMember("ImageName")]
         public string Repository { get; }
 
