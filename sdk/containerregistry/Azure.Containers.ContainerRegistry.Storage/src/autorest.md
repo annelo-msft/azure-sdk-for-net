@@ -60,3 +60,43 @@ directive:
   transform: >
     $["x-accessibility"] = "internal"
 ```
+
+``` yaml
+directive:
+  from: swagger-document
+  where: $.definitions.DeletedRepository
+  transform: >
+    $["x-accessibility"] = "internal"
+```
+
+``` yaml
+directive:
+  from: swagger-document
+  where: $.definitions.ChangeableAttributes
+  transform: >
+    $["x-accessibility"] = "internal"
+```
+
+``` yaml
+directive:
+  from: swagger-document
+  where: $.definitions.ManifestAttributes
+  transform: >
+    $["x-accessibility"] = "internal"
+```
+
+``` yaml
+directive:
+  from: swagger-document
+  where: $.definitions.RepositoryAttributes
+  transform: >
+    $["x-accessibility"] = "internal"
+```
+
+``` yaml
+directive:
+  from: swagger-document
+  where: $.definitions.TagAttributes
+  transform: >
+    $["x-accessibility"] = "internal"
+```

@@ -1,11 +1,12 @@
-//Copyright(c) Microsoft Corporation.All rights reserved.
-//Licensed under the MIT License.
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Azure.Containers.ContainerRegistry.Specialized;
 using Azure.Core;
 using Azure.Core.Pipeline;
 
@@ -40,11 +41,11 @@ namespace Azure.Containers.ContainerRegistry.Storage
             _repositoryName = repositoryName;
         }
 
-        public ContainerRegistryStorageClient(Uri endpoint, string repositoryName, AzureAdminUserCredential credential) : this(endpoint, repositoryName, credential, new ContainerRegistryClientOptions())
+        public ContainerRegistryStorageClient(Uri endpoint, string repositoryName, ContainerRegistryUserCredential credential) : this(endpoint, repositoryName, credential, new ContainerRegistryClientOptions())
         {
         }
 
-        public ContainerRegistryStorageClient(Uri endpoint, string repositoryName, AzureAdminUserCredential credential, ContainerRegistryClientOptions options)
+        public ContainerRegistryStorageClient(Uri endpoint, string repositoryName, ContainerRegistryUserCredential credential, ContainerRegistryClientOptions options)
         {
             _repositoryName = repositoryName;
         }
@@ -77,7 +78,7 @@ namespace Azure.Containers.ContainerRegistry.Storage
         // TODO: Confirm in FDG that IEnumerable is how to model this input collection
         /// <summary> Get the manifest identified by `name` and `reference` where `reference` can be a tag or digest. </summary>        
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response<RepositoryItemManifest>> GetManifestAsync(ArtifactReference reference, IEnumerable<ManifestMediaType> acceptMediaTypes = null, CancellationToken cancellationToken = default)
+        public virtual async Task<Response<RepositoryItemManifest>> GetManifestAsync(string reference, IEnumerable<ManifestMediaType> acceptMediaTypes = null, CancellationToken cancellationToken = default)
         {
             await Task.Delay(0, cancellationToken).ConfigureAwait(false);
             throw new NotImplementedException();
@@ -102,7 +103,7 @@ namespace Azure.Containers.ContainerRegistry.Storage
 
         /// <summary> Get the manifest identified by `name` and `reference` where `reference` can be a tag or digest. </summary>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response<RepositoryItemManifest> GetManifest(ArtifactReference reference, IEnumerable<ManifestMediaType> acceptMediaTypes = null, CancellationToken cancellationToken = default)
+        public virtual Response<RepositoryItemManifest> GetManifest(string reference, IEnumerable<ManifestMediaType> acceptMediaTypes = null, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
             //using var scope = _clientDiagnostics.CreateScope("ContainerRegistryRepositoryClient.GetManifest");

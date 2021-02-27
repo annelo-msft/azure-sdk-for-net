@@ -10,7 +10,7 @@ using System;
 namespace Azure.Containers.ContainerRegistry.Storage
 {
     /// <summary> Repository attributes. </summary>
-    public partial class RepositoryAttributes
+    internal partial class RepositoryAttributes
     {
         /// <summary> Initializes a new instance of RepositoryAttributes. </summary>
         internal RepositoryAttributes()

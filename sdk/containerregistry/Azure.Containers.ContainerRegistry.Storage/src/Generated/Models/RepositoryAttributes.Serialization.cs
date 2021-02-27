@@ -11,7 +11,7 @@ using Azure.Core;
 
 namespace Azure.Containers.ContainerRegistry.Storage
 {
-    public partial class RepositoryAttributes
+    internal partial class RepositoryAttributes
     {
         internal static RepositoryAttributes DeserializeRepositoryAttributes(JsonElement element)
         {

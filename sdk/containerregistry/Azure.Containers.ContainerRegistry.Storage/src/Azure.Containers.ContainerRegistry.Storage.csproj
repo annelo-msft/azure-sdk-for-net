@@ -51,6 +51,9 @@
   <ItemGroup>
     <Folder Include="swagger\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Azure.Containers.ContainerRegistry\src\Azure.Containers.ContainerRegistry.csproj" />
+  </ItemGroup>
 
   <Import Project="$(MSBuildThisFileDirectory)..\..\..\core\Azure.Core\src\Azure.Core.props" />
 
