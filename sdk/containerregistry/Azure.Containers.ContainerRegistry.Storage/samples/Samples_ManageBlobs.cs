@@ -7,6 +7,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Azure.Containers.ContainerRegistry;
+using Azure.Containers.ContainerRegistry.Storage;
 using Azure.Identity;
 
 namespace ContainerRegistrySamples
@@ -16,9 +17,7 @@ namespace ContainerRegistrySamples
         public async Task UploadBlobInOneRequest_Monolithic()
         {
             // Monolithic upload
-            ContainerRegistryClient registryClient = new ContainerRegistryClient(new Uri("myacr.azurecr.io"), new DefaultAzureCredential());
-            RepositoryClient repositoryClient = registryClient.GetRepositoryClient("hello-world");
-            ContainerRegistryStorageClient storageClient = repositoryClient.GetContainerRegistryStorageClient();
+            ContainerRegistryResumableStorageClient storageClient = new ContainerRegistryResumableStorageClient(new Uri("myacr.azurecr.io"), "hello-world", new DefaultAzureCredential());
 
             //POST INITIATE BLOB UPLOAD
             // Initiate a resumable blob upload. If successful, an upload location will be provided to complete the upload.
@@ -39,9 +38,7 @@ namespace ContainerRegistrySamples
             //var uploadedLayerEnd = await _runtimeClient.Blob.EndUploadAsync(digest, uploadedLayer.Location);
             //return uploadedLayerEnd.DockerContentDigest == digest;
 
-            ContainerRegistryClient registryClient = new ContainerRegistryClient(new Uri("myacr.azurecr.io"), new DefaultAzureCredential());
-            RepositoryClient repositoryClient = registryClient.GetRepositoryClient("hello-world");
-            ContainerRegistryStorageClient storageClient = repositoryClient.GetContainerRegistryStorageClient();
+            ContainerRegistryResumableStorageClient storageClient = new ContainerRegistryResumableStorageClient(new Uri("myacr.azurecr.io"), "hello-world", new DefaultAzureCredential());
 
 
             // TODO: Will calling this "Start" name cause confusion with our LRO patterns?
@@ -58,9 +55,7 @@ namespace ContainerRegistrySamples
 
         public async Task UploadBlob_ResumableUploadInSeveralChunks()
         {
-            ContainerRegistryClient registryClient = new ContainerRegistryClient(new Uri("myacr.azurecr.io"), new DefaultAzureCredential());
-            RepositoryClient repositoryClient = registryClient.GetRepositoryClient("hello-world");
-            ContainerRegistryStorageClient storageClient = repositoryClient.GetContainerRegistryStorageClient();
+            ContainerRegistryResumableStorageClient storageClient = new ContainerRegistryResumableStorageClient(new Uri("myacr.azurecr.io"), "hello-world", new DefaultAzureCredential());
 
             CreateUploadResult uploadDetails = await storageClient.CreateUploadAsync();
             bool haveChunks = true;  // TODO: how do I know?  Who decides how to break things into chunks and why?

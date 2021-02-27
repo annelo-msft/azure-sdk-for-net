@@ -15,7 +15,7 @@ namespace ContainerRegistrySamples
     {
         public async Task PushImageFromDirectory_DockerV2Manifest()
         {
-            ContainerRegistryStorageClient client = new ContainerRegistryStorageClient(new Uri("myacr.azurecr.io"), "hello-world", new DefaultAzureCredential());
+            ContainerRegistryResumableStorageClient client = new ContainerRegistryResumableStorageClient(new Uri("myacr.azurecr.io"), "hello-world", new DefaultAzureCredential());
 
             string directory = @"c:\path\to\image";
 
@@ -85,14 +85,14 @@ namespace ContainerRegistrySamples
             // _logger.LogInformation("Uploading Manifest");
             // TODO: Is it a semantically different operation if I pass in a tag or a digest?
             // Note: this method will throw an exception if the content has been tampered with.
-            await client.CreateManifestAsync(manifest);
+            await client.CreateManifestAsync("hello-world", manifest);
             
         }
 
 
         public async Task PushImageFromDirectory_DockerV2Manifest2()
         {
-            ContainerRegistryStorageClient client = new ContainerRegistryStorageClient(new Uri("myacr.azurecr.io"), "hello-world", new DefaultAzureCredential());
+            ContainerRegistryResumableStorageClient client = new ContainerRegistryResumableStorageClient(new Uri("myacr.azurecr.io"), "hello-world", new DefaultAzureCredential());
 
             string directory = @"c:\path\to\image";
 
@@ -151,11 +151,7 @@ namespace ContainerRegistrySamples
 
         public async Task PushImage_DockerV2Manifest()
         {
-            //var registryClient = new ContainerRegistryClient(new Uri("myacr.azurecr.io"), new DefaultAzureCredential());
-            //var repositoryClient = registryClient.GetRepositoryClient("hello-world");
-            //var storageClient = repositoryClient.GetContainerStorageClient();
-
-            ContainerRegistryStorageClient client = new ContainerRegistryStorageClient(new Uri("myacr.azurecr.io"), "hello-world", new DefaultAzureCredential());
+            ContainerRegistryResumableStorageClient client = new ContainerRegistryResumableStorageClient(new Uri("myacr.azurecr.io"), "hello-world", new DefaultAzureCredential());
 
             ContentDescriptor configDescriptor = new ContentDescriptor()
             {

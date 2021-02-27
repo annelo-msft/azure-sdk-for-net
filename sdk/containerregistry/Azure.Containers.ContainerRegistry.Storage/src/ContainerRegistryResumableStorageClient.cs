@@ -12,7 +12,7 @@ using Azure.Core.Pipeline;
 namespace Azure.Containers.ContainerRegistry.Storage
 {
     /// <summary> The RepositoryStorageClient service client. </summary>
-    public partial class ContainerRegistryStorageClient
+    public partial class ContainerRegistryResumableStorageClient
     {
         private readonly ClientDiagnostics _clientDiagnostics;
         private readonly HttpPipeline _pipeline;
@@ -28,38 +28,38 @@ namespace Azure.Containers.ContainerRegistry.Storage
         /// <summary>
         /// Initializes a new instance of the <see cref="ContainerRegistryClient"/>.
         /// </summary>
-        public ContainerRegistryStorageClient(Uri endpoint, string repositoryName, TokenCredential credential) : this(endpoint, repositoryName, credential, new ContainerRegistryClientOptions())
+        public ContainerRegistryResumableStorageClient(Uri endpoint, string repositoryName, TokenCredential credential) : this(endpoint, repositoryName, credential, new ContainerRegistryClientOptions())
         {
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ContainerRegistryClient"/>.
         /// </summary>
-        public ContainerRegistryStorageClient(Uri endpoint, string repositoryName, TokenCredential credential, ContainerRegistryClientOptions options)
+        public ContainerRegistryResumableStorageClient(Uri endpoint, string repositoryName, TokenCredential credential, ContainerRegistryClientOptions options)
         {
             _repositoryName = repositoryName;
         }
 
-        public ContainerRegistryStorageClient(Uri endpoint, string repositoryName, ContainerRegistryUserCredential credential) : this(endpoint, repositoryName, credential, new ContainerRegistryClientOptions())
+        public ContainerRegistryResumableStorageClient(Uri endpoint, string repositoryName, ContainerRegistryUserCredential credential) : this(endpoint, repositoryName, credential, new ContainerRegistryClientOptions())
         {
         }
 
-        public ContainerRegistryStorageClient(Uri endpoint, string repositoryName, ContainerRegistryUserCredential credential, ContainerRegistryClientOptions options)
+        public ContainerRegistryResumableStorageClient(Uri endpoint, string repositoryName, ContainerRegistryUserCredential credential, ContainerRegistryClientOptions options)
         {
             _repositoryName = repositoryName;
         }
 
-        public ContainerRegistryStorageClient(Uri endpoint, string repositoryName) : this(endpoint, repositoryName, new ContainerRegistryClientOptions())
+        public ContainerRegistryResumableStorageClient(Uri endpoint, string repositoryName) : this(endpoint, repositoryName, new ContainerRegistryClientOptions())
         {
         }
 
-        public ContainerRegistryStorageClient(Uri endpoint, string repositoryName, ContainerRegistryClientOptions options)
+        public ContainerRegistryResumableStorageClient(Uri endpoint, string repositoryName, ContainerRegistryClientOptions options)
         {
             _repositoryName = repositoryName;
         }
 
         /// <summary> Initializes a new instance of ContainerRegistryBlobClient for mocking. </summary>
-        protected ContainerRegistryStorageClient()
+        protected ContainerRegistryResumableStorageClient()
         {
         }
 
@@ -67,7 +67,7 @@ namespace Azure.Containers.ContainerRegistry.Storage
         /// <param name="clientDiagnostics"> The handler for diagnostic messaging in the client. </param>
         /// <param name="pipeline"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
         /// <param name="url"> Registry login URL. </param>
-        internal ContainerRegistryStorageClient(ClientDiagnostics clientDiagnostics, HttpPipeline pipeline, string url)
+        internal ContainerRegistryResumableStorageClient(ClientDiagnostics clientDiagnostics, HttpPipeline pipeline, string url)
         {
             RestClient = new ContainerRegistryBlobRestClient(clientDiagnostics, pipeline, url);
             _clientDiagnostics = clientDiagnostics;
