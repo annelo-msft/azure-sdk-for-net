@@ -22,16 +22,16 @@ namespace Azure.Containers.ContainerRegistry
         internal ContainerRegistryRepositoryRestClient RestClient { get; }
 
         private string _repository;
-        private string _itemReference;
+        private string _reference;
 
-        public RepositoryItemClient(Uri endpoint, string repository, string tagOrDigest, TokenCredential credential) : this(endpoint, repository, tagOrDigest, credential, new ContainerRegistryClientOptions())
+        public RepositoryItemClient(Uri endpoint, string repository, string reference, TokenCredential credential) : this(endpoint, repository, reference, credential, new ContainerRegistryClientOptions())
         {
         }
 
-        public RepositoryItemClient(Uri endpoint, string repository, string tagOrDigest, TokenCredential credential, ContainerRegistryClientOptions options)
+        public RepositoryItemClient(Uri endpoint, string repository, string reference, TokenCredential credential, ContainerRegistryClientOptions options)
         {
             _repository = repository;
-            _itemReference = tagOrDigest;
+            _reference = reference;
         }
 
         private bool IsDigest(string reference)
@@ -39,14 +39,14 @@ namespace Azure.Containers.ContainerRegistry
             throw new NotImplementedException();
         }
 
-        public RepositoryItemClient(Uri endpoint, string repository, string tagOrDigest, ContainerRegistryUserCredential credential) : this(endpoint, repository, tagOrDigest, credential, new ContainerRegistryClientOptions())
+        public RepositoryItemClient(Uri endpoint, string repository, string reference, ContainerRegistryUserCredential credential) : this(endpoint, repository, reference, credential, new ContainerRegistryClientOptions())
         {
         }
 
-        public RepositoryItemClient(Uri endpoint, string repository, string tagOrDigest, ContainerRegistryUserCredential credential, ContainerRegistryClientOptions options)
+        public RepositoryItemClient(Uri endpoint, string repository, string reference, ContainerRegistryUserCredential credential, ContainerRegistryClientOptions options)
         {
             _repository = repository;
-            _itemReference = tagOrDigest;
+            _reference = reference;
         }
 
         /// <summary>
@@ -54,14 +54,14 @@ namespace Azure.Containers.ContainerRegistry
         /// </summary>
         /// <param name="endpoint"></param>
         /// <param name="repository"></param>
-        public RepositoryItemClient(Uri endpoint, string repository, string tagOrDigest) : this(endpoint, repository, tagOrDigest, new ContainerRegistryClientOptions())
+        public RepositoryItemClient(Uri endpoint, string repository, string reference) : this(endpoint, repository, reference, new ContainerRegistryClientOptions())
         {
         }
 
-        public RepositoryItemClient(Uri endpoint, string repository, string tagOrDigest, ContainerRegistryClientOptions options)
+        public RepositoryItemClient(Uri endpoint, string repository, string reference, ContainerRegistryClientOptions options)
         {
             _repository = repository;
-            _itemReference = tagOrDigest;
+            _reference = reference;
         }
 
         /// <summary> Initializes a new instance of ContainerRegistryRepositoryClient for mocking. </summary>
@@ -85,6 +85,8 @@ namespace Azure.Containers.ContainerRegistry
         public string Registry { get; }
 
         public string Repository { get { return _repository; } }
+
+        public string Reference { get { return _reference; } }
 
         //public virtual async Task<Response<string>> GetDigestAsync(CancellationToken cancellationToken = default)
         //{

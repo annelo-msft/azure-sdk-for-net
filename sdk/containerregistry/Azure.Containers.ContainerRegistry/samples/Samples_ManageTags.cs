@@ -92,7 +92,7 @@ namespace ContainerRegistrySamples
             });
 
 
-            Console.WriteLine($"Updating {imageClient.Registry}/{imageClient.Repository}:latest");
+            Console.WriteLine($"Updating {imageClient.Registry}/{imageClient.Repository}:{imageClient.Reference}");
             try
             {
                 using FileStream fs = File.OpenRead(@"c:\path\to\image-manifest");
