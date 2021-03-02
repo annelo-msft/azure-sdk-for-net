@@ -739,7 +739,7 @@ namespace Azure.Containers.ContainerRegistry
                     {
                         ManifestProperties value = default;
                         using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
-                        value = ManifestProperties.DeserializeImageProperties(document.RootElement);
+                        value = ManifestProperties.DeserializeManifestProperties(document.RootElement);
                         return Response.FromValue(value, message.Response);
                     }
                 default:
@@ -771,7 +771,7 @@ namespace Azure.Containers.ContainerRegistry
                     {
                         ManifestProperties value = default;
                         using var document = JsonDocument.Parse(message.Response.ContentStream);
-                        value = ManifestProperties.DeserializeImageProperties(document.RootElement);
+                        value = ManifestProperties.DeserializeManifestProperties(document.RootElement);
                         return Response.FromValue(value, message.Response);
                     }
                 default:

@@ -167,3 +167,7 @@ msbuild.binlog
 BenchmarkDotNet.Artifacts
 
 artifacts
+/sdk/containerregistry/oras_0.9.0_windows_amd64.tar.gz
+/sdk/containerregistry/oras.exe
+/sdk/containerregistry/LICENSE
+/sdk/containerregistry/artifact.txt

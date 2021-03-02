@@ -39,9 +39,9 @@ namespace Azure.Containers.ContainerRegistry.Storage
             throw new NotImplementedException();
         }
 
-        public static string ComputeDigest(Stream stream)
-        {
-            throw new NotImplementedException();
-        }
+        //public static string ComputeDigest(Stream stream)
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }

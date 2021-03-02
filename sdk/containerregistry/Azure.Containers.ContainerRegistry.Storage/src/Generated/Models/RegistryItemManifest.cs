@@ -8,12 +8,12 @@
 namespace Azure.Containers.ContainerRegistry.Storage
 {
     /// <summary> Returns the requested manifest file. </summary>
-    public partial class ImageManifest
+    public partial class RegistryItemManifest
     {
 
-        /// <summary> Initializes a new instance of ImageManifest. </summary>
+        /// <summary> Initializes a new instance of RegistryItemManifest. </summary>
         /// <param name="schemaVersion"> Schema version. </param>
-        internal ImageManifest(int schemaVersion)
+        internal RegistryItemManifest(int schemaVersion)
         {
             SchemaVersion = schemaVersion;
         }

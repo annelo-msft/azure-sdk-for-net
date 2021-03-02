@@ -43,7 +43,7 @@ namespace ContainerRegistrySamples
                         Console.WriteLine($"   This corresponds to the following tagged images: ");
                         foreach (var tagName in item.Tags)
                         {
-                            Console.WriteLine($"        {item.Name}:{tagName}");
+                            Console.WriteLine($"        {item.Repository}:{tagName}");
                         }
                         await registryClient.DeleteImageAsync(repository, item.Digest);
                     }

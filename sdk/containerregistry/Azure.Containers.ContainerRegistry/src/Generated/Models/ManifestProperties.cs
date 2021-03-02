@@ -10,19 +10,19 @@ namespace Azure.Containers.ContainerRegistry
     /// <summary> Manifest attributes details. </summary>
     public partial class ManifestProperties
     {
-        /// <summary> Initializes a new instance of ImageProperties. </summary>
+        /// <summary> Initializes a new instance of ManifestProperties. </summary>
         internal ManifestProperties()
         {
         }
 
-        /// <summary> Initializes a new instance of ImageProperties. </summary>
+        /// <summary> Initializes a new instance of ManifestProperties. </summary>
         /// <param name="registry"> Registry name. </param>
-        /// <param name="name"> Image name. </param>
+        /// <param name="repository"> Image name. </param>
         /// <param name="attributes"> Manifest attributes. </param>
-        internal ManifestProperties(string registry, string name, ManifestAttributesBase attributes)
+        internal ManifestProperties(string registry, string repository, ManifestAttributesBase attributes)
         {
             Registry = registry;
-            Name = name;
+            Repository = repository;
             Attributes = attributes;
         }
 

@@ -12,7 +12,7 @@ namespace Azure.Containers.ContainerRegistry
 {
     public partial class ManifestProperties
     {
-        internal static ManifestProperties DeserializeImageProperties(JsonElement element)
+        internal static ManifestProperties DeserializeManifestProperties(JsonElement element)
         {
             Optional<string> registry = default;
             Optional<string> imageName = default;
