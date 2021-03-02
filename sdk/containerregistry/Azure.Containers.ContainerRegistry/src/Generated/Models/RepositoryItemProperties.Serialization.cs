@@ -10,9 +10,9 @@ using Azure.Core;
 
 namespace Azure.Containers.ContainerRegistry
 {
-    public partial class RepositoryItemProperties
+    public partial class ManifestProperties
     {
-        internal static RepositoryItemProperties DeserializeRepositoryItemProperties(JsonElement element)
+        internal static ManifestProperties DeserializeImageProperties(JsonElement element)
         {
             Optional<string> registry = default;
             Optional<string> imageName = default;
@@ -40,7 +40,7 @@ namespace Azure.Containers.ContainerRegistry
                     continue;
                 }
             }
-            return new RepositoryItemProperties(registry.Value, imageName.Value, manifest.Value);
+            return new ManifestProperties(registry.Value, imageName.Value, manifest.Value);
         }
     }
 }

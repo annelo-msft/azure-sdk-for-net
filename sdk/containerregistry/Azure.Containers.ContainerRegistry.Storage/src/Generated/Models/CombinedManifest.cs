@@ -11,7 +11,7 @@ using Azure.Core;
 namespace Azure.Containers.ContainerRegistry.Storage
 {
     /// <summary> Returns the requested manifest file. </summary>
-    internal partial class CombinedManifest : RepositoryItemManifest
+    internal partial class CombinedManifest : ImageManifest
     {
         /// <summary> Initializes a new instance of CombinedManifest. </summary>
         public CombinedManifest()

@@ -30,13 +30,13 @@ namespace ContainerRegistrySamples
 
                 RepositoryClient repositoryClient = registryClient.GetRepositoryClient(repository);
 
-                AsyncPageable<RepositoryItemProperties> items = repositoryClient.GetItemsAsync(
-                    new GetItemsOptions(orderBy: RepositoryItemOrderBy.LastUpdateTimeDescending)
+                AsyncPageable<ManifestProperties> items = repositoryClient.GetItemsAsync(
+                    new GetItemsOptions(orderBy: ImageOrderBy.LastUpdateTimeDescending)
                 );
 
                 int itemCount = 0;
                 int itemsToKeep = 3;
-                await foreach (RepositoryItemProperties item in items)
+                await foreach (ManifestProperties item in items)
                 {
                     if (itemCount++ >= itemsToKeep)
                     { 

@@ -10,11 +10,11 @@ namespace Azure.Containers.ContainerRegistry
 {
     public class GetItemsOptions
     {
-        public GetItemsOptions(RepositoryItemOrderBy orderBy)
+        public GetItemsOptions(ImageOrderBy orderBy)
         {
             OrderBy = orderBy;
         }
         
-        public RepositoryItemOrderBy OrderBy { get; }
+        public ImageOrderBy OrderBy { get; }
     }
 }

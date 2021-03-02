@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Azure.Containers.ContainerRegistry
 {
-    public enum RepositoryItemOrderBy
+    public enum ImageOrderBy
     {
         LastUpdateTimeDescending,
         LastUpdateTimeAscending

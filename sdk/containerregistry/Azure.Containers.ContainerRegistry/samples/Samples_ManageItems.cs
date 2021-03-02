@@ -17,7 +17,7 @@ namespace ContainerRegistrySamples
 
             Console.WriteLine($"Repository \"hello-world\" contains the following items:");
 
-            AsyncPageable<RepositoryItemProperties> items = repositoryClient.GetItemsAsync();
+            AsyncPageable<ManifestProperties> items = repositoryClient.GetItemsAsync();
             await foreach (var item in items)
             {
                 PrintItemProperties(item);
@@ -35,19 +35,19 @@ namespace ContainerRegistrySamples
             var repositoryClient = registryClient.GetRepositoryClient("hello-world");
             
             // By Tag
-            var repositoryItemClient = repositoryClient.GetItemClient("latest");
-            var itemProperties = await repositoryItemClient.GetPropertiesAsync();
+            var ImageClient = repositoryClient.GetItemClient("latest");
+            var itemProperties = await ImageClient.GetPropertiesAsync();
             PrintItemProperties(itemProperties);
 
             // By Digest (although once you have it by tag or digest, it'll just work after that)
-            repositoryItemClient = repositoryClient.GetItemClient("<digest>");
-            itemProperties = await repositoryItemClient.GetPropertiesAsync();
+            ImageClient = repositoryClient.GetItemClient("<digest>");
+            itemProperties = await ImageClient.GetPropertiesAsync();
             PrintItemProperties(itemProperties);
         }
 
         public async Task UpdateManifestPermissions()
         {
-            var repositoryItemClient = new RepositoryItemClient(new Uri("myacr.azurecr.io"), "hello-world", "latest", new DefaultAzureCredential());
+            var ImageClient = new ImageClient(new Uri("myacr.azurecr.io"), "hello-world", "latest", new DefaultAzureCredential());
 
             ContentPermissions permissions = new ContentPermissions()
             {
@@ -57,7 +57,7 @@ namespace ContainerRegistrySamples
                 CanDelete = false
             };
 
-            await repositoryItemClient.SetPermissionsAsync(permissions);
+            await ImageClient.SetPermissionsAsync(permissions);
 
             // TODO: show that trying to write to this manifest fails.  Also, what is the bigger story here?  
             // It seems like it would be a DevOps story, since this is about being able to push to a registry.
@@ -67,7 +67,7 @@ namespace ContainerRegistrySamples
         {
         }
 
-        private void PrintItemProperties(RepositoryItemProperties itemProperties)
+        private void PrintItemProperties(ManifestProperties itemProperties)
         {
             Console.WriteLine($"Item is {itemProperties.Registry}/{itemProperties.Name}:{itemProperties.Digest}");
 

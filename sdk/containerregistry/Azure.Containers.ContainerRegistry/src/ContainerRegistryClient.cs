@@ -111,6 +111,29 @@ namespace Azure.Containers.ContainerRegistry
             throw new NotImplementedException();
         }
 
+        public virtual async Task<Response<RepositoryProperties>> GetRepositoryAsync(string repository, CancellationToken cancellationToken = default)
+        {
+            await Task.Delay(0, cancellationToken).ConfigureAwait(false);
+            throw new NotImplementedException();
+
+            // TODO: Get Repository Properties
+        }
+
+        public virtual Response<RepositoryProperties> GetRepository(string repository, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual Pageable<ManifestProperties> GetImages(string respository = null, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual AsyncPageable<ManifestProperties> GetImagesAsync(string respository = null, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary> Delete the repository identified by `name`. </summary>
         /// <param name="repository"> Name of the image (including the namespace). </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
@@ -132,6 +155,47 @@ namespace Azure.Containers.ContainerRegistry
         /// <summary> Delete the repository identified by `name`. </summary>
         /// <param name="repository"> Name of the image (including the namespace). </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
+        public virtual Response DeleteImage(string repository, string digest, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+
+            //using var scope = _clientDiagnostics.CreateScope("ContainerRegistryClient.DeleteRepository");
+            //scope.Start();
+            //try
+            //{
+            //    return RestClient.DeleteRepository(repository, cancellationToken);
+            //}
+            //catch (Exception e)
+            //{
+            //    scope.Failed(e);
+            //    throw;
+            //}
+        }
+
+        /// <summary> Delete the repository identified by `name`. </summary>
+        /// <param name="repository"> Name of the image (including the namespace). </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        public virtual async Task<Response> DeleteImageAsync(string repository, string digest, CancellationToken cancellationToken = default)
+        {
+            await Task.Delay(0, cancellationToken).ConfigureAwait(false);
+            throw new NotImplementedException();
+
+            //using var scope = _clientDiagnostics.CreateScope("ContainerRegistryClient.DeleteRepository");
+            //scope.Start();
+            //try
+            //{
+            //    return await RestClient.DeleteRepositoryAsync(repository, cancellationToken).ConfigureAwait(false);
+            //}
+            //catch (Exception e)
+            //{
+            //    scope.Failed(e);
+            //    throw;
+            //}
+        }
+
+        /// <summary> Delete the repository identified by `name`. </summary>
+        /// <param name="repository"> Name of the image (including the namespace). </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Response<DeleteRepositoryResult> DeleteRepository(string repository, CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("ContainerRegistryClient.DeleteRepository");
@@ -147,7 +211,46 @@ namespace Azure.Containers.ContainerRegistry
             }
         }
 
-        public virtual RepositoryClient GetRepositoryClient(string repository)
+        /// <summary> Update the attribute identified by `name` where `reference` is the name of the repository. </summary>
+        /// <param name="value"> Repository attribute value. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        public virtual async Task<Response> SetRepositoryPermissionsAsync(ContentPermissions value, CancellationToken cancellationToken = default)
+        {
+            await Task.Delay(0, cancellationToken).ConfigureAwait(false);
+            throw new NotImplementedException();
+            //using var scope = _clientDiagnostics.CreateScope("ContainerRegistryClient.UpdateRepositoryAttributes");
+            //scope.Start();
+            //try
+            //{
+            //    return await RestClient.UpdateRepositoryAttributesAsync(repositoryName, value, cancellationToken).ConfigureAwait(false);
+            //}
+            //catch (Exception e)
+            //{
+            //    scope.Failed(e);
+            //    throw;
+            //}
+        }
+
+        /// <summary> Update the attribute identified by `name` where `reference` is the name of the repository. </summary>
+        /// <param name="value"> Repository attribute value. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        public virtual Response SetRepositoryPermissions(ContentPermissions value, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+            //using var scope = _clientDiagnostics.CreateScope("ContainerRegistryClient.UpdateRepositoryAttributes");
+            //scope.Start();
+            //try
+            //{
+            //    return RestClient.UpdateRepositoryAttributes(repositoryName, value, cancellationToken);
+            //}
+            //catch (Exception e)
+            //{
+            //    scope.Failed(e);
+            //    throw;
+            //}
+        }
+
+        public virtual ImageClient GetImageClient(string repository, string tag)
         {
             throw new NotImplementedException();
         }

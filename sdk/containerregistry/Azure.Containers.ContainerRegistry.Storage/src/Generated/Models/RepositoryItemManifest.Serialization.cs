@@ -10,7 +10,7 @@ using Azure.Core;
 
 namespace Azure.Containers.ContainerRegistry.Storage
 {
-    public partial class RepositoryItemManifest : IUtf8JsonSerializable
+    public partial class ImageManifest : IUtf8JsonSerializable
     {
         void IUtf8JsonSerializable.Write(Utf8JsonWriter writer)
         {
@@ -23,7 +23,7 @@ namespace Azure.Containers.ContainerRegistry.Storage
             writer.WriteEndObject();
         }
 
-        internal static RepositoryItemManifest DeserializeRepositoryItemManifest(JsonElement element)
+        internal static ImageManifest DeserializeImageManifest(JsonElement element)
         {
             Optional<int> schemaVersion = default;
             foreach (var property in element.EnumerateObject())
@@ -39,7 +39,7 @@ namespace Azure.Containers.ContainerRegistry.Storage
                     continue;
                 }
             }
-            return new RepositoryItemManifest(schemaVersion);
+            return new ImageManifest(schemaVersion);
         }
     }
 }
