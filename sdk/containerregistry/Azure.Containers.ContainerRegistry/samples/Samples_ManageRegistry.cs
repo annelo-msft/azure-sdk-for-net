@@ -28,9 +28,8 @@ namespace ContainerRegistrySamples
             {
                 Console.WriteLine($"Repository name: {repository}");
 
-                RepositoryClient repositoryClient = registryClient.GetRepositoryClient(repository);
-
-                AsyncPageable<ManifestProperties> items = repositoryClient.GetItemsAsync(
+                AsyncPageable<ManifestProperties> items = registryClient.GetImagesAsync(
+                    repository,
                     new GetItemsOptions(orderBy: ImageOrderBy.LastUpdateTimeDescending)
                 );
 
@@ -46,7 +45,7 @@ namespace ContainerRegistrySamples
                         {
                             Console.WriteLine($"        {item.Name}:{tagName}");
                         }
-                        await repositoryClient.DeleteItemAsync(item.Digest);
+                        await registryClient.DeleteImageAsync(repository, item.Digest);
                     }
 
                     // This will delete the manifest, but not the item layers unless there are no remaining references to them

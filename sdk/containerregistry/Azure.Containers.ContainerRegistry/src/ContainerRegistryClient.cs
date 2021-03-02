@@ -99,8 +99,6 @@ namespace Azure.Containers.ContainerRegistry
 
         public Uri Endpoint { get; }
 
-        public string Registry { get; }
-
         public virtual Pageable<string> GetRepositories(CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
@@ -124,12 +122,14 @@ namespace Azure.Containers.ContainerRegistry
             throw new NotImplementedException();
         }
 
-        public virtual Pageable<ManifestProperties> GetImages(string respository = null, CancellationToken cancellationToken = default)
+        public virtual Pageable<ManifestProperties> GetImages(string repository, GetItemsOptions options = null, CancellationToken cancellationToken = default)
         {
+            // Get images in repository
+
             throw new NotImplementedException();
         }
 
-        public virtual AsyncPageable<ManifestProperties> GetImagesAsync(string respository = null, CancellationToken cancellationToken = default)
+        public virtual AsyncPageable<ManifestProperties> GetImagesAsync(string repository, GetItemsOptions options = null, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
@@ -214,7 +214,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <summary> Update the attribute identified by `name` where `reference` is the name of the repository. </summary>
         /// <param name="value"> Repository attribute value. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response> SetRepositoryPermissionsAsync(ContentPermissions value, CancellationToken cancellationToken = default)
+        public virtual async Task<Response> SetRepositoryPermissionsAsync(string repository, ContentPermissions value, CancellationToken cancellationToken = default)
         {
             await Task.Delay(0, cancellationToken).ConfigureAwait(false);
             throw new NotImplementedException();
@@ -234,7 +234,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <summary> Update the attribute identified by `name` where `reference` is the name of the repository. </summary>
         /// <param name="value"> Repository attribute value. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response SetRepositoryPermissions(ContentPermissions value, CancellationToken cancellationToken = default)
+        public virtual Response SetRepositoryPermissions(string repository, ContentPermissions value, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
             //using var scope = _clientDiagnostics.CreateScope("ContainerRegistryClient.UpdateRepositoryAttributes");

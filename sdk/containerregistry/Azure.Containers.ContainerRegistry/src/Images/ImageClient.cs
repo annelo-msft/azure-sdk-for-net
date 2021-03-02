@@ -167,7 +167,7 @@ namespace Azure.Containers.ContainerRegistry
             throw new NotImplementedException();
         }
 
-        public virtual async Task<Response<ManifestProperties>> GetPropertiesAsync(CancellationToken cancellationToken = default)
+        public virtual async Task<Response<ManifestProperties>> GetManifestPropertiesAsync(string digest = null, CancellationToken cancellationToken = default)
         {
             await Task.Delay(0, cancellationToken).ConfigureAwait(false);
             throw new NotImplementedException();
@@ -175,12 +175,12 @@ namespace Azure.Containers.ContainerRegistry
             // TODO: Get Repository Attributes
         }
 
-        public virtual Response<ManifestProperties> GetProperties(CancellationToken cancellationToken = default)
+        public virtual Response<ManifestProperties> GetManifestProperties(string digest = null, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public virtual async Task<Response<ManifestProperties>> SetManifestPermissionsAsync(ContentPermissions value, CancellationToken cancellationToken = default)
+        public virtual async Task<Response<ManifestProperties>> SetManifestPermissionsAsync(ContentPermissions value, string digest = null, CancellationToken cancellationToken = default)
         {
             await Task.Delay(0, cancellationToken).ConfigureAwait(false);
             throw new NotImplementedException();
@@ -201,7 +201,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <summary> Update the attribute identified by `name` where `reference` is the name of the repository. </summary>
         /// <param name="value"> Repository attribute value. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response<ManifestProperties> SetManifestPermissions(ContentPermissions value, CancellationToken cancellationToken = default)
+        public virtual Response<ManifestProperties> SetManifestPermissions(ContentPermissions value, string digest = null, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
             //using var scope = _clientDiagnostics.CreateScope("ContainerRegistryClient.UpdateRepositoryAttributes");
@@ -233,7 +233,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <summary> Update the attribute identified by `name` where `reference` is the name of the repository. </summary>
         /// <param name="value"> Repository attribute value. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response<TagProperties>> SetTagPermissionsAsync(ContentPermissions value, string tag = null, CancellationToken cancellationToken = default)
+        public virtual async Task<Response<TagProperties>> SetTagPermissionsAsync(ContentPermissions value, CancellationToken cancellationToken = default)
         {
             await Task.Delay(0, cancellationToken).ConfigureAwait(false);
             throw new NotImplementedException();
@@ -253,7 +253,45 @@ namespace Azure.Containers.ContainerRegistry
         /// <summary> Update the attribute identified by `name` where `reference` is the name of the repository. </summary>
         /// <param name="value"> Repository attribute value. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response<TagProperties> SetTagPermissions(ContentPermissions value, string tag = null, CancellationToken cancellationToken = default)
+        public virtual Response<TagProperties> SetTagPermissions(ContentPermissions value, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+            //using var scope = _clientDiagnostics.CreateScope("ContainerRegistryClient.UpdateRepositoryAttributes");
+            //scope.Start();
+            //try
+            //{
+            //    return RestClient.UpdateRepositoryAttributes(repositoryName, value, cancellationToken);
+            //}
+            //catch (Exception e)
+            //{
+            //    scope.Failed(e);
+            //    throw;
+            //}
+        }
+        /// <summary> Update the attribute identified by `name` where `reference` is the name of the repository. </summary>
+        /// <param name="value"> Repository attribute value. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        public virtual async Task<Response<TagProperties>> SetTagPermissionsAsync(string tag, ContentPermissions value, CancellationToken cancellationToken = default)
+        {
+            await Task.Delay(0, cancellationToken).ConfigureAwait(false);
+            throw new NotImplementedException();
+            //using var scope = _clientDiagnostics.CreateScope("ContainerRegistryClient.UpdateRepositoryAttributes");
+            //scope.Start();
+            //try
+            //{
+            //    return await RestClient.UpdateRepositoryAttributesAsync(repositoryName, value, cancellationToken).ConfigureAwait(false);
+            //}
+            //catch (Exception e)
+            //{
+            //    scope.Failed(e);
+            //    throw;
+            //}
+        }
+
+        /// <summary> Update the attribute identified by `name` where `reference` is the name of the repository. </summary>
+        /// <param name="value"> Repository attribute value. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        public virtual Response<TagProperties> SetTagPermissions(string tag, ContentPermissions value, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
             //using var scope = _clientDiagnostics.CreateScope("ContainerRegistryClient.UpdateRepositoryAttributes");

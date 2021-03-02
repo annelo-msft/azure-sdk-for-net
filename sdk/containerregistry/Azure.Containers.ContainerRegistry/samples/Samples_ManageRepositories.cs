@@ -29,9 +29,8 @@ namespace ContainerRegistrySamples
         public async Task GetRepositoryProperties()
         {
             var client = new ContainerRegistryClient(new Uri("myacr.azurecr.io"), new DefaultAzureCredential());
-            var repositoryClient = client.GetRepositoryClient("hello-world");
 
-            RepositoryProperties repository = await repositoryClient.GetPropertiesAsync();
+            RepositoryProperties repository = await client.GetRepositoryAsync("hello-world");
 
             Console.WriteLine($"Repository is {repository.Registry}/{repository.Name}");
 
@@ -50,15 +49,16 @@ namespace ContainerRegistrySamples
 
         public async Task SetRepositoryPermissions()
         {
-            var client = new RepositoryClient(new Uri("myacr.azurecr.io"), "hello-world", new DefaultAzureCredential());
+            var client = new ContainerRegistryClient(new Uri("myacr.azurecr.io"), new DefaultAzureCredential());
 
-            await client.SetPermissionsAsync(new ContentPermissions()
+            await client.SetRepositoryPermissionsAsync("hello-world", new ContentPermissions()
             {
                 CanList = true,
                 CanRead = true,
                 CanWrite = false,
                 CanDelete = false
             });
+
         }
 
         public async Task DeleteRepository()

@@ -14,8 +14,7 @@ namespace ContainerRegistrySamples
         public async Task ListTagsForItem()
         {
             var registryClient = new ContainerRegistryClient(new Uri("myacr.azurecr.io"), new DefaultAzureCredential());
-            var repositoryClient = registryClient.GetRepositoryClient("hello-world");
-            var imageClient = repositoryClient.GetItemClient("latest");
+            var imageClient = registryClient.GetImageClient("hello-world", "latest");
 
             AsyncPageable<TagProperties> tags = imageClient.GetTagsAsync();
             await foreach (var tag in tags)
@@ -83,7 +82,7 @@ namespace ContainerRegistrySamples
 
             var imageClient = new ImageClient(new Uri("myacr.azurecr.io"), "hello-world", "latest", new DefaultAzureCredential());
 
-            await imageClient.SetTagPermissionsAsync("latest", new ContentPermissions()
+            await imageClient.SetTagPermissionsAsync(new ContentPermissions()
             {
                 CanList = true,
                 CanRead = true,
@@ -92,7 +91,7 @@ namespace ContainerRegistrySamples
             });
 
 
-            Console.WriteLine($"Updating {imageClient.Registry}/{imageClient.Repository}:{imageClient.Reference}");
+            Console.WriteLine($"Updating {imageClient.Registry}/{imageClient.Repository}:{imageClient.Tag}");
             try
             {
                 using FileStream fs = File.OpenRead(@"c:\path\to\image-manifest");
@@ -111,7 +110,7 @@ namespace ContainerRegistrySamples
 
             var imageClient = new ImageClient(new Uri("myacr.azurecr.io"), "hello-world", "v3", new DefaultAzureCredential());
 
-            await imageClient.DeleteTagAsync("latest");
+            await imageClient.UntagAsync("latest");
 
             // TODO: Write a story where we verify that this is gone.
         }

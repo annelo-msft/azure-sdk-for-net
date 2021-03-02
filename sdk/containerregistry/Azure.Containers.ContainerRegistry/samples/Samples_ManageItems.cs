@@ -13,11 +13,10 @@ namespace ContainerRegistrySamples
         public async Task ViewListOfManifestsInRepositoryAndInfoAboutThem()
         {
             var registryClient = new ContainerRegistryClient(new Uri("myacr.azurecr.io"), new DefaultAzureCredential());
-            var repositoryClient = registryClient.GetRepositoryClient("hello-world");
 
             Console.WriteLine($"Repository \"hello-world\" contains the following items:");
 
-            AsyncPageable<ManifestProperties> items = repositoryClient.GetItemsAsync();
+            AsyncPageable<ManifestProperties> items = registryClient.GetImagesAsync("hello-world");
             await foreach (var item in items)
             {
                 PrintItemProperties(item);
@@ -32,17 +31,18 @@ namespace ContainerRegistrySamples
         public async Task GetItemProperties()
         {
             var registryClient = new ContainerRegistryClient(new Uri("myacr.azurecr.io"), new DefaultAzureCredential());
-            var repositoryClient = registryClient.GetRepositoryClient("hello-world");
             
-            // By Tag
-            var ImageClient = repositoryClient.GetItemClient("latest");
-            var itemProperties = await ImageClient.GetPropertiesAsync();
+            // for one tagged image
+            var ImageClient = registryClient.GetImageClient("hello-world", "latest");
+            var itemProperties = await ImageClient.GetManifestPropertiesAsync();
             PrintItemProperties(itemProperties);
 
-            // By Digest (although once you have it by tag or digest, it'll just work after that)
-            ImageClient = repositoryClient.GetItemClient("<digest>");
-            itemProperties = await ImageClient.GetPropertiesAsync();
-            PrintItemProperties(itemProperties);
+            // for an entire repository (this include digest into)
+            AsyncPageable<ManifestProperties> images = registryClient.GetImagesAsync("hello-world");
+            await foreach (var image in images)
+            {
+                PrintItemProperties(image);
+            }
         }
 
         public async Task UpdateManifestPermissions()
@@ -57,14 +57,25 @@ namespace ContainerRegistrySamples
                 CanDelete = false
             };
 
-            await ImageClient.SetPermissionsAsync(permissions);
+            await ImageClient.SetTagPermissionsAsync(permissions);
 
             // TODO: show that trying to write to this manifest fails.  Also, what is the bigger story here?  
             // It seems like it would be a DevOps story, since this is about being able to push to a registry.
         }
 
-        public async Task HandleManifestList()
+        public async Task ViewImagesInManifestList()
         {
+            // TODO: rewrite this for recursion correctly
+            var itemClient = new ImageClient(new Uri("myacr.azurecr.io"), "redis", "latest");
+            ManifestProperties manifestList = itemClient.GetManifestProperties();
+            if (manifestList.Images.Count > 0)
+            {
+                // TODO: this should be items
+                foreach (var image in manifestList.Images )
+                {
+
+                }
+            }
         }
 
         private void PrintItemProperties(ManifestProperties itemProperties)
