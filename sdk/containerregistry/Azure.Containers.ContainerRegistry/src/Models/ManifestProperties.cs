@@ -12,7 +12,7 @@ namespace Azure.Containers.ContainerRegistry
     public partial class ManifestProperties
     {
         [CodeGenMember("ImageName")]
-        public string Name { get; }
+        public string Repository { get; }
 
         public string Digest { get { return Attributes.Digest; } }
 
