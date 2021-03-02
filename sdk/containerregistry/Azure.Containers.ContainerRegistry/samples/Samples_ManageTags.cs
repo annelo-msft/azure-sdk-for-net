@@ -43,7 +43,7 @@ namespace ContainerRegistrySamples
 
         public async Task ViewItemTagsOrderedByLastUpdateTime()
         {
-            var imageClient = new ImageClient(new Uri("myacr.azurecr.io"), "hello-world", "latest", new DefaultAzureCredential());
+            var imageClient = new RegistryItemClient(new Uri("myacr.azurecr.io"), "hello-world", "latest", new DefaultAzureCredential());
          
             AsyncPageable<TagProperties> tags = imageClient.GetTagsAsync(new GetTagOptions(orderBy: TagOrderBy.LastUpdateTimeDescending));
 
@@ -69,7 +69,7 @@ namespace ContainerRegistrySamples
         {
             // Qn: what is the story around why you would do this? To look at last update time or tag permissions.
 
-            var imageClient = new ImageClient(new Uri("myacr.azurecr.io"), "hello-world", "latest", new DefaultAzureCredential());
+            var imageClient = new RegistryItemClient(new Uri("myacr.azurecr.io"), "hello-world", "latest", new DefaultAzureCredential());
 
             TagProperties tagProperties = await imageClient.GetTagPropertiesAsync("latest");
 
@@ -80,7 +80,7 @@ namespace ContainerRegistrySamples
         {
             // Note: this isn't arbitrary SetProperties because we can only update the permissions component of the tag metadata - everything else is read-only
 
-            var imageClient = new ImageClient(new Uri("myacr.azurecr.io"), "hello-world", "latest", new DefaultAzureCredential());
+            var imageClient = new RegistryItemClient(new Uri("myacr.azurecr.io"), "hello-world", "latest", new DefaultAzureCredential());
 
             await imageClient.SetTagPermissionsAsync(new ContentPermissions()
             {
@@ -108,7 +108,7 @@ namespace ContainerRegistrySamples
             // TODO: does this just delete the tag but not the manifest or anything else?
             // Or is there more to this story?
 
-            var imageClient = new ImageClient(new Uri("myacr.azurecr.io"), "hello-world", "v3", new DefaultAzureCredential());
+            var imageClient = new RegistryItemClient(new Uri("myacr.azurecr.io"), "hello-world", "v3", new DefaultAzureCredential());
 
             await imageClient.UntagAsync("latest");
 

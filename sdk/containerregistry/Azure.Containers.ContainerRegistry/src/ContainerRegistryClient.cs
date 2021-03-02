@@ -122,14 +122,14 @@ namespace Azure.Containers.ContainerRegistry
             throw new NotImplementedException();
         }
 
-        public virtual Pageable<ManifestProperties> GetImages(string repository, GetItemsOptions options = null, CancellationToken cancellationToken = default)
+        public virtual Pageable<ManifestProperties> GetRegistryItems(string repository, GetItemsOptions options = null, CancellationToken cancellationToken = default)
         {
             // Get images in repository
 
             throw new NotImplementedException();
         }
 
-        public virtual AsyncPageable<ManifestProperties> GetImagesAsync(string repository, GetItemsOptions options = null, CancellationToken cancellationToken = default)
+        public virtual AsyncPageable<ManifestProperties> GetRegistryItemsAsync(string repository, GetItemsOptions options = null, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
@@ -155,7 +155,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <summary> Delete the repository identified by `name`. </summary>
         /// <param name="repository"> Name of the image (including the namespace). </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response DeleteImage(string repository, string digest, CancellationToken cancellationToken = default)
+        public virtual Response DeleteRegistryItem(string repository, string digest, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
 
@@ -175,7 +175,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <summary> Delete the repository identified by `name`. </summary>
         /// <param name="repository"> Name of the image (including the namespace). </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response> DeleteImageAsync(string repository, string digest, CancellationToken cancellationToken = default)
+        public virtual async Task<Response> DeleteRegistryItemAsync(string repository, string digest, CancellationToken cancellationToken = default)
         {
             await Task.Delay(0, cancellationToken).ConfigureAwait(false);
             throw new NotImplementedException();
@@ -250,7 +250,7 @@ namespace Azure.Containers.ContainerRegistry
             //}
         }
 
-        public virtual ImageClient GetImageClient(string repository, string tag)
+        public virtual RegistryItemClient GetItemClient(string repository, string tag)
         {
             throw new NotImplementedException();
         }

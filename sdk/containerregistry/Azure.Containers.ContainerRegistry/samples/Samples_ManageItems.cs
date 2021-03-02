@@ -48,7 +48,7 @@ namespace ContainerRegistrySamples
 
         public async Task UpdateManifestPermissions()
         {
-            var ImageClient = new ImageClient(new Uri("myacr.azurecr.io"), "hello-world", "latest", new DefaultAzureCredential());
+            var ImageClient = new RegistryItemClient(new Uri("myacr.azurecr.io"), "hello-world", "latest", new DefaultAzureCredential());
 
             ContentPermissions permissions = new ContentPermissions()
             {
@@ -74,12 +74,12 @@ namespace ContainerRegistrySamples
             // https://developer.ibm.com/components/ibm-power/tutorials/createmulti-architecture-docker-images/
 
             // TODO: rewrite this for recursion correctly
-            var itemClient = new ImageClient(new Uri("myacr.azurecr.io"), "redis", "latest");
+            var itemClient = new RegistryItemClient(new Uri("myacr.azurecr.io"), "redis", "latest");
             ManifestProperties manifestList = itemClient.GetManifestProperties();
-            if (manifestList.Images.Count > 0)
+            if (manifestList.RegistryItems.Count > 0)
             {
                 // TODO: this should be items
-                foreach (ManifestProperties image in manifestList.Images )
+                foreach (ManifestProperties image in manifestList.RegistryItems )
                 {
                     Console.WriteLine($"Image {image.Registry}/{image.Repository}:{image.Digest}");
                     Console.WriteLine($"  supports architecture/OS ${image.CpuArchitecture}/{image.OperatingSystem}");
@@ -87,7 +87,7 @@ namespace ContainerRegistrySamples
             }
 
             // Find the digest corresponding to the linux / amd64 platform
-            ManifestProperties manifest = manifestList.Images.Where(i => i.OperatingSystem == "linux" && i.CpuArchitecture == "amd64").FirstOrDefault();
+            ManifestProperties manifest = manifestList.RegistryItems.Where(i => i.OperatingSystem == "linux" && i.CpuArchitecture == "amd64").FirstOrDefault();
         }
 
         private void PrintItemProperties(ManifestProperties itemProperties)

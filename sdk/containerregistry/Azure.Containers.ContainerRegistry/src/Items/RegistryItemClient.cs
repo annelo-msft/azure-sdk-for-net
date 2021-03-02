@@ -13,7 +13,7 @@ using Azure.Core.Pipeline;
 namespace Azure.Containers.ContainerRegistry
 {
     /// <summary> The ContainerRegistryRepository service client. </summary>
-    public partial class ImageClient
+    public partial class RegistryItemClient
     {
         private readonly ClientDiagnostics _clientDiagnostics;
         private readonly HttpPipeline _pipeline;
@@ -22,11 +22,11 @@ namespace Azure.Containers.ContainerRegistry
         private string _repository;
         private string _tag;
 
-        public ImageClient(Uri endpoint, string repository, string tag, TokenCredential credential) : this(endpoint, repository, tag, credential, new ContainerRegistryClientOptions())
+        public RegistryItemClient(Uri endpoint, string repository, string tag, TokenCredential credential) : this(endpoint, repository, tag, credential, new ContainerRegistryClientOptions())
         {
         }
 
-        public ImageClient(Uri endpoint, string repository, string tag, TokenCredential credential, ContainerRegistryClientOptions options)
+        public RegistryItemClient(Uri endpoint, string repository, string tag, TokenCredential credential, ContainerRegistryClientOptions options)
         {
             _repository = repository;
             _tag = tag;
@@ -37,11 +37,11 @@ namespace Azure.Containers.ContainerRegistry
             throw new NotImplementedException();
         }
 
-        public ImageClient(Uri endpoint, string repository, string tag, ContainerRegistryUserCredential credential) : this(endpoint, repository, tag, credential, new ContainerRegistryClientOptions())
+        public RegistryItemClient(Uri endpoint, string repository, string tag, ContainerRegistryUserCredential credential) : this(endpoint, repository, tag, credential, new ContainerRegistryClientOptions())
         {
         }
 
-        public ImageClient(Uri endpoint, string repository, string tag, ContainerRegistryUserCredential credential, ContainerRegistryClientOptions options)
+        public RegistryItemClient(Uri endpoint, string repository, string tag, ContainerRegistryUserCredential credential, ContainerRegistryClientOptions options)
         {
             _repository = repository;
             _tag = tag;
@@ -52,18 +52,18 @@ namespace Azure.Containers.ContainerRegistry
         /// </summary>
         /// <param name="endpoint"></param>
         /// <param name="repository"></param>
-        public ImageClient(Uri endpoint, string repository, string tag) : this(endpoint, repository, tag, new ContainerRegistryClientOptions())
+        public RegistryItemClient(Uri endpoint, string repository, string tag) : this(endpoint, repository, tag, new ContainerRegistryClientOptions())
         {
         }
 
-        public ImageClient(Uri endpoint, string repository, string tag, ContainerRegistryClientOptions options)
+        public RegistryItemClient(Uri endpoint, string repository, string tag, ContainerRegistryClientOptions options)
         {
             _repository = repository;
             _tag = tag;
         }
 
         /// <summary> Initializes a new instance of ContainerRegistryRepositoryClient for mocking. </summary>
-        protected ImageClient()
+        protected RegistryItemClient()
         {
         }
 
@@ -71,7 +71,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="clientDiagnostics"> The handler for diagnostic messaging in the client. </param>
         /// <param name="pipeline"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
         /// <param name="url"> Registry login URL. </param>
-        internal ImageClient(ClientDiagnostics clientDiagnostics, HttpPipeline pipeline, string url)
+        internal RegistryItemClient(ClientDiagnostics clientDiagnostics, HttpPipeline pipeline, string url)
         {
             RestClient = new ContainerRegistryRepositoryRestClient(clientDiagnostics, pipeline, url);
             _clientDiagnostics = clientDiagnostics;
@@ -217,7 +217,7 @@ namespace Azure.Containers.ContainerRegistry
             //}
         }
 
-        public virtual async Task<Response<TagProperties>> GetTagPropertiesAsync(string tag = null, CancellationToken cancellationToken = default)
+        public virtual async Task<Response<TagProperties>> GetTagPropertiesAsync(CancellationToken cancellationToken = default)
         {
             await Task.Delay(0, cancellationToken).ConfigureAwait(false);
             throw new NotImplementedException();
@@ -225,7 +225,20 @@ namespace Azure.Containers.ContainerRegistry
             // TODO: Get Repository Attributes
         }
 
-        public virtual Response<TagProperties> GetTagProperties(string tag = null, CancellationToken cancellationToken = default)
+        public virtual Response<TagProperties> GetTagProperties(CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual async Task<Response<TagProperties>> GetTagPropertiesAsync(string tag, CancellationToken cancellationToken = default)
+        {
+            await Task.Delay(0, cancellationToken).ConfigureAwait(false);
+            throw new NotImplementedException();
+
+            // TODO: Get Repository Attributes
+        }
+
+        public virtual Response<TagProperties> GetTagProperties(string tag, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
