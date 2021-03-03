@@ -48,7 +48,7 @@ namespace ContainerRegistrySamples
 
         public async Task UpdateManifestPermissions()
         {
-            var ImageClient = new RegistryItemClient(new Uri("myacr.azurecr.io"), "hello-world", "latest", new DefaultAzureCredential());
+            var ImageClient = new RepositoryClient(new Uri("myacr.azurecr.io"), "hello-world", "latest", new DefaultAzureCredential());
 
             ContentPermissions permissions = new ContentPermissions()
             {
@@ -74,7 +74,7 @@ namespace ContainerRegistrySamples
             // https://developer.ibm.com/components/ibm-power/tutorials/createmulti-architecture-docker-images/
 
             // Assuming the manifest list is one level deep to simplify this example
-            var itemClient = new RegistryItemClient(new Uri("myacr.azurecr.io"), "redis", "latest");
+            var itemClient = new RepositoryClient(new Uri("myacr.azurecr.io"), "redis", "latest");
             ManifestProperties manifestList = itemClient.GetManifestProperties();
             if (manifestList.RegistryItems.Count > 0)
             {
