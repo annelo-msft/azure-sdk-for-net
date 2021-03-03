@@ -16,7 +16,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <summary> Initializes a new instance of DeleteRepositoryResult. </summary>
         internal DeleteRepositoryResult()
         {
-            DeletedItemDigests = new ChangeTrackingList<string>();
+            DeletedImageDigests = new ChangeTrackingList<string>();
             DeletedTags = new ChangeTrackingList<string>();
         }
 
@@ -25,7 +25,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="deletedTags"> Tag of the deleted image. </param>
         internal DeleteRepositoryResult(IReadOnlyList<string> deletedItemDigests, IReadOnlyList<string> deletedTags)
         {
-            DeletedItemDigests = deletedItemDigests;
+            DeletedImageDigests = deletedItemDigests;
             DeletedTags = deletedTags;
         }
     }

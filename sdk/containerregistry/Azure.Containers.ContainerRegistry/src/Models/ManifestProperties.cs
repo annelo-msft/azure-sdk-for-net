@@ -27,7 +27,7 @@ namespace Azure.Containers.ContainerRegistry
 
         public string OperatingSystem { get { return Attributes.Os; } }
 
-        public IReadOnlyList<ManifestProperties> RegistryItems { get; }
+        public IReadOnlyList<ManifestProperties> Images { get; }
 
         internal string ManifestMediaType { get { return Attributes.MediaType; } }
 

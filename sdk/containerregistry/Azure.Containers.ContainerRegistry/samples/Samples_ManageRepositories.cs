@@ -37,7 +37,7 @@ namespace ContainerRegistrySamples
             Console.WriteLine($"Repository {repository.Name} was created at {repository.CreatedTime}");
             Console.WriteLine($"Repository {repository.Name} was last updated at {repository.LastUpdateTime}");
 
-            Console.WriteLine($"Repository {repository.Name} has {repository.ItemCount} items");
+            Console.WriteLine($"Repository {repository.Name} has {repository.ImageCount} items");
             Console.WriteLine($"Repository {repository.Name} has {repository.TagCount} tags");
 
             Console.WriteLine($"Repository {repository.Name} permissions are:");
@@ -69,7 +69,7 @@ namespace ContainerRegistrySamples
             DeleteRepositoryResult result = await client.DeleteRepositoryAsync("hello-world");
 
             Console.WriteLine("Deleted repository hello-world.");
-            Console.WriteLine($"    Deleted {result.DeletedItemDigests.Count} items:");
+            Console.WriteLine($"    Deleted {result.DeletedImageDigests.Count} items:");
             Console.WriteLine($"    Deleted {result.DeletedTags.Count} tags.");
         }
     }

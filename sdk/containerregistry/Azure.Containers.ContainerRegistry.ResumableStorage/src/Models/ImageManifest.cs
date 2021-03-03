@@ -7,9 +7,9 @@ using Azure.Core;
 namespace Azure.Containers.ContainerRegistry.ResumableStorage
 {
     [CodeGenModel("Manifest")]
-    public partial class RegistryItemManifest
+    public partial class ImageManifest
     {
-        internal RegistryItemManifest() { }
+        internal ImageManifest() { }
 
         internal string Digest { get; set; }
 

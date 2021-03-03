@@ -138,21 +138,21 @@ namespace Azure.Containers.ContainerRegistry
             throw new NotImplementedException();
         }
 
-        public virtual Pageable<ManifestProperties> GetItems(GetItemsOptions options = null, CancellationToken cancellationToken = default)
+        public virtual Pageable<ManifestProperties> GetManifests(GetManifestOptions options = null, CancellationToken cancellationToken = default)
         {
             // Get images in repository
 
             throw new NotImplementedException();
         }
 
-        public virtual AsyncPageable<ManifestProperties> GetItemsAsync(GetItemsOptions options = null, CancellationToken cancellationToken = default)
+        public virtual AsyncPageable<ManifestProperties> GetManifestsAsync(GetManifestOptions options = null, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
         /// <summary> Delete the repository identified by `name`. </summary>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response DeleteItem(string digest, CancellationToken cancellationToken = default)
+        public virtual Response DeleteImage(string digest, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
 
@@ -171,7 +171,7 @@ namespace Azure.Containers.ContainerRegistry
 
         /// <summary> Delete the repository identified by `name`. </summary>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response> DeleteItemAsync(string digest, CancellationToken cancellationToken = default)
+        public virtual async Task<Response> DeleteImageAsync(string digest, CancellationToken cancellationToken = default)
         {
             await Task.Delay(0, cancellationToken).ConfigureAwait(false);
             throw new NotImplementedException();

@@ -3,18 +3,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace Azure.Containers.ContainerRegistry
 {
-    public class GetItemsOptions
+    public enum ManifestOrderBy
     {
-        public GetItemsOptions(RegistryItemOrderBy orderBy)
-        {
-            OrderBy = orderBy;
-        }
-        
-        public RegistryItemOrderBy OrderBy { get; }
+        LastUpdateTimeDescending,
+        LastUpdateTimeAscending
     }
 }

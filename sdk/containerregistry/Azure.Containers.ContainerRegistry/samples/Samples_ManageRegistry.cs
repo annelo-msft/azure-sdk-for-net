@@ -30,7 +30,7 @@ namespace ContainerRegistrySamples
 
                 AsyncPageable<ManifestProperties> items = registryClient.GetRegistryItemsAsync(
                     repository,
-                    new GetItemsOptions(orderBy: RegistryItemOrderBy.LastUpdateTimeDescending)
+                    new GetImageOptions(orderBy: ImageOrderBy.LastUpdateTimeDescending)
                 );
 
                 int itemCount = 0;

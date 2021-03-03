@@ -31,7 +31,7 @@ namespace Azure.Containers.ContainerRegistry
             Name = name;
             CreatedTime = createdTime;
             LastUpdateTime = lastUpdateTime;
-            ItemCount = itemCount;
+            ImageCount = itemCount;
             TagCount = tagCount;
             Permissions = permissions;
         }

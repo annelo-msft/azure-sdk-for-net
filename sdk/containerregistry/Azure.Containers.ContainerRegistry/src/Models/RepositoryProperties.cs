@@ -18,7 +18,7 @@ namespace Azure.Containers.ContainerRegistry
         public ContentPermissions Permissions { get; }
 
         [CodeGenMember("ManifestCount")]
-        public int ItemCount { get; }
+        public int ImageCount { get; }
 
         [CodeGenMember("CreatedTime")]
         public DateTimeOffset CreatedTime { get; }

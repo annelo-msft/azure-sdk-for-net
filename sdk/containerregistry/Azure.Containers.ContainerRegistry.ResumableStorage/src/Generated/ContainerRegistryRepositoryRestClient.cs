@@ -64,7 +64,7 @@ namespace Azure.Containers.ContainerRegistry.ResumableStorage
         /// <param name="accept"> Accept header string delimited by comma. For example, application/vnd.docker.distribution.manifest.v2+json. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> or <paramref name="reference"/> is null. </exception>
-        public async Task<Response<RegistryItemManifest>> GetManifestAsync(string name, string reference, string accept = null, CancellationToken cancellationToken = default)
+        public async Task<Response<ImageManifest>> GetManifestAsync(string name, string reference, string accept = null, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {
@@ -81,9 +81,9 @@ namespace Azure.Containers.ContainerRegistry.ResumableStorage
             {
                 case 200:
                     {
-                        RegistryItemManifest value = default;
+                        ImageManifest value = default;
                         using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
-                        value = RegistryItemManifest.DeserializeRegistryItemManifest(document.RootElement);
+                        value = ImageManifest.DeserializeImageManifest(document.RootElement);
                         return Response.FromValue(value, message.Response);
                     }
                 default:
@@ -97,7 +97,7 @@ namespace Azure.Containers.ContainerRegistry.ResumableStorage
         /// <param name="accept"> Accept header string delimited by comma. For example, application/vnd.docker.distribution.manifest.v2+json. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> or <paramref name="reference"/> is null. </exception>
-        public Response<RegistryItemManifest> GetManifest(string name, string reference, string accept = null, CancellationToken cancellationToken = default)
+        public Response<ImageManifest> GetManifest(string name, string reference, string accept = null, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {
@@ -114,9 +114,9 @@ namespace Azure.Containers.ContainerRegistry.ResumableStorage
             {
                 case 200:
                     {
-                        RegistryItemManifest value = default;
+                        ImageManifest value = default;
                         using var document = JsonDocument.Parse(message.Response.ContentStream);
-                        value = RegistryItemManifest.DeserializeRegistryItemManifest(document.RootElement);
+                        value = ImageManifest.DeserializeImageManifest(document.RootElement);
                         return Response.FromValue(value, message.Response);
                     }
                 default:
@@ -124,7 +124,7 @@ namespace Azure.Containers.ContainerRegistry.ResumableStorage
             }
         }
 
-        internal HttpMessage CreateCreateManifestRequest(string name, string reference, RegistryItemManifest payload)
+        internal HttpMessage CreateCreateManifestRequest(string name, string reference, ImageManifest payload)
         {
             var message = _pipeline.CreateMessage();
             var request = message.Request;
@@ -150,7 +150,7 @@ namespace Azure.Containers.ContainerRegistry.ResumableStorage
         /// <param name="payload"> Manifest body, can take v1 or v2 values depending on accept header. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/>, <paramref name="reference"/>, or <paramref name="payload"/> is null. </exception>
-        public async Task<ResponseWithHeaders<object, ContainerRegistryRepositoryCreateManifestHeaders>> CreateManifestAsync(string name, string reference, RegistryItemManifest payload, CancellationToken cancellationToken = default)
+        public async Task<ResponseWithHeaders<object, ContainerRegistryRepositoryCreateManifestHeaders>> CreateManifestAsync(string name, string reference, ImageManifest payload, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {
@@ -188,7 +188,7 @@ namespace Azure.Containers.ContainerRegistry.ResumableStorage
         /// <param name="payload"> Manifest body, can take v1 or v2 values depending on accept header. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/>, <paramref name="reference"/>, or <paramref name="payload"/> is null. </exception>
-        public ResponseWithHeaders<object, ContainerRegistryRepositoryCreateManifestHeaders> CreateManifest(string name, string reference, RegistryItemManifest payload, CancellationToken cancellationToken = default)
+        public ResponseWithHeaders<object, ContainerRegistryRepositoryCreateManifestHeaders> CreateManifest(string name, string reference, ImageManifest payload, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {

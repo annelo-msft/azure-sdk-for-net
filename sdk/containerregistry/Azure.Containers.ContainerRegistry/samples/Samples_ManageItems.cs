@@ -76,9 +76,9 @@ namespace ContainerRegistrySamples
             // Assuming the manifest list is one level deep to simplify this example
             var itemClient = new RepositoryClient(new Uri("myacr.azurecr.io"), "redis", "latest");
             ManifestProperties manifestList = itemClient.GetManifestProperties();
-            if (manifestList.RegistryItems.Count > 0)
+            if (manifestList.Images.Count > 0)
             {
-                foreach (ManifestProperties image in manifestList.RegistryItems )
+                foreach (ManifestProperties image in manifestList.Images )
                 {
                     Console.WriteLine($"Image {image.Registry}/{image.Repository}:{image.Digest}");
                     Console.WriteLine($"  supports architecture/OS ${image.CpuArchitecture}/{image.OperatingSystem}");
@@ -86,7 +86,7 @@ namespace ContainerRegistrySamples
             }
 
             // Find the digest corresponding to the linux / amd64 platform
-            ManifestProperties manifest = manifestList.RegistryItems.Where(i => i.OperatingSystem == "linux" && i.CpuArchitecture == "amd64").FirstOrDefault();
+            ManifestProperties manifest = manifestList.Images.Where(i => i.OperatingSystem == "linux" && i.CpuArchitecture == "amd64").FirstOrDefault();
         }
 
         private void PrintItemProperties(ManifestProperties itemProperties)
