@@ -8,22 +8,22 @@
 using System.Collections.Generic;
 using Azure.Core;
 
-namespace Azure.Containers.ContainerRegistry.Specialized
+namespace Azure.Containers.ContainerRegistry.Authentication
 {
     /// <summary> Returns the requested OCI index file. </summary>
-    public partial class OciIndex : RepositoryItemManifest
+    internal partial class OCIIndex : Manifest
     {
-        /// <summary> Initializes a new instance of OciIndex. </summary>
-        public OciIndex()
+        /// <summary> Initializes a new instance of OCIIndex. </summary>
+        public OCIIndex()
         {
             Manifests = new ChangeTrackingList<ManifestListAttributes>();
         }
 
-        /// <summary> Initializes a new instance of OciIndex. </summary>
+        /// <summary> Initializes a new instance of OCIIndex. </summary>
         /// <param name="schemaVersion"> Schema version. </param>
         /// <param name="manifests"> List of OCI image layer information. </param>
         /// <param name="annotations"> Additional information provided through arbitrary metadata. </param>
-        internal OciIndex(int schemaVersion, IList<ManifestListAttributes> manifests, OciManifestAnnotations annotations) : base(schemaVersion)
+        internal OCIIndex(int? schemaVersion, IList<ManifestListAttributes> manifests, Annotations annotations) : base(schemaVersion)
         {
             Manifests = manifests;
             Annotations = annotations;
@@ -32,6 +32,6 @@ namespace Azure.Containers.ContainerRegistry.Specialized
         /// <summary> List of OCI image layer information. </summary>
         public IList<ManifestListAttributes> Manifests { get; }
         /// <summary> Additional information provided through arbitrary metadata. </summary>
-        public OciManifestAnnotations Annotations { get; set; }
+        public Annotations Annotations { get; set; }
     }
 }

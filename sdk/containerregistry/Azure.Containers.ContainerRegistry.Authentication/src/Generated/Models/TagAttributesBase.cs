@@ -7,7 +7,7 @@
 
 using System;
 
-namespace Azure.Containers.ContainerRegistry
+namespace Azure.Containers.ContainerRegistry.Authentication
 {
     /// <summary> Tag attribute details. </summary>
     internal partial class TagAttributesBase
@@ -24,7 +24,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="lastUpdateTime"> Tag last update time. </param>
         /// <param name="signed"> Is signed. </param>
         /// <param name="changeableAttributes"> Changeable attributes. </param>
-        internal TagAttributesBase(string name, string digest, DateTimeOffset? createdTime, DateTimeOffset? lastUpdateTime, bool? signed, ContentPermissions changeableAttributes)
+        internal TagAttributesBase(string name, string digest, DateTimeOffset? createdTime, DateTimeOffset? lastUpdateTime, bool? signed, ChangeableAttributes changeableAttributes)
         {
             Name = name;
             Digest = digest;
@@ -45,6 +45,6 @@ namespace Azure.Containers.ContainerRegistry
         /// <summary> Is signed. </summary>
         public bool? Signed { get; }
         /// <summary> Changeable attributes. </summary>
-        public ContentPermissions ChangeableAttributes { get; }
+        public ChangeableAttributes ChangeableAttributes { get; }
     }
 }

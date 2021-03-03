@@ -13,7 +13,7 @@ using Azure;
 using Azure.Core;
 using Azure.Core.Pipeline;
 
-namespace Azure.Containers.ContainerRegistry
+namespace Azure.Containers.ContainerRegistry.Authentication
 {
     internal partial class ContainerRegistryRestClient
     {
@@ -166,7 +166,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="name"> Name of the image (including the namespace). </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> is null. </exception>
-        public async Task<Response<RepositoryProperties>> GetRepositoryAttributesAsync(string name, CancellationToken cancellationToken = default)
+        public async Task<Response<RepositoryAttributes>> GetRepositoryAttributesAsync(string name, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {
@@ -179,9 +179,9 @@ namespace Azure.Containers.ContainerRegistry
             {
                 case 200:
                     {
-                        RepositoryProperties value = default;
+                        RepositoryAttributes value = default;
                         using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
-                        value = RepositoryProperties.DeserializeRepositoryProperties(document.RootElement);
+                        value = RepositoryAttributes.DeserializeRepositoryAttributes(document.RootElement);
                         return Response.FromValue(value, message.Response);
                     }
                 default:
@@ -193,7 +193,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="name"> Name of the image (including the namespace). </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> is null. </exception>
-        public Response<RepositoryProperties> GetRepositoryAttributes(string name, CancellationToken cancellationToken = default)
+        public Response<RepositoryAttributes> GetRepositoryAttributes(string name, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {
@@ -206,9 +206,9 @@ namespace Azure.Containers.ContainerRegistry
             {
                 case 200:
                     {
-                        RepositoryProperties value = default;
+                        RepositoryAttributes value = default;
                         using var document = JsonDocument.Parse(message.Response.ContentStream);
-                        value = RepositoryProperties.DeserializeRepositoryProperties(document.RootElement);
+                        value = RepositoryAttributes.DeserializeRepositoryAttributes(document.RootElement);
                         return Response.FromValue(value, message.Response);
                     }
                 default:
@@ -234,7 +234,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="name"> Name of the image (including the namespace). </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> is null. </exception>
-        public async Task<Response<DeleteRepositoryResult>> DeleteRepositoryAsync(string name, CancellationToken cancellationToken = default)
+        public async Task<Response<DeletedRepository>> DeleteRepositoryAsync(string name, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {
@@ -247,9 +247,9 @@ namespace Azure.Containers.ContainerRegistry
             {
                 case 202:
                     {
-                        DeleteRepositoryResult value = default;
+                        DeletedRepository value = default;
                         using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
-                        value = DeleteRepositoryResult.DeserializeDeleteRepositoryResult(document.RootElement);
+                        value = DeletedRepository.DeserializeDeletedRepository(document.RootElement);
                         return Response.FromValue(value, message.Response);
                     }
                 default:
@@ -261,7 +261,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="name"> Name of the image (including the namespace). </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> is null. </exception>
-        public Response<DeleteRepositoryResult> DeleteRepository(string name, CancellationToken cancellationToken = default)
+        public Response<DeletedRepository> DeleteRepository(string name, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {
@@ -274,9 +274,9 @@ namespace Azure.Containers.ContainerRegistry
             {
                 case 202:
                     {
-                        DeleteRepositoryResult value = default;
+                        DeletedRepository value = default;
                         using var document = JsonDocument.Parse(message.Response.ContentStream);
-                        value = DeleteRepositoryResult.DeserializeDeleteRepositoryResult(document.RootElement);
+                        value = DeletedRepository.DeserializeDeletedRepository(document.RootElement);
                         return Response.FromValue(value, message.Response);
                     }
                 default:
@@ -284,7 +284,7 @@ namespace Azure.Containers.ContainerRegistry
             }
         }
 
-        internal HttpMessage CreateUpdateRepositoryAttributesRequest(string name, ContentPermissions value)
+        internal HttpMessage CreateUpdateRepositoryAttributesRequest(string name, ChangeableAttributes value)
         {
             var message = _pipeline.CreateMessage();
             var request = message.Request;
@@ -310,7 +310,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="value"> Repository attribute value. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> is null. </exception>
-        public async Task<Response> UpdateRepositoryAttributesAsync(string name, ContentPermissions value = null, CancellationToken cancellationToken = default)
+        public async Task<Response> UpdateRepositoryAttributesAsync(string name, ChangeableAttributes value = null, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {
@@ -333,7 +333,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="value"> Repository attribute value. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> is null. </exception>
-        public Response UpdateRepositoryAttributes(string name, ContentPermissions value = null, CancellationToken cancellationToken = default)
+        public Response UpdateRepositoryAttributes(string name, ChangeableAttributes value = null, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {

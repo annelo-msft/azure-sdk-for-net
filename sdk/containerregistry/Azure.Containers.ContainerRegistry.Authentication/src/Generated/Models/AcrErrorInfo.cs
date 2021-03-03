@@ -5,7 +5,7 @@
 
 #nullable disable
 
-namespace Azure.Containers.ContainerRegistry
+namespace Azure.Containers.ContainerRegistry.Authentication
 {
     /// <summary> Error information. </summary>
     internal partial class AcrErrorInfo

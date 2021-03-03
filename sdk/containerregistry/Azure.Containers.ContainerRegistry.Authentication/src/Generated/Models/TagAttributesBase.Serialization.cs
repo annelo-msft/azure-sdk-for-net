@@ -9,7 +9,7 @@ using System;
 using System.Text.Json;
 using Azure.Core;
 
-namespace Azure.Containers.ContainerRegistry
+namespace Azure.Containers.ContainerRegistry.Authentication
 {
     internal partial class TagAttributesBase
     {
@@ -20,7 +20,7 @@ namespace Azure.Containers.ContainerRegistry
             Optional<DateTimeOffset> createdTime = default;
             Optional<DateTimeOffset> lastUpdateTime = default;
             Optional<bool> signed = default;
-            Optional<ContentPermissions> changeableAttributes = default;
+            Optional<ChangeableAttributes> changeableAttributes = default;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("name"))
@@ -70,7 +70,7 @@ namespace Azure.Containers.ContainerRegistry
                         property.ThrowNonNullablePropertyIsNull();
                         continue;
                     }
-                    changeableAttributes = ContentPermissions.DeserializeContentPermissions(property.Value);
+                    changeableAttributes = ChangeableAttributes.DeserializeChangeableAttributes(property.Value);
                     continue;
                 }
             }

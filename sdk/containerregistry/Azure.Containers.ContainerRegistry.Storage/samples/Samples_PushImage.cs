@@ -62,7 +62,7 @@ namespace ContainerRegistrySamples
                 //_logger.LogInformation($"Uploading Config Blob: {configFilePath} {configFile.Digest}");
                 CreateUploadResult upload = await client.CreateUploadAsync();
                 UploadChunkResult uploadChunkResult = await client.UploadChunkAsync(upload, fs);
-                CompleteUploadResult completeUploadResult = await client.CompleteUploadAsync(upload, ContentDescriptor.ComputeDigest(fs));
+                CompleteUploadResult completeUploadResult = await client.CompleteUploadAsync(upload, ComputeDigest(fs));
                 // TODO: Is ComputeDigest discoverable on ContentDescriptor?  Probably not ... think this through better.
                 // TODO: Does digest need to be exposed?  Do we need to expose all three of these methods for the basic case?
                 // TODO: Look at this alongside the chunked upload case.
@@ -77,7 +77,7 @@ namespace ContainerRegistrySamples
                 {
                     CreateUploadResult upload = await client.CreateUploadAsync();
                     UploadChunkResult uploadChunkResult = await client.UploadChunkAsync(upload, fs);
-                    CompleteUploadResult completeUploadResult = await client.CompleteUploadAsync(upload, ContentDescriptor.ComputeDigest(fs));
+                    CompleteUploadResult completeUploadResult = await client.CompleteUploadAsync(upload, ComputeDigest(fs));
                 }
             }
 
@@ -89,6 +89,10 @@ namespace ContainerRegistrySamples
             
         }
 
+        private string ComputeDigest(Stream stream)
+        {
+            throw new NotImplementedException();
+        }
 
         public async Task PushImageFromDirectory_DockerV2Manifest2()
         {
@@ -115,7 +119,7 @@ namespace ContainerRegistrySamples
             {
                 CreateUploadResult upload = await client.CreateUploadAsync();
                 UploadChunkResult uploadChunkResult = await client.UploadChunkAsync(upload, fs);
-                CompleteUploadResult completeUploadResult = await client.CompleteUploadAsync(upload, ContentDescriptor.ComputeDigest(fs));
+                CompleteUploadResult completeUploadResult = await client.CompleteUploadAsync(upload, ComputeDigest(fs));
             }
 
             // Upload each layer.
@@ -130,7 +134,7 @@ namespace ContainerRegistrySamples
                 {
                     CreateUploadResult upload = await client.CreateUploadAsync();
                     UploadChunkResult uploadChunkResult = await client.UploadChunkAsync(upload, fs);
-                    CompleteUploadResult completeUploadResult = await client.CompleteUploadAsync(upload, ContentDescriptor.ComputeDigest(fs));
+                    CompleteUploadResult completeUploadResult = await client.CompleteUploadAsync(upload, ComputeDigest(fs));
                 }
             }
 
@@ -160,7 +164,7 @@ namespace ContainerRegistrySamples
 
             using Stream configStream = configDescriptor.ToStream();
             configDescriptor.Size = configStream.Length;
-            configDescriptor.Digest = ContentDescriptor.ComputeDigest(configStream);
+            configDescriptor.Digest = ComputeDigest(configStream);
 
             CreateUploadResult upload = await client.CreateUploadAsync();
             UploadChunkResult uploadChunkResult = await client.UploadChunkAsync(upload, configStream);
@@ -177,10 +181,10 @@ namespace ContainerRegistrySamples
             using (var fs = File.OpenRead(layerFile))
             {
                 layerDescriptor.Size = fs.Length;
-                layerDescriptor.Digest = ContentDescriptor.ComputeDigest(fs);
+                layerDescriptor.Digest = ComputeDigest(fs);
                 upload = await client.CreateUploadAsync();
                 uploadChunkResult = await client.UploadChunkAsync(upload, fs);
-                completeUploadResult = await client.CompleteUploadAsync(upload, ContentDescriptor.ComputeDigest(fs));
+                completeUploadResult = await client.CompleteUploadAsync(upload, ComputeDigest(fs));
             }
 
             DockerManifestV2 manifest = new DockerManifestV2()

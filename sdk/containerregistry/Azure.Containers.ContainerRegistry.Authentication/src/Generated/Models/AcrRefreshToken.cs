@@ -5,7 +5,7 @@
 
 #nullable disable
 
-namespace Azure.Containers.ContainerRegistry.Specialized
+namespace Azure.Containers.ContainerRegistry.Authentication
 {
     /// <summary> The RefreshToken. </summary>
     internal partial class AcrRefreshToken

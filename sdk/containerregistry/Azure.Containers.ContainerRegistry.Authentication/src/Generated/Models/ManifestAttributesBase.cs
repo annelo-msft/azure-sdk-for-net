@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using Azure.Core;
 
-namespace Azure.Containers.ContainerRegistry
+namespace Azure.Containers.ContainerRegistry.Authentication
 {
     /// <summary> Manifest details. </summary>
     internal partial class ManifestAttributesBase
@@ -31,7 +31,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="configMediaType"> Config blob media type. </param>
         /// <param name="tags"> List of tags. </param>
         /// <param name="changeableAttributes"> Changeable attributes. </param>
-        internal ManifestAttributesBase(string digest, long? imageSize, DateTimeOffset? createdTime, DateTimeOffset? lastUpdateTime, string architecture, string os, string mediaType, string configMediaType, IReadOnlyList<string> tags, ContentPermissions changeableAttributes)
+        internal ManifestAttributesBase(string digest, long? imageSize, DateTimeOffset? createdTime, DateTimeOffset? lastUpdateTime, string architecture, string os, string mediaType, string configMediaType, IReadOnlyList<string> tags, ChangeableAttributes changeableAttributes)
         {
             Digest = digest;
             ImageSize = imageSize;
@@ -64,6 +64,6 @@ namespace Azure.Containers.ContainerRegistry
         /// <summary> List of tags. </summary>
         public IReadOnlyList<string> Tags { get; }
         /// <summary> Changeable attributes. </summary>
-        public ContentPermissions ChangeableAttributes { get; }
+        public ChangeableAttributes ChangeableAttributes { get; }
     }
 }

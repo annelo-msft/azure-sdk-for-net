@@ -8,31 +8,34 @@
 using System.Collections.Generic;
 using Azure.Core;
 
-namespace Azure.Containers.ContainerRegistry.Specialized
+namespace Azure.Containers.ContainerRegistry.Authentication
 {
     /// <summary> Returns the requested OCI Manifest file. </summary>
-    public partial class OciManifest : RepositoryItemManifest
+    internal partial class OCIManifest : Manifest
     {
-        /// <summary> Initializes a new instance of OciManifest. </summary>
-        public OciManifest()
+        /// <summary> Initializes a new instance of OCIManifest. </summary>
+        public OCIManifest()
         {
-            Layers = new ChangeTrackingList<ContentDescriptor>();
+            Layers = new ChangeTrackingList<Descriptor>();
         }
 
-        /// <summary> Initializes a new instance of OciManifest. </summary>
+        /// <summary> Initializes a new instance of OCIManifest. </summary>
         /// <param name="schemaVersion"> Schema version. </param>
-        /// <param name="configDescriptor"> V2 image config descriptor. </param>
+        /// <param name="config"> V2 image config descriptor. </param>
         /// <param name="layers"> List of V2 image layer information. </param>
         /// <param name="annotations"> Additional information provided through arbitrary metadata. </param>
-        internal OciManifest(int schemaVersion, ContentDescriptor configDescriptor, IList<ContentDescriptor> layers, OciManifestAnnotations annotations) : base(schemaVersion)
+        internal OCIManifest(int? schemaVersion, Descriptor config, IList<Descriptor> layers, Annotations annotations) : base(schemaVersion)
         {
-            ConfigDescriptor = configDescriptor;
+            Config = config;
             Layers = layers;
             Annotations = annotations;
         }
+
+        /// <summary> V2 image config descriptor. </summary>
+        public Descriptor Config { get; set; }
         /// <summary> List of V2 image layer information. </summary>
-        public IList<ContentDescriptor> Layers { get; }
+        public IList<Descriptor> Layers { get; }
         /// <summary> Additional information provided through arbitrary metadata. </summary>
-        public OciManifestAnnotations Annotations { get; set; }
+        public Annotations Annotations { get; set; }
     }
 }

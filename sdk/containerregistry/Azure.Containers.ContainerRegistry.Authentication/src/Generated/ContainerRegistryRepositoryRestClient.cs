@@ -10,11 +10,10 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Azure;
-using Azure.Containers.ContainerRegistry.Specialized;
 using Azure.Core;
 using Azure.Core.Pipeline;
 
-namespace Azure.Containers.ContainerRegistry
+namespace Azure.Containers.ContainerRegistry.Authentication
 {
     internal partial class ContainerRegistryRepositoryRestClient
     {
@@ -65,7 +64,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="accept"> Accept header string delimited by comma. For example, application/vnd.docker.distribution.manifest.v2+json. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> or <paramref name="reference"/> is null. </exception>
-        public async Task<Response<RepositoryItemManifest>> GetManifestAsync(string name, string reference, string accept = null, CancellationToken cancellationToken = default)
+        public async Task<Response<Manifest>> GetManifestAsync(string name, string reference, string accept = null, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {
@@ -82,9 +81,9 @@ namespace Azure.Containers.ContainerRegistry
             {
                 case 200:
                     {
-                        RepositoryItemManifest value = default;
+                        Manifest value = default;
                         using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
-                        value = RepositoryItemManifest.DeserializeRepositoryItemManifest(document.RootElement);
+                        value = Manifest.DeserializeManifest(document.RootElement);
                         return Response.FromValue(value, message.Response);
                     }
                 default:
@@ -98,7 +97,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="accept"> Accept header string delimited by comma. For example, application/vnd.docker.distribution.manifest.v2+json. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> or <paramref name="reference"/> is null. </exception>
-        public Response<RepositoryItemManifest> GetManifest(string name, string reference, string accept = null, CancellationToken cancellationToken = default)
+        public Response<Manifest> GetManifest(string name, string reference, string accept = null, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {
@@ -115,9 +114,9 @@ namespace Azure.Containers.ContainerRegistry
             {
                 case 200:
                     {
-                        RepositoryItemManifest value = default;
+                        Manifest value = default;
                         using var document = JsonDocument.Parse(message.Response.ContentStream);
-                        value = RepositoryItemManifest.DeserializeRepositoryItemManifest(document.RootElement);
+                        value = Manifest.DeserializeManifest(document.RootElement);
                         return Response.FromValue(value, message.Response);
                     }
                 default:
@@ -125,7 +124,7 @@ namespace Azure.Containers.ContainerRegistry
             }
         }
 
-        internal HttpMessage CreateCreateManifestRequest(string name, string reference, RepositoryItemManifest payload)
+        internal HttpMessage CreateCreateManifestRequest(string name, string reference, Manifest payload)
         {
             var message = _pipeline.CreateMessage();
             var request = message.Request;
@@ -151,7 +150,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="payload"> Manifest body, can take v1 or v2 values depending on accept header. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/>, <paramref name="reference"/>, or <paramref name="payload"/> is null. </exception>
-        public async Task<ResponseWithHeaders<object, ContainerRegistryRepositoryCreateManifestHeaders>> CreateManifestAsync(string name, string reference, RepositoryItemManifest payload, CancellationToken cancellationToken = default)
+        public async Task<ResponseWithHeaders<object, ContainerRegistryRepositoryCreateManifestHeaders>> CreateManifestAsync(string name, string reference, Manifest payload, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {
@@ -189,7 +188,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="payload"> Manifest body, can take v1 or v2 values depending on accept header. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/>, <paramref name="reference"/>, or <paramref name="payload"/> is null. </exception>
-        public ResponseWithHeaders<object, ContainerRegistryRepositoryCreateManifestHeaders> CreateManifest(string name, string reference, RepositoryItemManifest payload, CancellationToken cancellationToken = default)
+        public ResponseWithHeaders<object, ContainerRegistryRepositoryCreateManifestHeaders> CreateManifest(string name, string reference, Manifest payload, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {
@@ -405,7 +404,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="reference"> Tag name. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> or <paramref name="reference"/> is null. </exception>
-        public async Task<Response<TagProperties>> GetTagAttributesAsync(string name, string reference, CancellationToken cancellationToken = default)
+        public async Task<Response<TagAttributes>> GetTagAttributesAsync(string name, string reference, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {
@@ -422,9 +421,9 @@ namespace Azure.Containers.ContainerRegistry
             {
                 case 200:
                     {
-                        TagProperties value = default;
+                        TagAttributes value = default;
                         using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
-                        value = TagProperties.DeserializeTagProperties(document.RootElement);
+                        value = TagAttributes.DeserializeTagAttributes(document.RootElement);
                         return Response.FromValue(value, message.Response);
                     }
                 default:
@@ -437,7 +436,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="reference"> Tag name. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> or <paramref name="reference"/> is null. </exception>
-        public Response<TagProperties> GetTagAttributes(string name, string reference, CancellationToken cancellationToken = default)
+        public Response<TagAttributes> GetTagAttributes(string name, string reference, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {
@@ -454,9 +453,9 @@ namespace Azure.Containers.ContainerRegistry
             {
                 case 200:
                     {
-                        TagProperties value = default;
+                        TagAttributes value = default;
                         using var document = JsonDocument.Parse(message.Response.ContentStream);
-                        value = TagProperties.DeserializeTagProperties(document.RootElement);
+                        value = TagAttributes.DeserializeTagAttributes(document.RootElement);
                         return Response.FromValue(value, message.Response);
                     }
                 default:
@@ -464,7 +463,7 @@ namespace Azure.Containers.ContainerRegistry
             }
         }
 
-        internal HttpMessage CreateUpdateTagAttributesRequest(string name, string reference, ContentPermissions value)
+        internal HttpMessage CreateUpdateTagAttributesRequest(string name, string reference, ChangeableAttributes value)
         {
             var message = _pipeline.CreateMessage();
             var request = message.Request;
@@ -493,7 +492,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="value"> Repository attribute value. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> or <paramref name="reference"/> is null. </exception>
-        public async Task<Response> UpdateTagAttributesAsync(string name, string reference, ContentPermissions value = null, CancellationToken cancellationToken = default)
+        public async Task<Response> UpdateTagAttributesAsync(string name, string reference, ChangeableAttributes value = null, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {
@@ -521,7 +520,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="value"> Repository attribute value. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> or <paramref name="reference"/> is null. </exception>
-        public Response UpdateTagAttributes(string name, string reference, ContentPermissions value = null, CancellationToken cancellationToken = default)
+        public Response UpdateTagAttributes(string name, string reference, ChangeableAttributes value = null, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {
@@ -721,7 +720,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="reference"> A tag or a digest, pointing to a specific image. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> or <paramref name="reference"/> is null. </exception>
-        public async Task<Response<RepositoryItemProperties>> GetManifestAttributesAsync(string name, string reference, CancellationToken cancellationToken = default)
+        public async Task<Response<ManifestAttributes>> GetManifestAttributesAsync(string name, string reference, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {
@@ -738,9 +737,9 @@ namespace Azure.Containers.ContainerRegistry
             {
                 case 200:
                     {
-                        RepositoryItemProperties value = default;
+                        ManifestAttributes value = default;
                         using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
-                        value = RepositoryItemProperties.DeserializeRepositoryItemProperties(document.RootElement);
+                        value = ManifestAttributes.DeserializeManifestAttributes(document.RootElement);
                         return Response.FromValue(value, message.Response);
                     }
                 default:
@@ -753,7 +752,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="reference"> A tag or a digest, pointing to a specific image. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> or <paramref name="reference"/> is null. </exception>
-        public Response<RepositoryItemProperties> GetManifestAttributes(string name, string reference, CancellationToken cancellationToken = default)
+        public Response<ManifestAttributes> GetManifestAttributes(string name, string reference, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {
@@ -770,9 +769,9 @@ namespace Azure.Containers.ContainerRegistry
             {
                 case 200:
                     {
-                        RepositoryItemProperties value = default;
+                        ManifestAttributes value = default;
                         using var document = JsonDocument.Parse(message.Response.ContentStream);
-                        value = RepositoryItemProperties.DeserializeRepositoryItemProperties(document.RootElement);
+                        value = ManifestAttributes.DeserializeManifestAttributes(document.RootElement);
                         return Response.FromValue(value, message.Response);
                     }
                 default:
@@ -780,7 +779,7 @@ namespace Azure.Containers.ContainerRegistry
             }
         }
 
-        internal HttpMessage CreateUpdateManifestAttributesRequest(string name, string reference, ContentPermissions value)
+        internal HttpMessage CreateUpdateManifestAttributesRequest(string name, string reference, ChangeableAttributes value)
         {
             var message = _pipeline.CreateMessage();
             var request = message.Request;
@@ -809,7 +808,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="value"> Repository attribute value. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> or <paramref name="reference"/> is null. </exception>
-        public async Task<Response> UpdateManifestAttributesAsync(string name, string reference, ContentPermissions value = null, CancellationToken cancellationToken = default)
+        public async Task<Response> UpdateManifestAttributesAsync(string name, string reference, ChangeableAttributes value = null, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {
@@ -837,7 +836,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="value"> Repository attribute value. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> or <paramref name="reference"/> is null. </exception>
-        public Response UpdateManifestAttributes(string name, string reference, ContentPermissions value = null, CancellationToken cancellationToken = default)
+        public Response UpdateManifestAttributes(string name, string reference, ChangeableAttributes value = null, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {

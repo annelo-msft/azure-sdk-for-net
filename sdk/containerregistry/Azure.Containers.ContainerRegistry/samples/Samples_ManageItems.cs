@@ -17,7 +17,7 @@ namespace ContainerRegistrySamples
 
             Console.WriteLine($"Repository \"hello-world\" contains the following items:");
 
-            AsyncPageable<ManifestProperties> items = registryClient.GetImagesAsync("hello-world");
+            AsyncPageable<ManifestProperties> items = registryClient.GetRegistryItemsAsync("hello-world");
             await foreach (var item in items)
             {
                 PrintItemProperties(item);
@@ -34,12 +34,12 @@ namespace ContainerRegistrySamples
             var registryClient = new ContainerRegistryClient(new Uri("myacr.azurecr.io"), new DefaultAzureCredential());
             
             // for one tagged image
-            var ImageClient = registryClient.GetImageClient("hello-world", "latest");
+            var ImageClient = registryClient.GetItemClient("hello-world", "latest");
             var itemProperties = await ImageClient.GetManifestPropertiesAsync();
             PrintItemProperties(itemProperties);
 
             // for an entire repository (this include digest into)
-            AsyncPageable<ManifestProperties> images = registryClient.GetImagesAsync("hello-world");
+            AsyncPageable<ManifestProperties> images = registryClient.GetRegistryItemsAsync("hello-world");
             await foreach (var image in images)
             {
                 PrintItemProperties(image);
@@ -73,12 +73,11 @@ namespace ContainerRegistrySamples
             // the name of the image that will work for their platform. 
             // https://developer.ibm.com/components/ibm-power/tutorials/createmulti-architecture-docker-images/
 
-            // TODO: rewrite this for recursion correctly
+            // Assuming the manifest list is one level deep to simplify this example
             var itemClient = new RegistryItemClient(new Uri("myacr.azurecr.io"), "redis", "latest");
             ManifestProperties manifestList = itemClient.GetManifestProperties();
             if (manifestList.RegistryItems.Count > 0)
             {
-                // TODO: this should be items
                 foreach (ManifestProperties image in manifestList.RegistryItems )
                 {
                     Console.WriteLine($"Image {image.Registry}/{image.Repository}:{image.Digest}");

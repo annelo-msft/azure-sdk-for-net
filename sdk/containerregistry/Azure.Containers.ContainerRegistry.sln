@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContainerRegistrySamples", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContainerRegistryStorageSamples", "Azure.Containers.ContainerRegistry.Storage\samples\ContainerRegistryStorageSamples.csproj", "{F3417D2C-BC79-40EC-9929-BFAB62B3C686}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.Containers.ContainerRegistry.Authentication", "Azure.Containers.ContainerRegistry.Authentication\src\Azure.Containers.ContainerRegistry.Authentication.csproj", "{07C3C695-BBAF-427B-BB67-C0C4A6D28E0F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{F3417D2C-BC79-40EC-9929-BFAB62B3C686}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F3417D2C-BC79-40EC-9929-BFAB62B3C686}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F3417D2C-BC79-40EC-9929-BFAB62B3C686}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07C3C695-BBAF-427B-BB67-C0C4A6D28E0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07C3C695-BBAF-427B-BB67-C0C4A6D28E0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07C3C695-BBAF-427B-BB67-C0C4A6D28E0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07C3C695-BBAF-427B-BB67-C0C4A6D28E0F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

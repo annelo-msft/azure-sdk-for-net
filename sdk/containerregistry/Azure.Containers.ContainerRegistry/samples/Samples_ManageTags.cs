@@ -14,7 +14,7 @@ namespace ContainerRegistrySamples
         public async Task ListTagsForItem()
         {
             var registryClient = new ContainerRegistryClient(new Uri("myacr.azurecr.io"), new DefaultAzureCredential());
-            var imageClient = registryClient.GetImageClient("hello-world", "latest");
+            var imageClient = registryClient.GetItemClient("hello-world", "latest");
 
             AsyncPageable<TagProperties> tags = imageClient.GetTagsAsync();
             await foreach (var tag in tags)
