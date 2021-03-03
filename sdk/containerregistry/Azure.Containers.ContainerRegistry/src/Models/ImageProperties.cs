@@ -9,7 +9,7 @@ using Azure.Core;
 namespace Azure.Containers.ContainerRegistry
 {
     [CodeGenModel("ManifestAttributes")]
-    public partial class ManifestProperties
+    public partial class ImageProperties
     {
         [CodeGenMember("ImageName")]
         public string Repository { get; }
@@ -27,7 +27,7 @@ namespace Azure.Containers.ContainerRegistry
 
         public string OperatingSystem { get { return Attributes.Os; } }
 
-        public IReadOnlyList<ManifestProperties> Images { get; }
+        public IReadOnlyList<ImageProperties> Images { get; }
 
         internal string ManifestMediaType { get { return Attributes.MediaType; } }
 
@@ -35,7 +35,7 @@ namespace Azure.Containers.ContainerRegistry
 
         public IReadOnlyList<string> Tags { get { return Attributes.Tags; } }
 
-        public ContentPermissions Permissions { get { return Attributes.ChangeableAttributes; } }
+        public ContentPermissions ManifestPermissions { get { return Attributes.ChangeableAttributes; } }
 
         /// <summary> Manifest attributes. </summary>
         internal ManifestAttributesBase Attributes { get; }

@@ -28,9 +28,9 @@ namespace ContainerRegistrySamples
 
         public async Task GetRepositoryProperties()
         {
-            var client = new ContainerRegistryClient(new Uri("myacr.azurecr.io"), new DefaultAzureCredential());
+            var client = new RepositoryClient(new Uri("myacr.azurecr.io"), "hello-world", new DefaultAzureCredential());
 
-            RepositoryProperties repository = await client.GetRepositoryAsync("hello-world");
+            RepositoryProperties repository = await client.GetPropertiesAsync();
 
             Console.WriteLine($"Repository is {repository.Registry}/{repository.Name}");
 
@@ -49,9 +49,9 @@ namespace ContainerRegistrySamples
 
         public async Task SetRepositoryPermissions()
         {
-            var client = new ContainerRegistryClient(new Uri("myacr.azurecr.io"), new DefaultAzureCredential());
+            var client = new RepositoryClient(new Uri("myacr.azurecr.io"), "hello-world", new DefaultAzureCredential());
 
-            await client.SetRepositoryPermissionsAsync("hello-world", new ContentPermissions()
+            await client.SetPermissionsAsync(new ContentPermissions()
             {
                 CanList = true,
                 CanRead = true,
@@ -65,7 +65,6 @@ namespace ContainerRegistrySamples
         {
             var client = new ContainerRegistryClient(new Uri("myacr.azurecr.io"), new DefaultAzureCredential());
 
-            // TODO: add error handling
             DeleteRepositoryResult result = await client.DeleteRepositoryAsync("hello-world");
 
             Console.WriteLine("Deleted repository hello-world.");

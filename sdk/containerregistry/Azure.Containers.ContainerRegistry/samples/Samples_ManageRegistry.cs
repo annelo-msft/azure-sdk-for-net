@@ -28,24 +28,25 @@ namespace ContainerRegistrySamples
             {
                 Console.WriteLine($"Repository name: {repository}");
 
-                AsyncPageable<ManifestProperties> items = registryClient.GetRegistryItemsAsync(
-                    repository,
+                RepositoryClient repositoryClient = registryClient.GetRepositoryClient(repository);
+
+                AsyncPageable<ImageProperties> images = repositoryClient.GetImagesAsync(
                     new GetImageOptions(orderBy: ImageOrderBy.LastUpdateTimeDescending)
                 );
 
-                int itemCount = 0;
-                int itemsToKeep = 3;
-                await foreach (ManifestProperties item in items)
+                int imageCount = 0;
+                int imagesToKeep = 3;
+                await foreach (ImageProperties image in images)
                 {
-                    if (itemCount++ >= itemsToKeep)
+                    if (imageCount++ >= imagesToKeep)
                     { 
-                        Console.WriteLine($"Deleting item with digest {item.Digest}.");
+                        Console.WriteLine($"Deleting item with digest {image.Digest}.");
                         Console.WriteLine($"   This corresponds to the following tagged images: ");
-                        foreach (var tagName in item.Tags)
+                        foreach (var tagName in image.Tags)
                         {
-                            Console.WriteLine($"        {item.Repository}:{tagName}");
+                            Console.WriteLine($"        {image.Repository}:{tagName}");
                         }
-                        await registryClient.DeleteRegistryItemAsync(repository, item.Digest);
+                        await repositoryClient.DeleteImageAsync(image.Digest);
                     }
 
                     // This will delete the manifest, but not the item layers unless there are no remaining references to them

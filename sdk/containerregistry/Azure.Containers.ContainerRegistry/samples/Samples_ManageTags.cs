@@ -14,9 +14,9 @@ namespace ContainerRegistrySamples
         public async Task ListTagsForItem()
         {
             var registryClient = new ContainerRegistryClient(new Uri("myacr.azurecr.io"), new DefaultAzureCredential());
-            var imageClient = registryClient.GetItemClient("hello-world", "latest");
+            var repositoryClient = registryClient.GetRepositoryClient("hello-world");
 
-            AsyncPageable<TagProperties> tags = imageClient.GetTagsAsync();
+            AsyncPageable<TagProperties> tags = repositoryClient.GetTagsAsync();
             await foreach (var tag in tags)
             {
                 PrintTagProperties(tag);
@@ -43,9 +43,9 @@ namespace ContainerRegistrySamples
 
         public async Task ViewItemTagsOrderedByLastUpdateTime()
         {
-            var imageClient = new RepositoryClient(new Uri("myacr.azurecr.io"), "hello-world", "latest", new DefaultAzureCredential());
+            var repositoryClient = new RepositoryClient(new Uri("myacr.azurecr.io"), "hello-world", new DefaultAzureCredential());
          
-            AsyncPageable<TagProperties> tags = imageClient.GetTagsAsync(new GetTagOptions(orderBy: TagOrderBy.LastUpdateTimeDescending));
+            AsyncPageable<TagProperties> tags = repositoryClient.GetTagsAsync(new GetTagOptions(orderBy: TagOrderBy.LastUpdateTimeDescending));
 
             // Note:
             // Set of orderby values can be found in the az acr client (see --orderby / Allowed values
@@ -69,9 +69,9 @@ namespace ContainerRegistrySamples
         {
             // Qn: what is the story around why you would do this? To look at last update time or tag permissions.
 
-            var imageClient = new RepositoryClient(new Uri("myacr.azurecr.io"), "hello-world", "latest", new DefaultAzureCredential());
+            var repositoryClient = new RepositoryClient(new Uri("myacr.azurecr.io"), "hello-world", new DefaultAzureCredential());
 
-            TagProperties tagProperties = await imageClient.GetTagPropertiesAsync("latest");
+            TagProperties tagProperties = await repositoryClient.GetTagPropertiesAsync("latest");
 
             PrintTagProperties(tagProperties);
         }
@@ -80,9 +80,9 @@ namespace ContainerRegistrySamples
         {
             // Note: this isn't arbitrary SetProperties because we can only update the permissions component of the tag metadata - everything else is read-only
 
-            var imageClient = new RepositoryClient(new Uri("myacr.azurecr.io"), "hello-world", "latest", new DefaultAzureCredential());
+            var repositoryClient = new RepositoryClient(new Uri("myacr.azurecr.io"), "hello-world", new DefaultAzureCredential());
 
-            await imageClient.SetTagPermissionsAsync(new ContentPermissions()
+            await repositoryClient.SetTagPermissionsAsync("latest", new ContentPermissions()
             {
                 CanList = true,
                 CanRead = true,
@@ -91,7 +91,7 @@ namespace ContainerRegistrySamples
             });
 
 
-            Console.WriteLine($"Updating {imageClient.Registry}/{imageClient.Repository}:{imageClient.Tag}");
+            Console.WriteLine($"Updating {repositoryClient.Registry}/{repositoryClient.Repository}:latest");
             try
             {
                 using FileStream fs = File.OpenRead(@"c:\path\to\image-manifest");
@@ -108,9 +108,9 @@ namespace ContainerRegistrySamples
             // TODO: does this just delete the tag but not the manifest or anything else?
             // Or is there more to this story?
 
-            var imageClient = new RepositoryClient(new Uri("myacr.azurecr.io"), "hello-world", "v3", new DefaultAzureCredential());
+            var imageClient = new RepositoryClient(new Uri("myacr.azurecr.io"), "hello-world", new DefaultAzureCredential());
 
-            await imageClient.UntagAsync("latest");
+            await imageClient.DeleteTagAsync("v3");
 
             // TODO: Write a story where we verify that this is gone.
         }

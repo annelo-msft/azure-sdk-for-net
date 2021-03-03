@@ -720,7 +720,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="reference"> A tag or a digest, pointing to a specific image. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> or <paramref name="reference"/> is null. </exception>
-        public async Task<Response<ManifestProperties>> GetManifestAttributesAsync(string name, string reference, CancellationToken cancellationToken = default)
+        public async Task<Response<ImageProperties>> GetManifestAttributesAsync(string name, string reference, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {
@@ -737,9 +737,9 @@ namespace Azure.Containers.ContainerRegistry
             {
                 case 200:
                     {
-                        ManifestProperties value = default;
+                        ImageProperties value = default;
                         using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
-                        value = ManifestProperties.DeserializeManifestProperties(document.RootElement);
+                        value = ImageProperties.DeserializeManifestProperties(document.RootElement);
                         return Response.FromValue(value, message.Response);
                     }
                 default:
@@ -752,7 +752,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="reference"> A tag or a digest, pointing to a specific image. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> or <paramref name="reference"/> is null. </exception>
-        public Response<ManifestProperties> GetManifestAttributes(string name, string reference, CancellationToken cancellationToken = default)
+        public Response<ImageProperties> GetManifestAttributes(string name, string reference, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {
@@ -769,9 +769,9 @@ namespace Azure.Containers.ContainerRegistry
             {
                 case 200:
                     {
-                        ManifestProperties value = default;
+                        ImageProperties value = default;
                         using var document = JsonDocument.Parse(message.Response.ContentStream);
-                        value = ManifestProperties.DeserializeManifestProperties(document.RootElement);
+                        value = ImageProperties.DeserializeManifestProperties(document.RootElement);
                         return Response.FromValue(value, message.Response);
                     }
                 default:
