@@ -342,6 +342,45 @@ namespace Azure.Containers.ContainerRegistry.ResumableStorage
             }
         }
 
+        /// <summary> Delete the repository identified by `name`. </summary>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        public virtual Response DeleteManifest(string digest, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+
+            //using var scope = _clientDiagnostics.CreateScope("ContainerRegistryClient.DeleteRepository");
+            //scope.Start();
+            //try
+            //{
+            //    return RestClient.DeleteRepository(repository, cancellationToken);
+            //}
+            //catch (Exception e)
+            //{
+            //    scope.Failed(e);
+            //    throw;
+            //}
+        }
+
+        /// <summary> Delete the repository identified by `name`. </summary>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        public virtual async Task<Response> DeleteManifestAsync(string digest, CancellationToken cancellationToken = default)
+        {
+            await Task.Delay(0, cancellationToken).ConfigureAwait(false);
+            throw new NotImplementedException();
+
+            //using var scope = _clientDiagnostics.CreateScope("ContainerRegistryClient.DeleteRepository");
+            //scope.Start();
+            //try
+            //{
+            //    return await RestClient.DeleteRepositoryAsync(repository, cancellationToken).ConfigureAwait(false);
+            //}
+            //catch (Exception e)
+            //{
+            //    scope.Failed(e);
+            //    throw;
+            //}
+        }
+
         /// <summary> Mount a blob identified by the `mount` parameter from another repository. </summary>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual async Task<Response> MountBlobAsync(string sourceRepository, string blobDigest, CancellationToken cancellationToken = default)

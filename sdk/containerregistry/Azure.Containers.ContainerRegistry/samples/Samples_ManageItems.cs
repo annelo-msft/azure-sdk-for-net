@@ -88,7 +88,7 @@ namespace ContainerRegistrySamples
             }
 
             // Find the digest corresponding to the linux / amd64 platform
-            ImageProperties manifest = manifestList.Images.Where(i => i.OperatingSystem == "linux" && i.CpuArchitecture == "amd64").FirstOrDefault();
+            ImageProperties amd64image = manifestList.Images.Where(i => i.OperatingSystem == "linux" && i.CpuArchitecture == "amd64").FirstOrDefault();
         }
 
         private void PrintImageProperties(ImageProperties imageProperties)
