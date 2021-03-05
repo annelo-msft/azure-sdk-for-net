@@ -1360,6 +1360,7 @@
         },
         "TagList": {
             "description": "List of tag details",
+            "x-accessibility": "internal",
             "properties": {
                 "registry": {
                     "type": "string",
@@ -1447,6 +1448,7 @@
         },
         "TagAttributesBase": {
             "description": "Tag attribute details",
+            "x-accessibility": "internal",
             "properties": {
                 "name": {
                     "type": "string",
@@ -1510,6 +1512,7 @@
                     }
                 }
             },
+            "x-accessibility": "internal",
             "example": {
                 "registry": "registry",
                 "imageName": "imageName",
@@ -1605,6 +1608,7 @@
         "ManifestAttributesBase": {
             "type": "object",
             "description": "Manifest details",
+            "x-accessibility": "internal",
             "properties": {
                 "digest": {
                     "type": "string",
@@ -1682,7 +1686,8 @@
                     "description": "The refresh token to be used for generating access tokens",
                     "type": "string"
                 }
-            }
+            },
+            "x-accessibility": "internal"
         },
         "AccessToken": {
             "type": "object",
@@ -1691,7 +1696,8 @@
                     "description": "The access token for performing authenticated requests",
                     "type": "string"
                 }
-            }
+            },
+            "x-accessibility": "internal"
         },
         "AcrErrors": {
             "description": "Acr error response describing why the operation failed",
@@ -1731,6 +1737,7 @@
         },
         "ImageSignature": {
             "description": "Signature of a signed manifest",
+            "x-accessibility": "internal",
             "properties": {
                 "header": {
                     "description": "A JSON web signature",
@@ -1762,6 +1769,7 @@
         },
         "JWK": {
             "description": "A JSON web signature",
+            "x-accessibility": "internal",
             "properties": {
                 "jwk": {
                     "$ref": "#/definitions/JWKHeader"
@@ -1774,6 +1782,7 @@
         },
         "JWKHeader": {
             "description": "JSON web key parameter",
+            "x-accessibility": "internal",
             "properties": {
                 "crv": {
                     "type": "string",
@@ -1799,6 +1808,7 @@
         },
         "History": {
             "description": "A list of unstructured historical data for v1 compatibility",
+            "x-accessibility": "internal",
             "properties": {
                 "v1Compatibility": {
                     "type": "string",
@@ -1815,13 +1825,13 @@
                 "repositories": {
                     "type": "array",
                     "x-ms-client-name": "Names",
-                    "x-accessibility": "internal",
                     "description": "Repository names",
                     "items": {
                         "type": "string"
                     }
                 }
             },
+            "x-accessibility": "internal",
             "example": {
                 "repositories": [
                     "production/alpine",
@@ -1867,6 +1877,7 @@
         },
         "FsLayer": {
             "description": "Image layer information",
+            "x-accessibility": "internal",
             "properties": {
                 "blobSum": {
                     "type": "string",
@@ -1879,6 +1890,7 @@
         },
         "Descriptor": {
             "description": "Docker V2 image layer descriptor including config and layers",
+            "x-accessibility": "internal",
             "properties": {
                 "mediaType": {
                     "type": "string",
@@ -2042,6 +2054,7 @@
         },
         "Manifest": {
             "description": "Returns the requested manifest file",
+            "x-accessibility": "internal",
             "properties": {
                 "schemaVersion": {
                     "type": "integer",
@@ -2051,6 +2064,7 @@
         },
         "ManifestWrapper": {
             "description": "Returns the requested manifest file",
+            "x-accessibility": "internal",
             "properties": {
                 "mediaType": {
                     "type": "string",
@@ -2121,6 +2135,7 @@
         "ManifestList": {
             "x-ms-discriminator-value": "application/vnd.docker.distribution.manifest.list.v2+json",
             "description": "Returns the requested Docker multi-arch-manifest file",
+            "x-accessibility": "internal",
             "properties": {
                 "mediaType": {
                     "type": "string",
@@ -2141,6 +2156,7 @@
             ]
         },
         "ManifestListAttributes": {
+            "x-accessibility": "internal",
             "properties": {
                 "mediaType": {
                     "type": "string",
@@ -2162,6 +2178,7 @@
         },
         "Platform": {
             "description": "The platform object describes the platform which the image in the manifest runs on. A full list of valid operating system and architecture values are listed in the Go language documentation for $GOOS and $GOARCH",
+            "x-accessibility": "internal",
             "properties": {
                 "architecture": {
                     "type": "string",
@@ -2197,6 +2214,7 @@
         },
         "V2Manifest": {
             "x-ms-discriminator-value": "application/vnd.docker.distribution.manifest.v2+json",
+            "x-accessibility": "internal",
             "description": "Returns the requested Docker V2 Manifest file",
             "properties": {
                 "mediaType": {
@@ -2239,6 +2257,7 @@
         },
         "OCIManifest": {
             "x-ms-discriminator-value": "application/vnd.oci.image.manifest.v1+json",
+            "x-accessibility": "internal",
             "description": "Returns the requested OCI Manifest file",
             "properties": {
                 "config": {
@@ -2264,6 +2283,7 @@
         },
         "OCIIndex": {
             "x-ms-discriminator-value": "application/vnd.oci.image.index.v1+json",
+            "x-accessibility": "internal",
             "description": "Returns the requested OCI index file",
             "properties": {
                 "manifests": {
@@ -2286,6 +2306,7 @@
         "V1Manifest": {
             "description": "Returns the requested V1 manifest file",
             "x-ms-discriminator-value": "application/vnd.oci.image.manifest.v1+json",
+            "x-accessibility": "internal",
             "properties": {
                 "architecture": {
                     "type": "string",
@@ -2329,6 +2350,7 @@
         },
         "Annotations": {
             "description": "Additional information provided through arbitrary metadata.",
+            "x-accessibility": "internal",
             "type": "object",
             "x-nullable": true,
             "additionalProperties": {
@@ -2503,7 +2525,8 @@
                 "access_token",
                 "refresh_token"
             ],
-            "x-ms-parameter-location": "method"
+            "x-ms-parameter-location": "method",
+            "x-accessibility": "internal"
         },
         "Service": {
             "name": "service",
