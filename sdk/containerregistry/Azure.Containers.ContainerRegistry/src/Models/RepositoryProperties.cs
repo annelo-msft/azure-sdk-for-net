@@ -15,16 +15,16 @@ namespace Azure.Containers.ContainerRegistry
         public string Name { get; }
 
         [CodeGenMember("ChangeableAttributes")]
-        public ContentPermissions Permissions { get; }
+        public ContentProperties ModifiableProperties { get; }
 
         [CodeGenMember("ManifestCount")]
-        public int ImageCount { get; }
+        public int RegistryArtifactCount { get; }
 
         [CodeGenMember("CreatedTime")]
-        public DateTimeOffset CreatedTime { get; }
+        public DateTimeOffset CreatedOn { get; }
         
         [CodeGenMember("LastUpdateTime")]
-        public DateTimeOffset LastUpdateTime { get; }
+        public DateTimeOffset LastUpdatedOn { get; }
         
         [CodeGenMember("TagCount")]
         public int TagCount { get; }

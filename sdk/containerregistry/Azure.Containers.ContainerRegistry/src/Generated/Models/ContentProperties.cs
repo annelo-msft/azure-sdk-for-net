@@ -8,19 +8,19 @@
 namespace Azure.Containers.ContainerRegistry
 {
     /// <summary> The ChangeableAttributes. </summary>
-    public partial class ContentPermissions
+    public partial class ContentProperties
     {
-        /// <summary> Initializes a new instance of ContentPermissions. </summary>
-        public ContentPermissions()
+        /// <summary> Initializes a new instance of ContentProperties. </summary>
+        public ContentProperties()
         {
         }
 
-        /// <summary> Initializes a new instance of ContentPermissions. </summary>
+        /// <summary> Initializes a new instance of ContentProperties. </summary>
         /// <param name="canDelete"> Delete enabled. </param>
         /// <param name="canWrite"> Write enabled. </param>
         /// <param name="canList"> List enabled. </param>
         /// <param name="canRead"> Read enabled. </param>
-        internal ContentPermissions(bool canDelete, bool canWrite, bool canList, bool canRead)
+        internal ContentProperties(bool canDelete, bool canWrite, bool canList, bool canRead)
         {
             CanDelete = canDelete;
             CanWrite = canWrite;

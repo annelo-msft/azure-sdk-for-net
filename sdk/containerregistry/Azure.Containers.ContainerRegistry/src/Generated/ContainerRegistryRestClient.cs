@@ -284,7 +284,7 @@ namespace Azure.Containers.ContainerRegistry
             }
         }
 
-        internal HttpMessage CreateUpdateRepositoryAttributesRequest(string name, ContentPermissions value)
+        internal HttpMessage CreateUpdateRepositoryAttributesRequest(string name, ContentProperties value)
         {
             var message = _pipeline.CreateMessage();
             var request = message.Request;
@@ -310,7 +310,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="value"> Repository attribute value. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> is null. </exception>
-        public async Task<Response> UpdateRepositoryAttributesAsync(string name, ContentPermissions value = null, CancellationToken cancellationToken = default)
+        public async Task<Response> UpdateRepositoryAttributesAsync(string name, ContentProperties value = null, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {
@@ -333,7 +333,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="value"> Repository attribute value. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> is null. </exception>
-        public Response UpdateRepositoryAttributes(string name, ContentPermissions value = null, CancellationToken cancellationToken = default)
+        public Response UpdateRepositoryAttributes(string name, ContentProperties value = null, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {

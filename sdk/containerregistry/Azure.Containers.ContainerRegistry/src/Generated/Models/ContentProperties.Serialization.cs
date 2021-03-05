@@ -10,7 +10,7 @@ using Azure.Core;
 
 namespace Azure.Containers.ContainerRegistry
 {
-    public partial class ContentPermissions : IUtf8JsonSerializable
+    public partial class ContentProperties : IUtf8JsonSerializable
     {
         void IUtf8JsonSerializable.Write(Utf8JsonWriter writer)
         {
@@ -38,7 +38,7 @@ namespace Azure.Containers.ContainerRegistry
             writer.WriteEndObject();
         }
 
-        internal static ContentPermissions DeserializeContentPermissions(JsonElement element)
+        internal static ContentProperties DeserializeContentProperties(JsonElement element)
         {
             Optional<bool> deleteEnabled = default;
             Optional<bool> writeEnabled = default;
@@ -87,7 +87,7 @@ namespace Azure.Containers.ContainerRegistry
                     continue;
                 }
             }
-            return new ContentPermissions(deleteEnabled, writeEnabled, listEnabled, readEnabled);
+            return new ContentProperties(deleteEnabled, writeEnabled, listEnabled, readEnabled);
         }
     }
 }

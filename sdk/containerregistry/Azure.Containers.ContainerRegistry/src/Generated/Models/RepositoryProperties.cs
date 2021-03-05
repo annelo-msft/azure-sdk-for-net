@@ -20,20 +20,20 @@ namespace Azure.Containers.ContainerRegistry
         /// <summary> Initializes a new instance of RepositoryProperties. </summary>
         /// <param name="registry"> Registry name. </param>
         /// <param name="name"> Image name. </param>
-        /// <param name="createdTime"> Image created time. </param>
-        /// <param name="lastUpdateTime"> Image last update time. </param>
-        /// <param name="imageCount"> Number of the manifests. </param>
+        /// <param name="createdOn"> Image created time. </param>
+        /// <param name="lastUpdatedOn"> Image last update time. </param>
+        /// <param name="registryArtifactCount"> Number of the manifests. </param>
         /// <param name="tagCount"> Number of the tags. </param>
-        /// <param name="permissions"> Changeable attributes. </param>
-        internal RepositoryProperties(string registry, string name, DateTimeOffset createdTime, DateTimeOffset lastUpdateTime, int imageCount, int tagCount, ContentPermissions permissions)
+        /// <param name="modifiableProperties"> Changeable attributes. </param>
+        internal RepositoryProperties(string registry, string name, DateTimeOffset createdOn, DateTimeOffset lastUpdatedOn, int registryArtifactCount, int tagCount, ContentProperties modifiableProperties)
         {
             Registry = registry;
             Name = name;
-            CreatedTime = createdTime;
-            LastUpdateTime = lastUpdateTime;
-            ImageCount = imageCount;
+            CreatedOn = createdOn;
+            LastUpdatedOn = lastUpdatedOn;
+            RegistryArtifactCount = registryArtifactCount;
             TagCount = tagCount;
-            Permissions = permissions;
+            ModifiableProperties = modifiableProperties;
         }
 
         /// <summary> Registry name. </summary>

@@ -25,7 +25,7 @@ namespace Azure.Containers.ContainerRegistry
             Optional<string> mediaType = default;
             Optional<string> configMediaType = default;
             Optional<IReadOnlyList<string>> tags = default;
-            Optional<ContentPermissions> changeableAttributes = default;
+            Optional<ContentProperties> changeableAttributes = default;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("digest"))
@@ -105,7 +105,7 @@ namespace Azure.Containers.ContainerRegistry
                         property.ThrowNonNullablePropertyIsNull();
                         continue;
                     }
-                    changeableAttributes = ContentPermissions.DeserializeContentPermissions(property.Value);
+                    changeableAttributes = ContentProperties.DeserializeContentProperties(property.Value);
                     continue;
                 }
             }

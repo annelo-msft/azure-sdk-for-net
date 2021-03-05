@@ -110,7 +110,7 @@ namespace Azure.Containers.ContainerRegistry
             }
         }
 
-        public virtual RepositoryClient GetRepositoryClient(string repository)
+        public virtual ContainerRepositoryClient GetRepositoryClient(string repository)
         {
             throw new NotImplementedException();
         }

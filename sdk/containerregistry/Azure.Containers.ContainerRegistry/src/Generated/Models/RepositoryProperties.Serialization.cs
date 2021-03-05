@@ -21,7 +21,7 @@ namespace Azure.Containers.ContainerRegistry
             Optional<DateTimeOffset> lastUpdateTime = default;
             Optional<int> manifestCount = default;
             Optional<int> tagCount = default;
-            Optional<ContentPermissions> changeableAttributes = default;
+            Optional<ContentProperties> changeableAttributes = default;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("registry"))
@@ -81,7 +81,7 @@ namespace Azure.Containers.ContainerRegistry
                         property.ThrowNonNullablePropertyIsNull();
                         continue;
                     }
-                    changeableAttributes = ContentPermissions.DeserializeContentPermissions(property.Value);
+                    changeableAttributes = ContentProperties.DeserializeContentProperties(property.Value);
                     continue;
                 }
             }

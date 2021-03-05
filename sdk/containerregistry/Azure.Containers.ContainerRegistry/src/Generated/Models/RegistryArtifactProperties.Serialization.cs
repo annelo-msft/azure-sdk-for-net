@@ -10,9 +10,9 @@ using Azure.Core;
 
 namespace Azure.Containers.ContainerRegistry
 {
-    public partial class ImageProperties
+    public partial class RegistryArtifactProperties
     {
-        internal static ImageProperties DeserializeImageProperties(JsonElement element)
+        internal static RegistryArtifactProperties DeserializeRegistryArtifactProperties(JsonElement element)
         {
             Optional<string> registry = default;
             Optional<string> imageName = default;
@@ -40,7 +40,7 @@ namespace Azure.Containers.ContainerRegistry
                     continue;
                 }
             }
-            return new ImageProperties(registry.Value, imageName.Value, manifest.Value);
+            return new RegistryArtifactProperties(registry.Value, imageName.Value, manifest.Value);
         }
     }
 }

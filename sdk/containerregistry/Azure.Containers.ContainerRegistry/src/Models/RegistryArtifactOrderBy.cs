@@ -3,18 +3,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace Azure.Containers.ContainerRegistry
 {
-    public class GetImageOptions
+    public enum RegistryArtifactOrderBy
     {
-        public GetImageOptions(ImageOrderBy orderBy)
-        {
-            OrderBy = orderBy;
-        }
-        
-        public ImageOrderBy OrderBy { get; }
+        LastUpdatedOnDescending,
+        LastUpdatedOnAscending
     }
 }

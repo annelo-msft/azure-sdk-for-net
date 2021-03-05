@@ -9,7 +9,7 @@ using Azure.Core;
 namespace Azure.Containers.ContainerRegistry
 {
     [CodeGenModel("ChangeableAttributes")]
-    public partial class ContentPermissions
+    public partial class ContentProperties
     {
         // TODO: why are these nullable?  We should figure out how to make then not nullable
         // TODO: Should these be settable? <-- Yes, should be settable, unless we wanted to handle that via constructor only

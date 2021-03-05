@@ -463,7 +463,7 @@ namespace Azure.Containers.ContainerRegistry
             }
         }
 
-        internal HttpMessage CreateUpdateTagAttributesRequest(string name, string reference, ContentPermissions value)
+        internal HttpMessage CreateUpdateTagAttributesRequest(string name, string reference, ContentProperties value)
         {
             var message = _pipeline.CreateMessage();
             var request = message.Request;
@@ -492,7 +492,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="value"> Repository attribute value. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> or <paramref name="reference"/> is null. </exception>
-        public async Task<Response> UpdateTagAttributesAsync(string name, string reference, ContentPermissions value = null, CancellationToken cancellationToken = default)
+        public async Task<Response> UpdateTagAttributesAsync(string name, string reference, ContentProperties value = null, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {
@@ -520,7 +520,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="value"> Repository attribute value. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> or <paramref name="reference"/> is null. </exception>
-        public Response UpdateTagAttributes(string name, string reference, ContentPermissions value = null, CancellationToken cancellationToken = default)
+        public Response UpdateTagAttributes(string name, string reference, ContentProperties value = null, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {
@@ -720,7 +720,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="reference"> A tag or a digest, pointing to a specific image. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> or <paramref name="reference"/> is null. </exception>
-        public async Task<Response<ImageProperties>> GetManifestAttributesAsync(string name, string reference, CancellationToken cancellationToken = default)
+        public async Task<Response<RegistryArtifactProperties>> GetManifestAttributesAsync(string name, string reference, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {
@@ -737,9 +737,9 @@ namespace Azure.Containers.ContainerRegistry
             {
                 case 200:
                     {
-                        ImageProperties value = default;
+                        RegistryArtifactProperties value = default;
                         using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
-                        value = ImageProperties.DeserializeImageProperties(document.RootElement);
+                        value = RegistryArtifactProperties.DeserializeRegistryArtifactProperties(document.RootElement);
                         return Response.FromValue(value, message.Response);
                     }
                 default:
@@ -752,7 +752,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="reference"> A tag or a digest, pointing to a specific image. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> or <paramref name="reference"/> is null. </exception>
-        public Response<ImageProperties> GetManifestAttributes(string name, string reference, CancellationToken cancellationToken = default)
+        public Response<RegistryArtifactProperties> GetManifestAttributes(string name, string reference, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {
@@ -769,9 +769,9 @@ namespace Azure.Containers.ContainerRegistry
             {
                 case 200:
                     {
-                        ImageProperties value = default;
+                        RegistryArtifactProperties value = default;
                         using var document = JsonDocument.Parse(message.Response.ContentStream);
-                        value = ImageProperties.DeserializeImageProperties(document.RootElement);
+                        value = RegistryArtifactProperties.DeserializeRegistryArtifactProperties(document.RootElement);
                         return Response.FromValue(value, message.Response);
                     }
                 default:
@@ -779,7 +779,7 @@ namespace Azure.Containers.ContainerRegistry
             }
         }
 
-        internal HttpMessage CreateUpdateManifestAttributesRequest(string name, string reference, ContentPermissions value)
+        internal HttpMessage CreateUpdateManifestAttributesRequest(string name, string reference, ContentProperties value)
         {
             var message = _pipeline.CreateMessage();
             var request = message.Request;
@@ -808,7 +808,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="value"> Repository attribute value. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> or <paramref name="reference"/> is null. </exception>
-        public async Task<Response> UpdateManifestAttributesAsync(string name, string reference, ContentPermissions value = null, CancellationToken cancellationToken = default)
+        public async Task<Response> UpdateManifestAttributesAsync(string name, string reference, ContentProperties value = null, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {
@@ -836,7 +836,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="value"> Repository attribute value. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> or <paramref name="reference"/> is null. </exception>
-        public Response UpdateManifestAttributes(string name, string reference, ContentPermissions value = null, CancellationToken cancellationToken = default)
+        public Response UpdateManifestAttributes(string name, string reference, ContentProperties value = null, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {

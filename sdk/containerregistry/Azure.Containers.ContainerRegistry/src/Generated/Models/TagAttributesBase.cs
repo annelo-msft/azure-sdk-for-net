@@ -24,7 +24,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="lastUpdateTime"> Tag last update time. </param>
         /// <param name="signed"> Is signed. </param>
         /// <param name="changeableAttributes"> Changeable attributes. </param>
-        internal TagAttributesBase(string name, string digest, DateTimeOffset? createdTime, DateTimeOffset? lastUpdateTime, bool? signed, ContentPermissions changeableAttributes)
+        internal TagAttributesBase(string name, string digest, DateTimeOffset? createdTime, DateTimeOffset? lastUpdateTime, bool? signed, ContentProperties changeableAttributes)
         {
             Name = name;
             Digest = digest;
@@ -45,6 +45,6 @@ namespace Azure.Containers.ContainerRegistry
         /// <summary> Is signed. </summary>
         public bool? Signed { get; }
         /// <summary> Changeable attributes. </summary>
-        public ContentPermissions ChangeableAttributes { get; }
+        public ContentProperties ChangeableAttributes { get; }
     }
 }

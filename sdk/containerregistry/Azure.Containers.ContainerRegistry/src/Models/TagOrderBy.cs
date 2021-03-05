@@ -9,7 +9,7 @@ namespace Azure.Containers.ContainerRegistry
 {
     public enum TagOrderBy
     {
-        LastUpdateTimeDescending,
-        LastUpdateTimeAscending
+        LastUpdatedOnDescending,
+        LastUpdatedOnAscending
     }
 }

@@ -19,18 +19,18 @@ namespace Azure.Containers.ContainerRegistry
 
         // TODO: Why is this nullable?  does it need to be?
         /// <summary> Tag created time. </summary>
-        public DateTimeOffset CreatedTime { get { return Attributes.CreatedTime.Value; } }
+        public DateTimeOffset CreatedOn { get { return Attributes.CreatedTime.Value; } }
 
         // TODO: Why is this nullable?  does it need to be?
         /// <summary> Tag last update time. </summary>
-        public DateTimeOffset LastUpdateTime { get { return Attributes.LastUpdateTime.Value; } }
+        public DateTimeOffset LastUpdatedOn { get { return Attributes.LastUpdateTime.Value; } }
 
         /// <summary> Is signed. </summary>
         [CodeGenMember("Signed")]
         internal bool IsSigned { get { return Attributes.Signed.Value; } }
 
         /// <summary> Changeable attributes. </summary>
-        public ContentPermissions Permissions { get { return Attributes.ChangeableAttributes; } }
+        public ContentProperties ModifiableProperties { get { return Attributes.ChangeableAttributes; } }
 
         [CodeGenMember("ImageName")]
         public string Repository { get; }

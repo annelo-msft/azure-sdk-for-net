@@ -13,7 +13,7 @@ using Azure.Core.Pipeline;
 namespace Azure.Containers.ContainerRegistry
 {
     /// <summary> The ContainerRegistryRepository service client. </summary>
-    public partial class RepositoryClient
+    public partial class ContainerRepositoryClient
     {
         private readonly ClientDiagnostics _clientDiagnostics;
         private readonly HttpPipeline _pipeline;
@@ -21,20 +21,20 @@ namespace Azure.Containers.ContainerRegistry
 
         private string _repository;
         
-        public RepositoryClient(Uri endpoint, string repository, TokenCredential credential) : this(endpoint, repository, credential, new ContainerRegistryClientOptions())
+        public ContainerRepositoryClient(Uri endpoint, string repository, TokenCredential credential) : this(endpoint, repository, credential, new ContainerRegistryClientOptions())
         {
         }
 
-        public RepositoryClient(Uri endpoint, string repository, TokenCredential credential, ContainerRegistryClientOptions options)
+        public ContainerRepositoryClient(Uri endpoint, string repository, TokenCredential credential, ContainerRegistryClientOptions options)
         {
             _repository = repository;
         }
 
-        public RepositoryClient(Uri endpoint, string repository, ContainerRegistryUserCredential credential) : this(endpoint, repository, credential, new ContainerRegistryClientOptions())
+        public ContainerRepositoryClient(Uri endpoint, string repository, ContainerRegistryUserCredential credential) : this(endpoint, repository, credential, new ContainerRegistryClientOptions())
         {
         }
 
-        public RepositoryClient(Uri endpoint, string repository, ContainerRegistryUserCredential credential, ContainerRegistryClientOptions options)
+        public ContainerRepositoryClient(Uri endpoint, string repository, ContainerRegistryUserCredential credential, ContainerRegistryClientOptions options)
         {
             _repository = repository;
         }
@@ -44,17 +44,17 @@ namespace Azure.Containers.ContainerRegistry
         /// </summary>
         /// <param name="endpoint"></param>
         /// <param name="repository"></param>
-        public RepositoryClient(Uri endpoint, string repository) : this(endpoint, repository, new ContainerRegistryClientOptions())
+        public ContainerRepositoryClient(Uri endpoint, string repository) : this(endpoint, repository, new ContainerRegistryClientOptions())
         {
         }
 
-        public RepositoryClient(Uri endpoint, string repository, ContainerRegistryClientOptions options)
+        public ContainerRepositoryClient(Uri endpoint, string repository, ContainerRegistryClientOptions options)
         {
             _repository = repository;
         }
 
         /// <summary> Initializes a new instance of ContainerRegistryRepositoryClient for mocking. </summary>
-        protected RepositoryClient()
+        protected ContainerRepositoryClient()
         {
         }
 
@@ -62,7 +62,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="clientDiagnostics"> The handler for diagnostic messaging in the client. </param>
         /// <param name="pipeline"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
         /// <param name="url"> Registry login URL. </param>
-        internal RepositoryClient(ClientDiagnostics clientDiagnostics, HttpPipeline pipeline, string url)
+        internal ContainerRepositoryClient(ClientDiagnostics clientDiagnostics, HttpPipeline pipeline, string url)
         {
             RestClient = new ContainerRegistryRepositoryRestClient(clientDiagnostics, pipeline, url);
             _clientDiagnostics = clientDiagnostics;
@@ -91,7 +91,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <summary> Update the attribute identified by `name` where `reference` is the name of the repository. </summary>
         /// <param name="value"> Repository attribute value. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response> SetPermissionsAsync(ContentPermissions value, CancellationToken cancellationToken = default)
+        public virtual async Task<Response> SetPropertiesAsync(ContentProperties value, CancellationToken cancellationToken = default)
         {
             await Task.Delay(0, cancellationToken).ConfigureAwait(false);
             throw new NotImplementedException();
@@ -111,7 +111,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <summary> Update the attribute identified by `name` where `reference` is the name of the repository. </summary>
         /// <param name="value"> Repository attribute value. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response SetPermissions(ContentPermissions value, CancellationToken cancellationToken = default)
+        public virtual Response SetProperties(ContentProperties value, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
             //using var scope = _clientDiagnostics.CreateScope("ContainerRegistryClient.UpdateRepositoryAttributes");
@@ -138,21 +138,21 @@ namespace Azure.Containers.ContainerRegistry
             throw new NotImplementedException();
         }
 
-        public virtual Pageable<ImageProperties> GetImages(GetImageOptions options = null, CancellationToken cancellationToken = default)
+        public virtual Pageable<RegistryArtifactProperties> GetRegistryArtifacts(GetRegistryArtifactOptions options = null, CancellationToken cancellationToken = default)
         {
             // Get images in repository
 
             throw new NotImplementedException();
         }
 
-        public virtual AsyncPageable<ImageProperties> GetImagesAsync(GetImageOptions options = null, CancellationToken cancellationToken = default)
+        public virtual AsyncPageable<RegistryArtifactProperties> GetRegistryArtifactsAsync(GetRegistryArtifactOptions options = null, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
         /// <summary> Delete the repository identified by `name`. </summary>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response DeleteImage(string digest, CancellationToken cancellationToken = default)
+        public virtual Response DeleteRegistryArtifact(string digest, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
 
@@ -171,7 +171,7 @@ namespace Azure.Containers.ContainerRegistry
 
         /// <summary> Delete the repository identified by `name`. </summary>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response> DeleteImageAsync(string digest, CancellationToken cancellationToken = default)
+        public virtual async Task<Response> DeleteRegistryArtifactAsync(string digest, CancellationToken cancellationToken = default)
         {
             await Task.Delay(0, cancellationToken).ConfigureAwait(false);
             throw new NotImplementedException();
@@ -189,7 +189,7 @@ namespace Azure.Containers.ContainerRegistry
             //}
         }
 
-        public virtual async Task<Response<ImageProperties>> GetImagePropertiesAsync(string tagOrDigest, CancellationToken cancellationToken = default)
+        public virtual async Task<Response<RegistryArtifactProperties>> GetRegistryArtifactPropertiesAsync(string tagOrDigest, CancellationToken cancellationToken = default)
         {
             await Task.Delay(0, cancellationToken).ConfigureAwait(false);
             throw new NotImplementedException();
@@ -197,12 +197,12 @@ namespace Azure.Containers.ContainerRegistry
             // TODO: Get Repository Attributes
         }
 
-        public virtual Response<ImageProperties> GetImageProperties(string tagOrDigest, CancellationToken cancellationToken = default)
+        public virtual Response<RegistryArtifactProperties> GetRegistryArtifactProperties(string tagOrDigest, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public virtual async Task<Response<ImageProperties>> SetManifestPermissionsAsync(string digest, ContentPermissions value, CancellationToken cancellationToken = default)
+        public virtual async Task<Response<RegistryArtifactProperties>> SetManifestPropertiesAsync(string digest, ContentProperties value, CancellationToken cancellationToken = default)
         {
             await Task.Delay(0, cancellationToken).ConfigureAwait(false);
             throw new NotImplementedException();
@@ -223,7 +223,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <summary> Update the attribute identified by `name` where `reference` is the name of the repository. </summary>
         /// <param name="value"> Repository attribute value. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response<ImageProperties> SetManifestPermissions(string digest, ContentPermissions value,  CancellationToken cancellationToken = default)
+        public virtual Response<RegistryArtifactProperties> SetManifestProperties(string digest, ContentProperties value,  CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
             //using var scope = _clientDiagnostics.CreateScope("ContainerRegistryClient.UpdateRepositoryAttributes");
@@ -255,7 +255,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <summary> Update the attribute identified by `name` where `reference` is the name of the repository. </summary>
         /// <param name="value"> Repository attribute value. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response<TagProperties>> SetTagPermissionsAsync(string tag, ContentPermissions value, CancellationToken cancellationToken = default)
+        public virtual async Task<Response<TagProperties>> SetTagPropertiesAsync(string tag, ContentProperties value, CancellationToken cancellationToken = default)
         {
             await Task.Delay(0, cancellationToken).ConfigureAwait(false);
             throw new NotImplementedException();
@@ -275,7 +275,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <summary> Update the attribute identified by `name` where `reference` is the name of the repository. </summary>
         /// <param name="value"> Repository attribute value. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response<TagProperties> SetTagPermissions(string tag, ContentPermissions value, CancellationToken cancellationToken = default)
+        public virtual Response<TagProperties> SetTagProperties(string tag, ContentProperties value, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
             //using var scope = _clientDiagnostics.CreateScope("ContainerRegistryClient.UpdateRepositoryAttributes");
