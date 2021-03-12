@@ -30,15 +30,6 @@ namespace Azure.Containers.ContainerRegistry
             _repository = repository;
         }
 
-        public ContainerRepositoryClient(Uri endpoint, string repository, ContainerRegistryUserCredential credential) : this(endpoint, repository, credential, new ContainerRegistryClientOptions())
-        {
-        }
-
-        public ContainerRepositoryClient(Uri endpoint, string repository, ContainerRegistryUserCredential credential, ContainerRegistryClientOptions options)
-        {
-            _repository = repository;
-        }
-
         /// <summary>
         /// anonymous access
         /// </summary>

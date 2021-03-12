@@ -25,14 +25,6 @@ namespace Azure.Containers.ContainerRegistry
         {
         }
 
-        public ContainerRegistryClient(Uri endpoint, ContainerRegistryUserCredential credential) : this(endpoint, credential, new ContainerRegistryClientOptions())
-        {
-        }
-
-        public ContainerRegistryClient(Uri endpoint, ContainerRegistryUserCredential credential, ContainerRegistryClientOptions options)
-        {
-        }
-
         public ContainerRegistryClient(Uri endpoint) : this(endpoint, new ContainerRegistryClientOptions())
         {
         }
