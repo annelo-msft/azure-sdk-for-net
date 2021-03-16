@@ -5,19 +5,20 @@
 
 #nullable disable
 
+using System;
 using System.Text.Json;
 using Azure.Core;
 
 namespace Azure.Containers.ContainerRegistry
 {
-    internal partial class RepositoryAttributes
+    public partial class RepositoryAttributes
     {
         internal static RepositoryAttributes DeserializeRepositoryAttributes(JsonElement element)
         {
             Optional<string> registry = default;
             Optional<string> imageName = default;
-            Optional<string> createdTime = default;
-            Optional<string> lastUpdateTime = default;
+            Optional<DateTimeOffset> createdTime = default;
+            Optional<DateTimeOffset> lastUpdateTime = default;
             Optional<int> manifestCount = default;
             Optional<int> tagCount = default;
             Optional<ChangeableAttributes> changeableAttributes = default;
@@ -35,12 +36,22 @@ namespace Azure.Containers.ContainerRegistry
                 }
                 if (property.NameEquals("createdTime"))
                 {
-                    createdTime = property.Value.GetString();
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        property.ThrowNonNullablePropertyIsNull();
+                        continue;
+                    }
+                    createdTime = property.Value.GetDateTimeOffset("O");
                     continue;
                 }
                 if (property.NameEquals("lastUpdateTime"))
                 {
-                    lastUpdateTime = property.Value.GetString();
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        property.ThrowNonNullablePropertyIsNull();
+                        continue;
+                    }
+                    lastUpdateTime = property.Value.GetDateTimeOffset("O");
                     continue;
                 }
                 if (property.NameEquals("manifestCount"))
@@ -74,7 +85,7 @@ namespace Azure.Containers.ContainerRegistry
                     continue;
                 }
             }
-            return new RepositoryAttributes(registry.Value, imageName.Value, createdTime.Value, lastUpdateTime.Value, Optional.ToNullable(manifestCount), Optional.ToNullable(tagCount), changeableAttributes.Value);
+            return new RepositoryAttributes(registry.Value, imageName.Value, Optional.ToNullable(createdTime), Optional.ToNullable(lastUpdateTime), Optional.ToNullable(manifestCount), Optional.ToNullable(tagCount), changeableAttributes.Value);
         }
     }
 }

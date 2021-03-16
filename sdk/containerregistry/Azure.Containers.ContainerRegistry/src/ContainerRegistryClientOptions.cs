@@ -7,7 +7,6 @@ using Azure.Core;
 namespace Azure.Containers.ContainerRegistry
 {
     /// <summary>
-    /// The options for <see cref="ContainerRegistryClient"/>
     /// </summary>
     public class ContainerRegistryClientOptions : ClientOptions
     {

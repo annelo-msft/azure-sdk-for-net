@@ -5,10 +5,12 @@
 
 #nullable disable
 
+using System;
+
 namespace Azure.Containers.ContainerRegistry
 {
     /// <summary> Tag attributes. </summary>
-    internal partial class TagAttributes
+    public partial class TagAttributes
     {
         /// <summary> Initializes a new instance of TagAttributes. </summary>
         internal TagAttributes()
@@ -17,20 +19,36 @@ namespace Azure.Containers.ContainerRegistry
 
         /// <summary> Initializes a new instance of TagAttributes. </summary>
         /// <param name="registry"> Registry name. </param>
-        /// <param name="imageName"> Image name. </param>
-        /// <param name="attributes"> List of tag attribute details. </param>
-        internal TagAttributes(string registry, string imageName, TagAttributesBase attributes)
+        /// <param name="repository"> Image name. </param>
+        /// <param name="name"> Tag name. </param>
+        /// <param name="digest"> Tag digest. </param>
+        /// <param name="createdOn"> Tag created time. </param>
+        /// <param name="lastUpdatedOn"> Tag last update time. </param>
+        /// <param name="modifiableProperties"> Changeable attributes. </param>
+        internal TagAttributes(string registry, string repository, string name, string digest, DateTimeOffset? createdOn, DateTimeOffset? lastUpdatedOn, ChangeableAttributes modifiableProperties)
         {
             Registry = registry;
-            ImageName = imageName;
-            Attributes = attributes;
+            Repository = repository;
+            Name = name;
+            Digest = digest;
+            CreatedOn = createdOn;
+            LastUpdatedOn = lastUpdatedOn;
+            ModifiableProperties = modifiableProperties;
         }
 
         /// <summary> Registry name. </summary>
         public string Registry { get; }
         /// <summary> Image name. </summary>
-        public string ImageName { get; }
-        /// <summary> List of tag attribute details. </summary>
-        public TagAttributesBase Attributes { get; }
+        public string Repository { get; }
+        /// <summary> Tag name. </summary>
+        public string Name { get; }
+        /// <summary> Tag digest. </summary>
+        public string Digest { get; }
+        /// <summary> Tag created time. </summary>
+        public DateTimeOffset? CreatedOn { get; }
+        /// <summary> Tag last update time. </summary>
+        public DateTimeOffset? LastUpdatedOn { get; }
+        /// <summary> Changeable attributes. </summary>
+        public ChangeableAttributes ModifiableProperties { get; }
     }
 }

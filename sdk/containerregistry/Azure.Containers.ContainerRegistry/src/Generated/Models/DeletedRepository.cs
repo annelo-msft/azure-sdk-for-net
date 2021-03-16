@@ -11,27 +11,27 @@ using Azure.Core;
 namespace Azure.Containers.ContainerRegistry
 {
     /// <summary> Deleted repository. </summary>
-    internal partial class DeletedRepository
+    public partial class DeletedRepository
     {
         /// <summary> Initializes a new instance of DeletedRepository. </summary>
         internal DeletedRepository()
         {
-            ManifestsDeleted = new ChangeTrackingList<string>();
-            TagsDeleted = new ChangeTrackingList<string>();
+            DeletedRegistryArtifactDigests = new ChangeTrackingList<string>();
+            DeletedTags = new ChangeTrackingList<string>();
         }
 
         /// <summary> Initializes a new instance of DeletedRepository. </summary>
-        /// <param name="manifestsDeleted"> SHA of the deleted image. </param>
-        /// <param name="tagsDeleted"> Tag of the deleted image. </param>
-        internal DeletedRepository(IReadOnlyList<string> manifestsDeleted, IReadOnlyList<string> tagsDeleted)
+        /// <param name="deletedRegistryArtifactDigests"> SHA of the deleted image. </param>
+        /// <param name="deletedTags"> Tag of the deleted image. </param>
+        internal DeletedRepository(IReadOnlyList<string> deletedRegistryArtifactDigests, IReadOnlyList<string> deletedTags)
         {
-            ManifestsDeleted = manifestsDeleted;
-            TagsDeleted = tagsDeleted;
+            DeletedRegistryArtifactDigests = deletedRegistryArtifactDigests;
+            DeletedTags = deletedTags;
         }
 
         /// <summary> SHA of the deleted image. </summary>
-        public IReadOnlyList<string> ManifestsDeleted { get; }
+        public IReadOnlyList<string> DeletedRegistryArtifactDigests { get; }
         /// <summary> Tag of the deleted image. </summary>
-        public IReadOnlyList<string> TagsDeleted { get; }
+        public IReadOnlyList<string> DeletedTags { get; }
     }
 }

@@ -8,7 +8,7 @@
 namespace Azure.Containers.ContainerRegistry
 {
     /// <summary> The ChangeableAttributes. </summary>
-    internal partial class ChangeableAttributes
+    public partial class ChangeableAttributes
     {
         /// <summary> Initializes a new instance of ChangeableAttributes. </summary>
         public ChangeableAttributes()
@@ -16,25 +16,25 @@ namespace Azure.Containers.ContainerRegistry
         }
 
         /// <summary> Initializes a new instance of ChangeableAttributes. </summary>
-        /// <param name="deleteEnabled"> Delete enabled. </param>
-        /// <param name="writeEnabled"> Write enabled. </param>
-        /// <param name="listEnabled"> List enabled. </param>
-        /// <param name="readEnabled"> Read enabled. </param>
-        internal ChangeableAttributes(bool? deleteEnabled, bool? writeEnabled, bool? listEnabled, bool? readEnabled)
+        /// <param name="canDelete"> Delete enabled. </param>
+        /// <param name="canWrite"> Write enabled. </param>
+        /// <param name="canList"> List enabled. </param>
+        /// <param name="canRead"> Read enabled. </param>
+        internal ChangeableAttributes(bool? canDelete, bool? canWrite, bool? canList, bool? canRead)
         {
-            DeleteEnabled = deleteEnabled;
-            WriteEnabled = writeEnabled;
-            ListEnabled = listEnabled;
-            ReadEnabled = readEnabled;
+            CanDelete = canDelete;
+            CanWrite = canWrite;
+            CanList = canList;
+            CanRead = canRead;
         }
 
         /// <summary> Delete enabled. </summary>
-        public bool? DeleteEnabled { get; set; }
+        public bool? CanDelete { get; set; }
         /// <summary> Write enabled. </summary>
-        public bool? WriteEnabled { get; set; }
+        public bool? CanWrite { get; set; }
         /// <summary> List enabled. </summary>
-        public bool? ListEnabled { get; set; }
+        public bool? CanList { get; set; }
         /// <summary> Read enabled. </summary>
-        public bool? ReadEnabled { get; set; }
+        public bool? CanRead { get; set; }
     }
 }

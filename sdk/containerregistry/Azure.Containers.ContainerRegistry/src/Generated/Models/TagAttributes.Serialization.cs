@@ -5,18 +5,23 @@
 
 #nullable disable
 
+using System;
 using System.Text.Json;
 using Azure.Core;
 
 namespace Azure.Containers.ContainerRegistry
 {
-    internal partial class TagAttributes
+    public partial class TagAttributes
     {
         internal static TagAttributes DeserializeTagAttributes(JsonElement element)
         {
             Optional<string> registry = default;
             Optional<string> imageName = default;
-            Optional<TagAttributesBase> tag = default;
+            Optional<string> name = default;
+            Optional<string> digest = default;
+            Optional<DateTimeOffset> createdTime = default;
+            Optional<DateTimeOffset> lastUpdateTime = default;
+            Optional<ChangeableAttributes> changeableAttributes = default;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("registry"))
@@ -36,11 +41,53 @@ namespace Azure.Containers.ContainerRegistry
                         property.ThrowNonNullablePropertyIsNull();
                         continue;
                     }
-                    tag = TagAttributesBase.DeserializeTagAttributesBase(property.Value);
+                    foreach (var property0 in property.Value.EnumerateObject())
+                    {
+                        if (property0.NameEquals("name"))
+                        {
+                            name = property0.Value.GetString();
+                            continue;
+                        }
+                        if (property0.NameEquals("digest"))
+                        {
+                            digest = property0.Value.GetString();
+                            continue;
+                        }
+                        if (property0.NameEquals("createdTime"))
+                        {
+                            if (property0.Value.ValueKind == JsonValueKind.Null)
+                            {
+                                property0.ThrowNonNullablePropertyIsNull();
+                                continue;
+                            }
+                            createdTime = property0.Value.GetDateTimeOffset("O");
+                            continue;
+                        }
+                        if (property0.NameEquals("lastUpdateTime"))
+                        {
+                            if (property0.Value.ValueKind == JsonValueKind.Null)
+                            {
+                                property0.ThrowNonNullablePropertyIsNull();
+                                continue;
+                            }
+                            lastUpdateTime = property0.Value.GetDateTimeOffset("O");
+                            continue;
+                        }
+                        if (property0.NameEquals("changeableAttributes"))
+                        {
+                            if (property0.Value.ValueKind == JsonValueKind.Null)
+                            {
+                                property0.ThrowNonNullablePropertyIsNull();
+                                continue;
+                            }
+                            changeableAttributes = ChangeableAttributes.DeserializeChangeableAttributes(property0.Value);
+                            continue;
+                        }
+                    }
                     continue;
                 }
             }
-            return new TagAttributes(registry.Value, imageName.Value, tag.Value);
+            return new TagAttributes(registry.Value, imageName.Value, name.Value, digest.Value, Optional.ToNullable(createdTime), Optional.ToNullable(lastUpdateTime), changeableAttributes.Value);
         }
     }
 }

@@ -10,30 +10,30 @@ using Azure.Core;
 
 namespace Azure.Containers.ContainerRegistry
 {
-    internal partial class ChangeableAttributes : IUtf8JsonSerializable
+    public partial class ChangeableAttributes : IUtf8JsonSerializable
     {
         void IUtf8JsonSerializable.Write(Utf8JsonWriter writer)
         {
             writer.WriteStartObject();
-            if (Optional.IsDefined(DeleteEnabled))
+            if (Optional.IsDefined(CanDelete))
             {
                 writer.WritePropertyName("deleteEnabled");
-                writer.WriteBooleanValue(DeleteEnabled.Value);
+                writer.WriteBooleanValue(CanDelete.Value);
             }
-            if (Optional.IsDefined(WriteEnabled))
+            if (Optional.IsDefined(CanWrite))
             {
                 writer.WritePropertyName("writeEnabled");
-                writer.WriteBooleanValue(WriteEnabled.Value);
+                writer.WriteBooleanValue(CanWrite.Value);
             }
-            if (Optional.IsDefined(ListEnabled))
+            if (Optional.IsDefined(CanList))
             {
                 writer.WritePropertyName("listEnabled");
-                writer.WriteBooleanValue(ListEnabled.Value);
+                writer.WriteBooleanValue(CanList.Value);
             }
-            if (Optional.IsDefined(ReadEnabled))
+            if (Optional.IsDefined(CanRead))
             {
                 writer.WritePropertyName("readEnabled");
-                writer.WriteBooleanValue(ReadEnabled.Value);
+                writer.WriteBooleanValue(CanRead.Value);
             }
             writer.WriteEndObject();
         }

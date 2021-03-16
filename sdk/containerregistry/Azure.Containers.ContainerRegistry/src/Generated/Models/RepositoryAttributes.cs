@@ -5,10 +5,12 @@
 
 #nullable disable
 
+using System;
+
 namespace Azure.Containers.ContainerRegistry
 {
     /// <summary> Repository attributes. </summary>
-    internal partial class RepositoryAttributes
+    public partial class RepositoryAttributes
     {
         /// <summary> Initializes a new instance of RepositoryAttributes. </summary>
         internal RepositoryAttributes()
@@ -17,36 +19,36 @@ namespace Azure.Containers.ContainerRegistry
 
         /// <summary> Initializes a new instance of RepositoryAttributes. </summary>
         /// <param name="registry"> Registry name. </param>
-        /// <param name="imageName"> Image name. </param>
-        /// <param name="createdTime"> Image created time. </param>
-        /// <param name="lastUpdateTime"> Image last update time. </param>
-        /// <param name="manifestCount"> Number of the manifests. </param>
+        /// <param name="name"> Image name. </param>
+        /// <param name="createdOn"> Image created time. </param>
+        /// <param name="lastUpdatedOn"> Image last update time. </param>
+        /// <param name="registryArtifactCount"> Number of the manifests. </param>
         /// <param name="tagCount"> Number of the tags. </param>
-        /// <param name="changeableAttributes"> Changeable attributes. </param>
-        internal RepositoryAttributes(string registry, string imageName, string createdTime, string lastUpdateTime, int? manifestCount, int? tagCount, ChangeableAttributes changeableAttributes)
+        /// <param name="writeableProperties"> Changeable attributes. </param>
+        internal RepositoryAttributes(string registry, string name, DateTimeOffset? createdOn, DateTimeOffset? lastUpdatedOn, int? registryArtifactCount, int? tagCount, ChangeableAttributes writeableProperties)
         {
             Registry = registry;
-            ImageName = imageName;
-            CreatedTime = createdTime;
-            LastUpdateTime = lastUpdateTime;
-            ManifestCount = manifestCount;
+            Name = name;
+            CreatedOn = createdOn;
+            LastUpdatedOn = lastUpdatedOn;
+            RegistryArtifactCount = registryArtifactCount;
             TagCount = tagCount;
-            ChangeableAttributes = changeableAttributes;
+            WriteableProperties = writeableProperties;
         }
 
         /// <summary> Registry name. </summary>
         public string Registry { get; }
         /// <summary> Image name. </summary>
-        public string ImageName { get; }
+        public string Name { get; }
         /// <summary> Image created time. </summary>
-        public string CreatedTime { get; }
+        public DateTimeOffset? CreatedOn { get; }
         /// <summary> Image last update time. </summary>
-        public string LastUpdateTime { get; }
+        public DateTimeOffset? LastUpdatedOn { get; }
         /// <summary> Number of the manifests. </summary>
-        public int? ManifestCount { get; }
+        public int? RegistryArtifactCount { get; }
         /// <summary> Number of the tags. </summary>
         public int? TagCount { get; }
         /// <summary> Changeable attributes. </summary>
-        public ChangeableAttributes ChangeableAttributes { get; }
+        public ChangeableAttributes WriteableProperties { get; }
     }
 }
