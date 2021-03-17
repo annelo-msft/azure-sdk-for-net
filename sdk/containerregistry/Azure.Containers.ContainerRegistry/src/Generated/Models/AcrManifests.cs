@@ -23,11 +23,13 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="registry"> Registry name. </param>
         /// <param name="imageName"> Image name. </param>
         /// <param name="manifests"> List of manifests. </param>
-        internal AcrManifests(string registry, string imageName, IReadOnlyList<ManifestAttributesBase> manifests)
+        /// <param name="link"> . </param>
+        internal AcrManifests(string registry, string imageName, IReadOnlyList<ManifestAttributesBase> manifests, string link)
         {
             Registry = registry;
             ImageName = imageName;
             Manifests = manifests;
+            Link = link;
         }
 
         /// <summary> Registry name. </summary>
@@ -36,5 +38,6 @@ namespace Azure.Containers.ContainerRegistry
         public string ImageName { get; }
         /// <summary> List of manifests. </summary>
         public IReadOnlyList<ManifestAttributesBase> Manifests { get; }
+        public string Link { get; }
     }
 }
