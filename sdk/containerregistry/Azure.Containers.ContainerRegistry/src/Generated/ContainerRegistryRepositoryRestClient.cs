@@ -329,7 +329,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="digest"> filter by digest. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> is null. </exception>
-        public async Task<Response<TagList>> GetTagsAsync(string name, string last = null, int? n = null, string orderby = null, string digest = null, CancellationToken cancellationToken = default)
+        public async Task<ResponseWithHeaders<TagList, ContainerRegistryRepositoryGetTagsHeaders>> GetTagsAsync(string name, string last = null, int? n = null, string orderby = null, string digest = null, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {
@@ -338,6 +338,7 @@ namespace Azure.Containers.ContainerRegistry
 
             using var message = CreateGetTagsRequest(name, last, n, orderby, digest);
             await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
+            var headers = new ContainerRegistryRepositoryGetTagsHeaders(message.Response);
             switch (message.Response.Status)
             {
                 case 200:
@@ -345,7 +346,7 @@ namespace Azure.Containers.ContainerRegistry
                         TagList value = default;
                         using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
                         value = TagList.DeserializeTagList(document.RootElement);
-                        return Response.FromValue(value, message.Response);
+                        return ResponseWithHeaders.FromValue(value, headers, message.Response);
                     }
                 default:
                     throw await _clientDiagnostics.CreateRequestFailedExceptionAsync(message.Response).ConfigureAwait(false);
@@ -360,7 +361,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="digest"> filter by digest. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> is null. </exception>
-        public Response<TagList> GetTags(string name, string last = null, int? n = null, string orderby = null, string digest = null, CancellationToken cancellationToken = default)
+        public ResponseWithHeaders<TagList, ContainerRegistryRepositoryGetTagsHeaders> GetTags(string name, string last = null, int? n = null, string orderby = null, string digest = null, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {
@@ -369,6 +370,7 @@ namespace Azure.Containers.ContainerRegistry
 
             using var message = CreateGetTagsRequest(name, last, n, orderby, digest);
             _pipeline.Send(message, cancellationToken);
+            var headers = new ContainerRegistryRepositoryGetTagsHeaders(message.Response);
             switch (message.Response.Status)
             {
                 case 200:
@@ -376,7 +378,7 @@ namespace Azure.Containers.ContainerRegistry
                         TagList value = default;
                         using var document = JsonDocument.Parse(message.Response.ContentStream);
                         value = TagList.DeserializeTagList(document.RootElement);
-                        return Response.FromValue(value, message.Response);
+                        return ResponseWithHeaders.FromValue(value, headers, message.Response);
                     }
                 default:
                     throw _clientDiagnostics.CreateRequestFailedException(message.Response);
@@ -646,7 +648,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="orderby"> orderby query parameter. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> is null. </exception>
-        public async Task<Response<AcrManifests>> GetManifestsAsync(string name, string last = null, int? n = null, string orderby = null, CancellationToken cancellationToken = default)
+        public async Task<ResponseWithHeaders<AcrManifests, ContainerRegistryRepositoryGetManifestsHeaders>> GetManifestsAsync(string name, string last = null, int? n = null, string orderby = null, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {
@@ -655,6 +657,7 @@ namespace Azure.Containers.ContainerRegistry
 
             using var message = CreateGetManifestsRequest(name, last, n, orderby);
             await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
+            var headers = new ContainerRegistryRepositoryGetManifestsHeaders(message.Response);
             switch (message.Response.Status)
             {
                 case 200:
@@ -662,7 +665,7 @@ namespace Azure.Containers.ContainerRegistry
                         AcrManifests value = default;
                         using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
                         value = AcrManifests.DeserializeAcrManifests(document.RootElement);
-                        return Response.FromValue(value, message.Response);
+                        return ResponseWithHeaders.FromValue(value, headers, message.Response);
                     }
                 default:
                     throw await _clientDiagnostics.CreateRequestFailedExceptionAsync(message.Response).ConfigureAwait(false);
@@ -676,7 +679,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="orderby"> orderby query parameter. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> is null. </exception>
-        public Response<AcrManifests> GetManifests(string name, string last = null, int? n = null, string orderby = null, CancellationToken cancellationToken = default)
+        public ResponseWithHeaders<AcrManifests, ContainerRegistryRepositoryGetManifestsHeaders> GetManifests(string name, string last = null, int? n = null, string orderby = null, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {
@@ -685,6 +688,7 @@ namespace Azure.Containers.ContainerRegistry
 
             using var message = CreateGetManifestsRequest(name, last, n, orderby);
             _pipeline.Send(message, cancellationToken);
+            var headers = new ContainerRegistryRepositoryGetManifestsHeaders(message.Response);
             switch (message.Response.Status)
             {
                 case 200:
@@ -692,7 +696,7 @@ namespace Azure.Containers.ContainerRegistry
                         AcrManifests value = default;
                         using var document = JsonDocument.Parse(message.Response.ContentStream);
                         value = AcrManifests.DeserializeAcrManifests(document.RootElement);
-                        return Response.FromValue(value, message.Response);
+                        return ResponseWithHeaders.FromValue(value, headers, message.Response);
                     }
                 default:
                     throw _clientDiagnostics.CreateRequestFailedException(message.Response);
@@ -853,6 +857,178 @@ namespace Azure.Containers.ContainerRegistry
             {
                 case 200:
                     return message.Response;
+                default:
+                    throw _clientDiagnostics.CreateRequestFailedException(message.Response);
+            }
+        }
+
+        internal HttpMessage CreateGetTagsNextPageRequest(string nextLink, string name, string last, int? n, string orderby, string digest)
+        {
+            var message = _pipeline.CreateMessage();
+            var request = message.Request;
+            request.Method = RequestMethod.Get;
+            var uri = new RawRequestUriBuilder();
+            uri.AppendRaw(url, false);
+            uri.AppendRawNextLink(nextLink, false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            return message;
+        }
+
+        /// <summary> List tags of a repository. </summary>
+        /// <param name="nextLink"> The URL to the next page of results. </param>
+        /// <param name="name"> Name of the image (including the namespace). </param>
+        /// <param name="last"> Query parameter for the last item in previous query. Result set will include values lexically after last. </param>
+        /// <param name="n"> query parameter for max number of items. </param>
+        /// <param name="orderby"> orderby query parameter. </param>
+        /// <param name="digest"> filter by digest. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="nextLink"/> or <paramref name="name"/> is null. </exception>
+        public async Task<ResponseWithHeaders<TagList, ContainerRegistryRepositoryGetTagsHeaders>> GetTagsNextPageAsync(string nextLink, string name, string last = null, int? n = null, string orderby = null, string digest = null, CancellationToken cancellationToken = default)
+        {
+            if (nextLink == null)
+            {
+                throw new ArgumentNullException(nameof(nextLink));
+            }
+            if (name == null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            using var message = CreateGetTagsNextPageRequest(nextLink, name, last, n, orderby, digest);
+            await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
+            var headers = new ContainerRegistryRepositoryGetTagsHeaders(message.Response);
+            switch (message.Response.Status)
+            {
+                case 200:
+                    {
+                        TagList value = default;
+                        using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
+                        value = TagList.DeserializeTagList(document.RootElement);
+                        return ResponseWithHeaders.FromValue(value, headers, message.Response);
+                    }
+                default:
+                    throw await _clientDiagnostics.CreateRequestFailedExceptionAsync(message.Response).ConfigureAwait(false);
+            }
+        }
+
+        /// <summary> List tags of a repository. </summary>
+        /// <param name="nextLink"> The URL to the next page of results. </param>
+        /// <param name="name"> Name of the image (including the namespace). </param>
+        /// <param name="last"> Query parameter for the last item in previous query. Result set will include values lexically after last. </param>
+        /// <param name="n"> query parameter for max number of items. </param>
+        /// <param name="orderby"> orderby query parameter. </param>
+        /// <param name="digest"> filter by digest. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="nextLink"/> or <paramref name="name"/> is null. </exception>
+        public ResponseWithHeaders<TagList, ContainerRegistryRepositoryGetTagsHeaders> GetTagsNextPage(string nextLink, string name, string last = null, int? n = null, string orderby = null, string digest = null, CancellationToken cancellationToken = default)
+        {
+            if (nextLink == null)
+            {
+                throw new ArgumentNullException(nameof(nextLink));
+            }
+            if (name == null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            using var message = CreateGetTagsNextPageRequest(nextLink, name, last, n, orderby, digest);
+            _pipeline.Send(message, cancellationToken);
+            var headers = new ContainerRegistryRepositoryGetTagsHeaders(message.Response);
+            switch (message.Response.Status)
+            {
+                case 200:
+                    {
+                        TagList value = default;
+                        using var document = JsonDocument.Parse(message.Response.ContentStream);
+                        value = TagList.DeserializeTagList(document.RootElement);
+                        return ResponseWithHeaders.FromValue(value, headers, message.Response);
+                    }
+                default:
+                    throw _clientDiagnostics.CreateRequestFailedException(message.Response);
+            }
+        }
+
+        internal HttpMessage CreateGetManifestsNextPageRequest(string nextLink, string name, string last, int? n, string orderby)
+        {
+            var message = _pipeline.CreateMessage();
+            var request = message.Request;
+            request.Method = RequestMethod.Get;
+            var uri = new RawRequestUriBuilder();
+            uri.AppendRaw(url, false);
+            uri.AppendRawNextLink(nextLink, false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            return message;
+        }
+
+        /// <summary> List manifests of a repository. </summary>
+        /// <param name="nextLink"> The URL to the next page of results. </param>
+        /// <param name="name"> Name of the image (including the namespace). </param>
+        /// <param name="last"> Query parameter for the last item in previous query. Result set will include values lexically after last. </param>
+        /// <param name="n"> query parameter for max number of items. </param>
+        /// <param name="orderby"> orderby query parameter. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="nextLink"/> or <paramref name="name"/> is null. </exception>
+        public async Task<ResponseWithHeaders<AcrManifests, ContainerRegistryRepositoryGetManifestsHeaders>> GetManifestsNextPageAsync(string nextLink, string name, string last = null, int? n = null, string orderby = null, CancellationToken cancellationToken = default)
+        {
+            if (nextLink == null)
+            {
+                throw new ArgumentNullException(nameof(nextLink));
+            }
+            if (name == null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            using var message = CreateGetManifestsNextPageRequest(nextLink, name, last, n, orderby);
+            await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
+            var headers = new ContainerRegistryRepositoryGetManifestsHeaders(message.Response);
+            switch (message.Response.Status)
+            {
+                case 200:
+                    {
+                        AcrManifests value = default;
+                        using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
+                        value = AcrManifests.DeserializeAcrManifests(document.RootElement);
+                        return ResponseWithHeaders.FromValue(value, headers, message.Response);
+                    }
+                default:
+                    throw await _clientDiagnostics.CreateRequestFailedExceptionAsync(message.Response).ConfigureAwait(false);
+            }
+        }
+
+        /// <summary> List manifests of a repository. </summary>
+        /// <param name="nextLink"> The URL to the next page of results. </param>
+        /// <param name="name"> Name of the image (including the namespace). </param>
+        /// <param name="last"> Query parameter for the last item in previous query. Result set will include values lexically after last. </param>
+        /// <param name="n"> query parameter for max number of items. </param>
+        /// <param name="orderby"> orderby query parameter. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="nextLink"/> or <paramref name="name"/> is null. </exception>
+        public ResponseWithHeaders<AcrManifests, ContainerRegistryRepositoryGetManifestsHeaders> GetManifestsNextPage(string nextLink, string name, string last = null, int? n = null, string orderby = null, CancellationToken cancellationToken = default)
+        {
+            if (nextLink == null)
+            {
+                throw new ArgumentNullException(nameof(nextLink));
+            }
+            if (name == null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            using var message = CreateGetManifestsNextPageRequest(nextLink, name, last, n, orderby);
+            _pipeline.Send(message, cancellationToken);
+            var headers = new ContainerRegistryRepositoryGetManifestsHeaders(message.Response);
+            switch (message.Response.Status)
+            {
+                case 200:
+                    {
+                        AcrManifests value = default;
+                        using var document = JsonDocument.Parse(message.Response.ContentStream);
+                        value = AcrManifests.DeserializeAcrManifests(document.RootElement);
+                        return ResponseWithHeaders.FromValue(value, headers, message.Response);
+                    }
                 default:
                     throw _clientDiagnostics.CreateRequestFailedException(message.Response);
             }
