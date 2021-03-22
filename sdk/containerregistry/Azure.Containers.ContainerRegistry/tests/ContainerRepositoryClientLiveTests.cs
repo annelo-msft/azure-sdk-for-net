@@ -13,11 +13,11 @@ using Task = System.Threading.Tasks.Task;
 
 namespace Azure.Containers.ContainerRegistry.Tests
 {
-    public class ContainerRepositoryClientLiveTests : RecordedTestBase<ContainerRegistryTestEnvironment>
+    public class ContainerRepositoryClientLiveTests : ContainerRegistryTestBase
     {
         private readonly string _repositoryName = "library/hello-world";
 
-        public ContainerRepositoryClientLiveTests(bool isAsync) : base(isAsync)
+        public ContainerRepositoryClientLiveTests(bool isAsync) : base(isAsync, RecordedTestMode.Playback)
         {
         }
 
@@ -34,17 +34,7 @@ namespace Azure.Containers.ContainerRegistry.Tests
 
         public async Task ImportImage(string tag)
         {
-            var credential = new AzureCredentials(
-                new ServicePrincipalLoginInformation
-                {
-                    ClientId = TestEnvironment.ClientId,
-                    ClientSecret = TestEnvironment.ClientSecret,
-                },
-                TestEnvironment.TenantId,
-                AzureEnvironment.AzureGlobalCloud);
-
-            var _registryClient = new ContainerRegistryManagementClient(credential.WithDefaultSubscription(TestEnvironment.SubscriptionId));
-            _registryClient.SubscriptionId = TestEnvironment.SubscriptionId;
+            var armClient = GetContainerRegistryManagementClient();
 
             var importSource = new ImportSource
             {
@@ -52,7 +42,7 @@ namespace Azure.Containers.ContainerRegistry.Tests
                 RegistryUri = "registry.hub.docker.com"
             };
 
-            await _registryClient.Registries.ImportImageAsync(
+            await armClient.Registries.ImportImageAsync(
                 resourceGroupName: TestEnvironment.ResourceGroup,
                 registryName: TestEnvironment.Registry,
                 parameters:

@@ -8,7 +8,7 @@ using NUnit.Framework;
 
 namespace Azure.Containers.ContainerRegistry.Tests
 {
-    public class ContainerRegistryClientLiveTests : RecordedTestBase<ContainerRegistryTestEnvironment>
+    public class ContainerRegistryClientLiveTests : ContainerRegistryTestBase
     {
         public ContainerRegistryClientLiveTests(bool isAsync) : base(isAsync)
         {
