@@ -4,7 +4,7 @@ Run `dotnet build /t:GenerateCode` to generate code.
 
 ``` yaml
 input-file:
-    -  https://github.com/Azure/azure-sdk-for-js/blob/f3a5137513bfe904eeaddcd2d1d73191da90a63c/sdk/containerregistry/container-registry/swagger/containerregistry.json
+    -  https://github.com/Azure/azure-sdk-for-js/blob/aa5edc4d4cb0298bde52c939a7c948692f3285e1/sdk/containerregistry/container-registry/swagger/containerregistry.json
 model-namespace: false
 ```
 
