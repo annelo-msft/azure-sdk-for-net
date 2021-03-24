@@ -10,7 +10,7 @@ namespace Azure.Containers.ContainerRegistry.Tests
 {
     public class ContainerRegistryClientLiveTests : RecordedTestBase<ContainerRegistryTestEnvironment>
     {
-        public ContainerRegistryClientLiveTests(bool isAsync) : base(isAsync)
+        public ContainerRegistryClientLiveTests(bool isAsync) : base(isAsync, RecordedTestMode.Live)
         {
             Sanitizer = new ContainerRegistryRecordedTestSanitizer();
         }
@@ -43,6 +43,26 @@ namespace Azure.Containers.ContainerRegistry.Tests
             }
 
             Assert.IsTrue(gotHelloWorld);
+        }
+
+        [RecordedTest]
+        public async Task CanGetRepositoriesByPage()
+        {
+            var client = CreateClient();
+
+            AsyncPageable<string> repositories = client.GetRepositoriesAsync();
+
+            var pages = repositories.AsPages("v1", 2);
+
+            await foreach (var page in pages)
+            {
+            }
+
+            //Page<string> firstPage = pages.GetAsyncEnumerator().Current;
+
+            //Assert.AreEqual(2, firstPage.Values.Count);
+            //Assert.AreEqual("v2", firstPage.Values[0]);
+            //Assert.AreEqual("v3", firstPage.Values[1]);
         }
     }
 }
