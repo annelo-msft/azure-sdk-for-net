@@ -33,6 +33,9 @@ namespace Azure.Containers.ContainerRegistry
         private void AddHeadersAndQueryParameters()
         {
             Diagnostics.LoggedQueryParameters.Add("orderby");
+            Diagnostics.LoggedQueryParameters.Add("n");
+            Diagnostics.LoggedQueryParameters.Add("last");
+            Diagnostics.LoggedQueryParameters.Add("digest");
         }
 
         /// <summary>
