@@ -14,7 +14,7 @@ namespace Azure.Containers.ContainerRegistry.Tests
     {
         private readonly string _repositoryName = "library/hello-world";
 
-        public ContainerRepositoryClientLiveTests(bool isAsync) : base(isAsync)
+        public ContainerRepositoryClientLiveTests(bool isAsync) : base(isAsync, RecordedTestMode.Live)
         {
         }
 
@@ -559,6 +559,35 @@ namespace Azure.Containers.ContainerRegistry.Tests
             }
 
             Assert.ThrowsAsync<RequestFailedException>(async () => { await client.GetTagPropertiesAsync(tag); });
+        }
+
+        [RecordedTest, NonParallelizable]
+        public async Task CanGetManifestWithNoTags()
+        {
+            // Arrange
+            ContainerRepositoryClient client = CreateClient("library/node");
+            string tag = "test-no-tag";
+
+            if (Mode != RecordedTestMode.Playback)
+            {
+                await ImportImage("library/node", tag);
+            }
+
+            // Act
+            await client.DeleteTagAsync(tag);
+
+            // This will be removed, pending investigation into potential race condition.
+            // https://github.com/azure/azure-sdk-for-net/issues/19699
+            if (Mode != RecordedTestMode.Playback)
+            {
+                await Task.Delay(5000);
+            }
+
+            AsyncPageable<RegistryArtifactProperties> images = client.GetRegistryArtifactsAsync();
+            await foreach (RegistryArtifactProperties image in images)
+            {
+                Assert.AreEqual(0, image.Tags.Count);
+            }
         }
         #endregion
     }
