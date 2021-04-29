@@ -4,5 +4,5 @@ Run `dotnet build /t:GenerateCode` to generate code.
 
 ``` yaml
 input-file:
-    -  $(this-folder)/swagger/mini-secrets.json
+    -  C:\temp\acr-service-swagger-changes\containerregistry-orig.json
 ```

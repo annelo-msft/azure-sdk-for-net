@@ -1,0 +1,21 @@
+{
+  "OutputFolder": ".",
+  "Namespace": "Azure.Containers.ContainerRegistry",
+  "LibraryName": null,
+  "SharedSourceFolders": [
+    "..\\..\\..\\..\\core\\Azure.Core\\src\\Shared\\",
+    "..\\..\\..\\..\\..\\..\\..\\Users\\annelo\\.nuget\\packages\\microsoft.azure.autorest.csharp\\3.0.0-beta.20210428.2\\content\\Generator.Shared\\"
+  ],
+  "AzureArm": false,
+  "PublicClients": false,
+  "ModelNamespace": false,
+  "HeadAsBoolean": false,
+  "SkipCSProjPackageReference": false,
+  "LowLevelClient": false,
+  "CredentialTypes": [],
+  "CredentialScopes": [],
+  "CredentialHeaderName": "api-key",
+  "OperationGroupToResourceType": {},
+  "OperationGroupToResource": {},
+  "OperationGroupToParent": {}
+}
