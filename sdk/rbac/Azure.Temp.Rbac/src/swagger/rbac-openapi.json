@@ -1,0 +1,256 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "Microsoft Remote PDP V1 API Specification",
+    "version": "2018-09-01-preview"
+  },
+  "servers": [
+    {
+      "url": "https://management.azure.com"
+    }
+  ],
+  "security": [
+    {
+      "azure_auth": [
+        "user_impersonation"
+      ]
+    }
+  ],
+  "paths": {
+    "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.ContainerRegistry/registries/{registryName}/providers/Microsoft.Authorization/checkAccess": {
+        "post": {
+            "summary": "Evalute CheckAccess request",
+            "operationId": "Rbac_CheckAccess",
+            "parameters": [
+                {
+                    "$ref": "#/components/parameters/ApiVersionParameter"
+                },
+                {
+                    "$ref": "#/components/parameters/SubscriptionIdParameter"
+                },
+                {
+                    "$ref": "#/components/parameters/ResourceGroupNameParameter"
+                },
+                {
+                    "$ref": "#/components/parameters/RegistryNameParameter"
+                }
+            ],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/AuthorizationRequest"
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "A Json array of authorization decision",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AuthorizationResponse"
+                            }
+                        }
+                    }
+                },
+                "default": {
+                    "description": "unexpected error",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Error"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AuthorizationRequest": {
+        "type": "object",
+        "properties": {
+          "Subject": {
+            "$ref": "#/components/schemas/SubjectInfo"
+          },
+          "Actions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ActionInfo"
+            }
+          },
+          "Resource": {
+            "$ref": "#/components/schemas/ResourceInfo"
+          }
+        },
+        "required": [
+          "Subject",
+          "Actions"
+        ]
+      },
+      "AuthorizationResponse": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/AuthorizationDecision"
+        }
+      },
+      "AuthorizationDecision": {
+        "type": "object",
+        "properties": {
+          "ActionId": {
+            "type": "string"
+          },
+          "AccessDecision": {
+            "$ref": "#/components/schemas/AccessDecision"
+          },
+          "TimeToLiveInMs": {
+            "format": "int64,",
+            "type": "integer"
+          },
+          "IsDataAction": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "ActionId",
+          "AccessDecision"
+        ]
+      },
+      "AccessDecision": {
+        "type": "string",
+        "enum": [
+          "NotAllowed",
+          "Allowed",
+          "Denied"
+        ]
+      },
+      "SubjectInfo": {
+        "type": "object",
+        "properties": {
+          "Attributes": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "example": {
+              "ObjectId": "12345",
+              "Groups": [
+                "56789, 67890"
+              ],
+              "_claim_names": "from AAD token",
+              "_claim_sources": "from AAD token",
+              "xms-pasrp-retrievegroupmemberships": false
+            }
+          }
+        },
+        "required": [
+          "Attributes"
+        ]
+      },
+      "ActionInfo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "IsDataAction": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "example": {
+          "id": "Microsoft.Authorization/roleassignment/read",
+          "IsDataAction": true
+        }
+      },
+      "ResourceInfo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "Error": {
+        "type": "object",
+        "required": [
+          "code",
+          "message"
+        ],
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "parameters": {
+      "SubscriptionIdParameter": {
+        "name": "subscriptionId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "The ID of the target subscription."
+      },
+      "ResourceGroupNameParameter": {
+        "name": "resourceGroupName",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "The name of the target resource group."
+      },
+      "RegistryNameParameter": {
+        "name": "registryName",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "The name of the registry."
+      },
+      "ApiVersionParameter": {
+        "name": "api-version",
+        "in": "query",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "The API version to use for this operation."
+      }
+    },
+    "securitySchemes": {
+      "azure_auth": {
+        "type": "oauth2",
+        "description": "Azure Active Directory OAuth2 Flow",
+        "flows": {
+          "implicit": {
+            "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/v2.0/authorize",
+            "scopes": {
+              "user_impersonation": "impersonate your user account"
+            }
+          },
+          "clientCredentials": {
+            "tokenUrl": "https://login.microsoftonline.com/common/oauth2/v2.0/token"
+          }
+        }
+      }
+    }
+  }
+}
