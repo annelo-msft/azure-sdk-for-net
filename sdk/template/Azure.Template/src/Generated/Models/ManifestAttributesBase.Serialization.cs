@@ -24,7 +24,7 @@ namespace Azure.Template.Models
             Optional<string> mediaType = default;
             Optional<string> configMediaType = default;
             Optional<IReadOnlyList<string>> tags = default;
-            Optional<ChangeableAttributes> changeableAttributes = default;
+            Optional<ManifestChangeableAttributes> changeableAttributes = default;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("digest"))
@@ -94,7 +94,7 @@ namespace Azure.Template.Models
                         property.ThrowNonNullablePropertyIsNull();
                         continue;
                     }
-                    changeableAttributes = ChangeableAttributes.DeserializeChangeableAttributes(property.Value);
+                    changeableAttributes = ManifestChangeableAttributes.DeserializeManifestChangeableAttributes(property.Value);
                     continue;
                 }
             }

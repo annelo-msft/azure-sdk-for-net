@@ -10,7 +10,7 @@ using Azure.Core;
 
 namespace Azure.Template.Models
 {
-    public partial class ChangeableAttributes : IUtf8JsonSerializable
+    public partial class ManifestChangeableAttributes : IUtf8JsonSerializable
     {
         void IUtf8JsonSerializable.Write(Utf8JsonWriter writer)
         {
@@ -35,15 +35,27 @@ namespace Azure.Template.Models
                 writer.WritePropertyName("readEnabled");
                 writer.WriteBooleanValue(ReadEnabled.Value);
             }
+            if (Optional.IsDefined(QuarantineState))
+            {
+                writer.WritePropertyName("quarantineState");
+                writer.WriteStringValue(QuarantineState);
+            }
+            if (Optional.IsDefined(QuarantineDetails))
+            {
+                writer.WritePropertyName("quarantineDetails");
+                writer.WriteStringValue(QuarantineDetails);
+            }
             writer.WriteEndObject();
         }
 
-        internal static ChangeableAttributes DeserializeChangeableAttributes(JsonElement element)
+        internal static ManifestChangeableAttributes DeserializeManifestChangeableAttributes(JsonElement element)
         {
             Optional<bool> deleteEnabled = default;
             Optional<bool> writeEnabled = default;
             Optional<bool> listEnabled = default;
             Optional<bool> readEnabled = default;
+            Optional<string> quarantineState = default;
+            Optional<string> quarantineDetails = default;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("deleteEnabled"))
@@ -86,8 +98,18 @@ namespace Azure.Template.Models
                     readEnabled = property.Value.GetBoolean();
                     continue;
                 }
+                if (property.NameEquals("quarantineState"))
+                {
+                    quarantineState = property.Value.GetString();
+                    continue;
+                }
+                if (property.NameEquals("quarantineDetails"))
+                {
+                    quarantineDetails = property.Value.GetString();
+                    continue;
+                }
             }
-            return new ChangeableAttributes(Optional.ToNullable(deleteEnabled), Optional.ToNullable(writeEnabled), Optional.ToNullable(listEnabled), Optional.ToNullable(readEnabled));
+            return new ManifestChangeableAttributes(Optional.ToNullable(deleteEnabled), Optional.ToNullable(writeEnabled), Optional.ToNullable(listEnabled), Optional.ToNullable(readEnabled), quarantineState.Value, quarantineDetails.Value);
         }
     }
 }

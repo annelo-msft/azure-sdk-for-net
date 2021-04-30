@@ -20,7 +20,7 @@ namespace Azure.Template.Models
             Optional<string> lastUpdateTime = default;
             Optional<int> manifestCount = default;
             Optional<int> tagCount = default;
-            Optional<ChangeableAttributes> changeableAttributes = default;
+            Optional<RepositoryChangeableAttributes> changeableAttributes = default;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("registry"))
@@ -70,7 +70,7 @@ namespace Azure.Template.Models
                         property.ThrowNonNullablePropertyIsNull();
                         continue;
                     }
-                    changeableAttributes = ChangeableAttributes.DeserializeChangeableAttributes(property.Value);
+                    changeableAttributes = RepositoryChangeableAttributes.DeserializeRepositoryChangeableAttributes(property.Value);
                     continue;
                 }
             }

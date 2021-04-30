@@ -21,8 +21,8 @@ namespace Azure.Template.Models
         /// <param name="createdTime"> Tag created time. </param>
         /// <param name="lastUpdateTime"> Tag last update time. </param>
         /// <param name="signed"> Is signed. </param>
-        /// <param name="changeableAttributes"> Changeable attributes. </param>
-        internal TagAttributesBase(string name, string digest, string createdTime, string lastUpdateTime, bool? signed, ChangeableAttributes changeableAttributes)
+        /// <param name="changeableAttributes"> Tag Changeable attributes. </param>
+        internal TagAttributesBase(string name, string digest, string createdTime, string lastUpdateTime, bool? signed, TagChangeableAttributes changeableAttributes)
         {
             Name = name;
             Digest = digest;
@@ -42,7 +42,7 @@ namespace Azure.Template.Models
         public string LastUpdateTime { get; }
         /// <summary> Is signed. </summary>
         public bool? Signed { get; }
-        /// <summary> Changeable attributes. </summary>
-        public ChangeableAttributes ChangeableAttributes { get; }
+        /// <summary> Tag Changeable attributes. </summary>
+        public TagChangeableAttributes ChangeableAttributes { get; }
     }
 }

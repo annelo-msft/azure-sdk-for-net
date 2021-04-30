@@ -7,25 +7,27 @@
 
 namespace Azure.Template.Models
 {
-    /// <summary> The ChangeableAttributes. </summary>
-    public partial class ChangeableAttributes
+    /// <summary> Changeable attributes for Repository. </summary>
+    public partial class RepositoryChangeableAttributes
     {
-        /// <summary> Initializes a new instance of ChangeableAttributes. </summary>
-        public ChangeableAttributes()
+        /// <summary> Initializes a new instance of RepositoryChangeableAttributes. </summary>
+        public RepositoryChangeableAttributes()
         {
         }
 
-        /// <summary> Initializes a new instance of ChangeableAttributes. </summary>
+        /// <summary> Initializes a new instance of RepositoryChangeableAttributes. </summary>
         /// <param name="deleteEnabled"> Delete enabled. </param>
         /// <param name="writeEnabled"> Write enabled. </param>
         /// <param name="listEnabled"> List enabled. </param>
         /// <param name="readEnabled"> Read enabled. </param>
-        internal ChangeableAttributes(bool? deleteEnabled, bool? writeEnabled, bool? listEnabled, bool? readEnabled)
+        /// <param name="teleportEnabled"> Teleport enabled. </param>
+        internal RepositoryChangeableAttributes(bool? deleteEnabled, bool? writeEnabled, bool? listEnabled, bool? readEnabled, bool? teleportEnabled)
         {
             DeleteEnabled = deleteEnabled;
             WriteEnabled = writeEnabled;
             ListEnabled = listEnabled;
             ReadEnabled = readEnabled;
+            TeleportEnabled = teleportEnabled;
         }
 
         /// <summary> Delete enabled. </summary>
@@ -36,5 +38,7 @@ namespace Azure.Template.Models
         public bool? ListEnabled { get; set; }
         /// <summary> Read enabled. </summary>
         public bool? ReadEnabled { get; set; }
+        /// <summary> Teleport enabled. </summary>
+        public bool? TeleportEnabled { get; set; }
     }
 }

@@ -23,7 +23,7 @@ namespace Azure.Template.Models
         /// <param name="manifestCount"> Number of the manifests. </param>
         /// <param name="tagCount"> Number of the tags. </param>
         /// <param name="changeableAttributes"> Changeable attributes. </param>
-        internal RepositoryAttributes(string registry, string imageName, string createdTime, string lastUpdateTime, int? manifestCount, int? tagCount, ChangeableAttributes changeableAttributes)
+        internal RepositoryAttributes(string registry, string imageName, string createdTime, string lastUpdateTime, int? manifestCount, int? tagCount, RepositoryChangeableAttributes changeableAttributes)
         {
             Registry = registry;
             ImageName = imageName;
@@ -47,6 +47,6 @@ namespace Azure.Template.Models
         /// <summary> Number of the tags. </summary>
         public int? TagCount { get; }
         /// <summary> Changeable attributes. </summary>
-        public ChangeableAttributes ChangeableAttributes { get; }
+        public RepositoryChangeableAttributes ChangeableAttributes { get; }
     }
 }

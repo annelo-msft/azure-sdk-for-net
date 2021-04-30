@@ -242,7 +242,7 @@ namespace Azure.Template
             }
         }
 
-        internal HttpMessage CreateUpdateAttributesRequest(string name, ChangeableAttributes value)
+        internal HttpMessage CreateUpdateAttributesRequest(string name, RepositoryChangeableAttributes value)
         {
             var message = _pipeline.CreateMessage();
             var request = message.Request;
@@ -268,7 +268,7 @@ namespace Azure.Template
         /// <param name="value"> Repository attribute value. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> is null. </exception>
-        public async Task<Response> UpdateAttributesAsync(string name, ChangeableAttributes value = null, CancellationToken cancellationToken = default)
+        public async Task<Response> UpdateAttributesAsync(string name, RepositoryChangeableAttributes value = null, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {
@@ -291,7 +291,7 @@ namespace Azure.Template
         /// <param name="value"> Repository attribute value. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> is null. </exception>
-        public Response UpdateAttributes(string name, ChangeableAttributes value = null, CancellationToken cancellationToken = default)
+        public Response UpdateAttributes(string name, RepositoryChangeableAttributes value = null, CancellationToken cancellationToken = default)
         {
             if (name == null)
             {

@@ -7,29 +7,25 @@
 
 namespace Azure.Template.Models
 {
-    /// <summary> Changeable attributes. </summary>
-    public partial class ManifestChangeableAttributes
+    /// <summary> The TagChangeableAttributes. </summary>
+    public partial class TagChangeableAttributes
     {
-        /// <summary> Initializes a new instance of ManifestChangeableAttributes. </summary>
-        public ManifestChangeableAttributes()
+        /// <summary> Initializes a new instance of TagChangeableAttributes. </summary>
+        public TagChangeableAttributes()
         {
         }
 
-        /// <summary> Initializes a new instance of ManifestChangeableAttributes. </summary>
+        /// <summary> Initializes a new instance of TagChangeableAttributes. </summary>
         /// <param name="deleteEnabled"> Delete enabled. </param>
         /// <param name="writeEnabled"> Write enabled. </param>
         /// <param name="listEnabled"> List enabled. </param>
         /// <param name="readEnabled"> Read enabled. </param>
-        /// <param name="quarantineState"> Quarantine state. </param>
-        /// <param name="quarantineDetails"> Quarantine details. </param>
-        internal ManifestChangeableAttributes(bool? deleteEnabled, bool? writeEnabled, bool? listEnabled, bool? readEnabled, string quarantineState, string quarantineDetails)
+        internal TagChangeableAttributes(bool? deleteEnabled, bool? writeEnabled, bool? listEnabled, bool? readEnabled)
         {
             DeleteEnabled = deleteEnabled;
             WriteEnabled = writeEnabled;
             ListEnabled = listEnabled;
             ReadEnabled = readEnabled;
-            QuarantineState = quarantineState;
-            QuarantineDetails = quarantineDetails;
         }
 
         /// <summary> Delete enabled. </summary>
@@ -40,9 +36,5 @@ namespace Azure.Template.Models
         public bool? ListEnabled { get; set; }
         /// <summary> Read enabled. </summary>
         public bool? ReadEnabled { get; set; }
-        /// <summary> Quarantine state. </summary>
-        public string QuarantineState { get; set; }
-        /// <summary> Quarantine details. </summary>
-        public string QuarantineDetails { get; set; }
     }
 }

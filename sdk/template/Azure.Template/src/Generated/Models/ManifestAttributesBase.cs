@@ -30,7 +30,7 @@ namespace Azure.Template.Models
         /// <param name="configMediaType"> Config blob media type. </param>
         /// <param name="tags"> List of tags. </param>
         /// <param name="changeableAttributes"> Changeable attributes. </param>
-        internal ManifestAttributesBase(string digest, long? imageSize, string createdTime, string lastUpdateTime, string architecture, string os, string mediaType, string configMediaType, IReadOnlyList<string> tags, ChangeableAttributes changeableAttributes)
+        internal ManifestAttributesBase(string digest, long? imageSize, string createdTime, string lastUpdateTime, string architecture, string os, string mediaType, string configMediaType, IReadOnlyList<string> tags, ManifestChangeableAttributes changeableAttributes)
         {
             Digest = digest;
             ImageSize = imageSize;
@@ -63,6 +63,6 @@ namespace Azure.Template.Models
         /// <summary> List of tags. </summary>
         public IReadOnlyList<string> Tags { get; }
         /// <summary> Changeable attributes. </summary>
-        public ChangeableAttributes ChangeableAttributes { get; }
+        public ManifestChangeableAttributes ChangeableAttributes { get; }
     }
 }

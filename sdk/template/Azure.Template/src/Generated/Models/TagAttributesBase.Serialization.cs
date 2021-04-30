@@ -19,7 +19,7 @@ namespace Azure.Template.Models
             Optional<string> createdTime = default;
             Optional<string> lastUpdateTime = default;
             Optional<bool> signed = default;
-            Optional<ChangeableAttributes> changeableAttributes = default;
+            Optional<TagChangeableAttributes> changeableAttributes = default;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("name"))
@@ -59,7 +59,7 @@ namespace Azure.Template.Models
                         property.ThrowNonNullablePropertyIsNull();
                         continue;
                     }
-                    changeableAttributes = ChangeableAttributes.DeserializeChangeableAttributes(property.Value);
+                    changeableAttributes = TagChangeableAttributes.DeserializeTagChangeableAttributes(property.Value);
                     continue;
                 }
             }
