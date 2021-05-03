@@ -158,5 +158,77 @@ namespace Azure.Containers.ContainerRegistry.Tests
             Assert.AreEqual(2, refreshTokenRequests);
             Assert.AreEqual(3, accessTokenRequests);
         }
+
+        [Test]
+        public async Task ChallengePolicyForceRefresh()
+        {
+            // Arrange
+            int refreshTokenRequests = 0;
+            int accessTokenRequests = 0;
+            TimeSpan expiryTime = TimeSpan.FromSeconds(5);
+
+            MockAuthenticationClient mockClient = new MockAuthenticationClient(
+                service =>
+                {
+                    refreshTokenRequests++;
+                    return new AcrRefreshToken($"TestAcrRefreshToken{refreshTokenRequests}");
+                },
+                (service, scope) =>
+                {
+                    accessTokenRequests++;
+                    return new AcrAccessToken($"TestAcrAccessToken{accessTokenRequests}");
+                });
+            MockCredential mockCredential = new MockCredential();
+
+            var policy = new ContainerRegistryChallengeAuthenticationPolicy(mockCredential, "TestScope", mockClient);
+
+            var challengeResponse = new MockResponse(401);
+            string challenge = "Bearer realm=\"https://example.azurecr.io/oauth2/token\",service=\"example.azurecr.io\",scope=\"repository:library/hello-world:metadata_read\",error=\"invalid_token\"";
+            challengeResponse.AddHeader(new HttpHeader(HttpHeader.Names.WwwAuthenticate, challenge));
+
+            var serviceNameChallengeResponse = new MockResponse(401);
+            string serviceNameChallenge = "Bearer realm=\"https://example.azurecr.io/oauth2/token\",service=\"new-name.azurecr.io\",scope=\"repository:library/hello-world:metadata_read\",error=\"invalid_token\"";
+            serviceNameChallengeResponse.AddHeader(new HttpHeader(HttpHeader.Names.WwwAuthenticate, serviceNameChallenge));
+
+            // We'll send three GET requests - each will receive a challenge response
+            // In the last one, the token will have expired so a new request for it will be sent
+            MockTransport transport = CreateMockTransport(
+                challengeResponse, new MockResponse(200),
+                challengeResponse, new MockResponse(200),
+                serviceNameChallengeResponse, new MockResponse(200));
+
+            // Act
+            await SendGetRequest(transport, policy, uri: new Uri("https://example.azurecr.io/acr/v1/hello-world/_tags/latest"), cancellationToken: default);
+            MockRequest firstRequest = transport.Requests[0];
+
+            // Assert
+            string authHeaderValue;
+            Assert.IsTrue(firstRequest.Headers.TryGetValue(HttpHeader.Names.Authorization, out authHeaderValue));
+            Assert.AreEqual("Bearer TestAcrAccessToken1", authHeaderValue);
+            Assert.AreEqual(1, refreshTokenRequests);
+            Assert.AreEqual(1, accessTokenRequests);
+
+            // Act
+            await SendGetRequest(transport, policy, uri: new Uri("https://example.azurecr.io/acr/v1/hello-world/_tags/latest"), cancellationToken: default);
+            MockRequest secondRequest = transport.Requests[2];
+
+            // Assert
+            Assert.IsTrue(secondRequest.Headers.TryGetValue(HttpHeader.Names.Authorization, out authHeaderValue));
+            Assert.AreEqual("Bearer TestAcrAccessToken2", authHeaderValue);
+            Assert.AreEqual(1, refreshTokenRequests);
+            Assert.AreEqual(2, accessTokenRequests);
+
+            // Act
+            await Task.Delay(expiryTime);
+
+            await SendGetRequest(transport, policy, uri: new Uri("https://example.azurecr.io/acr/v1/hello-world/_tags/latest"), cancellationToken: default);
+            MockRequest thirdRequest = transport.Requests[4];
+
+            // Assert
+            Assert.IsTrue(thirdRequest.Headers.TryGetValue(HttpHeader.Names.Authorization, out authHeaderValue));
+            Assert.AreEqual("Bearer TestAcrAccessToken3", authHeaderValue);
+            Assert.AreEqual(2, refreshTokenRequests);
+            Assert.AreEqual(3, accessTokenRequests);
+        }
     }
 }
