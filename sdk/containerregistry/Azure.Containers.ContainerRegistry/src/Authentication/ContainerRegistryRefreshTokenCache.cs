@@ -40,7 +40,7 @@ namespace Azure.Containers.ContainerRegistry
         {
             lock (_syncObj)
             {
-                if (_tokenLookupTask == null || TokenNeedsRefresh(service))
+                if (_tokenLookupTask == null || _tokenLookupTask.Value. TokenNeedsRefresh(service))
                 {
                     _tokenLookupTask = GetRefreshTokenFromCredentialAsync(context, service, async, cancellationToken);
                 }
@@ -53,7 +53,7 @@ namespace Azure.Containers.ContainerRegistry
         {
             DateTimeOffset now = DateTimeOffset.UtcNow;
 
-            return _cachedToken == null ||
+            return _tokenLookupTask == null ||
                _cachedToken.Value.HasExpired(now) ||
                _cachedToken.Value.WillExpireSoon(now) ||
                RequestRequiresNewToken(service);
