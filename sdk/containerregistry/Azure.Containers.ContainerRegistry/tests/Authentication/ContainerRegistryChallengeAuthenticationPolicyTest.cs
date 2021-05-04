@@ -19,10 +19,10 @@ namespace Azure.Containers.ContainerRegistry.Tests
 
         public ContainerRegistryChallengeAuthenticationPolicyTest(bool isAsync) : base(isAsync) { }
 
-        private MockResponse GetChallengeResponse()
+        private MockResponse GetChallengeResponse(string serviceName = "example")
         {
             MockResponse challengeResponse = new MockResponse(401);
-            string challenge = "Bearer realm=\"https://example.azurecr.io/oauth2/token\",service=\"example.azurecr.io\",scope=\"repository:library/hello-world:metadata_read\",error=\"invalid_token\"";
+            string challenge = $"Bearer realm=\"https://example.azurecr.io/oauth2/token\",service=\"{serviceName}.azurecr.io\",scope=\"repository:library/hello-world:metadata_read\",error=\"invalid_token\"";
             challengeResponse.AddHeader(new HttpHeader(HttpHeader.Names.WwwAuthenticate, challenge));
             return challengeResponse;
         }
@@ -35,7 +35,7 @@ namespace Azure.Containers.ContainerRegistry.Tests
         }
 
         [Test]
-        public async Task ContainerRegistryChallengeAuthenticationPolicy_SetsToken()
+        public async Task ContainerRegistryChallengeAuthenticationPolicy_UsesTokenProvidedByAuthClient()
         {
             MockAuthenticationClient mockClient = GetMockAuthClient();
             MockCredential mockCredential = new MockCredential();
@@ -62,12 +62,12 @@ namespace Azure.Containers.ContainerRegistry.Tests
             MockAuthenticationClient mockClient = new MockAuthenticationClient(
                 service =>
                 {
-                    refreshTokenRequests++;
+                    Interlocked.Increment(ref refreshTokenRequests);
                     return new AcrRefreshToken($"TestAcrRefreshToken{refreshTokenRequests}");
                 },
                 (service, scope) =>
                 {
-                    accessTokenRequests++;
+                    Interlocked.Increment(ref accessTokenRequests);
                     return new AcrAccessToken($"TestAcrAccessToken{accessTokenRequests}");
                 });
             MockCredential mockCredential = new MockCredential();
@@ -112,12 +112,12 @@ namespace Azure.Containers.ContainerRegistry.Tests
             MockAuthenticationClient mockClient = new MockAuthenticationClient(
                 service =>
                 {
-                    refreshTokenRequests++;
+                    Interlocked.Increment(ref refreshTokenRequests);
                     return new AcrRefreshToken($"TestAcrRefreshToken{refreshTokenRequests}");
                 },
                 (service, scope) =>
                 {
-                    accessTokenRequests++;
+                    Interlocked.Increment(ref accessTokenRequests);
                     return new AcrAccessToken($"TestAcrAccessToken{accessTokenRequests}");
                 });
             MockCredential mockCredential = new MockCredential();
@@ -171,93 +171,48 @@ namespace Azure.Containers.ContainerRegistry.Tests
         }
 
         [Test]
-        public async Task ContainerRegistryChallengeAuthenticationPolicy_UsesTokenProvidedByCredentials()
-        {
-            //var credential = new TokenCredentialStub(
-            //    (r, c) => r.Scopes.SequenceEqual(new[] { "scope1", "scope2" }) ? new AccessToken("token", DateTimeOffset.MaxValue) : default, IsAsync);
-
-            var credential = new TokenCredentialStub(
-                (r, c) => r.Scopes.SequenceEqual(new[] { "scope1" }) ? new AccessToken("token", DateTimeOffset.MaxValue) : default, IsAsync);
-
-            MockAuthenticationClient mockAuthClient = GetMockAuthClient();
-            //var policy = new ContainerRegistryChallengeAuthenticationPolicy(credential, new[] { "scope1", "scope2" }, mockAuthClient);
-            var policy = new ContainerRegistryChallengeAuthenticationPolicy(credential, "scope1", mockAuthClient);
-
-            MockTransport transport = CreateMockTransport(new MockResponse(200));
-            await SendGetRequest(transport, policy, uri: new Uri("https://example.com"));
-
-            Assert.True(transport.SingleRequest.Headers.TryGetValue("Authorization", out string authValue));
-            Assert.AreEqual("Bearer token", authValue);
-        }
-
-        [Test]
         public async Task ContainerRegistryChallengeAuthenticationPolicy_RequestsTokenEveryRequest()
         {
-            var accessTokens = new Queue<AccessToken>();
-            accessTokens.Enqueue(new AccessToken("token1", DateTimeOffset.UtcNow));
-            accessTokens.Enqueue(new AccessToken("token2", DateTimeOffset.UtcNow));
+            // Arrange
+            int refreshTokenRequests = 0;
+            int accessTokenRequests = 0;
 
-            var credential = new TokenCredentialStub(
-                (r, c) => r.Scopes.SequenceEqual(new[] { "scope1" }) ? accessTokens.Dequeue() : default, IsAsync);
+            MockAuthenticationClient mockClient = new MockAuthenticationClient(service => { Interlocked.Increment(ref refreshTokenRequests); return new AcrRefreshToken($"TestAcrRefreshToken{refreshTokenRequests}"); }, (service, scope) => { Interlocked.Increment(ref accessTokenRequests); return new AcrAccessToken($"TestAcrAccessToken{accessTokenRequests}"); });
+            MockCredential mockCredential = new MockCredential();
 
-            //var credential = new TokenCredentialStub(
-            //    (r, c) => r.Scopes.SequenceEqual(new[] { "scope1", "scope2" }) ? accessTokens.Dequeue() : default, IsAsync);
+            var policy = new ContainerRegistryChallengeAuthenticationPolicy(mockCredential, "TestScope", mockClient);
 
-            MockAuthenticationClient mockAuthClient = GetMockAuthClient();
-            var policy = new ContainerRegistryChallengeAuthenticationPolicy(credential, "scope1", mockAuthClient);
-            // var policy = new ContainerRegistryChallengeAuthenticationPolicy(credential, new[] { "scope1", "scope2" }, mockAuthClient);
-            MockTransport transport = CreateMockTransport(new MockResponse(200), new MockResponse(200));
+            MockTransport transport = CreateMockTransport(
+                GetChallengeResponse("example1"), new MockResponse(200),
+                GetChallengeResponse("example2"), new MockResponse(200));
 
-            await SendGetRequest(transport, policy, uri: new Uri("https://example.com"));
-            await SendGetRequest(transport, policy, uri: new Uri("https://example.com"));
+            // Act
+            await SendGetRequest(transport, policy, uri: new Uri("https://example.azurecr.io/acr/v1/hello-world/_tags/latest"), cancellationToken: default);
+            MockRequest firstRequest = transport.Requests[0];
 
-            Assert.True(transport.Requests[0].Headers.TryGetValue("Authorization", out string auth1Value));
-            Assert.True(transport.Requests[1].Headers.TryGetValue("Authorization", out string auth2Value));
+            // Assert
+            string authHeaderValue;
+            Assert.IsTrue(firstRequest.Headers.TryGetValue(HttpHeader.Names.Authorization, out authHeaderValue));
+            Assert.AreEqual("Bearer TestAcrAccessToken1", authHeaderValue);
+            Assert.AreEqual(1, refreshTokenRequests);
+            Assert.AreEqual(1, accessTokenRequests);
 
-            Assert.AreEqual("Bearer token1", auth1Value);
-            Assert.AreEqual("Bearer token2", auth2Value);
-        }
+            // Act
+            await SendGetRequest(transport, policy, uri: new Uri("https://example.azurecr.io/acr/v1/hello-world/_tags/latest"), cancellationToken: default);
+            MockRequest secondRequest = transport.Requests[2];
 
-        [Test]
-        public async Task ContainerRegistryChallengeAuthenticationPolicy_CachesHeaderValue()
-        {
-            var credential = new TokenCredentialStub(
-                (r, c) => r.Scopes.SequenceEqual(new[] { "scope" }) ? new AccessToken("token", DateTimeOffset.MaxValue) : default, IsAsync);
-
-            MockAuthenticationClient mockAuthClient = GetMockAuthClient();
-            var policy = new ContainerRegistryChallengeAuthenticationPolicy(credential, "scope", mockAuthClient);
-            MockTransport transport = CreateMockTransport(GetChallengeResponse(), new MockResponse(200), GetChallengeResponse(), new MockResponse(200));
-
-            await SendGetRequest(transport, policy, uri: new Uri("https://example.com"));
-            await SendGetRequest(transport, policy, uri: new Uri("https://example.com"));
-
-            Assert.True(transport.Requests[0].Headers.TryGetValue("Authorization", out string auth1Value));
-            Assert.True(transport.Requests[1].Headers.TryGetValue("Authorization", out string auth2Value));
-
-            Assert.AreEqual($"Bearer {TestAcrAccessToken}", auth1Value);
-            Assert.AreEqual($"Bearer {TestAcrAccessToken}", auth2Value);
+            // Assert
+            Assert.IsTrue(secondRequest.Headers.TryGetValue(HttpHeader.Names.Authorization, out authHeaderValue));
+            Assert.AreEqual("Bearer TestAcrAccessToken2", authHeaderValue);
+            Assert.AreEqual(2, refreshTokenRequests);
+            Assert.AreEqual(2, accessTokenRequests);
         }
 
         [Test]
         public void ContainerRegistryChallengeAuthenticationPolicy_ThrowsForNonTlsEndpoint()
         {
-            var credential = new TokenCredentialStub(
-                (r, c) => r.Scopes.SequenceEqual(new[] { "scope" }) ? new AccessToken("token", DateTimeOffset.MaxValue) : default, IsAsync);
-
             MockAuthenticationClient mockAuthClient = GetMockAuthClient();
-            var policy = new ContainerRegistryChallengeAuthenticationPolicy(credential, "scope", mockAuthClient);
-            MockTransport transport = CreateMockTransport();
-
-            Assert.ThrowsAsync<InvalidOperationException>(async () => await SendGetRequest(transport, policy, uri: new Uri("http://example.com")));
-        }
-
-        [Test]
-        public void ContainerRegistryChallengeAuthenticationPolicy_ThrowsForEmptyToken()
-        {
-            var credential = new TokenCredentialStub((r, c) => new AccessToken(string.Empty, DateTimeOffset.MaxValue), IsAsync);
-
-            MockAuthenticationClient mockAuthClient = GetMockAuthClient();
-            var policy = new ContainerRegistryChallengeAuthenticationPolicy(credential, "scope", mockAuthClient);
+            var policy = new ContainerRegistryChallengeAuthenticationPolicy(new MockCredential(), "scope", mockAuthClient);
             MockTransport transport = CreateMockTransport();
 
             Assert.ThrowsAsync<InvalidOperationException>(async () => await SendGetRequest(transport, policy, uri: new Uri("http://example.com")));
@@ -266,14 +221,15 @@ namespace Azure.Containers.ContainerRegistry.Tests
         [Test]
         public async Task ContainerRegistryChallengeAuthenticationPolicy_OneHundredConcurrentCalls()
         {
-            var credential = new TokenCredentialStub((r, c) =>
+            MockAuthenticationClient mockAuthClient = new MockAuthenticationClient(
+            service => new AcrRefreshToken("TestAcrRefreshToken"),
+            (service, scope) =>
             {
                 Thread.Sleep(100);
-                return new AccessToken(Guid.NewGuid().ToString(), DateTimeOffset.UtcNow.AddMinutes(30));
-            }, IsAsync);
+                return new AcrAccessToken("TestAcrAccessToken");
+            });
 
-            MockAuthenticationClient mockAuthClient = GetMockAuthClient();
-            var policy = new ContainerRegistryChallengeAuthenticationPolicy(credential, "scope", mockAuthClient);
+            var policy = new ContainerRegistryChallengeAuthenticationPolicy(new MockCredential(), "scope", mockAuthClient);
             MockTransport transport = CreateMockTransport(r => GetChallengeResponse());
             var requestTasks = new Task<Response>[100];
 
@@ -292,26 +248,27 @@ namespace Azure.Containers.ContainerRegistry.Tests
             }
         }
 
-        private bool IsEven(int value)
-        {
-            return (value % 2 == 0);
-        }
-
         [Test]
         public async Task ContainerRegistryChallengeAuthenticationPolicy_GatedConcurrentCalls()
         {
             var requestMre = new ManualResetEventSlim(false);
             var responseMre = new ManualResetEventSlim(false);
-            var credential = new TokenCredentialStub((r, c) =>
+            MockAuthenticationClient mockAuthClient = new MockAuthenticationClient(
+            service =>
+            {
+                return new AcrRefreshToken($"TestAcrRefreshToken");
+            },
+            (service, scope) =>
             {
                 requestMre.Set();
-                responseMre.Wait(c);
-                return new AccessToken(Guid.NewGuid().ToString(), DateTimeOffset.UtcNow.AddMinutes(30));
-            }, IsAsync);
+                responseMre.Wait();
+                return new AcrAccessToken($"TestAcrAccessToken");
+            });
 
-            MockAuthenticationClient mockAuthClient = GetMockAuthClient();
+            var credential = new MockCredential();
+
             var policy = new ContainerRegistryChallengeAuthenticationPolicy(credential, "scope", mockAuthClient);
-            MockTransport transport = CreateMockTransport(new MockResponse(200), new MockResponse(200));
+            MockTransport transport = CreateMockTransport(GetChallengeResponse(), GetChallengeResponse(), new MockResponse(200));
 
             var firstRequestTask = SendGetRequest(transport, policy, uri: new Uri("https://example.com"));
             requestMre.Wait();
@@ -332,20 +289,25 @@ namespace Azure.Containers.ContainerRegistry.Tests
         {
             var requestMre = new ManualResetEventSlim(false);
             var callCount = 0;
-            var credential = new TokenCredentialStub((r, c) =>
+
+            MockAuthenticationClient mockAuthClient = new MockAuthenticationClient(
+            service =>
             {
                 Interlocked.Increment(ref callCount);
                 var offsetTime = DateTimeOffset.UtcNow;
                 requestMre.Set();
 
-                return callCount == 2
+                return callCount == 3
                     ? throw new InvalidOperationException("Call Failed")
-                    : new AccessToken(Guid.NewGuid().ToString(), offsetTime.AddMilliseconds(1000));
-            }, IsAsync);
+                    : new AcrRefreshToken("TestAcrRefreshToken");
+            },
+            (service, scope) =>
+            {
+                return new AcrAccessToken("TestAcrAccessToken");
+            });
 
-            MockAuthenticationClient mockAuthClient = GetMockAuthClient();
-            var policy = new ContainerRegistryChallengeAuthenticationPolicy(credential, "scope", mockAuthClient, TimeSpan.FromMilliseconds(100), TimeSpan.FromSeconds(30));
-            MockTransport transport = CreateMockTransport(r => new MockResponse(200));
+            var policy = new ContainerRegistryChallengeAuthenticationPolicy(new MockCredential(), "scope", mockAuthClient, TimeSpan.FromMilliseconds(100), TimeSpan.FromSeconds(30));
+            MockTransport transport = CreateMockTransport(r => GetChallengeResponse());
 
             var firstRequestTask = SendGetRequest(transport, policy, uri: new Uri("https://example.com/1"));
             var secondRequestTask = SendGetRequest(transport, policy, uri: new Uri("https://example.com/2"));
@@ -356,13 +318,13 @@ namespace Azure.Containers.ContainerRegistry.Tests
             await Task.WhenAll(firstRequestTask, secondRequestTask);
             await Task.Delay(1000);
 
-            Assert.AreEqual(1, callCount);
+            Assert.AreEqual(2, callCount);
             requestMre.Reset();
 
             var failedTask = SendGetRequest(transport, policy, uri: new Uri("https://example.com/3/failed"));
             requestMre.Wait();
 
-            Assert.AreEqual(2, callCount);
+            Assert.AreEqual(3, callCount);
             Assert.ThrowsAsync<InvalidOperationException>(async () => await failedTask);
 
             requestMre.Reset();
@@ -393,19 +355,24 @@ namespace Azure.Containers.ContainerRegistry.Tests
             var currentTime = DateTimeOffset.UtcNow;
             var expires = new Queue<DateTimeOffset>(new[] { currentTime.AddMinutes(2), currentTime.AddMinutes(30) });
             var callCount = 0;
-            var credential = new TokenCredentialStub((r, c) =>
+
+            MockAuthenticationClient mockAuthClient = new MockAuthenticationClient(
+            service =>
+            {
+                return new AcrRefreshToken("TestAcrRefreshToken");
+            },
+            (service, scope) =>
             {
                 requestMre.Set();
-                responseMre.Wait(c);
+                responseMre.Wait();
                 requestMre.Reset();
                 callCount++;
 
-                return new AccessToken(Guid.NewGuid().ToString(), expires.Dequeue());
-            }, IsAsync);
+                return new AcrAccessToken("TestAcrAccessToken");
+            });
 
-            MockAuthenticationClient mockAuthClient = GetMockAuthClient();
-            var policy = new ContainerRegistryChallengeAuthenticationPolicy(credential, "scope", mockAuthClient);
-            MockTransport transport = CreateMockTransport(new MockResponse(200), new MockResponse(200), new MockResponse(200), new MockResponse(200));
+            var policy = new ContainerRegistryChallengeAuthenticationPolicy(new MockCredential(), "scope", mockAuthClient);
+            MockTransport transport = CreateMockTransport(GetChallengeResponse(), GetChallengeResponse(), GetChallengeResponse(), GetChallengeResponse());
 
             await SendGetRequest(transport, policy, uri: new Uri("https://example.com/1/Original"));
             responseMre.Reset();
@@ -521,14 +488,18 @@ namespace Azure.Containers.ContainerRegistry.Tests
         [Test]
         public void ContainerRegistryChallengeAuthenticationPolicy_OneHundredConcurrentCallsFailed()
         {
-            var credential = new TokenCredentialStub((r, c) =>
+            MockAuthenticationClient mockAuthClient = new MockAuthenticationClient(
+            service =>
             {
                 Thread.Sleep(100);
                 throw new InvalidOperationException("Error");
-            }, IsAsync);
+            },
+            (service, scope) =>
+            {
+                return new AcrAccessToken("TestAcrAccessToken");
+            });
 
-            MockAuthenticationClient mockAuthClient = GetMockAuthClient();
-            var policy = new ContainerRegistryChallengeAuthenticationPolicy(credential, "scope", mockAuthClient);
+            var policy = new ContainerRegistryChallengeAuthenticationPolicy(new MockCredential(), "scope", mockAuthClient);
             MockTransport transport = CreateMockTransport(r => GetChallengeResponse());
             var requestTasks = new Task<Response>[100];
 
@@ -550,15 +521,20 @@ namespace Azure.Containers.ContainerRegistry.Tests
         {
             var requestMre = new ManualResetEventSlim(false);
             var responseMre = new ManualResetEventSlim(false);
-            var credential = new TokenCredentialStub((r, c) =>
-            {
-                requestMre.Set();
-                responseMre.Wait(c);
-                throw new InvalidOperationException("Error");
-            }, IsAsync);
 
-            MockAuthenticationClient mockAuthClient = GetMockAuthClient();
-            var policy = new ContainerRegistryChallengeAuthenticationPolicy(credential, "scope", mockAuthClient);
+            MockAuthenticationClient mockAuthClient = new MockAuthenticationClient(
+                service =>
+                {
+                    requestMre.Set();
+                    responseMre.Wait();
+                    throw new InvalidOperationException("Error");
+                },
+                (service, scope) =>
+                {
+                    return new AcrAccessToken("TestAcrAccessToken");
+                });
+
+            var policy = new ContainerRegistryChallengeAuthenticationPolicy(new MockCredential(), "scope", mockAuthClient);
             MockTransport transport = CreateMockTransport(GetChallengeResponse(), new MockResponse(200));
 
             var firstRequestTask = SendGetRequest(transport, policy, uri: new Uri("https://example.com"));
@@ -581,6 +557,19 @@ namespace Azure.Containers.ContainerRegistry.Tests
             var requestMre = new ManualResetEventSlim(true);
             var responseMre = new ManualResetEventSlim(true);
             var fail = false;
+
+            //MockAuthenticationClient mockAuthClient = new MockAuthenticationClient(
+            //    service =>
+            //    {
+            //        requestMre.Set();
+            //        responseMre.Wait();
+            //        throw new InvalidOperationException("Error");
+            //    },
+            //    (service, scope) =>
+            //    {
+            //        return new AcrAccessToken("TestAcrAccessToken");
+            //    });
+
             var credential = new TokenCredentialStub((r, c) =>
             {
                 requestMre.Set();
@@ -698,16 +687,28 @@ namespace Azure.Containers.ContainerRegistry.Tests
             var requestMre = new ManualResetEventSlim(false);
             var responseMre = new ManualResetEventSlim(false);
             var cts = new CancellationTokenSource();
-            var credential = new TokenCredentialStub((r, c) =>
-            {
-                requestMre.Set();
-                responseMre.Wait(c);
-                throw new InvalidOperationException("Error");
-            }, IsAsync);
 
-            MockAuthenticationClient mockAuthClient = GetMockAuthClient();
-            var policy = new ContainerRegistryChallengeAuthenticationPolicy(credential, "scope", mockAuthClient);
-            MockTransport transport = CreateMockTransport(new MockResponse(200), new MockResponse(200));
+            MockAuthenticationClient mockAuthClient = new MockAuthenticationClient(
+                service =>
+                {
+                    return new AcrRefreshToken("TestAcrRefreshToken");
+                },
+                (service, scope) =>
+                {
+                    requestMre.Set();
+                    responseMre.Wait();
+                    throw new InvalidOperationException("Error");
+                });
+
+            //var credential = new TokenCredentialStub((r, c) =>
+            //{
+            //    requestMre.Set();
+            //    responseMre.Wait(c);
+            //    throw new InvalidOperationException("Error");
+            //}, IsAsync);
+
+            var policy = new ContainerRegistryChallengeAuthenticationPolicy(new MockCredential(), "scope", mockAuthClient);
+            MockTransport transport = CreateMockTransport(GetChallengeResponse(), GetChallengeResponse());
 
             var firstRequestTask = SendGetRequest(transport, policy, uri: new Uri("https://example.com"), cancellationToken: default);
             requestMre.Wait();
@@ -719,114 +720,6 @@ namespace Azure.Containers.ContainerRegistry.Tests
             responseMre.Set();
 
             Assert.CatchAsync<InvalidOperationException>(async () => await firstRequestTask);
-        }
-
-        [Test]
-        public async Task ContainerRegistryChallengeAuthenticationPolicy_CancelledFirstRequestDoesNotCancelPendingSecondRequest()
-        {
-            var currentTime = DateTime.UtcNow;
-            var requestMre = new ManualResetEventSlim(false);
-            var responseMre = new ManualResetEventSlim(false);
-            var cts = new CancellationTokenSource();
-            var credential = new TokenCredentialStub((r, c) =>
-            {
-                requestMre.Set();
-                responseMre.Wait(c);
-                return new AccessToken(Guid.NewGuid().ToString(), currentTime.AddMinutes(2));
-            }, IsAsync);
-
-            MockAuthenticationClient mockAuthClient = GetMockAuthClient();
-            var policy = new ContainerRegistryChallengeAuthenticationPolicy(credential, "scope", mockAuthClient);
-            MockTransport transport = CreateMockTransport((req) => new MockResponse(200));
-
-            var firstRequestTask = SendGetRequest(transport, policy, uri: new Uri("https://example.com"), cancellationToken: cts.Token);
-            requestMre.Wait();
-
-            var secondRequestTask = SendGetRequest(transport, policy, uri: new Uri("https://example.com"), cancellationToken: default);
-            cts.Cancel();
-
-            Assert.CatchAsync<OperationCanceledException>(async () => await firstRequestTask);
-            responseMre.Set();
-
-            var response = await secondRequestTask;
-            Assert.That(response.Status, Is.EqualTo(200));
-        }
-
-        [Test]
-        public void ContainerRegistryChallengeAuthenticationPolicy_CancelledFirstRequestAndCancelledSecondRequest()
-        {
-            var currentTime = DateTime.UtcNow;
-            var requestMre = new ManualResetEventSlim(false);
-            var responseMre = new ManualResetEventSlim(false);
-            var cts1 = new CancellationTokenSource();
-            var cts2 = new CancellationTokenSource();
-            var credential = new TokenCredentialStub((r, c) =>
-            {
-                requestMre.Set();
-                responseMre.Wait(c);
-                return new AccessToken(Guid.NewGuid().ToString(), currentTime.AddMinutes(2));
-            }, IsAsync);
-
-            MockAuthenticationClient mockAuthClient = GetMockAuthClient();
-            var policy = new ContainerRegistryChallengeAuthenticationPolicy(credential, "scope", mockAuthClient);
-            MockTransport transport = CreateMockTransport((req) =>
-            {
-                return new MockResponse(200);
-            });
-
-            var firstRequestTask = SendGetRequest(transport, policy, uri: new Uri("https://example.com"), cancellationToken: cts1.Token);
-            requestMre.Wait();
-
-            var secondRequestTask = SendGetRequest(transport, policy, uri: new Uri("https://example.com"), cancellationToken: cts2.Token);
-            cts1.Cancel();
-            cts2.Cancel();
-
-            Assert.CatchAsync<OperationCanceledException>(async () => await firstRequestTask);
-            responseMre.Set();
-
-            Assert.CatchAsync<OperationCanceledException>(async () => await secondRequestTask);
-        }
-
-        [Test]
-        [Repeat(10)]
-        public void ContainerRegistryChallengeAuthenticationPolicy_UnobservedTaskException()
-        {
-            var unobservedTaskExceptionWasRaised = false;
-            var expectedFailedException = new RequestFailedException("Communication Error");
-            try
-            {
-                TaskScheduler.UnobservedTaskException += UnobservedTaskExceptionHandler;
-                var credential =
-                    new TokenCredentialStub((_, ct) => throw expectedFailedException,
-                        IsAsync);
-
-                MockAuthenticationClient mockAuthClient = GetMockAuthClient();
-                var policy = new ContainerRegistryChallengeAuthenticationPolicy(credential, "scope", mockAuthClient);
-                MockTransport transport = CreateMockTransport((_) => new MockResponse(500));
-
-                Assert.ThrowsAsync<RequestFailedException>(async () =>
-                    await SendRequestAsync(transport, request => { request.Uri.Scheme = "https"; }, policy));
-
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
-                GC.Collect();
-            }
-            finally
-            {
-                TaskScheduler.UnobservedTaskException -= UnobservedTaskExceptionHandler;
-            }
-
-            Assert.False(unobservedTaskExceptionWasRaised, "UnobservedTaskException should not be raised");
-
-            void UnobservedTaskExceptionHandler(object sender, UnobservedTaskExceptionEventArgs args)
-            {
-                if (args.Exception.InnerException == null ||
-                    args.Exception.InnerException.ToString() != expectedFailedException.ToString())
-                    return;
-
-                args.SetObserved();
-                unobservedTaskExceptionWasRaised = true;
-            }
         }
 
         private class TokenCredentialStub : TokenCredential

@@ -71,7 +71,7 @@ namespace Azure.Containers.ContainerRegistry
             if (async)
             {
                 // Step 3: Exchange AAD Access Token for ACR Refresh Token, or get the cached value instead.
-                string acrRefreshToken = await _refreshTokenCache.GetAcrRefreshTokenAsync(message, context, service, async).ConfigureAwait(false);
+                string acrRefreshToken = await _refreshTokenCache.GetAcrRefreshTokenAsync(context, service, async, message.CancellationToken).ConfigureAwait(false);
 
                 // Step 4: Send in acrRefreshToken and get back acrAccessToken
                 acrAccessToken = await ExchangeAcrRefreshTokenForAcrAccessTokenAsync(acrRefreshToken, service, scope, true, message.CancellationToken).ConfigureAwait(false);
@@ -79,7 +79,7 @@ namespace Azure.Containers.ContainerRegistry
             else
             {
                 // Step 3: Exchange AAD Access Token for ACR Refresh Token, or get the cached value instead.
-                string acrRefreshToken = _refreshTokenCache.GetAcrRefreshTokenAsync(message, context, service, false).EnsureCompleted();
+                string acrRefreshToken = _refreshTokenCache.GetAcrRefreshTokenAsync(context, service, false, message.CancellationToken).EnsureCompleted();
 
                 // Step 4: Send in acrRefreshToken and get back acrAccessToken
                 acrAccessToken = ExchangeAcrRefreshTokenForAcrAccessTokenAsync(acrRefreshToken, service, scope, false, message.CancellationToken).EnsureCompleted();
