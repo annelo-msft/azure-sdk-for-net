@@ -8,19 +8,19 @@
 namespace Azure.Containers.ContainerRegistry
 {
     /// <summary> Changeable attributes. </summary>
-    public partial class ContentProperties
+    public partial class TagWriteableProperties
     {
-        /// <summary> Initializes a new instance of ContentProperties. </summary>
-        public ContentProperties()
+        /// <summary> Initializes a new instance of TagWriteableProperties. </summary>
+        public TagWriteableProperties()
         {
         }
 
-        /// <summary> Initializes a new instance of ContentProperties. </summary>
+        /// <summary> Initializes a new instance of TagWriteableProperties. </summary>
         /// <param name="canDelete"> Delete enabled. </param>
         /// <param name="canWrite"> Write enabled. </param>
         /// <param name="canList"> List enabled. </param>
         /// <param name="canRead"> Read enabled. </param>
-        internal ContentProperties(bool? canDelete, bool? canWrite, bool? canList, bool? canRead)
+        internal TagWriteableProperties(bool? canDelete, bool? canWrite, bool? canList, bool? canRead)
         {
             CanDelete = canDelete;
             CanWrite = canWrite;

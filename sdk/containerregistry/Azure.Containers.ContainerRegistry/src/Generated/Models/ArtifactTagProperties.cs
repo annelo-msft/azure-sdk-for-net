@@ -20,7 +20,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="lastUpdatedOn"> Tag last update time. </param>
         /// <param name="writeableProperties"> Writeable properties of the resource. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="repository"/>, <paramref name="name"/>, <paramref name="digest"/>, or <paramref name="writeableProperties"/> is null. </exception>
-        internal ArtifactTagProperties(string repository, string name, string digest, DateTimeOffset createdOn, DateTimeOffset lastUpdatedOn, ContentProperties writeableProperties)
+        internal ArtifactTagProperties(string repository, string name, string digest, DateTimeOffset createdOn, DateTimeOffset lastUpdatedOn, TagWriteableProperties writeableProperties)
         {
             if (repository == null)
             {
@@ -58,6 +58,6 @@ namespace Azure.Containers.ContainerRegistry
         /// <summary> Tag last update time. </summary>
         public DateTimeOffset LastUpdatedOn { get; }
         /// <summary> Writeable properties of the resource. </summary>
-        public ContentProperties WriteableProperties { get; }
+        public TagWriteableProperties WriteableProperties { get; }
     }
 }

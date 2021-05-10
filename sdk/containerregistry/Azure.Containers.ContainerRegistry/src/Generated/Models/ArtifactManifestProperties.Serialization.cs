@@ -25,7 +25,7 @@ namespace Azure.Containers.ContainerRegistry
             Optional<ArtifactOperatingSystem?> os = default;
             Optional<IReadOnlyList<ManifestAttributesManifestReferences>> references = default;
             Optional<IReadOnlyList<string>> tags = default;
-            Optional<ContentProperties> changeableAttributes = default;
+            Optional<ManifestWriteableProperties> changeableAttributes = default;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("imageName"))
@@ -134,7 +134,7 @@ namespace Azure.Containers.ContainerRegistry
                                 property0.ThrowNonNullablePropertyIsNull();
                                 continue;
                             }
-                            changeableAttributes = ContentProperties.DeserializeContentProperties(property0.Value);
+                            changeableAttributes = ManifestWriteableProperties.DeserializeManifestWriteableProperties(property0.Value);
                             continue;
                         }
                     }

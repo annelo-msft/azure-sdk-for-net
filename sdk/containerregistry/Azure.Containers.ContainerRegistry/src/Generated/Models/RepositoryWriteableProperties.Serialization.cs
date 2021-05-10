@@ -10,40 +10,46 @@ using Azure.Core;
 
 namespace Azure.Containers.ContainerRegistry
 {
-    public partial class ContentProperties : IUtf8JsonSerializable
+    public partial class RepositoryWriteableProperties : IUtf8JsonSerializable
     {
         void IUtf8JsonSerializable.Write(Utf8JsonWriter writer)
         {
             writer.WriteStartObject();
-            if (Optional.IsDefined(CanDelete))
+            if (Optional.IsDefined(DeleteEnabled))
             {
                 writer.WritePropertyName("deleteEnabled");
-                writer.WriteBooleanValue(CanDelete.Value);
+                writer.WriteBooleanValue(DeleteEnabled.Value);
             }
-            if (Optional.IsDefined(CanWrite))
+            if (Optional.IsDefined(WriteEnabled))
             {
                 writer.WritePropertyName("writeEnabled");
-                writer.WriteBooleanValue(CanWrite.Value);
+                writer.WriteBooleanValue(WriteEnabled.Value);
             }
-            if (Optional.IsDefined(CanList))
+            if (Optional.IsDefined(ListEnabled))
             {
                 writer.WritePropertyName("listEnabled");
-                writer.WriteBooleanValue(CanList.Value);
+                writer.WriteBooleanValue(ListEnabled.Value);
             }
-            if (Optional.IsDefined(CanRead))
+            if (Optional.IsDefined(ReadEnabled))
             {
                 writer.WritePropertyName("readEnabled");
-                writer.WriteBooleanValue(CanRead.Value);
+                writer.WriteBooleanValue(ReadEnabled.Value);
+            }
+            if (Optional.IsDefined(TeleportEnabled))
+            {
+                writer.WritePropertyName("teleportEnabled");
+                writer.WriteBooleanValue(TeleportEnabled.Value);
             }
             writer.WriteEndObject();
         }
 
-        internal static ContentProperties DeserializeContentProperties(JsonElement element)
+        internal static RepositoryWriteableProperties DeserializeRepositoryWriteableProperties(JsonElement element)
         {
             Optional<bool> deleteEnabled = default;
             Optional<bool> writeEnabled = default;
             Optional<bool> listEnabled = default;
             Optional<bool> readEnabled = default;
+            Optional<bool> teleportEnabled = default;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("deleteEnabled"))
@@ -86,8 +92,18 @@ namespace Azure.Containers.ContainerRegistry
                     readEnabled = property.Value.GetBoolean();
                     continue;
                 }
+                if (property.NameEquals("teleportEnabled"))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        property.ThrowNonNullablePropertyIsNull();
+                        continue;
+                    }
+                    teleportEnabled = property.Value.GetBoolean();
+                    continue;
+                }
             }
-            return new ContentProperties(Optional.ToNullable(deleteEnabled), Optional.ToNullable(writeEnabled), Optional.ToNullable(listEnabled), Optional.ToNullable(readEnabled));
+            return new RepositoryWriteableProperties(Optional.ToNullable(deleteEnabled), Optional.ToNullable(writeEnabled), Optional.ToNullable(listEnabled), Optional.ToNullable(readEnabled), Optional.ToNullable(teleportEnabled));
         }
     }
 }
