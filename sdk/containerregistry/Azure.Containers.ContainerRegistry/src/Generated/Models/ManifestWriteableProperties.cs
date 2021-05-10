@@ -40,9 +40,5 @@ namespace Azure.Containers.ContainerRegistry
         public bool? ListEnabled { get; set; }
         /// <summary> Read enabled. </summary>
         public bool? ReadEnabled { get; set; }
-        /// <summary> Quarantine state. </summary>
-        public string QuarantineState { get; set; }
-        /// <summary> Quarantine details. </summary>
-        public string QuarantineDetails { get; set; }
     }
 }
