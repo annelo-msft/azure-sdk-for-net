@@ -16,29 +16,29 @@ namespace Azure.Containers.ContainerRegistry
         }
 
         /// <summary> Initializes a new instance of ManifestWriteableProperties. </summary>
-        /// <param name="deleteEnabled"> Delete enabled. </param>
-        /// <param name="writeEnabled"> Write enabled. </param>
-        /// <param name="listEnabled"> List enabled. </param>
-        /// <param name="readEnabled"> Read enabled. </param>
+        /// <param name="canDelete"> Delete enabled. </param>
+        /// <param name="canWrite"> Write enabled. </param>
+        /// <param name="canList"> List enabled. </param>
+        /// <param name="canRead"> Read enabled. </param>
         /// <param name="quarantineState"> Quarantine state. </param>
         /// <param name="quarantineDetails"> Quarantine details. </param>
-        internal ManifestWriteableProperties(bool? deleteEnabled, bool? writeEnabled, bool? listEnabled, bool? readEnabled, string quarantineState, string quarantineDetails)
+        internal ManifestWriteableProperties(bool? canDelete, bool? canWrite, bool? canList, bool? canRead, string quarantineState, string quarantineDetails)
         {
-            DeleteEnabled = deleteEnabled;
-            WriteEnabled = writeEnabled;
-            ListEnabled = listEnabled;
-            ReadEnabled = readEnabled;
+            CanDelete = canDelete;
+            CanWrite = canWrite;
+            CanList = canList;
+            CanRead = canRead;
             QuarantineState = quarantineState;
             QuarantineDetails = quarantineDetails;
         }
 
         /// <summary> Delete enabled. </summary>
-        public bool? DeleteEnabled { get; set; }
+        public bool? CanDelete { get; set; }
         /// <summary> Write enabled. </summary>
-        public bool? WriteEnabled { get; set; }
+        public bool? CanWrite { get; set; }
         /// <summary> List enabled. </summary>
-        public bool? ListEnabled { get; set; }
+        public bool? CanList { get; set; }
         /// <summary> Read enabled. </summary>
-        public bool? ReadEnabled { get; set; }
+        public bool? CanRead { get; set; }
     }
 }
