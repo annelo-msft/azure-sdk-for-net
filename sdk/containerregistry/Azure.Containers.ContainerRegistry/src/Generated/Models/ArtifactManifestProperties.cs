@@ -15,8 +15,16 @@ namespace Azure.Containers.ContainerRegistry
     public partial class ArtifactManifestProperties
     {
         /// <summary> Initializes a new instance of ArtifactManifestProperties. </summary>
-        internal ArtifactManifestProperties()
+        /// <param name="digest"> Manifest. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="digest"/> is null. </exception>
+        internal ArtifactManifestProperties(string digest)
         {
+            if (digest == null)
+            {
+                throw new ArgumentNullException(nameof(digest));
+            }
+
+            Digest = digest;
             References = new ChangeTrackingList<ManifestAttributesManifestReferences>();
             Tags = new ChangeTrackingList<string>();
         }

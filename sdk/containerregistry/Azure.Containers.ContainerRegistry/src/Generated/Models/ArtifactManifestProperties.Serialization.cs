@@ -17,7 +17,7 @@ namespace Azure.Containers.ContainerRegistry
         internal static ArtifactManifestProperties DeserializeArtifactManifestProperties(JsonElement element)
         {
             Optional<string> imageName = default;
-            Optional<string> digest = default;
+            string digest = default;
             Optional<long> imageSize = default;
             Optional<DateTimeOffset> createdTime = default;
             Optional<DateTimeOffset> lastUpdateTime = default;
@@ -141,7 +141,7 @@ namespace Azure.Containers.ContainerRegistry
                     continue;
                 }
             }
-            return new ArtifactManifestProperties(imageName.Value, digest.Value, Optional.ToNullable(imageSize), Optional.ToNullable(createdTime), Optional.ToNullable(lastUpdateTime), Optional.ToNullable(architecture), Optional.ToNullable(os), Optional.ToList(references), Optional.ToList(tags), changeableAttributes.Value);
+            return new ArtifactManifestProperties(imageName.Value, digest, Optional.ToNullable(imageSize), Optional.ToNullable(createdTime), Optional.ToNullable(lastUpdateTime), Optional.ToNullable(architecture), Optional.ToNullable(os), Optional.ToList(references), Optional.ToList(tags), changeableAttributes.Value);
         }
     }
 }
