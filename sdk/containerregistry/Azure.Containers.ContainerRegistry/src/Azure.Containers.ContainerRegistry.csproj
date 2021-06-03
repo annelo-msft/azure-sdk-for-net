@@ -28,5 +28,8 @@
     <Compile Include="$(AzureCoreSharedSources)OperationHelpers.cs" LinkBase="Shared" />
     <Compile Include="$(AzureCoreSharedSources)PageResponseEnumerator.cs" LinkBase="Shared" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\identity\Azure.Identity\src\Azure.Identity.csproj" />
+  </ItemGroup>
 
 </Project>

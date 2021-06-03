@@ -32,13 +32,19 @@ namespace Azure.Containers.ContainerRegistry.Tests
 
                 InstrumentClient(new ContainerRegistryClient(
                     new Uri(TestEnvironment.AnonymousAccessEndpoint),
-                    InstrumentClientOptions(new ContainerRegistryClientOptions())
+                    InstrumentClientOptions(new ContainerRegistryClientOptions()
+                    {
+                        AuthenticationScope = "https://management.usgovcloudapi.net/.default"
+                    })
                 )) :
 
                 InstrumentClient(new ContainerRegistryClient(
                     new Uri(TestEnvironment.Endpoint),
                     TestEnvironment.Credential,
-                    InstrumentClientOptions(new ContainerRegistryClientOptions())
+                    InstrumentClientOptions(new ContainerRegistryClientOptions()
+                    {
+                        AuthenticationScope = "https://management.usgovcloudapi.net/.default"
+                    })
                 ));
         }
 
