@@ -22,7 +22,7 @@ namespace Azure.Containers.ContainerRegistry
         /// For example, to connect to the Azure Germany cloud, create a client with
         /// <see cref="AuthenticationScope"/> set to "https://management.microsoftazure.de/.default".
         /// </summary>
-        public string AuthenticationScope { get; set; } = "https://management.azure.com/.default";
+        public string AuthenticationScope { get; set; }
 
         /// <summary>
         /// </summary>

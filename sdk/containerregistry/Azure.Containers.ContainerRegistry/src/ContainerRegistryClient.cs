@@ -20,6 +20,8 @@ namespace Azure.Containers.ContainerRegistry
         private readonly ContainerRegistryRestClient _restClient;
         private readonly AuthenticationRestClient _acrAuthClient;
 
+        private readonly string DefaultAuthenticationScope = "https://management.azure.com/.default";
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ContainerRegistryClient"/> for managing container images and artifacts,
         /// using anonymous access to the registry.  Only operations that support anonymous access are enabled.  Other service
@@ -79,7 +81,7 @@ namespace Azure.Containers.ContainerRegistry
             _acrAuthPipeline = HttpPipelineBuilder.Build(options);
             _acrAuthClient = new AuthenticationRestClient(_clientDiagnostics, _acrAuthPipeline, endpoint.AbsoluteUri);
 
-            _pipeline = HttpPipelineBuilder.Build(options, new ContainerRegistryChallengeAuthenticationPolicy(credential, options.AuthenticationScope, _acrAuthClient));
+            _pipeline = HttpPipelineBuilder.Build(options, new ContainerRegistryChallengeAuthenticationPolicy(credential, options.AuthenticationScope ?? DefaultAuthenticationScope, _acrAuthClient));
             _restClient = new ContainerRegistryRestClient(_clientDiagnostics, _pipeline, _endpoint.AbsoluteUri);
         }
 
