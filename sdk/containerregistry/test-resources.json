@@ -15,13 +15,20 @@
         "metadata": {
           "description": "The location of the resource. By default, this is the same as the resource group."
         }
+      },
+      "acrEndpointSuffix": {
+        "type": "string",
+        "defaultValue": ".azurecr.io",
+        "metadata": {
+          "description": "The location of the resource. By default, this is the same as the resource group."
+        }
       }
     },
     "variables": {
       "apiVersion": "2020-11-01-preview",
-      "endpointValue": "[format('https://{0}.azurecr.io', parameters('baseName'))]",
+      "endpointValue": "[format('https://{0}{1}', parameters('baseName'), parameters('acrEndpointSuffix'))]",
       "anonRegistryName": "[format('{0}anon', parameters('baseName'))]",
-      "anonEndpointValue": "[format('https://{0}.azurecr.io', variables('anonRegistryName'))]"
+      "anonEndpointValue": "[format('https://{0}{1}', variables('anonRegistryName'), parameters('acrEndpointSuffix'))]"
     },
     "resources": [
       {

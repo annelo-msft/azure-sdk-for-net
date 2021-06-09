@@ -5,3 +5,4 @@ extends:
   parameters:
     SDKType: client
     ServiceDirectory: containerregistry
+    SupportedClouds: 'Public,UsGov,China'
