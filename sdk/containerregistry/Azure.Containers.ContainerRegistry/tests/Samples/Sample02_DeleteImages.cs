@@ -66,7 +66,7 @@ namespace Azure.Containers.ContainerRegistry.Tests.Samples
 
             // Iterate through repositories
             AsyncPageable<string> repositoryNames = client.GetRepositoryNamesAsync();
-            await foreach (string repositoryName in repositoryNames)
+            await repositoryNames.ForEachAsync(async (repositoryName) =>
             {
                 ContainerRepository repository = client.GetRepository(repositoryName);
 
@@ -75,7 +75,7 @@ namespace Azure.Containers.ContainerRegistry.Tests.Samples
                     repository.GetManifestPropertiesCollectionAsync(orderBy: ArtifactManifestOrderBy.LastUpdatedOnDescending);
 
                 // Delete images older than the first three.
-                await foreach (ArtifactManifestProperties imageManifest in imageManifests.Skip(3))
+                await imageManifests.Skip(3).ForEachAsync(async (imageManifest) =>
                 {
                     Console.WriteLine($"Deleting image with digest {imageManifest.Digest}.");
                     Console.WriteLine($"   This image has the following tags: ");
@@ -84,8 +84,8 @@ namespace Azure.Containers.ContainerRegistry.Tests.Samples
                         Console.WriteLine($"        {imageManifest.RepositoryName}:{tagName}");
                     }
                     await repository.GetArtifact(imageManifest.Digest).DeleteAsync();
-                }
-            }
+                });
+            });
 
             #endregion
         }
