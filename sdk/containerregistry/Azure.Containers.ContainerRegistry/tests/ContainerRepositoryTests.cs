@@ -16,7 +16,7 @@ namespace Azure.Containers.ContainerRegistry.Tests
         }
 
         private ContainerRegistryClient client { get; set; }
-        private ContainerRepository repository { get; set; }
+        private ContainerRepositoryOperations repository { get; set; }
         private readonly Uri _url = new Uri("https://example.azurecr.io");
         private readonly string _repositoryName = "hello-world";
 

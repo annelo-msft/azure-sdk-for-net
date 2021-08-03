@@ -9,10 +9,14 @@ namespace Azure.Containers.ContainerRegistry
 {
     /// <summary>
     /// </summary>
-    public class RegistryArtifact : RegistryArtifactOperations
+    public class RegistryArtifactData
     {
         /// <summary>
         /// </summary>
-        public RegistryArtifactData Data { get; }
+        public ArtifactManifestProperties ManifestData { get; }
+
+        /// <summary>
+        /// </summary>
+        public ArtifactTagProperties TagData { get; }
     }
 }

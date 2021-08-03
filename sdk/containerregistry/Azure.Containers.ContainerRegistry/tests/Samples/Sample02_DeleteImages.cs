@@ -35,7 +35,7 @@ namespace Azure.Containers.ContainerRegistry.Tests.Samples
             Pageable<string> repositoryNames = client.GetRepositoryNames();
             foreach (string repositoryName in repositoryNames)
             {
-                ContainerRepository repository = client.GetRepository(repositoryName);
+                ContainerRepositoryOperations repository = client.GetRepository(repositoryName);
 
                 // Obtain the images ordered from newest to oldest
                 Pageable<ArtifactManifestProperties> imageManifests =
@@ -44,7 +44,7 @@ namespace Azure.Containers.ContainerRegistry.Tests.Samples
                 // Delete images older than the first three.
                 foreach (ArtifactManifestProperties imageManifest in imageManifests.Skip(3))
                 {
-                    RegistryArtifact image = repository.GetArtifact(imageManifest.Digest);
+                    RegistryArtifactOperations image = repository.GetArtifact(imageManifest.Digest);
                     Console.WriteLine($"Deleting image with digest {imageManifest.Digest}.");
                     Console.WriteLine($"   Deleting the following tags from the image: ");
                     foreach (var tagName in imageManifest.Tags)
@@ -81,7 +81,7 @@ namespace Azure.Containers.ContainerRegistry.Tests.Samples
             AsyncPageable<string> repositoryNames = client.GetRepositoryNamesAsync();
             await foreach (string repositoryName in repositoryNames)
             {
-                ContainerRepository repository = client.GetRepository(repositoryName);
+                ContainerRepositoryOperations repository = client.GetRepository(repositoryName);
 
                 // Obtain the images ordered from newest to oldest
                 AsyncPageable<ArtifactManifestProperties> imageManifests =
@@ -90,7 +90,7 @@ namespace Azure.Containers.ContainerRegistry.Tests.Samples
                 // Delete images older than the first three.
                 await foreach (ArtifactManifestProperties imageManifest in imageManifests.Skip(3))
                 {
-                    RegistryArtifact image = repository.GetArtifact(imageManifest.Digest);
+                    RegistryArtifactOperations image = repository.GetArtifact(imageManifest.Digest);
                     Console.WriteLine($"Deleting image with digest {imageManifest.Digest}.");
                     Console.WriteLine($"   Deleting the following tags from the image: ");
                     foreach (var tagName in imageManifest.Tags)

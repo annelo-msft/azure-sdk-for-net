@@ -10,12 +10,12 @@ namespace Azure.Containers.ContainerRegistry.Perf
 {
     public sealed class ListArtifacts : ContainerRegistryPerfTest
     {
-        private readonly ContainerRegistryClient _client;
-        private ContainerRepository _repository;
+        private readonly ContainerRegistryOperations _client;
+        private ContainerRepositoryOperations _repository;
 
         public ListArtifacts(PerfOptions options) : base(options)
         {
-            _client = new ContainerRegistryClient(new Uri(PerfTestEnvironment.Instance.Endpoint), PerfTestEnvironment.Instance.Credential);
+            _client = new ContainerRegistryOperations(new Uri(PerfTestEnvironment.Instance.Endpoint), PerfTestEnvironment.Instance.Credential);
         }
 
         public override async Task GlobalSetupAsync()

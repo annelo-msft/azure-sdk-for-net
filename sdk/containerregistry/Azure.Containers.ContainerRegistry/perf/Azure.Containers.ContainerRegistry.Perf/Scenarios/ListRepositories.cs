@@ -10,11 +10,11 @@ namespace Azure.Containers.ContainerRegistry.Perf
 {
     public sealed class ListRepositories : ContainerRegistryPerfTest
     {
-        private readonly ContainerRegistryClient _client;
+        private readonly ContainerRegistryOperations _client;
 
         public ListRepositories(PerfOptions options) : base(options)
         {
-            _client = new ContainerRegistryClient(new Uri(PerfTestEnvironment.Instance.Endpoint), PerfTestEnvironment.Instance.Credential);
+            _client = new ContainerRegistryOperations(new Uri(PerfTestEnvironment.Instance.Endpoint), PerfTestEnvironment.Instance.Credential);
         }
 
         public override void Run(CancellationToken cancellationToken)

@@ -26,7 +26,7 @@ namespace Azure.Containers.ContainerRegistry.Tests.Samples
             ContainerRegistryClient client = new ContainerRegistryClient(endpoint);
 
             // Obtain a RegistryArtifact object to get access to image operations
-            RegistryArtifact image = client.GetArtifact("library/hello-world", "latest");
+            RegistryArtifactOperations image = client.GetArtifact("library/hello-world", "latest");
 
             // List the set of tags on the hello_world image tagged as "latest"
             Pageable<ArtifactTagProperties> tags = image.GetTagPropertiesCollection();
@@ -54,7 +54,7 @@ namespace Azure.Containers.ContainerRegistry.Tests.Samples
             ContainerRegistryClient client = new ContainerRegistryClient(endpoint);
 
             // Obtain a RegistryArtifact object to get access to image operations
-            RegistryArtifact image = client.GetArtifact("library/hello-world", "latest");
+            RegistryArtifactOperations image = client.GetArtifact("library/hello-world", "latest");
 
             // List the set of tags on the hello_world image tagged as "latest"
             AsyncPageable<ArtifactTagProperties> tags = image.GetTagPropertiesCollectionAsync();

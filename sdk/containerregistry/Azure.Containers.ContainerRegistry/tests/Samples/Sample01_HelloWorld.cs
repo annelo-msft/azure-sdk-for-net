@@ -70,7 +70,7 @@ namespace Azure.Containers.ContainerRegistry.Tests.Samples
             // Create a ContainerRepository class for an invalid repository
             string fakeRepositoryName = "doesnotexist";
             ContainerRegistryClient client = new ContainerRegistryClient(endpoint, new DefaultAzureCredential());
-            ContainerRepository repository = client.GetRepository(fakeRepositoryName);
+            ContainerRepositoryOperations repository = client.GetRepository(fakeRepositoryName);
 
             try
             {
@@ -95,7 +95,7 @@ namespace Azure.Containers.ContainerRegistry.Tests.Samples
             // Create a ContainerRepository class for an invalid repository
             string fakeRepositoryName = "doesnotexist";
             ContainerRegistryClient client = new ContainerRegistryClient(endpoint, new DefaultAzureCredential());
-            ContainerRepository repository = client.GetRepository(fakeRepositoryName);
+            ContainerRepositoryOperations repository = client.GetRepository(fakeRepositoryName);
 
             try
             {
