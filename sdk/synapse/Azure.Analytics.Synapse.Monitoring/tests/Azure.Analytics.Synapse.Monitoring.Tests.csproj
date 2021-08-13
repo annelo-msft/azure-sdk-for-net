@@ -17,6 +17,5 @@
 
   <ItemGroup>
     <ProjectReference Include="$(AzureCoreTestFramework)" />
-    <ProjectReference Include="..\src\Azure.Analytics.Synapse.Monitoring.csproj" />
   </ItemGroup>
 </Project>

@@ -6,6 +6,7 @@
   <Import Project="..\..\Azure.Analytics.Synapse.Shared\tests\Azure.Analytics.Synapse.Shared.Tests.projitems" Label="Shared" />
 
   <ItemGroup>
+    <PackageReference Include="Azure.Analytics.Synapse.ManagedPrivateEndpoints" VersionOverride="1.0.0-beta.4" />
     <PackageReference Include="Azure.Identity" />
     <PackageReference Include="NUnit" />
     <PackageReference Include="NUnit3TestAdapter" />
@@ -17,6 +18,5 @@
 
   <ItemGroup>
     <ProjectReference Include="$(AzureCoreTestFramework)" />
-    <ProjectReference Include="..\src\Azure.Analytics.Synapse.ManagedPrivateEndpoints.csproj" />
   </ItemGroup>
 </Project>

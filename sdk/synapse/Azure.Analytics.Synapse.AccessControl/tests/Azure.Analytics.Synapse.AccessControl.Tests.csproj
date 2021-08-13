@@ -6,6 +6,7 @@
   <Import Project="..\..\Azure.Analytics.Synapse.Shared\tests\Azure.Analytics.Synapse.Shared.Tests.projitems" Label="Shared" />
 
   <ItemGroup>
+    <PackageReference Include="Azure.Analytics.Synapse.AccessControl" VersionOverride="1.0.0-preview.5" />
     <PackageReference Include="NUnit" />
     <PackageReference Include="NUnit3TestAdapter" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
@@ -16,6 +17,5 @@
 
   <ItemGroup>
     <ProjectReference Include="$(AzureCoreTestFramework)" />
-    <ProjectReference Include="..\src\Azure.Analytics.Synapse.AccessControl.csproj" />
   </ItemGroup>
 </Project>
