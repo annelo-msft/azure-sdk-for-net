@@ -139,7 +139,7 @@ namespace Azure
         {
             if (!IsError.HasValue)
             {
-                throw new InvalidOperationException("Error value should have been cached by the pipeline.");
+                throw new InvalidOperationException("IsError value should have been cached by the pipeline.");
             }
 
             if (IsError.Value)
@@ -156,7 +156,7 @@ namespace Azure
         {
             if (!IsError.HasValue)
             {
-                throw new InvalidOperationException("Error value should have been cached by the pipeline.");
+                throw new InvalidOperationException("IsError value should have been cached by the pipeline.");
             }
 
             if (IsError.Value)
