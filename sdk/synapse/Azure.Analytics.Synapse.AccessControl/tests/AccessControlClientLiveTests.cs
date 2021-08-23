@@ -100,16 +100,13 @@ namespace Azure.Analytics.Synapse.AccessControl.Tests
 
             // But since we suppressed the error, we might want to think
             // about it the following way:
-            if (response.IsError())
-            {
-                await response.ThrowAsync();
-            }
-            else
-            {
-                Assert.NotNull(returnedRoleAssignment.Id);
-                Assert.NotNull(returnedRoleAssignment.Properties.RoleDefinitionId);
-                Assert.NotNull(returnedRoleAssignment.Properties.PrincipalId);
-            }
+
+            await response.ThrowIfErrorAsync();
+
+            // else
+            Assert.NotNull(returnedRoleAssignment.Id);
+            Assert.NotNull(returnedRoleAssignment.Properties.RoleDefinitionId);
+            Assert.NotNull(returnedRoleAssignment.Properties.PrincipalId);
         }
 
         [Test]

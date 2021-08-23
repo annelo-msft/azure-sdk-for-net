@@ -463,10 +463,15 @@ namespace Azure.Analytics.Synapse.AccessControl
         {
             options ??= new RequestOptions();
             HttpMessage message = CreateCreateRoleAssignmentRequest(roleAssignmentId, content, options);
-            if (options.PerCallPolicy != null)
-            {
-                message.SetProperty("RequestOptionsPerCallPolicyCallback", options.PerCallPolicy);
-            }
+
+            // The following:
+            //   1. Optionally adds a policy to this pipeline for the scope of the message
+            //   2. Overwrites this message's ResponseClassifier with classification options set on RequestOptions
+            //
+            // Note: we are essentially configuring the pipeline for the request and response
+            // before we call Pipeline.SendAsync();
+            RequestOptions.Apply(options, message);
+
             using var scope0 = _clientDiagnostics.CreateScope("SynapseAccessControlClient.CreateRoleAssignment");
             scope0.Start();
             try
@@ -474,18 +479,10 @@ namespace Azure.Analytics.Synapse.AccessControl
                 await Pipeline.SendAsync(message, options.CancellationToken).ConfigureAwait(false);
                 if (options.StatusOption == ResponseStatusOption.Default)
                 {
-                    switch (message.Response.Status)
-                    {
-                        case 200:
-                            return message.Response;
-                        default:
-                            throw await _responseClassifier.CreateRequestFailedExceptionAsync(message.Response).ConfigureAwait(false);
-                    }
+                    await message.Response.ThrowIfErrorAsync().ConfigureAwait(false);
                 }
-                else
-                {
-                    return message.Response;
-                }
+
+                return message.Response;
             }
             catch (Exception e)
             {

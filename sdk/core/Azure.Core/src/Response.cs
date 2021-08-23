@@ -116,29 +116,27 @@ namespace Azure
         internal HttpMessage? Message { get; set; }
 
         /// <summary>
+        /// Throw a RequestFailedException appropriate to the Response if the response classifer determines
+        /// this is response represents an error.
         /// </summary>
-        /// <returns></returns>
-        public bool IsError()
+        public void ThrowIfError()
         {
-            return this.Message!.ResponseClassifier.IsErrorResponse(this.Message);
+            if (this.Message!.ResponseClassifier.IsErrorResponse(this.Message))
+            {
+                throw this.Message!.ResponseClassifier.CreateRequestFailedException(this);
+            }
         }
 
         /// <summary>
-        /// Throw a RequestFailedException appropriate to the Response.
+        /// Throw a RequestFailedException appropriate to the Response if the response classifer determines
+        /// this is response represents an error.
         /// </summary>
-        public void Throw()
+        public async Task ThrowIfErrorAsync()
         {
-            throw this.Message!.ResponseClassifier.CreateRequestFailedException(this);
-            //throw new RequestFailedException("<error message>");
-        }
-
-        /// <summary>
-        /// Throw a RequestFailedException appropriate to the Response.
-        /// </summary>
-        public async Task ThrowAsync()
-        {
-             throw await this.Message!.ResponseClassifier.CreateRequestFailedExceptionAsync(this).ConfigureAwait(false);
-            //throw new RequestFailedException("<error message>");
+            if (this.Message!.ResponseClassifier.IsErrorResponse(this.Message))
+            {
+                throw await this.Message!.ResponseClassifier.CreateRequestFailedExceptionAsync(this).ConfigureAwait(false);
+            }
         }
 
         /// <summary>
