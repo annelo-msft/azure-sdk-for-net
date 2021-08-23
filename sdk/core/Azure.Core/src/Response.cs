@@ -113,17 +113,47 @@ namespace Azure
         /// <returns>The <see cref="IEnumerable{T}"/> enumerating <see cref="HttpHeader"/> in the response.</returns>
         protected internal abstract IEnumerable<HttpHeader> EnumerateHeaders();
 
+        /// <summary>
+        /// Note: this will be disposed after the service method completes.
+        /// </summary>
         internal HttpMessage? Message { get; set; }
 
+        // Note: these are better cached on the ResponseClassifier itself.
+        private bool? _isError;
+        private RequestFailedException? _requestFailedException;
+
         /// <summary>
-        /// Throw a RequestFailedException appropriate to the Response if the response classifer determines
-        /// this is response represents an error.
+        /// Since the information needed to determine whether the response is an error gets disposed
+        /// after the service call, we'll want to cache it while we have the message in scope.
         /// </summary>
-        public void ThrowIfError()
+        /// <param name="message"></param>
+        internal void ApplyErrorSettings(HttpMessage message)
         {
-            if (this.Message!.ResponseClassifier.IsErrorResponse(this.Message))
+            if (message.CacheError)
             {
-                throw this.Message!.ResponseClassifier.CreateRequestFailedException(this);
+                _isError = message.ResponseClassifier.IsErrorResponse(message);
+                if (_isError!.Value)
+                {
+                    _requestFailedException = message.ResponseClassifier.CreateRequestFailedException(this);
+                }
+            }
+            else
+            {
+                Message = message;
+            }
+        }
+
+        /// <summary>
+        /// Since the information needed to determine whether the response is an error gets disposed
+        /// after the service call, we'll want to cache it while we have the message in scope.
+        /// </summary>
+        /// <param name="message"></param>
+        internal async Task ApplyErrorSettingsAsync(HttpMessage message)
+        {
+            _isError = message.ResponseClassifier.IsErrorResponse(message);
+            if (_isError!.Value)
+            {
+                _requestFailedException = await message.ResponseClassifier.CreateRequestFailedExceptionAsync(this).ConfigureAwait(false);
             }
         }
 
@@ -131,11 +161,21 @@ namespace Azure
         /// Throw a RequestFailedException appropriate to the Response if the response classifer determines
         /// this is response represents an error.
         /// </summary>
-        public async Task ThrowIfErrorAsync()
+        public void ThrowIfError()
         {
-            if (this.Message!.ResponseClassifier.IsErrorResponse(this.Message))
+            if (!_isError.HasValue)
             {
-                throw await this.Message!.ResponseClassifier.CreateRequestFailedExceptionAsync(this).ConfigureAwait(false);
+                if (Message!.ResponseClassifier.IsErrorResponse(Message))
+                {
+                    throw Message.ResponseClassifier.CreateRequestFailedException(this);
+                }
+            }
+            else
+            {
+                if (_isError.Value)
+                {
+                    throw _requestFailedException!;
+                }
             }
         }
 

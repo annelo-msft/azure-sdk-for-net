@@ -71,6 +71,11 @@ namespace Azure.Core
         public ResponseClassifier ResponseClassifier { get; set; }
 
         /// <summary>
+        /// We can make this internal if RequestOptions moves out of Core.Experimental into Core.
+        /// </summary>
+        public bool CacheError { get; set; }
+
+        /// <summary>
         /// Gets or sets the value indicating if response would be buffered as part of the pipeline. Defaults to true.
         /// </summary>
         public bool BufferResponse { get; set; }
