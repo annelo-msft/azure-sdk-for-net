@@ -115,8 +115,6 @@ namespace Azure
             {
                 message.ResponseClassifier = new PerCallResponseClassifier(message.ResponseClassifier, requestOptions._classifiers);
             }
-
-            message.CacheError = requestOptions.StatusOption == ResponseStatusOption.NoThrow;
         }
 
         /// <summary>

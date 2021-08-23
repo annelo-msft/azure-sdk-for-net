@@ -113,47 +113,21 @@ namespace Azure
         /// <returns>The <see cref="IEnumerable{T}"/> enumerating <see cref="HttpHeader"/> in the response.</returns>
         protected internal abstract IEnumerable<HttpHeader> EnumerateHeaders();
 
-        /// <summary>
-        /// Note: this will be disposed after the service method completes.
-        /// </summary>
-        internal HttpMessage? Message { get; set; }
+        internal bool? IsError { get; set; }
 
-        // Note: these are better cached on the ResponseClassifier itself.
-        private bool? _isError;
-        private RequestFailedException? _requestFailedException;
+        internal ResponseClassifier? ResponseClassifier { get; set; }
 
         /// <summary>
         /// Since the information needed to determine whether the response is an error gets disposed
         /// after the service call, we'll want to cache it while we have the message in scope.
         /// </summary>
         /// <param name="message"></param>
-        internal void ApplyErrorSettings(HttpMessage message)
+        internal void EvaluateError(HttpMessage message)
         {
-            if (message.CacheError)
+            if (!IsError.HasValue)
             {
-                _isError = message.ResponseClassifier.IsErrorResponse(message);
-                if (_isError!.Value)
-                {
-                    _requestFailedException = message.ResponseClassifier.CreateRequestFailedException(this);
-                }
-            }
-            else
-            {
-                Message = message;
-            }
-        }
-
-        /// <summary>
-        /// Since the information needed to determine whether the response is an error gets disposed
-        /// after the service call, we'll want to cache it while we have the message in scope.
-        /// </summary>
-        /// <param name="message"></param>
-        internal async Task ApplyErrorSettingsAsync(HttpMessage message)
-        {
-            _isError = message.ResponseClassifier.IsErrorResponse(message);
-            if (_isError!.Value)
-            {
-                _requestFailedException = await message.ResponseClassifier.CreateRequestFailedExceptionAsync(this).ConfigureAwait(false);
+                IsError = message.ResponseClassifier.IsErrorResponse(message);
+                ResponseClassifier = message.ResponseClassifier;
             }
         }
 
@@ -163,19 +137,31 @@ namespace Azure
         /// </summary>
         public void ThrowIfError()
         {
-            if (!_isError.HasValue)
+            if (!IsError.HasValue)
             {
-                if (Message!.ResponseClassifier.IsErrorResponse(Message))
-                {
-                    throw Message.ResponseClassifier.CreateRequestFailedException(this);
-                }
+                throw new InvalidOperationException("Error value should have been cached by the pipeline.");
             }
-            else
+
+            if (IsError.Value)
             {
-                if (_isError.Value)
-                {
-                    throw _requestFailedException!;
-                }
+                throw ResponseClassifier!.CreateRequestFailedException(this);
+            }
+        }
+
+        /// <summary>
+        /// Throw a RequestFailedException appropriate to the Response if the response classifer determines
+        /// this is response represents an error.
+        /// </summary>
+        public async Task ThrowIfErrorAsync()
+        {
+            if (!IsError.HasValue)
+            {
+                throw new InvalidOperationException("Error value should have been cached by the pipeline.");
+            }
+
+            if (IsError.Value)
+            {
+                throw await ResponseClassifier!.CreateRequestFailedExceptionAsync(this).ConfigureAwait(false);
             }
         }
 
