@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using System;
+using System.Text.Json;
 using Azure.Core;
 
 namespace Azure.Analytics.Synapse.AccessControl
@@ -50,7 +51,12 @@ namespace Azure.Analytics.Synapse.AccessControl
 
         private static SynapseRoleAssignment DeserializeResponse(Response response)
         {
-            throw new NotImplementedException();
+            JsonDocument roleAssignment = JsonDocument.Parse(response.Content.ToMemory());
+            return new SynapseRoleAssignment(
+                roleAssignment.RootElement.GetProperty("id").GetGuid(),
+                roleAssignment.RootElement.GetProperty("principalId").GetGuid(),
+                roleAssignment.RootElement.GetProperty("roleDefinitionId").GetGuid(),
+                roleAssignment.RootElement.GetProperty("scope").ToString());
         }
     }
 }

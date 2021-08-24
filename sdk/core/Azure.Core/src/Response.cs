@@ -117,11 +117,6 @@ namespace Azure
 
         internal ResponseClassifier? ResponseClassifier { get; set; }
 
-        /// <summary>
-        /// Since the information needed to determine whether the response is an error gets disposed
-        /// after the service call, we'll want to cache it while we have the message in scope.
-        /// </summary>
-        /// <param name="message"></param>
         internal void EvaluateError(HttpMessage message)
         {
             if (!IsError.HasValue)
@@ -132,8 +127,7 @@ namespace Azure
         }
 
         /// <summary>
-        /// Throw a RequestFailedException appropriate to the Response if the response classifer determines
-        /// this is response represents an error.
+        /// If the response is an error response, throw a RequestFailedException.
         /// </summary>
         public void ThrowIfError()
         {
@@ -149,8 +143,7 @@ namespace Azure
         }
 
         /// <summary>
-        /// Throw a RequestFailedException appropriate to the Response if the response classifer determines
-        /// this is response represents an error.
+        /// If the response is an error response, throw a RequestFailedException.
         /// </summary>
         public async Task ThrowIfErrorAsync()
         {
