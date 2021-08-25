@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using System;
+using System.Text.Json;
 using Azure.Core;
 
 namespace Azure.Analytics.Synapse.AccessControl
@@ -41,5 +42,21 @@ namespace Azure.Analytics.Synapse.AccessControl
                 Id = value.Id,
                 Properties = value.Properties
             });
+
+        public static implicit operator SynapseRoleAssignment(Response response)
+        {
+            response.ThrowIfError();  // What about async?
+            return DeserializeResponse(response);
+        }
+
+        private static SynapseRoleAssignment DeserializeResponse(Response response)
+        {
+            JsonDocument roleAssignment = JsonDocument.Parse(response.Content.ToMemory());
+            return new SynapseRoleAssignment(
+                roleAssignment.RootElement.GetProperty("id").GetGuid(),
+                roleAssignment.RootElement.GetProperty("principalId").GetGuid(),
+                roleAssignment.RootElement.GetProperty("roleDefinitionId").GetGuid(),
+                roleAssignment.RootElement.GetProperty("scope").ToString());
+        }
     }
 }
