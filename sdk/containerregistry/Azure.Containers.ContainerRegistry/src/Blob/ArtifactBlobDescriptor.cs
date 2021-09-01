@@ -13,22 +13,12 @@ namespace Azure.Containers.ContainerRegistry.Specialized
     [CodeGenModel("Descriptor")]
     public partial class ArtifactBlobDescriptor
     {
-        /// <summary>
-        /// </summary>
-        /// <param name="mediaType"></param>
-        /// <param name="digest"></param>
-        /// <param name="size"></param>
-        public ArtifactBlobDescriptor(string mediaType, string digest, long? size = null)
-        {
-            MediaType = mediaType;
-            Digest = digest;
-            Size = size;
-        }
-
         /// <summary> Layer media type. </summary>
         public string MediaType { get; set; }
+
         /// <summary> Layer size. </summary>
         public long? Size { get; set; }
+
         /// <summary> Layer digest. </summary>
         public string Digest { get; set; }
 

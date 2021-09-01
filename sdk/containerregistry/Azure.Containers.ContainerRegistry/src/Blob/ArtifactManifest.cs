@@ -1,6 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
-
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,10 +9,9 @@ namespace Azure.Containers.ContainerRegistry.Specialized
 {
     /// <summary>
     /// </summary>
-    [CodeGenModel("OCIManifest")]
-    public partial class OciManifest
+    [CodeGenModel("Manifest")]
+    public partial class ArtifactManifest
     {
-        /// <summary> Additional information provided through arbitrary metadata. </summary>
-        internal Annotations Annotations { get; }
+        internal int? SchemaVersion { get; }
     }
 }

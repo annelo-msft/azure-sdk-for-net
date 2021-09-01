@@ -54,7 +54,7 @@ directive:
     $["x-csharp-usage"] = "model,input,output,converter";
     $["x-csharp-formats"] = "json";
     delete $["x-accessibility"];
-    delete $["allOf"];
+#    delete $["allOf"];
 ```
 
 # Make ArtifactBlobDescriptor a public type

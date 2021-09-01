@@ -22,6 +22,43 @@ namespace Azure.Containers.ContainerRegistry.Tests
         {
             // Arrange
             var client = CreateBlobClient("oci-artifact");
+
+            // Act
+            OciManifest manifest = new OciManifest()
+            {
+                Config = new ArtifactBlobDescriptor()
+                {
+                    MediaType = "application/vnd.acme.rocket.config",
+                    Digest = "sha256:d25b42d3dbad5361ed2d909624d899e7254a822c9a632b582ebd3a44f9b0dbc8"
+                }
+            };
+            manifest.Layers.Add(new ArtifactBlobDescriptor()
+            {
+                MediaType = "application/vnd.oci.image.layer.v1.tar",
+                Digest = "sha256:654b93f61054e4ce90ed203bb8d556a6200d5f906cf3eca0620738d6dc18cbed",
+                Size = 28
+            });
+
+            var uploadResult = await client.UploadManifestAsync(manifest, new UploadManifestOptions()
+            {
+                MediaType = ManifestMediaType.OciManifest
+            });
+            string digest = uploadResult.Value.Digest;
+
+            // Assert
+            var downloadResult = await client.DownloadManifestAsync(digest);
+            Assert.AreEqual(digest, downloadResult.Value.Digest);
+            Assert.AreEqual(ManifestMediaType.OciManifest, downloadResult.Value.MediaType);
+
+            // Clean up
+            await client.DeleteManifestAsync(digest);
+        }
+
+        [RecordedTest, NonParallelizable]
+        public async Task CanUploadOciManifestStream()
+        {
+            // Arrange
+            var client = CreateBlobClient("oci-artifact");
             var manifest = Path.Combine(TestContext.CurrentContext.TestDirectory, "Data\\oci-artifact", "manifest.json");
             string digest = default;
 
@@ -45,7 +82,7 @@ namespace Azure.Containers.ContainerRegistry.Tests
         }
 
         [RecordedTest, NonParallelizable]
-        public async Task CanUploadOciManifestWithTag()
+        public async Task CanUploadOciManifestStreamWithTag()
         {
             // Arrange
             string repository = "oci-artifact";
