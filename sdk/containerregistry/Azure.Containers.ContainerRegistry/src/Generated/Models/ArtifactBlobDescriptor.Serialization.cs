@@ -109,7 +109,7 @@ namespace Azure.Containers.ContainerRegistry.Specialized
                         annotations = null;
                         continue;
                     }
-                    annotations = ContainerRegistry.Annotations.DeserializeAnnotations(property.Value);
+                    annotations = Annotations.DeserializeAnnotations(property.Value);
                     continue;
                 }
             }

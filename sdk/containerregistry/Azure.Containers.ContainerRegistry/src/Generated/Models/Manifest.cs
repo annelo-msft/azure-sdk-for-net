@@ -5,13 +5,13 @@
 
 #nullable disable
 
-namespace Azure.Containers.ContainerRegistry
+namespace Azure.Containers.ContainerRegistry.Specialized
 {
     /// <summary> Returns the requested manifest file. </summary>
-    internal partial class Manifest
+    public partial class Manifest
     {
         /// <summary> Initializes a new instance of Manifest. </summary>
-        internal Manifest()
+        public Manifest()
         {
         }
 
@@ -23,6 +23,6 @@ namespace Azure.Containers.ContainerRegistry
         }
 
         /// <summary> Schema version. </summary>
-        public int? SchemaVersion { get; }
+        public int? SchemaVersion { get; set; }
     }
 }

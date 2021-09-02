@@ -12,7 +12,7 @@ using Azure.Core;
 namespace Azure.Containers.ContainerRegistry
 {
     /// <summary> Additional information provided through arbitrary metadata. </summary>
-    internal partial class Annotations
+    public partial class Annotations
     {
         /// <summary> Initializes a new instance of Annotations. </summary>
         public Annotations()

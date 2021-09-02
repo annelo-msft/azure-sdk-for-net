@@ -4,6 +4,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Azure.Containers.ContainerRegistry.Specialized;
 using Azure.Core.TestFramework;
@@ -13,7 +14,7 @@ namespace Azure.Containers.ContainerRegistry.Tests
 {
     public class ContainerRegistryBlobClientLiveTests : ContainerRegistryRecordedTestBase
     {
-        public ContainerRegistryBlobClientLiveTests(bool isAsync) : base(isAsync, RecordedTestMode.Live)
+        public ContainerRegistryBlobClientLiveTests(bool isAsync) : base(isAsync, RecordedTestMode.Record)
         {
         }
 
@@ -23,7 +24,7 @@ namespace Azure.Containers.ContainerRegistry.Tests
             // Arrange
             var client = CreateBlobClient("oci-artifact");
             var layer = "654b93f61054e4ce90ed203bb8d556a6200d5f906cf3eca0620738d6dc18cbed";
-            var manifest = "manifest.json";
+            //var manifest = "manifest.json";
             var config = "config.json";
             var basePath = Path.Combine(TestContext.CurrentContext.TestDirectory, "Data\\oci-artifact");
 
@@ -39,11 +40,11 @@ namespace Azure.Containers.ContainerRegistry.Tests
                 var uploadResult = await client.UploadBlobAsync(fs);
             }
 
-            // Upload manifest
-            using (var fs = File.OpenRead(Path.Combine(basePath, manifest)))
-            {
-                var uploadResult = await client.UploadManifestAsync(fs);
-            }
+            //// Upload manifest
+            //using (var fs = File.OpenRead(Path.Combine(basePath, manifest)))
+            //{
+            //    var uploadResult = await client.UploadManifestAsync(fs);
+            //}
         }
 
         [RecordedTest, NonParallelizable]
@@ -52,21 +53,37 @@ namespace Azure.Containers.ContainerRegistry.Tests
             // Arrange
             var client = CreateBlobClient("oci-artifact");
 
+            var manifestPath = Path.Combine(TestContext.CurrentContext.TestDirectory, "TestData\\oci-artifact", "manifest.json");
+
+            OciManifest manifest = default;
+
             // Act
-            OciManifest manifest = new OciManifest()
+            using (var fs = File.OpenRead(manifestPath))
             {
-                Config = new ArtifactBlobDescriptor()
-                {
-                    MediaType = "application/vnd.acme.rocket.config",
-                    Digest = "sha256:d25b42d3dbad5361ed2d909624d899e7254a822c9a632b582ebd3a44f9b0dbc8"
-                }
-            };
-            manifest.Layers.Add(new ArtifactBlobDescriptor()
-            {
-                MediaType = "application/vnd.oci.image.layer.v1.tar",
-                Digest = "sha256:654b93f61054e4ce90ed203bb8d556a6200d5f906cf3eca0620738d6dc18cbed",
-                Size = 28
-            });
+                using var document = JsonDocument.Parse(fs);
+                manifest = OciManifest.DeserializeOciManifest(document.RootElement);
+
+                //var uploadResult = await client.UploadManifestAsync(fs);
+                //digest = uploadResult.Value.Digest;
+            }
+
+            // Act
+            //OciManifest manifest = new OciManifest()
+            //{
+            //    Config = new ArtifactBlobDescriptor()
+            //    {
+            //        MediaType = "application/vnd.acme.rocket.config",
+            //        Digest = "sha256:d25b42d3dbad5361ed2d909624d899e7254a822c9a632b582ebd3a44f9b0dbc8"
+            //    }
+            //};
+            //manifest.Layers.Add(new ArtifactBlobDescriptor()
+            //{
+            //    MediaType = "application/vnd.oci.image.layer.v1.tar",
+            //    Digest = "sha256:654b93f61054e4ce90ed203bb8d556a6200d5f906cf3eca0620738d6dc18cbed",
+            //    Size = 28
+            //});
+
+            //OciManifest manifest = JsonSerializer.Serialize<Oci>
 
             var uploadResult = await client.UploadManifestAsync(manifest);
             string digest = uploadResult.Value.Digest;
@@ -91,8 +108,8 @@ namespace Azure.Containers.ContainerRegistry.Tests
             // Act
             using (var fs = File.OpenRead(manifest))
             {
-                var uploadResult = await client.UploadManifestAsync(fs);
-                digest = uploadResult.Value.Digest;
+                //var uploadResult = await client.UploadManifestAsync(fs);
+                //digest = uploadResult.Value.Digest;
             }
 
             // Assert
@@ -118,11 +135,11 @@ namespace Azure.Containers.ContainerRegistry.Tests
             // Act
             using (var fs = File.OpenRead(manifest))
             {
-                var uploadResult = await client.UploadManifestAsync(fs, new UploadManifestOptions()
-                {
-                    Tag = tag
-                });
-                digest = uploadResult.Value.Digest;
+                //var uploadResult = await client.UploadManifestAsync(fs, new UploadManifestOptions()
+                //{
+                //    Tag = tag
+                //});
+                //digest = uploadResult.Value.Digest;
             }
 
             // Assert
@@ -153,9 +170,9 @@ namespace Azure.Containers.ContainerRegistry.Tests
 
             Assert.IsNotNull(manifest.Layers);
             Assert.AreEqual(1, manifest.Layers.Count);
-            Assert.AreEqual("application/vnd.oci.image.layer.v1.tar", manifest.Config.MediaType);
-            Assert.AreEqual("sha256:654b93f61054e4ce90ed203bb8d556a6200d5f906cf3eca0620738d6dc18cbed", manifest.Config.Digest);
-            Assert.AreEqual(28, manifest.Config.Size);
+            Assert.AreEqual("application/vnd.oci.image.layer.v1.tar", manifest.Layers[0].MediaType);
+            Assert.AreEqual("sha256:654b93f61054e4ce90ed203bb8d556a6200d5f906cf3eca0620738d6dc18cbed", manifest.Layers[0].Digest);
+            Assert.AreEqual(28, manifest.Layers[0].Size);
         }
 
         [RecordedTest, NonParallelizable]

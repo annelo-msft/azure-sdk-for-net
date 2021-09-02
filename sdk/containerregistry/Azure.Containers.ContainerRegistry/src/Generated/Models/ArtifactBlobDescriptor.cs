@@ -35,5 +35,7 @@ namespace Azure.Containers.ContainerRegistry.Specialized
             Urls = urls;
             Annotations = annotations;
         }
+        /// <summary> Additional information provided through arbitrary metadata. </summary>
+        public Annotations Annotations { get; set; }
     }
 }

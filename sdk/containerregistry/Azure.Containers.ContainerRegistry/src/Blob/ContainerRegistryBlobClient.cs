@@ -78,41 +78,68 @@ namespace Azure.Containers.ContainerRegistry.Specialized
 
         #region File Upload/Download
 
-        /// <summary>
-        /// </summary>
-        /// <param name="stream"></param>
-        /// <param name="options"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        public virtual Response<UploadManifestResult> UploadManifest(Stream stream, UploadManifestOptions options = default, CancellationToken cancellationToken = default)
-        {
-            throw new NotImplementedException();
-        }
+        ///// <summary>
+        ///// </summary>
+        ///// <param name="stream"></param>
+        ///// <param name="options"></param>
+        ///// <param name="cancellationToken"></param>
+        ///// <returns></returns>
+        //public virtual Response<UploadManifestResult> UploadManifest(Stream stream, UploadManifestOptions options = default, CancellationToken cancellationToken = default)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
-        /// <summary>
-        /// </summary>
-        /// <param name="stream"></param>
-        /// <param name="options"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        public async virtual Task<Response<UploadManifestResult>> UploadManifestAsync(Stream stream, UploadManifestOptions options = default, CancellationToken cancellationToken = default)
-        {
-            options ??= new UploadManifestOptions();
+        ///// <summary>
+        ///// </summary>
+        ///// <param name="stream"></param>
+        ///// <param name="options"></param>
+        ///// <param name="cancellationToken"></param>
+        ///// <returns></returns>
+        //public async virtual Task<Response<UploadManifestResult>> UploadManifestAsync(Stream stream, UploadManifestOptions options = default, CancellationToken cancellationToken = default)
+        //{
+        //    options ??= new UploadManifestOptions();
 
-            using DiagnosticScope scope = _clientDiagnostics.CreateScope($"{nameof(ContainerRegistryBlobClient)}.{nameof(UploadManifest)}");
-            scope.Start();
-            try
-            {
-                string tagOrDigest = options.Tag ?? ArtifactBlobDescriptor.ComputeDigest(stream);
-                ResponseWithHeaders<ContainerRegistryCreateManifestHeaders> response = await _restClient.CreateManifestAsync(_repositoryName, tagOrDigest, stream, ManifestMediaType.OciManifest.ToString(), cancellationToken).ConfigureAwait(false);
-                return Response.FromValue(new UploadManifestResult(response.Headers.DockerContentDigest), response.GetRawResponse());
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
-        }
+        //    using DiagnosticScope scope = _clientDiagnostics.CreateScope($"{nameof(ContainerRegistryBlobClient)}.{nameof(UploadManifest)}");
+        //    scope.Start();
+        //    try
+        //    {
+        //        string tagOrDigest = options.Tag ?? ArtifactBlobDescriptor.ComputeDigest(stream);
+        //        ResponseWithHeaders<ContainerRegistryCreateManifestHeaders> response = await _restClient.CreateManifestAsync(_repositoryName, tagOrDigest, stream, ManifestMediaType.OciManifest.ToString(), cancellationToken).ConfigureAwait(false);
+        //        return Response.FromValue(new UploadManifestResult(response.Headers.DockerContentDigest), response.GetRawResponse());
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        scope.Failed(e);
+        //        throw;
+        //    }
+        //}
+
+        ///// <summary>
+        ///// </summary>
+        ///// <param name="manifest"></param>
+        ///// <param name="options"></param>
+        ///// <param name="cancellationToken"></param>
+        ///// <returns></returns>
+        //public virtual Response<UploadManifestResult> UploadManifest(OciManifest manifest, UploadManifestOptions options = default, CancellationToken cancellationToken = default)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        ///// <summary>
+        ///// </summary>
+        ///// <param name="manifest"></param>
+        ///// <param name="options"></param>
+        ///// <param name="cancellationToken"></param>
+        ///// <returns></returns>
+        //public async virtual Task<Response<UploadManifestResult>> UploadManifestAsync(OciManifest manifest, UploadManifestOptions options = default, CancellationToken cancellationToken = default)
+        //{
+        //    Argument.AssertNotNull(manifest, "manifest");
+
+        //    MemoryStream stream = new MemoryStream();
+        //    Utf8JsonWriter jsonWriter = new Utf8JsonWriter(stream);
+        //    ((IUtf8JsonSerializable)manifest).Write(jsonWriter);
+        //    return await UploadManifestAsync(stream, options, cancellationToken).ConfigureAwait(false);
+        //}
 
         /// <summary>
         /// </summary>
@@ -133,12 +160,26 @@ namespace Azure.Containers.ContainerRegistry.Specialized
         /// <returns></returns>
         public async virtual Task<Response<UploadManifestResult>> UploadManifestAsync(OciManifest manifest, UploadManifestOptions options = default, CancellationToken cancellationToken = default)
         {
-            Argument.AssertNotNull(manifest, "manifest");
+            options ??= new UploadManifestOptions();
 
-            MemoryStream stream = new MemoryStream();
-            Utf8JsonWriter jsonWriter = new Utf8JsonWriter(stream);
-            ((IUtf8JsonSerializable)manifest).Write(jsonWriter);
-            return await UploadManifestAsync(stream, options, cancellationToken).ConfigureAwait(false);
+            using DiagnosticScope scope = _clientDiagnostics.CreateScope($"{nameof(ContainerRegistryBlobClient)}.{nameof(UploadManifest)}");
+            scope.Start();
+            try
+            {
+                MemoryStream stream = new MemoryStream();
+                Utf8JsonWriter jsonWriter = new Utf8JsonWriter(stream);
+                ((IUtf8JsonSerializable)manifest).Write(jsonWriter);
+                jsonWriter.Flush();
+
+                string tagOrDigest = options.Tag ?? ArtifactBlobDescriptor.ComputeDigest(stream);
+                ResponseWithHeaders<ContainerRegistryCreateManifestHeaders> response = await _restClient.CreateManifestAsync(_repositoryName, tagOrDigest, manifest, ManifestMediaType.OciManifest.ToString(), cancellationToken).ConfigureAwait(false);
+                return Response.FromValue(new UploadManifestResult(response.Headers.DockerContentDigest), response.GetRawResponse());
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
         }
 
         /// <summary>
