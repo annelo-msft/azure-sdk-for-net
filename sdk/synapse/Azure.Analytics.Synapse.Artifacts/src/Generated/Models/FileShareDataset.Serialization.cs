@@ -99,7 +99,7 @@ namespace Azure.Analytics.Synapse.Artifacts.Models
             if (Optional.IsDefined(Compression))
             {
                 writer.WritePropertyName("compression");
-                writer.WriteObjectValue(Compression);
+                writer.WriteStringValue(Compression);
             }
             writer.WriteEndObject();
             foreach (var item in AdditionalProperties)
@@ -126,7 +126,7 @@ namespace Azure.Analytics.Synapse.Artifacts.Models
             Optional<object> modifiedDatetimeEnd = default;
             Optional<DatasetStorageFormat> format = default;
             Optional<object> fileFilter = default;
-            Optional<DatasetCompression> compression = default;
+            Optional<string> compression = default;
             IDictionary<string, object> additionalProperties = default;
             Dictionary<string, object> additionalPropertiesDictionary = new Dictionary<string, object>();
             foreach (var property in element.EnumerateObject())
@@ -277,12 +277,7 @@ namespace Azure.Analytics.Synapse.Artifacts.Models
                         }
                         if (property0.NameEquals("compression"))
                         {
-                            if (property0.Value.ValueKind == JsonValueKind.Null)
-                            {
-                                property0.ThrowNonNullablePropertyIsNull();
-                                continue;
-                            }
-                            compression = DatasetCompression.DeserializeDatasetCompression(property0.Value);
+                            compression = property0.Value.GetString();
                             continue;
                         }
                     }

@@ -6,9 +6,9 @@ Run `dotnet build /t:GenerateCode` to generate code.
 > see https://aka.ms/autorest
 
 ``` yaml
-tag: package-artifacts-2019-06-01-preview
+tag: package-artifacts-2020-12-01
 require:
-    - https://github.com/Azure/azure-rest-api-specs/blob/fc5e2fbcfc3f585d38bdb1c513ce1ad2c570cf3d/specification/synapse/data-plane/readme.md
+    - https://github.com/Azure/azure-rest-api-specs/blob/3d6211cf28f83236cdf78e7cfc50efd3fb7cba72/specification/synapse/data-plane/readme.md
 namespace: Azure.Analytics.Synapse.Artifacts
 public-clients: true
 security: AADToken
@@ -26,6 +26,57 @@ directive:
   transform: $.format = "url"
 ```
 
+### Make expression object types into strings
+
+``` yaml
+directive:
+  from: swagger-document
+  where: $.definitions.DatasetCompression
+  transform: $.type = "string"
+```
+
+``` yaml
+directive:
+  from: swagger-document
+  where: $.definitions.DatasetBZip2Compression
+  transform: $.type = "string"
+```
+
+``` yaml
+directive:
+  from: swagger-document
+  where: $.definitions.DatasetGZipCompression
+  transform: $.type = "string"
+```
+
+``` yaml
+directive:
+  from: swagger-document
+  where: $.definitions.DatasetDeflateCompression
+  transform: $.type = "string"
+```
+
+``` yaml
+directive:
+  from: swagger-document
+  where: $.definitions.DatasetZipDeflateCompression
+  transform: $.type = "string"
+```
+
+``` yaml
+directive:
+  from: swagger-document
+  where: $.definitions.DatasetTarCompression
+  transform: $.type = "string"
+```
+
+``` yaml
+directive:
+  from: swagger-document
+  where: $.definitions.DatasetTarGZipCompression
+  transform: $.type = "string"
+```
+
 ### Expose serialization and deserialization methods and internal models
 
 ``` yaml
@@ -36,6 +87,7 @@ directive:
     for (var path in $)
     {
       if (path.endsWith("AvroFormat") ||
+          path.endsWith("AdditionalColumns") ||
           path.endsWith("CreateDataFlowDebugSessionRequest") ||
           path.endsWith("CopyBehaviorType") ||
           path.endsWith("CopyTranslator") ||

@@ -43,7 +43,7 @@ namespace Azure.Analytics.Synapse.Artifacts.Models
         /// <param name="format"> The format of the files. </param>
         /// <param name="fileFilter"> Specify a filter to be used to select a subset of files in the folderPath rather than all files. Type: string (or Expression with resultType string). </param>
         /// <param name="compression"> The data compression method used for the file system. </param>
-        internal FileShareDataset(string type, string description, object structure, object schema, LinkedServiceReference linkedServiceName, IDictionary<string, ParameterSpecification> parameters, IList<object> annotations, DatasetFolder folder, IDictionary<string, object> additionalProperties, object folderPath, object fileName, object modifiedDatetimeStart, object modifiedDatetimeEnd, DatasetStorageFormat format, object fileFilter, DatasetCompression compression) : base(type, description, structure, schema, linkedServiceName, parameters, annotations, folder, additionalProperties)
+        internal FileShareDataset(string type, string description, object structure, object schema, LinkedServiceReference linkedServiceName, IDictionary<string, ParameterSpecification> parameters, IList<object> annotations, DatasetFolder folder, IDictionary<string, object> additionalProperties, object folderPath, object fileName, object modifiedDatetimeStart, object modifiedDatetimeEnd, DatasetStorageFormat format, object fileFilter, string compression) : base(type, description, structure, schema, linkedServiceName, parameters, annotations, folder, additionalProperties)
         {
             FolderPath = folderPath;
             FileName = fileName;
@@ -68,6 +68,6 @@ namespace Azure.Analytics.Synapse.Artifacts.Models
         /// <summary> Specify a filter to be used to select a subset of files in the folderPath rather than all files. Type: string (or Expression with resultType string). </summary>
         public object FileFilter { get; set; }
         /// <summary> The data compression method used for the file system. </summary>
-        public DatasetCompression Compression { get; set; }
+        public string Compression { get; set; }
     }
 }

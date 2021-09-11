@@ -50,7 +50,7 @@ namespace Azure.Analytics.Synapse.Artifacts.Models
         /// <param name="modifiedDatetimeEnd"> The end of S3 object&apos;s modified datetime. Type: string (or Expression with resultType string). </param>
         /// <param name="format"> The format of files. </param>
         /// <param name="compression"> The data compression method used for the Amazon S3 object. </param>
-        internal AmazonS3Dataset(string type, string description, object structure, object schema, LinkedServiceReference linkedServiceName, IDictionary<string, ParameterSpecification> parameters, IList<object> annotations, DatasetFolder folder, IDictionary<string, object> additionalProperties, object bucketName, object key, object prefix, object version, object modifiedDatetimeStart, object modifiedDatetimeEnd, DatasetStorageFormat format, DatasetCompression compression) : base(type, description, structure, schema, linkedServiceName, parameters, annotations, folder, additionalProperties)
+        internal AmazonS3Dataset(string type, string description, object structure, object schema, LinkedServiceReference linkedServiceName, IDictionary<string, ParameterSpecification> parameters, IList<object> annotations, DatasetFolder folder, IDictionary<string, object> additionalProperties, object bucketName, object key, object prefix, object version, object modifiedDatetimeStart, object modifiedDatetimeEnd, DatasetStorageFormat format, string compression) : base(type, description, structure, schema, linkedServiceName, parameters, annotations, folder, additionalProperties)
         {
             BucketName = bucketName;
             Key = key;
@@ -78,6 +78,6 @@ namespace Azure.Analytics.Synapse.Artifacts.Models
         /// <summary> The format of files. </summary>
         public DatasetStorageFormat Format { get; set; }
         /// <summary> The data compression method used for the Amazon S3 object. </summary>
-        public DatasetCompression Compression { get; set; }
+        public string Compression { get; set; }
     }
 }

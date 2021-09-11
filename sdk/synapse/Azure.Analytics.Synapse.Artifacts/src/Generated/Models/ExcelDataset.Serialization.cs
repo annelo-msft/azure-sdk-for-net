@@ -89,7 +89,7 @@ namespace Azure.Analytics.Synapse.Artifacts.Models
             if (Optional.IsDefined(Compression))
             {
                 writer.WritePropertyName("compression");
-                writer.WriteObjectValue(Compression);
+                writer.WriteStringValue(Compression);
             }
             if (Optional.IsDefined(NullValue))
             {
@@ -119,7 +119,7 @@ namespace Azure.Analytics.Synapse.Artifacts.Models
             Optional<object> sheetName = default;
             Optional<object> range = default;
             Optional<object> firstRowAsHeader = default;
-            Optional<DatasetCompression> compression = default;
+            Optional<string> compression = default;
             Optional<object> nullValue = default;
             IDictionary<string, object> additionalProperties = default;
             Dictionary<string, object> additionalPropertiesDictionary = new Dictionary<string, object>();
@@ -251,12 +251,7 @@ namespace Azure.Analytics.Synapse.Artifacts.Models
                         }
                         if (property0.NameEquals("compression"))
                         {
-                            if (property0.Value.ValueKind == JsonValueKind.Null)
-                            {
-                                property0.ThrowNonNullablePropertyIsNull();
-                                continue;
-                            }
-                            compression = DatasetCompression.DeserializeDatasetCompression(property0.Value);
+                            compression = property0.Value.GetString();
                             continue;
                         }
                         if (property0.NameEquals("nullValue"))

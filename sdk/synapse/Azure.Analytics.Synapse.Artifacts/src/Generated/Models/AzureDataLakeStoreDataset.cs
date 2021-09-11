@@ -40,7 +40,7 @@ namespace Azure.Analytics.Synapse.Artifacts.Models
         /// <param name="fileName"> The name of the file in the Azure Data Lake Store. Type: string (or Expression with resultType string). </param>
         /// <param name="format"> The format of the Data Lake Store. </param>
         /// <param name="compression"> The data compression method used for the item(s) in the Azure Data Lake Store. </param>
-        internal AzureDataLakeStoreDataset(string type, string description, object structure, object schema, LinkedServiceReference linkedServiceName, IDictionary<string, ParameterSpecification> parameters, IList<object> annotations, DatasetFolder folder, IDictionary<string, object> additionalProperties, object folderPath, object fileName, DatasetStorageFormat format, DatasetCompression compression) : base(type, description, structure, schema, linkedServiceName, parameters, annotations, folder, additionalProperties)
+        internal AzureDataLakeStoreDataset(string type, string description, object structure, object schema, LinkedServiceReference linkedServiceName, IDictionary<string, ParameterSpecification> parameters, IList<object> annotations, DatasetFolder folder, IDictionary<string, object> additionalProperties, object folderPath, object fileName, DatasetStorageFormat format, string compression) : base(type, description, structure, schema, linkedServiceName, parameters, annotations, folder, additionalProperties)
         {
             FolderPath = folderPath;
             FileName = fileName;
@@ -56,6 +56,6 @@ namespace Azure.Analytics.Synapse.Artifacts.Models
         /// <summary> The format of the Data Lake Store. </summary>
         public DatasetStorageFormat Format { get; set; }
         /// <summary> The data compression method used for the item(s) in the Azure Data Lake Store. </summary>
-        public DatasetCompression Compression { get; set; }
+        public string Compression { get; set; }
     }
 }

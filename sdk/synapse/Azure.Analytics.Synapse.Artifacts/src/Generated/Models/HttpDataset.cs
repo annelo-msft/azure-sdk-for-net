@@ -46,7 +46,7 @@ namespace Azure.Analytics.Synapse.Artifacts.Models
         /// </param>
         /// <param name="format"> The format of files. </param>
         /// <param name="compression"> The data compression method used on files. </param>
-        internal HttpDataset(string type, string description, object structure, object schema, LinkedServiceReference linkedServiceName, IDictionary<string, ParameterSpecification> parameters, IList<object> annotations, DatasetFolder folder, IDictionary<string, object> additionalProperties, object relativeUrl, object requestMethod, object requestBody, object additionalHeaders, DatasetStorageFormat format, DatasetCompression compression) : base(type, description, structure, schema, linkedServiceName, parameters, annotations, folder, additionalProperties)
+        internal HttpDataset(string type, string description, object structure, object schema, LinkedServiceReference linkedServiceName, IDictionary<string, ParameterSpecification> parameters, IList<object> annotations, DatasetFolder folder, IDictionary<string, object> additionalProperties, object relativeUrl, object requestMethod, object requestBody, object additionalHeaders, DatasetStorageFormat format, string compression) : base(type, description, structure, schema, linkedServiceName, parameters, annotations, folder, additionalProperties)
         {
             RelativeUrl = relativeUrl;
             RequestMethod = requestMethod;
@@ -72,6 +72,6 @@ namespace Azure.Analytics.Synapse.Artifacts.Models
         /// <summary> The format of files. </summary>
         public DatasetStorageFormat Format { get; set; }
         /// <summary> The data compression method used on files. </summary>
-        public DatasetCompression Compression { get; set; }
+        public string Compression { get; set; }
     }
 }

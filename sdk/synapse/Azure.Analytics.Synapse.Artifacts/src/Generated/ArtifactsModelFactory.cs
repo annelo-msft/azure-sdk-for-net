@@ -366,6 +366,148 @@ namespace Azure.Analytics.Synapse.Artifacts.Models
             return new NotebookResource(id, name, type, etag, properties);
         }
 
+        /// <summary> Initializes a new instance of BigDataPoolResourceInfoListResult. </summary>
+        /// <param name="nextLink"> Link to the next page of results. </param>
+        /// <param name="value"> List of Big Data pools. </param>
+        /// <returns> A new <see cref="Models.BigDataPoolResourceInfoListResult"/> instance for mocking. </returns>
+        public static BigDataPoolResourceInfoListResult BigDataPoolResourceInfoListResult(string nextLink = null, IEnumerable<BigDataPoolResourceInfo> value = null)
+        {
+            value ??= new List<BigDataPoolResourceInfo>();
+
+            return new BigDataPoolResourceInfoListResult(nextLink, value?.ToList());
+        }
+
+        /// <summary> Initializes a new instance of BigDataPoolResourceInfo. </summary>
+        /// <param name="id"> Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}. </param>
+        /// <param name="name"> The name of the resource. </param>
+        /// <param name="type"> The type of the resource. E.g. &quot;Microsoft.Compute/virtualMachines&quot; or &quot;Microsoft.Storage/storageAccounts&quot;. </param>
+        /// <param name="tags"> Resource tags. </param>
+        /// <param name="location"> The geo-location where the resource lives. </param>
+        /// <param name="provisioningState"> The state of the Big Data pool. </param>
+        /// <param name="autoScale"> Auto-scaling properties. </param>
+        /// <param name="creationDate"> The time when the Big Data pool was created. </param>
+        /// <param name="autoPause"> Auto-pausing properties. </param>
+        /// <param name="isComputeIsolationEnabled"> Whether compute isolation is required or not. </param>
+        /// <param name="sessionLevelPackagesEnabled"> Whether session level packages enabled. </param>
+        /// <param name="cacheSize"> The cache size. </param>
+        /// <param name="dynamicExecutorAllocation"> Dynamic Executor Allocation. </param>
+        /// <param name="sparkEventsFolder"> The Spark events folder. </param>
+        /// <param name="nodeCount"> The number of nodes in the Big Data pool. </param>
+        /// <param name="libraryRequirements"> Library version requirements. </param>
+        /// <param name="customLibraries"> List of custom libraries/packages associated with the spark pool. </param>
+        /// <param name="sparkConfigProperties"> Spark configuration file to specify additional properties. </param>
+        /// <param name="sparkVersion"> The Apache Spark version. </param>
+        /// <param name="defaultSparkLogFolder"> The default folder where Spark logs will be written. </param>
+        /// <param name="nodeSize"> The level of compute power that each node in the Big Data pool has. </param>
+        /// <param name="nodeSizeFamily"> The kind of nodes that the Big Data pool provides. </param>
+        /// <param name="lastSucceededTimestamp"> The time when the Big Data pool was updated successfully. </param>
+        /// <returns> A new <see cref="Models.BigDataPoolResourceInfo"/> instance for mocking. </returns>
+        public static BigDataPoolResourceInfo BigDataPoolResourceInfo(string id = null, string name = null, string type = null, IDictionary<string, string> tags = null, string location = null, string provisioningState = null, AutoScaleProperties autoScale = null, DateTimeOffset? creationDate = null, AutoPauseProperties autoPause = null, bool? isComputeIsolationEnabled = null, bool? sessionLevelPackagesEnabled = null, int? cacheSize = null, DynamicExecutorAllocation dynamicExecutorAllocation = null, string sparkEventsFolder = null, int? nodeCount = null, LibraryRequirements libraryRequirements = null, IEnumerable<LibraryInfo> customLibraries = null, LibraryRequirements sparkConfigProperties = null, string sparkVersion = null, string defaultSparkLogFolder = null, NodeSize? nodeSize = null, NodeSizeFamily? nodeSizeFamily = null, DateTimeOffset? lastSucceededTimestamp = null)
+        {
+            tags ??= new Dictionary<string, string>();
+            customLibraries ??= new List<LibraryInfo>();
+
+            return new BigDataPoolResourceInfo(id, name, type, tags, location, provisioningState, autoScale, creationDate, autoPause, isComputeIsolationEnabled, sessionLevelPackagesEnabled, cacheSize, dynamicExecutorAllocation, sparkEventsFolder, nodeCount, libraryRequirements, customLibraries?.ToList(), sparkConfigProperties, sparkVersion, defaultSparkLogFolder, nodeSize, nodeSizeFamily, lastSucceededTimestamp);
+        }
+
+        /// <summary> Initializes a new instance of LibraryRequirements. </summary>
+        /// <param name="time"> The last update time of the library requirements file. </param>
+        /// <param name="content"> The library requirements. </param>
+        /// <param name="filename"> The filename of the library requirements file. </param>
+        /// <returns> A new <see cref="Models.LibraryRequirements"/> instance for mocking. </returns>
+        public static LibraryRequirements LibraryRequirements(DateTimeOffset? time = null, string content = null, string filename = null)
+        {
+            return new LibraryRequirements(time, content, filename);
+        }
+
+        /// <summary> Initializes a new instance of LibraryInfo. </summary>
+        /// <param name="name"> Name of the library. </param>
+        /// <param name="path"> Storage blob path of library. </param>
+        /// <param name="containerName"> Storage blob container name. </param>
+        /// <param name="uploadedTimestamp"> The last update time of the library. </param>
+        /// <param name="type"> Type of the library. </param>
+        /// <param name="provisioningStatus"> Provisioning status of the library/package. </param>
+        /// <param name="creatorId"> Creator Id of the library/package. </param>
+        /// <returns> A new <see cref="Models.LibraryInfo"/> instance for mocking. </returns>
+        public static LibraryInfo LibraryInfo(string name = null, string path = null, string containerName = null, DateTimeOffset? uploadedTimestamp = null, string type = null, string provisioningStatus = null, string creatorId = null)
+        {
+            return new LibraryInfo(name, path, containerName, uploadedTimestamp, type, provisioningStatus, creatorId);
+        }
+
+        /// <summary> Initializes a new instance of GitHubAccessTokenResponse. </summary>
+        /// <param name="gitHubAccessToken"></param>
+        /// <returns> A new <see cref="Models.GitHubAccessTokenResponse"/> instance for mocking. </returns>
+        public static GitHubAccessTokenResponse GitHubAccessTokenResponse(string gitHubAccessToken = null)
+        {
+            return new GitHubAccessTokenResponse(gitHubAccessToken);
+        }
+
+        /// <summary> Initializes a new instance of IntegrationRuntimeListResponse. </summary>
+        /// <param name="value"> List of integration runtimes. </param>
+        /// <param name="nextLink"> The link to the next page of results, if any remaining results exist. </param>
+        /// <returns> A new <see cref="Models.IntegrationRuntimeListResponse"/> instance for mocking. </returns>
+        public static IntegrationRuntimeListResponse IntegrationRuntimeListResponse(IEnumerable<IntegrationRuntimeResource> value = null, string nextLink = null)
+        {
+            value ??= new List<IntegrationRuntimeResource>();
+
+            return new IntegrationRuntimeListResponse(value?.ToList(), nextLink);
+        }
+
+        /// <summary> Initializes a new instance of LibraryResourceProperties. </summary>
+        /// <param name="name"> Name of the library/package. </param>
+        /// <param name="path"> Location of library/package in storage account. </param>
+        /// <param name="containerName"> Container name of the library/package. </param>
+        /// <param name="uploadedTimestamp"> The last update time of the library/package. </param>
+        /// <param name="type"> Type of the library/package. </param>
+        /// <param name="provisioningStatus"> Provisioning status of the library/package. </param>
+        /// <param name="creatorId"> Creator Id of the library/package. </param>
+        /// <returns> A new <see cref="Models.LibraryResourceProperties"/> instance for mocking. </returns>
+        public static LibraryResourceProperties LibraryResourceProperties(string name = null, string path = null, string containerName = null, string uploadedTimestamp = null, string type = null, string provisioningStatus = null, string creatorId = null)
+        {
+            return new LibraryResourceProperties(name, path, containerName, uploadedTimestamp, type, provisioningStatus, creatorId);
+        }
+
+        /// <summary> Initializes a new instance of LibraryResourceInfo. </summary>
+        /// <param name="id"> Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}. </param>
+        /// <param name="recordId"> record Id of the library/package. </param>
+        /// <param name="state"> Provisioning status of the library/package. </param>
+        /// <param name="created"> The creation time of the library/package. </param>
+        /// <param name="changed"> The last updated time of the library/package. </param>
+        /// <param name="type"> The type of the resource. E.g. LibraryArtifact. </param>
+        /// <param name="name"> Name of the library/package. </param>
+        /// <param name="operationId"> Operation Id of the operation performed on library/package. </param>
+        /// <param name="artifactId"> artifact Id of the library/package. </param>
+        /// <returns> A new <see cref="Models.LibraryResourceInfo"/> instance for mocking. </returns>
+        public static LibraryResourceInfo LibraryResourceInfo(string id = null, int? recordId = null, string state = null, string created = null, string changed = null, string type = null, string name = null, string operationId = null, string artifactId = null)
+        {
+            return new LibraryResourceInfo(id, recordId, state, created, changed, type, name, operationId, artifactId);
+        }
+
+        /// <summary> Initializes a new instance of OperationResult. </summary>
+        /// <param name="status"> Operation status. </param>
+        /// <param name="code"> Error code. </param>
+        /// <param name="message"> Error message. </param>
+        /// <param name="target"> Property name/path in request associated with error. </param>
+        /// <param name="details"> Array with additional error details. </param>
+        /// <returns> A new <see cref="Models.OperationResult"/> instance for mocking. </returns>
+        public static OperationResult OperationResult(string status = null, string code = null, string message = null, string target = null, IEnumerable<CloudError> details = null)
+        {
+            details ??= new List<CloudError>();
+
+            return new OperationResult(status, code, message, target, details?.ToList());
+        }
+
+        /// <summary> Initializes a new instance of SqlPoolInfoListResult. </summary>
+        /// <param name="nextLink"> Link to the next page of results. </param>
+        /// <param name="value"> List of SQL pools. </param>
+        /// <returns> A new <see cref="Models.SqlPoolInfoListResult"/> instance for mocking. </returns>
+        public static SqlPoolInfoListResult SqlPoolInfoListResult(string nextLink = null, IEnumerable<SqlPool> value = null)
+        {
+            value ??= new List<SqlPool>();
+
+            return new SqlPoolInfoListResult(nextLink, value?.ToList());
+        }
+
         /// <summary> Initializes a new instance of Workspace. </summary>
         /// <param name="id"> Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}. </param>
         /// <param name="name"> The name of the resource. </param>
@@ -457,148 +599,6 @@ namespace Azure.Analytics.Synapse.Artifacts.Models
         public static ManagedIdentity ManagedIdentity(string principalId = null, Guid? tenantId = null, ResourceIdentityType? type = null)
         {
             return new ManagedIdentity(principalId, tenantId, type);
-        }
-
-        /// <summary> Initializes a new instance of SqlPoolInfoListResult. </summary>
-        /// <param name="nextLink"> Link to the next page of results. </param>
-        /// <param name="value"> List of SQL pools. </param>
-        /// <returns> A new <see cref="Models.SqlPoolInfoListResult"/> instance for mocking. </returns>
-        public static SqlPoolInfoListResult SqlPoolInfoListResult(string nextLink = null, IEnumerable<SqlPool> value = null)
-        {
-            value ??= new List<SqlPool>();
-
-            return new SqlPoolInfoListResult(nextLink, value?.ToList());
-        }
-
-        /// <summary> Initializes a new instance of BigDataPoolResourceInfoListResult. </summary>
-        /// <param name="nextLink"> Link to the next page of results. </param>
-        /// <param name="value"> List of Big Data pools. </param>
-        /// <returns> A new <see cref="Models.BigDataPoolResourceInfoListResult"/> instance for mocking. </returns>
-        public static BigDataPoolResourceInfoListResult BigDataPoolResourceInfoListResult(string nextLink = null, IEnumerable<BigDataPoolResourceInfo> value = null)
-        {
-            value ??= new List<BigDataPoolResourceInfo>();
-
-            return new BigDataPoolResourceInfoListResult(nextLink, value?.ToList());
-        }
-
-        /// <summary> Initializes a new instance of BigDataPoolResourceInfo. </summary>
-        /// <param name="id"> Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}. </param>
-        /// <param name="name"> The name of the resource. </param>
-        /// <param name="type"> The type of the resource. E.g. &quot;Microsoft.Compute/virtualMachines&quot; or &quot;Microsoft.Storage/storageAccounts&quot;. </param>
-        /// <param name="tags"> Resource tags. </param>
-        /// <param name="location"> The geo-location where the resource lives. </param>
-        /// <param name="provisioningState"> The state of the Big Data pool. </param>
-        /// <param name="autoScale"> Auto-scaling properties. </param>
-        /// <param name="creationDate"> The time when the Big Data pool was created. </param>
-        /// <param name="autoPause"> Auto-pausing properties. </param>
-        /// <param name="isComputeIsolationEnabled"> Whether compute isolation is required or not. </param>
-        /// <param name="sessionLevelPackagesEnabled"> Whether session level packages enabled. </param>
-        /// <param name="cacheSize"> The cache size. </param>
-        /// <param name="dynamicExecutorAllocation"> Dynamic Executor Allocation. </param>
-        /// <param name="sparkEventsFolder"> The Spark events folder. </param>
-        /// <param name="nodeCount"> The number of nodes in the Big Data pool. </param>
-        /// <param name="libraryRequirements"> Library version requirements. </param>
-        /// <param name="customLibraries"> List of custom libraries/packages associated with the spark pool. </param>
-        /// <param name="sparkConfigProperties"> Spark configuration file to specify additional properties. </param>
-        /// <param name="sparkVersion"> The Apache Spark version. </param>
-        /// <param name="defaultSparkLogFolder"> The default folder where Spark logs will be written. </param>
-        /// <param name="nodeSize"> The level of compute power that each node in the Big Data pool has. </param>
-        /// <param name="nodeSizeFamily"> The kind of nodes that the Big Data pool provides. </param>
-        /// <param name="lastSucceededTimestamp"> The time when the Big Data pool was updated successfully. </param>
-        /// <returns> A new <see cref="Models.BigDataPoolResourceInfo"/> instance for mocking. </returns>
-        public static BigDataPoolResourceInfo BigDataPoolResourceInfo(string id = null, string name = null, string type = null, IDictionary<string, string> tags = null, string location = null, string provisioningState = null, AutoScaleProperties autoScale = null, DateTimeOffset? creationDate = null, AutoPauseProperties autoPause = null, bool? isComputeIsolationEnabled = null, bool? sessionLevelPackagesEnabled = null, int? cacheSize = null, DynamicExecutorAllocation dynamicExecutorAllocation = null, string sparkEventsFolder = null, int? nodeCount = null, LibraryRequirements libraryRequirements = null, IEnumerable<LibraryInfo> customLibraries = null, LibraryRequirements sparkConfigProperties = null, string sparkVersion = null, string defaultSparkLogFolder = null, NodeSize? nodeSize = null, NodeSizeFamily? nodeSizeFamily = null, DateTimeOffset? lastSucceededTimestamp = null)
-        {
-            tags ??= new Dictionary<string, string>();
-            customLibraries ??= new List<LibraryInfo>();
-
-            return new BigDataPoolResourceInfo(id, name, type, tags, location, provisioningState, autoScale, creationDate, autoPause, isComputeIsolationEnabled, sessionLevelPackagesEnabled, cacheSize, dynamicExecutorAllocation, sparkEventsFolder, nodeCount, libraryRequirements, customLibraries?.ToList(), sparkConfigProperties, sparkVersion, defaultSparkLogFolder, nodeSize, nodeSizeFamily, lastSucceededTimestamp);
-        }
-
-        /// <summary> Initializes a new instance of LibraryRequirements. </summary>
-        /// <param name="time"> The last update time of the library requirements file. </param>
-        /// <param name="content"> The library requirements. </param>
-        /// <param name="filename"> The filename of the library requirements file. </param>
-        /// <returns> A new <see cref="Models.LibraryRequirements"/> instance for mocking. </returns>
-        public static LibraryRequirements LibraryRequirements(DateTimeOffset? time = null, string content = null, string filename = null)
-        {
-            return new LibraryRequirements(time, content, filename);
-        }
-
-        /// <summary> Initializes a new instance of LibraryInfo. </summary>
-        /// <param name="name"> Name of the library. </param>
-        /// <param name="path"> Storage blob path of library. </param>
-        /// <param name="containerName"> Storage blob container name. </param>
-        /// <param name="uploadedTimestamp"> The last update time of the library. </param>
-        /// <param name="type"> Type of the library. </param>
-        /// <param name="provisioningStatus"> Provisioning status of the library/package. </param>
-        /// <param name="creatorId"> Creator Id of the library/package. </param>
-        /// <returns> A new <see cref="Models.LibraryInfo"/> instance for mocking. </returns>
-        public static LibraryInfo LibraryInfo(string name = null, string path = null, string containerName = null, DateTimeOffset? uploadedTimestamp = null, string type = null, string provisioningStatus = null, string creatorId = null)
-        {
-            return new LibraryInfo(name, path, containerName, uploadedTimestamp, type, provisioningStatus, creatorId);
-        }
-
-        /// <summary> Initializes a new instance of IntegrationRuntimeListResponse. </summary>
-        /// <param name="value"> List of integration runtimes. </param>
-        /// <param name="nextLink"> The link to the next page of results, if any remaining results exist. </param>
-        /// <returns> A new <see cref="Models.IntegrationRuntimeListResponse"/> instance for mocking. </returns>
-        public static IntegrationRuntimeListResponse IntegrationRuntimeListResponse(IEnumerable<IntegrationRuntimeResource> value = null, string nextLink = null)
-        {
-            value ??= new List<IntegrationRuntimeResource>();
-
-            return new IntegrationRuntimeListResponse(value?.ToList(), nextLink);
-        }
-
-        /// <summary> Initializes a new instance of LibraryResourceProperties. </summary>
-        /// <param name="name"> Name of the library/package. </param>
-        /// <param name="path"> Location of library/package in storage account. </param>
-        /// <param name="containerName"> Container name of the library/package. </param>
-        /// <param name="uploadedTimestamp"> The last update time of the library/package. </param>
-        /// <param name="type"> Type of the library/package. </param>
-        /// <param name="provisioningStatus"> Provisioning status of the library/package. </param>
-        /// <param name="creatorId"> Creator Id of the library/package. </param>
-        /// <returns> A new <see cref="Models.LibraryResourceProperties"/> instance for mocking. </returns>
-        public static LibraryResourceProperties LibraryResourceProperties(string name = null, string path = null, string containerName = null, string uploadedTimestamp = null, string type = null, string provisioningStatus = null, string creatorId = null)
-        {
-            return new LibraryResourceProperties(name, path, containerName, uploadedTimestamp, type, provisioningStatus, creatorId);
-        }
-
-        /// <summary> Initializes a new instance of LibraryResourceInfo. </summary>
-        /// <param name="id"> Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}. </param>
-        /// <param name="recordId"> record Id of the library/package. </param>
-        /// <param name="state"> Provisioning status of the library/package. </param>
-        /// <param name="created"> The creation time of the library/package. </param>
-        /// <param name="changed"> The last updated time of the library/package. </param>
-        /// <param name="type"> The type of the resource. E.g. LibraryArtifact. </param>
-        /// <param name="name"> Name of the library/package. </param>
-        /// <param name="operationId"> Operation Id of the operation performed on library/package. </param>
-        /// <param name="artifactId"> artifact Id of the library/package. </param>
-        /// <returns> A new <see cref="Models.LibraryResourceInfo"/> instance for mocking. </returns>
-        public static LibraryResourceInfo LibraryResourceInfo(string id = null, int? recordId = null, string state = null, string created = null, string changed = null, string type = null, string name = null, string operationId = null, string artifactId = null)
-        {
-            return new LibraryResourceInfo(id, recordId, state, created, changed, type, name, operationId, artifactId);
-        }
-
-        /// <summary> Initializes a new instance of OperationResult. </summary>
-        /// <param name="status"> Operation status. </param>
-        /// <param name="code"> Error code. </param>
-        /// <param name="message"> Error message. </param>
-        /// <param name="target"> Property name/path in request associated with error. </param>
-        /// <param name="details"> Array with additional error details. </param>
-        /// <returns> A new <see cref="Models.OperationResult"/> instance for mocking. </returns>
-        public static OperationResult OperationResult(string status = null, string code = null, string message = null, string target = null, IEnumerable<CloudError> details = null)
-        {
-            details ??= new List<CloudError>();
-
-            return new OperationResult(status, code, message, target, details?.ToList());
-        }
-
-        /// <summary> Initializes a new instance of GitHubAccessTokenResponse. </summary>
-        /// <param name="gitHubAccessToken"></param>
-        /// <returns> A new <see cref="Models.GitHubAccessTokenResponse"/> instance for mocking. </returns>
-        public static GitHubAccessTokenResponse GitHubAccessTokenResponse(string gitHubAccessToken = null)
-        {
-            return new GitHubAccessTokenResponse(gitHubAccessToken);
         }
 
         /// <summary> Initializes a new instance of WorkspaceIdentity. </summary>

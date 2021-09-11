@@ -42,7 +42,7 @@ namespace Azure.Analytics.Synapse.Artifacts.Models
         /// <param name="firstRowAsHeader"> When used as input, treat the first row of data as headers. When used as output,write the headers into the output as the first row of data. The default value is false. Type: boolean (or Expression with resultType boolean). </param>
         /// <param name="compression"> The data compression method used for the json dataset. </param>
         /// <param name="nullValue"> The null value string. Type: string (or Expression with resultType string). </param>
-        internal ExcelDataset(string type, string description, object structure, object schema, LinkedServiceReference linkedServiceName, IDictionary<string, ParameterSpecification> parameters, IList<object> annotations, DatasetFolder folder, IDictionary<string, object> additionalProperties, DatasetLocation location, object sheetName, object range, object firstRowAsHeader, DatasetCompression compression, object nullValue) : base(type, description, structure, schema, linkedServiceName, parameters, annotations, folder, additionalProperties)
+        internal ExcelDataset(string type, string description, object structure, object schema, LinkedServiceReference linkedServiceName, IDictionary<string, ParameterSpecification> parameters, IList<object> annotations, DatasetFolder folder, IDictionary<string, object> additionalProperties, DatasetLocation location, object sheetName, object range, object firstRowAsHeader, string compression, object nullValue) : base(type, description, structure, schema, linkedServiceName, parameters, annotations, folder, additionalProperties)
         {
             Location = location;
             SheetName = sheetName;
@@ -62,7 +62,7 @@ namespace Azure.Analytics.Synapse.Artifacts.Models
         /// <summary> When used as input, treat the first row of data as headers. When used as output,write the headers into the output as the first row of data. The default value is false. Type: boolean (or Expression with resultType boolean). </summary>
         public object FirstRowAsHeader { get; set; }
         /// <summary> The data compression method used for the json dataset. </summary>
-        public DatasetCompression Compression { get; set; }
+        public string Compression { get; set; }
         /// <summary> The null value string. Type: string (or Expression with resultType string). </summary>
         public object NullValue { get; set; }
     }
