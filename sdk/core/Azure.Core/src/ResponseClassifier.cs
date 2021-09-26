@@ -11,6 +11,9 @@ namespace Azure.Core
     /// </summary>
     public class ResponseClassifier
     {
+        public string ExceptionMessage { get; set; }
+        public string ErrorCode { get; set; }
+
         /// <summary>
         /// Specifies if the request contained in the <paramref name="message"/> should be retried.
         /// </summary>

@@ -144,5 +144,7 @@ namespace Azure
                 stream = null;
             }
         }
+
+        internal ResponseClassifier? ResponseClassifier { get; set; }
     }
 }

@@ -19,9 +19,19 @@ namespace Azure.Core
 
         private Response Response { get; }
 
+        private ResponseClassifier _responseClassifier;
+
         /// <summary>
         /// </summary>
         public bool IsError { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        public string ExceptionMessage => _responseClassifier.ExceptionMessage;
+
+        /// <summary>
+        /// </summary>
+        public string ErrorCode => _responseClassifier.ErrorCode;
 
         internal void EvaluateError(HttpMessage message)
         {
@@ -49,9 +59,11 @@ namespace Azure.Core
         /// Represents a result of Azure operation with a <see cref="JsonData"/> response.
         /// </summary>
         /// <param name="response">The response returned by the service.</param>
-        public ClassifiedResponse(Response response)
+        /// <param name="responseClassifier">The response classifier from the pipeline message</param>
+        public ClassifiedResponse(Response response, ResponseClassifier responseClassifier)
         {
             Response = response;
+            _responseClassifier = responseClassifier;
         }
 
         /// <summary>

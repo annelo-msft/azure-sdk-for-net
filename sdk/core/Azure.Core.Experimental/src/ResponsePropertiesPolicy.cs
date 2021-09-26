@@ -39,6 +39,8 @@ namespace Azure.Core
             ClassifiedResponse response = new ClassifiedResponse(message.Response);
             response.EvaluateError(message);
             message.Response = response;
+
+            response.ResponseClassifier = message.ResponseClassifier;
         }
     }
 }
