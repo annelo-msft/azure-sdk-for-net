@@ -6,6 +6,7 @@
   <Import Project="..\..\Azure.Analytics.Synapse.Shared\tests\Azure.Analytics.Synapse.Shared.Tests.projitems" Label="Shared" />
 
   <ItemGroup>
+    <PackageReference Include="Azure.Analytics.Synapse.Spark"/>
     <PackageReference Include="NUnit" />
     <PackageReference Include="NUnit3TestAdapter" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
@@ -20,6 +21,5 @@
 
   <ItemGroup>
     <ProjectReference Include="$(AzureCoreTestFramework)" />
-    <ProjectReference Include="..\src\Azure.Analytics.Synapse.Spark.csproj" />
   </ItemGroup>
 </Project>

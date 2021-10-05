@@ -88,6 +88,8 @@
     <PackageReference Update="Azure.Security.KeyVault.Keys" Version="4.2.0" />
     <PackageReference Update="Azure.Security.KeyVault.Certificates" Version="4.2.0" />
     <PackageReference Update="Azure.Storage.Blobs" Version="12.8.0" />
+    <PackageReference Update="Azure.Analytics.Synapse.Artifacts" Version="1.0.0-preview.11" />
+    <PackageReference Update="Azure.Analytics.Synapse.Spark" Version="1.0.0-preview.8" />
     
     <!-- Other approved packages -->
     <PackageReference Update="Microsoft.Azure.Amqp" Version="2.5.6" />
