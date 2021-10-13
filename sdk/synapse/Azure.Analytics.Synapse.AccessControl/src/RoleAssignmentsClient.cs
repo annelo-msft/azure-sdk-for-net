@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Azure;
 using Azure.Core;
@@ -48,6 +49,26 @@ namespace Azure.Analytics.Synapse.AccessControl
         {
             Response response = await GetRoleAssignmentByIdAsync(roleAssignmentId, default).ConfigureAwait(false);
             return Response.FromValue((RoleAssignmentDetails)response, response);
+        }
+
+        /// <summary> Check if the given principalId has access to perform list of actions at a given scope. </summary>
+        /// <param name="subject"> Subject details. </param>
+        /// <param name="actions"> List of actions. </param>
+        /// <param name="scope"> Scope at which the check access is done. </param>
+        public virtual Response<CheckPrincipalAccessResponse> CheckPrincipalAccess(SubjectInfo subject, IEnumerable<RequiredAction> actions, string scope)
+        {
+            Response response = CheckPrincipalAccessAsync(subject, actions, scope, default);
+            return Response.FromValue((CheckPrincipalAccessResponse)response, response);
+        }
+
+        /// <summary> Check if the given principalId has access to perform list of actions at a given scope. </summary>
+        /// <param name="subject"> Subject details. </param>
+        /// <param name="actions"> List of actions. </param>
+        /// <param name="scope"> Scope at which the check access is done. </param>
+        public virtual async Task<Response<CheckPrincipalAccessResponse>> CheckPrincipalAccessAsync(SubjectInfo subject, IEnumerable<RequiredAction> actions, string scope)
+        {
+            Response response = await CheckPrincipalAccessAsync(subject, actions, scope, default).ConfigureAwait(false);
+            return Response.FromValue((CheckPrincipalAccessResponse)response, response);
         }
     }
 }
