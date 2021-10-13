@@ -57,7 +57,14 @@ namespace Azure.Analytics.Synapse.AccessControl
         /// <param name="scope"> Scope at which the check access is done. </param>
         public virtual Response<CheckPrincipalAccessResponse> CheckPrincipalAccess(SubjectInfo subject, IEnumerable<RequiredAction> actions, string scope)
         {
-            Response response = CheckPrincipalAccessAsync(subject, actions, scope, default);
+            var accessRequest = new
+            {
+                subject = subject,
+                actions = actions,
+                scope = scope
+            };
+
+            Response response = CheckPrincipalAccess(RequestContent.Create(accessRequest), default);
             return Response.FromValue((CheckPrincipalAccessResponse)response, response);
         }
 
@@ -67,7 +74,14 @@ namespace Azure.Analytics.Synapse.AccessControl
         /// <param name="scope"> Scope at which the check access is done. </param>
         public virtual async Task<Response<CheckPrincipalAccessResponse>> CheckPrincipalAccessAsync(SubjectInfo subject, IEnumerable<RequiredAction> actions, string scope)
         {
-            Response response = await CheckPrincipalAccessAsync(subject, actions, scope, default).ConfigureAwait(false);
+            var accessRequest = new
+            {
+                subject = subject,
+                actions = actions,
+                scope = scope
+            };
+
+            Response response = await CheckPrincipalAccessAsync(RequestContent.Create(accessRequest), default).ConfigureAwait(false);
             return Response.FromValue((CheckPrincipalAccessResponse)response, response);
         }
     }
