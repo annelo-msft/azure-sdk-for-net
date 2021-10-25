@@ -28,12 +28,6 @@ namespace Azure
         public RequestOptions(ResponseStatusOption statusOption) => StatusOption = statusOption;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RequestOptions"/> class.
-        /// </summary>
-        /// <param name="perCall"></param>
-        public RequestOptions(Action<HttpMessage> perCall) => PerCallPolicy = new ActionPolicy(perCall);
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="RequestOptions"/> class using the given <see cref="ResponseStatusOption"/>.
         /// </summary>
         /// <param name="option"></param>
@@ -53,7 +47,27 @@ namespace Azure
         /// A <see cref="HttpPipelinePolicy"/> to use as part of this operation. This policy will be applied at the start
         /// of the underlying <see cref="HttpPipeline"/>.
         /// </summary>
-        public HttpPipelinePolicy? PerCallPolicy { get; set; }
+        internal HttpPipelinePolicy? PerCallPolicy { get; set; }
+
+        /// <summary>
+        /// Adds an <see cref="HttpPipeline"/> policy into the client pipeline. The position of policy in the pipeline is controlled by <paramref name="position"/> parameter.
+        /// If you want the policy to execute once per client request use <see cref="HttpPipelinePosition.PerCall"/> otherwise use <see cref="HttpPipelinePosition.PerRetry"/>
+        /// to run the policy for every retry. Note that the same instance of <paramref name="policy"/> would be added to all pipelines of client constructed using this <see cref="ClientOptions"/> object.
+        /// </summary>
+        /// <param name="policy">The <see cref="HttpPipelinePolicy"/> instance to be added to the pipeline.</param>
+        /// <param name="position">The position of policy in the pipeline.</param>
+        public void AddPolicy(HttpPipelinePolicy policy, HttpPipelinePosition position)
+        {
+            if (position != HttpPipelinePosition.PerCall &&
+                position != HttpPipelinePosition.PerRetry &&
+                position != HttpPipelinePosition.BeforeTransport)
+            {
+                throw new ArgumentOutOfRangeException(nameof(position), position, null);
+            }
+
+            // TODO: add policy at specified position
+            PerCallPolicy = policy;
+        }
 
         /// <summary>
         /// Applies options from <see cref="RequestOptions"/> instance to a <see cref="HttpMessage"/>.

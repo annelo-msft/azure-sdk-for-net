@@ -3,11 +3,13 @@
 
 using System;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using Azure.Core.Experimental.Tests;
 using Azure.Core.Experimental.Tests.Models;
 using Azure.Core.Pipeline;
 using Azure.Core.TestFramework;
+using Azure.Identity;
 using NUnit.Framework;
 
 namespace Azure.Core.Tests
@@ -209,6 +211,86 @@ namespace Azure.Core.Tests
                     StatusOption = ResponseStatusOption.Default
                 });
             });
+        }
+
+        [Test]
+        public async Task CanSetRequestHeader()
+        {
+            var mockResponse = new MockResponse(404);
+
+            var mockTransport = new MockTransport(mockResponse);
+            //PetStoreClient client = CreateClient(mockTransport);
+
+            PetStoreClient client = new PetStoreClient(new Uri("https://example.petstore.com"), new DefaultAzureCredential());
+
+            RequestOptions options = new RequestOptions();
+            options.AddPolicy(new SetHeaderPolicy(), HttpPipelinePosition.PerCall);
+
+            Response response = await client.GetPetAsync("snoopy", options);
+            Console.WriteLine($"Status: {response.Status}");
+
+            var doc = JsonDocument.Parse(response.Content.ToMemory());
+            Console.WriteLine($" Name: {doc.RootElement.GetProperty("name").GetString()}");
+            Console.WriteLine($" Species: {doc.RootElement.GetProperty("species").GetString()}");
+
+            // Prints:
+            //
+            // Status: 200
+            //  Name: snoopy
+            //  Species: beagle
+        }
+
+        [Test]
+        public async Task CanSetCancellationToken()
+        {
+            var mockResponse = new MockResponse(404);
+
+            var mockTransport = new MockTransport(mockResponse);
+            //PetStoreClient client = CreateClient(mockTransport);
+
+            PetStoreClient client = new PetStoreClient(new Uri("https://example.petstore.com"), new DefaultAzureCredential());
+
+            using CancellationTokenSource source = new CancellationTokenSource();
+            try
+            {
+                Response response = await client.GetPetAsync("snoopy", new RequestOptions()
+                {
+                    CancellationToken = source.Token
+                });
+                Console.WriteLine($"Status: {response.Status}");
+
+                var doc = JsonDocument.Parse(response.Content.ToMemory());
+                Console.WriteLine($" Name: {doc.RootElement.GetProperty("name").GetString()}");
+                Console.WriteLine($" Species: {doc.RootElement.GetProperty("species").GetString()}");
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
+            }
+        }
+
+        [Test]
+        public async Task ClientDoesntThrowOnError()
+        {
+            var mockResponse = new MockResponse(404);
+
+            var mockTransport = new MockTransport(mockResponse);
+            //PetStoreClient client = CreateClient(mockTransport);
+
+            PetStoreClient client = new PetStoreClient(new Uri("https://example.petstore.com"), new DefaultAzureCredential());
+
+            Response response = await client.GetPetAsync("snoopy", ResponseStatusOption.NoThrow);
+
+            if (response.IsError())
+            {
+                throw response.CreateRequestFailedException();
+            }
+
+            Console.WriteLine($"Status: {response.Status}");
+
+            var doc = JsonDocument.Parse(response.Content.ToMemory());
+            Console.WriteLine($" Name: {doc.RootElement.GetProperty("name").GetString()}");
+            Console.WriteLine($" Species: {doc.RootElement.GetProperty("species").GetString()}");
         }
 
         #region Helpers
