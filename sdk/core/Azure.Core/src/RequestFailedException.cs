@@ -74,6 +74,15 @@ namespace Azure
             ErrorCode = info.GetString(nameof(ErrorCode));
         }
 
+#pragma warning disable CA1801 // Review unused parameters
+        /// <summary>
+        /// </summary>
+        /// <param name="response"></param>
+        public RequestFailedException(Response response)
+#pragma warning restore CA1801 // Review unused parameters
+        {
+        }
+
         /// <inheritdoc />
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {

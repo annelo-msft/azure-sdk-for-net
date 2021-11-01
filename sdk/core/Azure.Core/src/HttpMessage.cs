@@ -124,6 +124,23 @@ namespace Azure.Core
         }
 
         /// <summary>
+        /// Applies options from <see cref="RequestOptions"/> instance to a <see cref="HttpMessage"/>.
+        /// </summary>
+        /// <param name="requestOptions"></param>
+        public void Apply(RequestOptions requestOptions)
+        {
+            if (requestOptions == null)
+            {
+                return;
+            }
+
+            if (requestOptions.PerCallPolicy != null)
+            {
+                SetProperty("RequestOptionsPerCallPolicyCallback", requestOptions.PerCallPolicy);
+            }
+        }
+
+        /// <summary>
         /// Disposes the request and response.
         /// </summary>
         public void Dispose()

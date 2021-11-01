@@ -22,26 +22,15 @@ namespace Azure
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RequestOptions"/> class using the given <see cref="RequestOptions"/>.
+        /// Initializes a new instance of the <see cref="RequestOptions"/> class using the given <see cref="ErrorOptions"/>.
         /// </summary>
-        /// <param name="statusOption"></param>
-        public RequestOptions(ResponseStatusOption statusOption) => StatusOption = statusOption;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RequestOptions"/> class using the given <see cref="ResponseStatusOption"/>.
-        /// </summary>
-        /// <param name="option"></param>
-        public static implicit operator RequestOptions(ResponseStatusOption option) => new RequestOptions(option);
-
-        /// <summary>
-        /// The token to check for cancellation.
-        /// </summary>
-        public CancellationToken CancellationToken { get; set; } = CancellationToken.None;
+        /// <param name="options"></param>
+        public static implicit operator RequestOptions(ErrorOptions options) => new RequestOptions {  ErrorOptions = options };
 
         /// <summary>
         /// Controls under what conditions the operation raises an exception if the underlying response indicates a failure.
         /// </summary>
-        public ResponseStatusOption StatusOption { get; set; } = ResponseStatusOption.Default;
+        public ErrorOptions ErrorOptions { get; set; } = ErrorOptions.Default;
 
         /// <summary>
         /// A <see cref="HttpPipelinePolicy"/> to use as part of this operation. This policy will be applied at the start
@@ -67,24 +56,6 @@ namespace Azure
 
             // TODO: add policy at specified position
             PerCallPolicy = policy;
-        }
-
-        /// <summary>
-        /// Applies options from <see cref="RequestOptions"/> instance to a <see cref="HttpMessage"/>.
-        /// </summary>
-        /// <param name="requestOptions"></param>
-        /// <param name="message"></param>
-        public static void Apply(RequestOptions requestOptions, HttpMessage message)
-        {
-            if (requestOptions == null)
-            {
-                return;
-            }
-
-            if (requestOptions.PerCallPolicy != null)
-            {
-                message.SetProperty("RequestOptionsPerCallPolicyCallback", requestOptions.PerCallPolicy);
-            }
         }
 
         /// <summary>
