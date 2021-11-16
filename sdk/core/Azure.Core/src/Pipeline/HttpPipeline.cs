@@ -208,40 +208,47 @@ namespace Azure.Core.Pipeline
             return CurrentHttpMessagePropertiesScope.Value;
         }
 
-        private ReadOnlyMemory<HttpPipelinePolicy> CreateRequestPipeline(HttpPipelinePolicy[] policies, HttpMessage message)
+        private ReadOnlyMemory<HttpPipelinePolicy> CreateRequestPipeline(HttpPipelinePolicy[] policies, List<(HttpPipelinePosition Position, HttpPipelinePolicy Policy)> customPolicies)
         {
-            if (!_internallyConstructed)
+            int AddCustomPolicies(HttpPipelinePosition position, int start)
             {
-                throw new InvalidOperationException("Cannot send messages with per-request policies if the pipeline wasn't constructed with HttpPipelineBuilder.");
+                int i = 0;
+                if (customPolicies != null)
+                {
+                    foreach (var policy in customPolicies)
+                    {
+                        if (policy.Position == position)
+                        {
+                            policies[start + i++] = policy.Policy;
+                        }
+                    }
+                }
+
+                return i;
             }
 
             // Copy over client policies and splice in custom policies at designated indices
             _pipeline.Slice(0, _perCallIndex).CopyTo(policies);
 
             int index = _perCallIndex;
-            int count = message.PerCallPolicies.Length;
-            message.PerCallPolicies.CopyTo(new Memory<HttpPipelinePolicy>(policies, index, count));
+            int count = AddCustomPolicies(HttpPipelinePosition.PerCall, _perCallIndex);
 
-            index += count;
-            count = _perRetryIndex - _perCallIndex;
-            _pipeline.Slice(_perCallIndex, count).CopyTo(new Memory<HttpPipelinePolicy>(policies, index, count));
 
-            index += count;
-            count = message.PerRetryPolicies.Length;
-            message.PerRetryPolicies.CopyTo(new Memory<HttpPipelinePolicy>(policies, index, count));
 
-            index += count;
+            int count = _perRetryIndex - _perCallIndex;
+            _pipeline.Slice(_perCallIndex, count).CopyTo(new Memory<HttpPipelinePolicy>(policies, _perCallIndex + custom, count));
+
+            custom += AddCustomPolicies(HttpPipelinePosition.PerRetry, _perRetryIndex + custom);
+
             count = _transportIndex - _perRetryIndex;
-            _pipeline.Slice(_perRetryIndex, count).CopyTo(new Memory<HttpPipelinePolicy>(policies, index, count));
+            _pipeline.Slice(_perRetryIndex, count).CopyTo(new Memory<HttpPipelinePolicy>(policies, _perRetryIndex + custom, count));
 
-            index += count;
-            count = message.BeforeTransportPolicies.Length;
-            message.BeforeTransportPolicies.CopyTo(new Memory<HttpPipelinePolicy>(policies, index, count));
+            custom += AddCustomPolicies(HttpPipelinePosition.BeforeTransport, _transportIndex + custom);
 
-            index += count;
-            policies[index] = _pipeline.Span[_transportIndex];
+            count = _pipeline.Length - _transportIndex;
+            _pipeline.Slice(_transportIndex, count).CopyTo(new Memory<HttpPipelinePolicy>(policies, _transportIndex + custom, count));
 
-            return new ReadOnlyMemory<HttpPipelinePolicy>(policies, 0, index + 1);
+            return new ReadOnlyMemory<HttpPipelinePolicy>(policies, 0, _pipeline.Length + custom);
         }
 
         private static void AddHttpMessageProperties(HttpMessage message)

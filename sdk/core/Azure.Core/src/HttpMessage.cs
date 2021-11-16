@@ -74,36 +74,7 @@ namespace Azure.Core
         /// </summary>
         public bool BufferResponse { get; set; }
 
-        /// <summary>
-        /// Gets or sets the network timeout value for this message. If <c>null</c> the value provided in <see cref="RetryOptions.NetworkTimeout"/> would be used instead.
-        /// Defaults to <c>null</c>.
-        /// </summary>
-        public TimeSpan? NetworkTimeout { get; set; }
-
-        internal void AddPolicies(RequestContext context)
-        {
-            if (context == null || context.Policies == null)
-            {
-                return;
-            }
-
-            var policies = new Memory<HttpPipelinePolicy>(new HttpPipelinePolicy[context.Policies.Value.Length]);
-            context.Policies?.CopyTo(policies);
-
-            PerCallPolicies = policies.Slice(RequestContext.PerCallOffset, context.PerCallPolicies);
-            PerRetryPolicies = policies.Slice(RequestContext.PerRetryOffset, context.PerRetryPolicies);
-            BeforeTransportPolicies = policies.Slice(RequestContext.BeforeTransportOffset, context.BeforeTransportPolicies);
-
-            PolicyCount = context.PerCallPolicies + context.PerRetryPolicies + context.BeforeTransportPolicies;
-
-            _policies = policies;
-        }
-
-        private ReadOnlyMemory<HttpPipelinePolicy>? _policies;
-        internal int PolicyCount { get; private set; }
-        internal ReadOnlyMemory<HttpPipelinePolicy> PerCallPolicies { get; private set; }
-        internal ReadOnlyMemory<HttpPipelinePolicy> PerRetryPolicies { get; private set; }
-        internal ReadOnlyMemory<HttpPipelinePolicy> BeforeTransportPolicies { get; private set; }
+        internal List<(HttpPipelinePosition Position, HttpPipelinePolicy Policy)>? Policies { get; set; }
 
         /// <summary>
         /// Gets a property that modifies the pipeline behavior. Please refer to individual policies documentation on what properties it supports.
