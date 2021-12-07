@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>$(RequiredTargetFrameworks)</TargetFrameworks>
-    <IncludeGeneratorSharedCode>true</IncludeGeneratorSharedCode>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,8 +24,8 @@
     <Compile Include="$(AzureCoreSharedSources)ArrayBufferWriter.cs" LinkBase="Shared" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="TestClients\llc_initial\" />
     <Folder Include="TestClients\llc_update1\" />
+    <Folder Include="TestClients\llc_update_optparams\" />
   </ItemGroup>
 
 </Project>

@@ -10,8 +10,8 @@ using Azure.Core;
 
 namespace Azure.Template.Generated
 {
-    /// <summary> Client options for TemplateServiceClient. </summary>
-    public partial class TemplateServiceClientOptions : ClientOptions
+    /// <summary> Client options for LLCClient. </summary>
+    public partial class LLCClientOptionsV1 : ClientOptions
     {
         private const ServiceVersion LatestVersion = ServiceVersion.V1_0_0;
 
@@ -24,8 +24,8 @@ namespace Azure.Template.Generated
 
         internal string Version { get; }
 
-        /// <summary> Initializes new instance of TemplateServiceClientOptions. </summary>
-        public TemplateServiceClientOptions(ServiceVersion version = LatestVersion)
+        /// <summary> Initializes new instance of LLCClientOptions. </summary>
+        public LLCClientOptionsV1(ServiceVersion version = LatestVersion)
         {
             Version = version switch
             {

@@ -7,8 +7,8 @@ Run `dotnet build /t:GenerateCode` to generate code.
 
 ``` yaml
 input-file:
-- $(this-folder)/swagger/swagger.json
-namespace: Azure.Template.Generated
+- $(this-folder)/swagger/llc_addoptparam.json
+namespace: llc_addoptparam
 public-clients: true
 low-level-client: true
 security: AADToken

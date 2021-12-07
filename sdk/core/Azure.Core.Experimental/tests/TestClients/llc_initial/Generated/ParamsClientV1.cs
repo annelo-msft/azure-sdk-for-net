@@ -14,7 +14,7 @@ using Azure.Core.Pipeline;
 namespace Azure.Template.Generated
 {
     /// <summary> The Params service client. </summary>
-    public partial class ParamsClient
+    public partial class ParamsClientV1
     {
         private static readonly string[] AuthorizationScopes = new string[] { "https://dev.azuresdkgenerated.net/.default" };
         private readonly TokenCredential _tokenCredential;
@@ -25,17 +25,17 @@ namespace Azure.Template.Generated
         /// <summary> The HTTP pipeline for sending and receiving REST requests and responses. </summary>
         public virtual HttpPipeline Pipeline => _pipeline;
 
-        /// <summary> Initializes a new instance of ParamsClient for mocking. </summary>
-        protected ParamsClient()
+        /// <summary> Initializes a new instance of ParamsClientV1 for mocking. </summary>
+        protected ParamsClientV1()
         {
         }
 
-        /// <summary> Initializes a new instance of ParamsClient. </summary>
+        /// <summary> Initializes a new instance of ParamsClientV1. </summary>
         /// <param name="credential"> A credential used to authenticate to an Azure Service. </param>
         /// <param name="endpoint"> server parameter. </param>
         /// <param name="options"> The options for configuring the client. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="credential"/> is null. </exception>
-        public ParamsClient(TokenCredential credential, Uri endpoint = null, LLCClientOptions options = null)
+        public ParamsClientV1(TokenCredential credential, Uri endpoint = null, LLCClientOptions options = null)
         {
             if (credential == null)
             {
@@ -56,7 +56,7 @@ namespace Azure.Template.Generated
         public virtual async Task<Response> NoParamsAsync(RequestContext context = null)
 #pragma warning restore AZC0002
         {
-            using var scope = _clientDiagnostics.CreateScope("ParamsClient.NoParams");
+            using var scope = _clientDiagnostics.CreateScope("ParamsClientV1.NoParams");
             scope.Start();
             try
             {
@@ -76,7 +76,7 @@ namespace Azure.Template.Generated
         public virtual Response NoParams(RequestContext context = null)
 #pragma warning restore AZC0002
         {
-            using var scope = _clientDiagnostics.CreateScope("ParamsClient.NoParams");
+            using var scope = _clientDiagnostics.CreateScope("ParamsClientV1.NoParams");
             scope.Start();
             try
             {
@@ -98,7 +98,7 @@ namespace Azure.Template.Generated
         public virtual async Task<Response> GetRequiredAsync(string parameter, RequestContext context = null)
 #pragma warning restore AZC0002
         {
-            using var scope = _clientDiagnostics.CreateScope("ParamsClient.GetRequired");
+            using var scope = _clientDiagnostics.CreateScope("ParamsClientV1.GetRequired");
             scope.Start();
             try
             {
@@ -120,7 +120,7 @@ namespace Azure.Template.Generated
         public virtual Response GetRequired(string parameter, RequestContext context = null)
 #pragma warning restore AZC0002
         {
-            using var scope = _clientDiagnostics.CreateScope("ParamsClient.GetRequired");
+            using var scope = _clientDiagnostics.CreateScope("ParamsClientV1.GetRequired");
             scope.Start();
             try
             {
@@ -143,7 +143,7 @@ namespace Azure.Template.Generated
         public virtual async Task<Response> PutRequiredOptionalAsync(string requiredParam, string optionalParam = null, RequestContext context = null)
 #pragma warning restore AZC0002
         {
-            using var scope = _clientDiagnostics.CreateScope("ParamsClient.PutRequiredOptional");
+            using var scope = _clientDiagnostics.CreateScope("ParamsClientV1.PutRequiredOptional");
             scope.Start();
             try
             {
@@ -166,7 +166,7 @@ namespace Azure.Template.Generated
         public virtual Response PutRequiredOptional(string requiredParam, string optionalParam = null, RequestContext context = null)
 #pragma warning restore AZC0002
         {
-            using var scope = _clientDiagnostics.CreateScope("ParamsClient.PutRequiredOptional");
+            using var scope = _clientDiagnostics.CreateScope("ParamsClientV1.PutRequiredOptional");
             scope.Start();
             try
             {
@@ -196,7 +196,7 @@ namespace Azure.Template.Generated
         public virtual async Task<Response> PostParametersAsync(RequestContent content, RequestContext context = null)
 #pragma warning restore AZC0002
         {
-            using var scope = _clientDiagnostics.CreateScope("ParamsClient.PostParameters");
+            using var scope = _clientDiagnostics.CreateScope("ParamsClientV1.PostParameters");
             scope.Start();
             try
             {
@@ -226,7 +226,7 @@ namespace Azure.Template.Generated
         public virtual Response PostParameters(RequestContent content, RequestContext context = null)
 #pragma warning restore AZC0002
         {
-            using var scope = _clientDiagnostics.CreateScope("ParamsClient.PostParameters");
+            using var scope = _clientDiagnostics.CreateScope("ParamsClientV1.PostParameters");
             scope.Start();
             try
             {
@@ -247,7 +247,7 @@ namespace Azure.Template.Generated
         public virtual async Task<Response> GetOptionalAsync(string optionalParam = null, RequestContext context = null)
 #pragma warning restore AZC0002
         {
-            using var scope = _clientDiagnostics.CreateScope("ParamsClient.GetOptional");
+            using var scope = _clientDiagnostics.CreateScope("ParamsClientV1.GetOptional");
             scope.Start();
             try
             {
@@ -268,7 +268,7 @@ namespace Azure.Template.Generated
         public virtual Response GetOptional(string optionalParam = null, RequestContext context = null)
 #pragma warning restore AZC0002
         {
-            using var scope = _clientDiagnostics.CreateScope("ParamsClient.GetOptional");
+            using var scope = _clientDiagnostics.CreateScope("ParamsClientV1.GetOptional");
             scope.Start();
             try
             {
