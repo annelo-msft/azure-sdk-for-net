@@ -24,5 +24,9 @@
     <Compile Include="$(AzureCoreSharedSources)AppContextSwitchHelper.cs" LinkBase="Shared" />
     <Compile Include="$(AzureCoreSharedSources)ArrayBufferWriter.cs" LinkBase="Shared" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="TestClients\llc_initial\" />
+    <Folder Include="TestClients\llc_update1\" />
+  </ItemGroup>
 
 </Project>
