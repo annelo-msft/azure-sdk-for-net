@@ -4,7 +4,9 @@
 #nullable disable
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
+using Azure.Core.Experimental.Tests.Models;
 using Azure.Core.Pipeline;
 
 namespace Azure.Core.Experimental.Tests
@@ -12,12 +14,11 @@ namespace Azure.Core.Experimental.Tests
     /// <summary> The PetStore service client. </summary>
     public partial class PetStoreClient
     {
-        /// <summary> The HTTP pipeline for sending and receiving REST requests and responses. </summary>
-        public virtual HttpPipeline Pipeline { get; }
-        private readonly string[] AuthorizationScopes = { "https://example.azurepetshop.com/.default" };
+        private HttpPipeline _pipeline { get; }
+        private readonly string[] _authorizationScopes = { "https://example.azurepetshop.com/.default" };
         private readonly TokenCredential _tokenCredential;
-        private Uri endpoint;
-        private readonly string apiVersion;
+        private Uri _endpoint;
+        private readonly string _apiVersion;
         private readonly ClientDiagnostics _clientDiagnostics;
         private ResponseClassifier _classifier200;
 
@@ -56,17 +57,16 @@ namespace Azure.Core.Experimental.Tests
             options ??= new PetStoreClientOptions();
             _clientDiagnostics = new ClientDiagnostics(options);
             _tokenCredential = credential;
-            var authPolicy = new BearerTokenAuthenticationPolicy(_tokenCredential, AuthorizationScopes);
+            var authPolicy = new BearerTokenAuthenticationPolicy(_tokenCredential, _authorizationScopes);
 
-            Pipeline = HttpPipelineBuilder.Build(options, Array.Empty<HttpPipelinePolicy>(), new HttpPipelinePolicy[] { authPolicy }, null);
-            this.endpoint = endpoint;
-            apiVersion = options.Version;
+            _pipeline = HttpPipelineBuilder.Build(options, Array.Empty<HttpPipelinePolicy>(), new HttpPipelinePolicy[] { authPolicy }, null);
+            this._endpoint = endpoint;
+            _apiVersion = options.Version;
         }
 
         /// <summary> Get a pet by its Id. </summary>
         /// <param name="id"> Id of pet to return. </param>
         /// <param name="context"> The request options. </param>
-#pragma warning disable AZC0002
         public virtual async Task<Response> GetPetAsync(string id, RequestContext context = null)
 #pragma warning restore AZC0002
         {
@@ -75,7 +75,7 @@ namespace Azure.Core.Experimental.Tests
             scope.Start();
             try
             {
-                await Pipeline.SendAsync(message, context?.CancellationToken ?? default).ConfigureAwait(false);
+                await _pipeline.SendAsync(message, context?.CancellationToken ?? default).ConfigureAwait(false);
                 var errorOptions = context?.ErrorOptions ?? ErrorOptions.Default;
 
                 if (errorOptions == ErrorOptions.NoThrow)
@@ -104,7 +104,6 @@ namespace Azure.Core.Experimental.Tests
         /// <summary> Get a pet by its Id. </summary>
         /// <param name="id"> Id of pet to return. </param>
         /// <param name="options"> The request options. </param>
-#pragma warning disable AZC0002
         public virtual Response GetPet(string id, RequestContext context = null)
 #pragma warning restore AZC0002
         {
@@ -113,7 +112,7 @@ namespace Azure.Core.Experimental.Tests
             scope.Start();
             try
             {
-                Pipeline.Send(message, context?.CancellationToken ?? default);
+                _pipeline.Send(message, context?.CancellationToken ?? default);
                 var errorOptions = context?.ErrorOptions ?? ErrorOptions.Default;
 
                 if (errorOptions == ErrorOptions.NoThrow)
@@ -145,11 +144,11 @@ namespace Azure.Core.Experimental.Tests
         /// <param name="options"> The request options. </param>
         private HttpMessage CreateGetPetRequest(string id, RequestContext context = null)
         {
-            var message = Pipeline.CreateMessage();
+            var message = _pipeline.CreateMessage();
             var request = message.Request;
             request.Method = RequestMethod.Get;
             var uri = new RawRequestUriBuilder();
-            uri.Reset(endpoint);
+            uri.Reset(_endpoint);
             uri.AppendPath("/pets/", false);
             uri.AppendPath(id, true);
             request.Uri = uri;
@@ -171,5 +170,73 @@ namespace Azure.Core.Experimental.Tests
                 }
             }
         }
+
+        #region Prove LRO Grow-Up
+
+        // Protocol method
+        public virtual async Task<Operation<BinaryData>> ImportPetAsync(bool waitForCompletion, string species, RequestContext context = null)
+        {
+            using var scope = _clientDiagnostics.CreateScope("DeviceManagementClient.ImportDevices");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateImportPetRequest(species, context);
+                return await LowLevelOperationHelpers.ProcessMessageAsync(_pipeline, message, _clientDiagnostics, "DeviceManagementClient.ImportDevices", OperationFinalStateVia.Location, context, waitForCompletion).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        // Grow-up method
+        public virtual async Task<Operation<Pet>> ImportPetAsync(bool waitForCompletion, string species, CancellationToken cancellationToken = default)
+        {
+            using var scope = _clientDiagnostics.CreateScope("DeviceManagementClient.ImportDevices");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateImportPetRequest(species, quantity, context);
+                return await LowLevelOperationHelpers.ProcessMessageAsync(_pipeline, message, _clientDiagnostics, "DeviceManagementClient.ImportDevices", OperationFinalStateVia.Location, context, waitForCompletion).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        internal HttpMessage CreateImportPetRequest(string species, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context);
+            var request = message.Request;
+            request.Method = RequestMethod.Post;
+            var uri = new RawRequestUriBuilder();
+            uri.AppendRaw("https://", false);
+            uri.AppendRaw(_endpoint.ToString(), false);
+            uri.AppendPath("/pets/import", false);
+            uri.AppendQuery("species", species, true);
+            uri.AppendQuery("api-version", _apiVersion, true);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            message.ResponseClassifier = ResponseClassifier202.Instance;
+            return message;
+        }
+
+        private sealed class ResponseClassifier202 : ResponseClassifier
+        {
+            private static ResponseClassifier _instance;
+            public static ResponseClassifier Instance => _instance ??= new ResponseClassifier202();
+            public override bool IsErrorResponse(HttpMessage message)
+            {
+                return message.Response.Status switch
+                {
+                    202 => false,
+                    _ => true
+                };
+            }
+        }
+        #endregion
     }
 }
