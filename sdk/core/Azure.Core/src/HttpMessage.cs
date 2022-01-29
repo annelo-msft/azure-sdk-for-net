@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using Azure.Core.Pipeline;
 
@@ -80,18 +81,46 @@ namespace Azure.Core
         /// </summary>
         public TimeSpan? NetworkTimeout { get; set; }
 
-        internal void AddPolicies(RequestContext? context)
+        internal void ApplyContext(RequestContext? context)
         {
-            if (context == null || context.Policies == null || context.Policies.Count == 0)
+            if (context == null)
             {
                 return;
             }
 
-            Policies ??= new(context.Policies.Count);
-            Policies.AddRange(context.Policies);
+            if (context.Policies != null && context.Policies.Count > 0)
+            {
+                Policies ??= new(context.Policies.Count);
+                Policies.AddRange(context.Policies);
+            }
+
+            _errorCodes = context.ErrorCodes;
+            _nonErrorCodes = context.NonErrorCodes;
         }
 
         internal List<(HttpPipelinePosition Position, HttpPipelinePolicy Policy)>? Policies { get; set; }
+
+        // TODO: collapse to a single value?
+        private int[]? _errorCodes { get; set; }
+        private int[]? _nonErrorCodes { get; set; }
+
+        internal bool TryClassify(int status, out bool isError)
+        {
+            if (_errorCodes?.Contains(status) ?? false)
+            {
+                isError = true;
+                return true;
+            }
+
+            if (_nonErrorCodes?.Contains(status) ?? false)
+            {
+                isError = false;
+                return true;
+            }
+
+            isError = false;
+            return false;
+        }
 
         /// <summary>
         /// Gets a property that modifies the pipeline behavior. Please refer to individual policies documentation on what properties it supports.

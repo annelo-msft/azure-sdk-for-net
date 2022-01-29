@@ -52,5 +52,17 @@ namespace Azure
             Policies ??= new();
             Policies.Add((position, policy));
         }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="statusCodes"></param>
+        /// <param name="isError"></param>
+        public void AddClassifier(int[] statusCodes, bool isError)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal int[]? ErrorCodes { get; private set; }
+        internal int[]? NonErrorCodes { get; private set; }
     }
 }
