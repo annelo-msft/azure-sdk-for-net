@@ -128,7 +128,6 @@ namespace Azure
             if (coreClassifier != null)
             {
                 CoreResponseClassifier clone = coreClassifier.Clone();
-
                 clone.Handlers = _handlers;
 
                 if (_statusCodes != null)
@@ -142,7 +141,7 @@ namespace Azure
                 return clone;
             }
 
-
+            
 
         }
     }
