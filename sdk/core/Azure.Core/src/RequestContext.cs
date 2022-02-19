@@ -117,26 +117,33 @@ namespace Azure
         /// <summary>
         /// </summary>
         /// <param name="classifier"></param>
-        internal CoreResponseClassifier Apply(CoreResponseClassifier classifier)
+        internal ResponseClassifier Apply(ResponseClassifier classifier)
         {
             if (_statusCodes == null && _handlers == null)
             {
                 return classifier;
             }
 
-            CoreResponseClassifier clone = classifier.Clone();
-
-            clone.Handlers = _handlers;
-
-            if (_statusCodes != null)
+            var coreClassifier = classifier as CoreResponseClassifier;
+            if (coreClassifier != null)
             {
-                foreach (var classification in _statusCodes)
+                CoreResponseClassifier clone = coreClassifier.Clone();
+
+                clone.Handlers = _handlers;
+
+                if (_statusCodes != null)
                 {
-                    clone.AddClassifier(classification.Status, classification.IsError);
+                    foreach (var classification in _statusCodes)
+                    {
+                        clone.AddClassifier(classification.Status, classification.IsError);
+                    }
                 }
+
+                return clone;
             }
 
-            return clone;
+
+
         }
     }
 }
