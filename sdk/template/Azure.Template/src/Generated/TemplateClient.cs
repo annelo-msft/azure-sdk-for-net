@@ -69,6 +69,10 @@ namespace Azure.Template
         /// <param name="optionalQueryParamInt"> An optional parameter. </param>
         /// <param name="optionalQueryParamBool"> An optional parameter. </param>
         /// <param name="optionalQueryParamNumber"> An optional parameter. </param>
+        /// <param name="optionalHeaderParamStringDefault"> An optional parameter. </param>
+        /// <param name="optionalHeaderParamIntDefault"> An optional parameter. </param>
+        /// <param name="optionalQueryParamStringDefault"> An optional parameter. </param>
+        /// <param name="optionalQueryParamIntDefault"> An optional parameter. </param>
         /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="secretName"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="secretName"/> is an empty string, and was expected to be non-empty. </exception>
@@ -85,7 +89,7 @@ namespace Azure.Template
         /// </code>
         /// 
         /// </remarks>
-        public virtual async Task<Response> GetSecretAsync(string secretName, string optionalHeaderParamString = null, int? optionalHeaderParamInt = null, bool? optionalHeaderParamBool = null, float? optionalHeaderParamNumber = null, string optionalQueryParamString = null, int? optionalQueryParamInt = null, bool? optionalQueryParamBool = null, float? optionalQueryParamNumber = null, RequestContext context = null)
+        public virtual async Task<Response> GetSecretAsync(string secretName, string optionalHeaderParamString = null, int? optionalHeaderParamInt = null, bool? optionalHeaderParamBool = null, float? optionalHeaderParamNumber = null, string optionalQueryParamString = null, int? optionalQueryParamInt = null, bool? optionalQueryParamBool = null, float? optionalQueryParamNumber = null, string optionalHeaderParamStringDefault = null, int? optionalHeaderParamIntDefault = null, string optionalQueryParamStringDefault = null, int? optionalQueryParamIntDefault = null, RequestContext context = null)
         {
             Argument.AssertNotNullOrEmpty(secretName, nameof(secretName));
 
@@ -93,7 +97,7 @@ namespace Azure.Template
             scope.Start();
             try
             {
-                using HttpMessage message = CreateGetSecretRequest(secretName, optionalHeaderParamString, optionalHeaderParamInt, optionalHeaderParamBool, optionalHeaderParamNumber, optionalQueryParamString, optionalQueryParamInt, optionalQueryParamBool, optionalQueryParamNumber, context);
+                using HttpMessage message = CreateGetSecretRequest(secretName, optionalHeaderParamString, optionalHeaderParamInt, optionalHeaderParamBool, optionalHeaderParamNumber, optionalQueryParamString, optionalQueryParamInt, optionalQueryParamBool, optionalQueryParamNumber, optionalHeaderParamStringDefault, optionalHeaderParamIntDefault, optionalQueryParamStringDefault, optionalQueryParamIntDefault, context);
                 return await _pipeline.ProcessMessageAsync(message, context).ConfigureAwait(false);
             }
             catch (Exception e)
@@ -113,6 +117,10 @@ namespace Azure.Template
         /// <param name="optionalQueryParamInt"> An optional parameter. </param>
         /// <param name="optionalQueryParamBool"> An optional parameter. </param>
         /// <param name="optionalQueryParamNumber"> An optional parameter. </param>
+        /// <param name="optionalHeaderParamStringDefault"> An optional parameter. </param>
+        /// <param name="optionalHeaderParamIntDefault"> An optional parameter. </param>
+        /// <param name="optionalQueryParamStringDefault"> An optional parameter. </param>
+        /// <param name="optionalQueryParamIntDefault"> An optional parameter. </param>
         /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="secretName"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="secretName"/> is an empty string, and was expected to be non-empty. </exception>
@@ -129,7 +137,7 @@ namespace Azure.Template
         /// </code>
         /// 
         /// </remarks>
-        public virtual Response GetSecret(string secretName, string optionalHeaderParamString = null, int? optionalHeaderParamInt = null, bool? optionalHeaderParamBool = null, float? optionalHeaderParamNumber = null, string optionalQueryParamString = null, int? optionalQueryParamInt = null, bool? optionalQueryParamBool = null, float? optionalQueryParamNumber = null, RequestContext context = null)
+        public virtual Response GetSecret(string secretName, string optionalHeaderParamString = null, int? optionalHeaderParamInt = null, bool? optionalHeaderParamBool = null, float? optionalHeaderParamNumber = null, string optionalQueryParamString = null, int? optionalQueryParamInt = null, bool? optionalQueryParamBool = null, float? optionalQueryParamNumber = null, string optionalHeaderParamStringDefault = null, int? optionalHeaderParamIntDefault = null, string optionalQueryParamStringDefault = null, int? optionalQueryParamIntDefault = null, RequestContext context = null)
         {
             Argument.AssertNotNullOrEmpty(secretName, nameof(secretName));
 
@@ -137,7 +145,7 @@ namespace Azure.Template
             scope.Start();
             try
             {
-                using HttpMessage message = CreateGetSecretRequest(secretName, optionalHeaderParamString, optionalHeaderParamInt, optionalHeaderParamBool, optionalHeaderParamNumber, optionalQueryParamString, optionalQueryParamInt, optionalQueryParamBool, optionalQueryParamNumber, context);
+                using HttpMessage message = CreateGetSecretRequest(secretName, optionalHeaderParamString, optionalHeaderParamInt, optionalHeaderParamBool, optionalHeaderParamNumber, optionalQueryParamString, optionalQueryParamInt, optionalQueryParamBool, optionalQueryParamNumber, optionalHeaderParamStringDefault, optionalHeaderParamIntDefault, optionalQueryParamStringDefault, optionalQueryParamIntDefault, context);
                 return _pipeline.ProcessMessage(message, context);
             }
             catch (Exception e)
@@ -147,7 +155,7 @@ namespace Azure.Template
             }
         }
 
-        internal HttpMessage CreateGetSecretRequest(string secretName, string optionalHeaderParamString, int? optionalHeaderParamInt, bool? optionalHeaderParamBool, float? optionalHeaderParamNumber, string optionalQueryParamString, int? optionalQueryParamInt, bool? optionalQueryParamBool, float? optionalQueryParamNumber, RequestContext context)
+        internal HttpMessage CreateGetSecretRequest(string secretName, string optionalHeaderParamString, int? optionalHeaderParamInt, bool? optionalHeaderParamBool, float? optionalHeaderParamNumber, string optionalQueryParamString, int? optionalQueryParamInt, bool? optionalQueryParamBool, float? optionalQueryParamNumber, string optionalHeaderParamStringDefault, int? optionalHeaderParamIntDefault, string optionalQueryParamStringDefault, int? optionalQueryParamIntDefault, RequestContext context)
         {
             var message = _pipeline.CreateMessage(context, ResponseClassifier200);
             var request = message.Request;
@@ -172,6 +180,14 @@ namespace Azure.Template
             {
                 uri.AppendQuery("optional-query-param-number", optionalQueryParamNumber.Value, true);
             }
+            if (optionalQueryParamStringDefault != null)
+            {
+                uri.AppendQuery("optional-query-param-string-default", optionalQueryParamStringDefault, true);
+            }
+            if (optionalQueryParamIntDefault != null)
+            {
+                uri.AppendQuery("optional-query-param-int-default", optionalQueryParamIntDefault.Value, true);
+            }
             uri.AppendQuery("api-version", _apiVersion, true);
             request.Uri = uri;
             if (optionalHeaderParamString != null)
@@ -189,6 +205,14 @@ namespace Azure.Template
             if (optionalHeaderParamNumber != null)
             {
                 request.Headers.Add("optional-header-param-number", optionalHeaderParamNumber.Value);
+            }
+            if (optionalHeaderParamStringDefault != null)
+            {
+                request.Headers.Add("optional-header-param-string-default", optionalHeaderParamStringDefault);
+            }
+            if (optionalHeaderParamIntDefault != null)
+            {
+                request.Headers.Add("optional-header-param-int-default", optionalHeaderParamIntDefault.Value);
             }
             request.Headers.Add("Accept", "application/json");
             return message;
