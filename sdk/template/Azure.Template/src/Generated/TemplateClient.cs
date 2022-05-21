@@ -61,6 +61,10 @@ namespace Azure.Template
 
         /// <summary> The GET operation is applicable to any secret stored in Azure Key Vault. This operation requires the secrets/get permission. </summary>
         /// <param name="secretName"> The name of the secret. </param>
+        /// <param name="optionalStringParam"> An optional parameter. </param>
+        /// <param name="optionalIntParam"> An optional parameter. </param>
+        /// <param name="optionalBoolParam"> An optional parameter. </param>
+        /// <param name="optionalNumberParam"> An optional parameter. </param>
         /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="secretName"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="secretName"/> is an empty string, and was expected to be non-empty. </exception>
@@ -77,7 +81,7 @@ namespace Azure.Template
         /// </code>
         /// 
         /// </remarks>
-        public virtual async Task<Response> GetSecretAsync(string secretName, RequestContext context = null)
+        public virtual async Task<Response> GetSecretAsync(string secretName, string optionalStringParam = null, int? optionalIntParam = null, bool? optionalBoolParam = null, float? optionalNumberParam = null, RequestContext context = null)
         {
             Argument.AssertNotNullOrEmpty(secretName, nameof(secretName));
 
@@ -85,7 +89,7 @@ namespace Azure.Template
             scope.Start();
             try
             {
-                using HttpMessage message = CreateGetSecretRequest(secretName, context);
+                using HttpMessage message = CreateGetSecretRequest(secretName, optionalStringParam, optionalIntParam, optionalBoolParam, optionalNumberParam, context);
                 return await _pipeline.ProcessMessageAsync(message, context).ConfigureAwait(false);
             }
             catch (Exception e)
@@ -97,6 +101,10 @@ namespace Azure.Template
 
         /// <summary> The GET operation is applicable to any secret stored in Azure Key Vault. This operation requires the secrets/get permission. </summary>
         /// <param name="secretName"> The name of the secret. </param>
+        /// <param name="optionalStringParam"> An optional parameter. </param>
+        /// <param name="optionalIntParam"> An optional parameter. </param>
+        /// <param name="optionalBoolParam"> An optional parameter. </param>
+        /// <param name="optionalNumberParam"> An optional parameter. </param>
         /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="secretName"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="secretName"/> is an empty string, and was expected to be non-empty. </exception>
@@ -113,7 +121,7 @@ namespace Azure.Template
         /// </code>
         /// 
         /// </remarks>
-        public virtual Response GetSecret(string secretName, RequestContext context = null)
+        public virtual Response GetSecret(string secretName, string optionalStringParam = null, int? optionalIntParam = null, bool? optionalBoolParam = null, float? optionalNumberParam = null, RequestContext context = null)
         {
             Argument.AssertNotNullOrEmpty(secretName, nameof(secretName));
 
@@ -121,7 +129,7 @@ namespace Azure.Template
             scope.Start();
             try
             {
-                using HttpMessage message = CreateGetSecretRequest(secretName, context);
+                using HttpMessage message = CreateGetSecretRequest(secretName, optionalStringParam, optionalIntParam, optionalBoolParam, optionalNumberParam, context);
                 return _pipeline.ProcessMessage(message, context);
             }
             catch (Exception e)
@@ -131,7 +139,7 @@ namespace Azure.Template
             }
         }
 
-        internal HttpMessage CreateGetSecretRequest(string secretName, RequestContext context)
+        internal HttpMessage CreateGetSecretRequest(string secretName, string optionalStringParam, int? optionalIntParam, bool? optionalBoolParam, float? optionalNumberParam, RequestContext context)
         {
             var message = _pipeline.CreateMessage(context, ResponseClassifier200);
             var request = message.Request;
@@ -140,6 +148,22 @@ namespace Azure.Template
             uri.AppendRaw(_vaultBaseUrl, false);
             uri.AppendPath("/secrets/", false);
             uri.AppendPath(secretName, true);
+            if (optionalStringParam != null)
+            {
+                uri.AppendQuery("optional-string-param", optionalStringParam, true);
+            }
+            if (optionalIntParam != null)
+            {
+                uri.AppendQuery("optional-int-param", optionalIntParam.Value, true);
+            }
+            if (optionalBoolParam != null)
+            {
+                uri.AppendQuery("optional-bool-param", optionalBoolParam.Value, true);
+            }
+            if (optionalNumberParam != null)
+            {
+                uri.AppendQuery("optional-number-param", optionalNumberParam.Value, true);
+            }
             uri.AppendQuery("api-version", _apiVersion, true);
             request.Uri = uri;
             request.Headers.Add("Accept", "application/json");
