@@ -23,6 +23,15 @@ namespace Azure
         public abstract string Id { get; }
 
         /// <summary>
+        /// </summary>
+        public virtual string ContinuationToken
+        {
+#pragma warning disable CA1065 // Do not raise exceptions in unexpected locations
+            get => throw new NotSupportedException();
+#pragma warning restore CA1065 // Do not raise exceptions in unexpected locations
+        }
+
+        /// <summary>
         /// The last HTTP response received from the server.
         /// </summary>
         /// <remarks>
