@@ -6,8 +6,8 @@ using Azure.Core.Pipeline;
 ServiceClient client = new ServiceClient();
 Operation<BinaryData> computeOp = client.ComputeResource(WaitUntil.Started, new BinaryData("<data>"));
 
-ProtocolOperation<BinaryData> rehydratedComputeOp = new ProtocolOperation<BinaryData>(computeOp.ContinuationToken, client.Pipeline);
-rehydratedComputeOp.WaitForCompletion(); // TODO: 
+//ProtocolOperation<BinaryData> rehydratedComputeOp = new ProtocolOperation<BinaryData>(computeOp.ContinuationToken, client.Pipeline);
+//rehydratedComputeOp.WaitForCompletion(); // TODO: 
 
 public class ProtocolOperation : Operation
 {
@@ -26,15 +26,16 @@ public class ProtocolOperation : Operation
     public override ValueTask<Response> UpdateStatusAsync(CancellationToken cancellationToken = default) => throw new NotImplementedException();
 }
 
-public class ProtocolOperation<T> : Operation<T>
+public class ProtocolOperation<T> : Operation<T> where T : notnull, IProtocolConvertable<T>
 {
     private ProtocolOperation _protocolOperation;
 
     public ProtocolOperation(string continuationToken, HttpPipeline pipeline, RequestContext context = null)
     {
+        _protocolOperation = new ProtocolOperation(continuationToken, pipeline, context);
     }
 
-    public override T Value => throw new NotImplementedException();
+    public override T Value => _protocolOperation.GetRawResponse().Content.ToObjectFromJson<T>();
 
     public override bool HasValue => throw new NotImplementedException();
 
@@ -56,6 +57,13 @@ public class ProtocolOperation<T> : Operation<T>
     {
         throw new NotImplementedException();
     }
+
+}
+
+public interface IProtocolConvertable<T>
+{
+    T FromResponse(Response response);
+    RequestContent ToRequestContent(T value);
 }
 
 public class ServiceClient
