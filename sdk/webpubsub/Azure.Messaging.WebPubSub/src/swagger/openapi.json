@@ -1,0 +1,349 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "WebPubSub Service",
+    "version": "2021-10-01",
+    "x-cadl-generated": [
+      {
+        "emitter": "@azure-tools/cadl-autorest"
+      }
+    ]
+  },
+  "schemes": [
+    "https"
+  ],
+  "x-ms-parameterized-host": {
+    "hostTemplate": "{Endpoint}",
+    "useSchemePrefix": false,
+    "parameters": [
+        {
+            "name": "Endpoint",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "url",
+            "x-ms-skip-url-encoding": true,
+            "x-ms-parameter-location": "client"
+        }
+    ]
+  },
+  "produces": [
+    "application/json"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "tags": [
+    {
+      "name": "webpubsub"
+    }
+  ],
+  "paths": {
+    "/api/hubs/{hub}/:send": {
+      "post": {
+        "tags": [
+          "webpubsub"
+        ],
+        "operationId": "WebPubSubService_sendToAll",
+        "summary": "Broadcast content inside request body to all the connected client connections.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/CommonParams.hub"
+          },
+          {
+            "$ref": "#/parameters/CommonParams.api-version"
+          },
+          {
+            "name": "excluded",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "message",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "byte"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "The request has been received but not yet acted upon."
+          },
+          "default": {
+            "description": "An unexpected error response",
+            "schema": {
+              "$ref": "#/definitions/ErrorDetail"
+            }
+          }
+        }
+      }
+    },
+    "/api/hubs/{hub}/groups/{group}/connections/{connectionId}": {
+      "put": {
+        "tags": [
+          "webpubsub"
+        ],
+        "operationId": "WebPubSubService_addConnectionToGroup",
+        "summary": "Add a connection to the target group.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/CommonParams.hub"
+          },
+          {
+            "$ref": "#/parameters/CommonParams.api-version"
+          },
+          {
+            "$ref": "#/parameters/GroupId"
+          },
+          {
+            "$ref": "#/parameters/ConnectionId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Http response with status code"
+          },
+          "default": {
+            "description": "An unexpected error response",
+            "schema": {
+              "$ref": "#/definitions/ErrorDetail"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "webpubsub"
+        ],
+        "operationId": "WebPubSubService_removeConnectionFromGroup",
+        "summary": "Remove a connection from the target group.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/CommonParams.hub"
+          },
+          {
+            "$ref": "#/parameters/CommonParams.api-version"
+          },
+          {
+            "$ref": "#/parameters/GroupId"
+          },
+          {
+            "$ref": "#/parameters/ConnectionId"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "There is no content to send for this request, but the headers may be useful. "
+          },
+          "default": {
+            "description": "An unexpected error response",
+            "schema": {
+              "$ref": "#/definitions/ErrorDetail"
+            }
+          }
+        }
+      }
+    },
+    "/api/hubs/{hub}/permissions/{permission}/connections/{connectionId}": {
+      "head": {
+        "tags": [
+          "webpubsub"
+        ],
+        "operationId": "WebPubSubService_checkPermission",
+        "summary": "Check if a connection has permission to the specified action.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/CommonParams.hub"
+          },
+          {
+            "$ref": "#/parameters/CommonParams.api-version"
+          },
+          {
+            "name": "permission",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "sendToGroup",
+              "joinLeaveGroup"
+            ],
+            "x-ms-enum": {
+              "name": "WebPubSubPermission",
+              "modelAsString": false
+            }
+          },
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "targetName",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Http response with status code"
+          },
+          "404": {
+            "description": "The server can not find the requested resource."
+          },
+          "default": {
+            "description": "An unexpected error response",
+            "schema": {
+              "$ref": "#/definitions/ErrorDetail"
+            }
+          }
+        }
+      }
+    },
+    "/api/hubs/{hub}/users/{userId}/groups/{group}": {
+      "put": {
+        "tags": [
+          "webpubsub"
+        ],
+        "operationId": "WebPubSubService_addUserToGroup",
+        "summary": "Add a user to the target group.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/CommonParams.hub"
+          },
+          {
+            "$ref": "#/parameters/CommonParams.api-version"
+          },
+          {
+            "$ref": "#/parameters/UserParams.userId"
+          },
+          {
+            "$ref": "#/parameters/GroupId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Http response with status code"
+          },
+          "default": {
+            "description": "An unexpected error response",
+            "schema": {
+              "$ref": "#/definitions/ErrorDetail"
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "WebPubSubService_removeUserFromGroup",
+        "summary": "Remove a user from the target group.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/CommonParams.hub"
+          },
+          {
+            "$ref": "#/parameters/CommonParams.api-version"
+          },
+          {
+            "$ref": "#/parameters/UserParams.userId"
+          },
+          {
+            "$ref": "#/parameters/GroupId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Http response with status code"
+          },
+          "default": {
+            "description": "An unexpected error response",
+            "schema": {
+              "$ref": "#/definitions/ErrorDetail"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ErrorDetail": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "target": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "message",
+        "target"
+      ]
+    },
+    "WebPubSubPermission": {
+      "type": "string",
+      "enum": [
+        "sendToGroup",
+        "joinLeaveGroup"
+      ],
+      "x-ms-enum": {
+        "name": "WebPubSubPermission",
+        "modelAsString": false
+      }
+    }
+  },
+  "parameters": {
+    "CommonParams.api-version": {
+      "name": "api-version",
+      "in": "query",
+      "required": true,
+      "type": "string",
+      "x-ms-parameter-location": "method"
+    },
+    "CommonParams.hub": {
+      "name": "hub",
+      "in": "path",
+      "required": true,
+      "pattern": "^[A-Za-z][A-Za-z0-9_`,.[\\]]{0,127}$",
+      "type": "string",
+      "x-ms-parameter-location": "method"
+    },
+    "ConnectionId": {
+      "name": "connectionId",
+      "in": "path",
+      "required": true,
+      "minLength": 1,
+      "type": "string",
+      "x-ms-parameter-location": "method"
+    },
+    "GroupId": {
+      "name": "group",
+      "in": "path",
+      "required": true,
+      "minLength": 1,
+      "maxLength": 1024,
+      "type": "string",
+      "x-ms-parameter-location": "method"
+    },
+    "UserParams.userId": {
+      "name": "userId",
+      "in": "path",
+      "required": true,
+      "minLength": 1,
+      "type": "string",
+      "x-ms-parameter-location": "method"
+    }
+  }
+}
