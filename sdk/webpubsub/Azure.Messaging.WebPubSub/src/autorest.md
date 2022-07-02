@@ -9,7 +9,7 @@ Run `dotnet build /t:GenerateCode` to generate code.
 ``` yaml
 title: WebPubSubServiceClient
 input-file:
-- https://github.com/Azure/azure-rest-api-specs/blob/39c7d63c21b9a29efe3907d9b949d1c77b021907/specification/webpubsub/data-plane/WebPubSub/stable/2021-10-01/webpubsub.json
+- $(this-folder)/swagger/openapi.json
 credential-types: AzureKeyCredential
 credential-header-name: Ocp-Apim-Subscription-Key
 ```
@@ -29,9 +29,6 @@ directive:
   where: $.paths["/api/hubs/{hub}/:generateToken"].post.operationId
   transform: return "WebPubSubService_GenerateClientTokenImpl";
 - from: swagger-document
-  where: $.paths["/api/hubs/{hub}/:generateToken"].post.parameters["0"]
-  transform: $["x-ms-parameter-location"] = "client"
-- from: swagger-document
   where: $.paths["/api/hubs/{hub}/:generateToken"].post
   transform: $["x-accessibility"] = "internal"
 ```
@@ -42,9 +39,6 @@ directive:
 - from: swagger-document
   where: $.paths["/api/hubs/{hub}/:send"].post.operationId
   transform: return "WebPubSubService_SendToAll";
-- from: swagger-document
-  where: $.paths["/api/hubs/{hub}/:send"].post.parameters["0"]
-  transform: $["x-ms-parameter-location"] = "client"
 ```
 
 ### ConnectionExistsImpl
@@ -53,9 +47,6 @@ directive:
 - from: swagger-document
   where: $.paths["/api/hubs/{hub}/connections/{connectionId}"].head.operationId
   transform: return "WebPubSubService_ConnectionExistsImpl";
-- from: swagger-document
-  where: $.paths["/api/hubs/{hub}/connections/{connectionId}"].head.parameters["0"]
-  transform: $["x-ms-parameter-location"] = "client"
 - from: swagger-document
   where: $.paths["/api/hubs/{hub}/connections/{connectionId}"].head
   transform: $["x-accessibility"] = "internal"
@@ -67,9 +58,6 @@ directive:
 - from: swagger-document
   where: $.paths["/api/hubs/{hub}/connections/{connectionId}"].delete.operationId
   transform: return "WebPubSubService_CloseConnection";
-- from: swagger-document
-  where: $.paths["/api/hubs/{hub}/connections/{connectionId}"].delete.parameters["0"]
-  transform: $["x-ms-parameter-location"] = "client"
 ```
 
 ### SendToConnection
@@ -78,9 +66,6 @@ directive:
 - from: swagger-document
   where: $.paths["/api/hubs/{hub}/connections/{connectionId}/:send"].post.operationId
   transform: return "WebPubSubService_SendToConnection";
-- from: swagger-document
-  where: $.paths["/api/hubs/{hub}/connections/{connectionId}/:send"].post.parameters["0"]
-  transform: $["x-ms-parameter-location"] = "client"
 ```
 
 ### GroupExistsImpl
@@ -89,9 +74,6 @@ directive:
 - from: swagger-document
   where: $.paths["/api/hubs/{hub}/groups/{group}"].head.operationId
   transform: return "WebPubSubService_GroupExistsImpl";
-- from: swagger-document
-  where: $.paths["/api/hubs/{hub}/groups/{group}"].head.parameters["0"]
-  transform: $["x-ms-parameter-location"] = "client"
 - from: swagger-document
   where: $.paths["/api/hubs/{hub}/groups/{group}"].head
   transform: $["x-accessibility"] = "internal"
@@ -103,9 +85,6 @@ directive:
 - from: swagger-document
   where: $.paths["/api/hubs/{hub}/groups/{group}/:send"].post.operationId
   transform: return "WebPubSubService_SendToGroup";
-- from: swagger-document
-  where: $.paths["/api/hubs/{hub}/groups/{group}/:send"].post.parameters["0"]
-  transform: $["x-ms-parameter-location"] = "client"
 ```
 
 ### AddConnectionToGroup
@@ -114,9 +93,6 @@ directive:
 - from: swagger-document
   where: $.paths["/api/hubs/{hub}/groups/{group}/connections/{connectionId}"].put.operationId
   transform: return "WebPubSubService_AddConnectionToGroup";
-- from: swagger-document
-  where: $.paths["/api/hubs/{hub}/groups/{group}/connections/{connectionId}"].put.parameters["0"]
-  transform: $["x-ms-parameter-location"] = "client"
 ```
 
 ### RemoveConnectionFromGroup
@@ -125,9 +101,6 @@ directive:
 - from: swagger-document
   where: $.paths["/api/hubs/{hub}/groups/{group}/connections/{connectionId}"].delete.operationId
   transform: return "WebPubSubService_RemoveConnectionFromGroup";
-- from: swagger-document
-  where: $.paths["/api/hubs/{hub}/groups/{group}/connections/{connectionId}"].delete.parameters["0"]
-  transform: $["x-ms-parameter-location"] = "client"
 ```
 
 ### UserExistsImpl
@@ -136,9 +109,6 @@ directive:
 - from: swagger-document
   where: $.paths["/api/hubs/{hub}/users/{userId}"].head.operationId
   transform: return "WebPubSubService_UserExistsImpl";
-- from: swagger-document
-  where: $.paths["/api/hubs/{hub}/users/{userId}"].head.parameters["0"]
-  transform: $["x-ms-parameter-location"] = "client"
 - from: swagger-document
   where: $.paths["/api/hubs/{hub}/users/{userId}"].head
   transform: $["x-accessibility"] = "internal"
@@ -150,9 +120,6 @@ directive:
 - from: swagger-document
   where: $.paths["/api/hubs/{hub}/users/{userId}/:send"].post.operationId
   transform: return "WebPubSubService_SendToUser";
-- from: swagger-document
-  where: $.paths["/api/hubs/{hub}/users/{userId}/:send"].post.parameters["0"]
-  transform: $["x-ms-parameter-location"] = "client"
 ```
 
 ### AddUserToGroup
@@ -161,9 +128,6 @@ directive:
 - from: swagger-document
   where: $.paths["/api/hubs/{hub}/users/{userId}/groups/{group}"].put.operationId
   transform: return "WebPubSubService_AddUserToGroup";
-- from: swagger-document
-  where: $.paths["/api/hubs/{hub}/users/{userId}/groups/{group}"].put.parameters["0"]
-  transform: $["x-ms-parameter-location"] = "client"
 ```
 
 ### RemoveUserFromGroup
@@ -172,9 +136,6 @@ directive:
 - from: swagger-document
   where: $.paths["/api/hubs/{hub}/users/{userId}/groups/{group}"].delete.operationId
   transform: return "WebPubSubService_RemoveUserFromGroup";
-- from: swagger-document
-  where: $.paths["/api/hubs/{hub}/users/{userId}/groups/{group}"].delete.parameters["0"]
-  transform: $["x-ms-parameter-location"] = "client"
 ```
 
 ### RemoveUserFromAllGroups
@@ -183,9 +144,6 @@ directive:
 - from: swagger-document
   where: $.paths["/api/hubs/{hub}/users/{userId}/groups"].delete.operationId
   transform: return "WebPubSubService_RemoveUserFromAllGroups";
-- from: swagger-document
-  where: $.paths["/api/hubs/{hub}/users/{userId}/groups"].delete.parameters["0"]
-  transform: $["x-ms-parameter-location"] = "client"
 ```
 
 ### GrantPermission
@@ -194,9 +152,6 @@ directive:
 - from: swagger-document
   where: $.paths["/api/hubs/{hub}/permissions/{permission}/connections/{connectionId}"].put.operationId
   transform: return "WebPubSubService_GrantPermission";
-- from: swagger-document
-  where: $.paths["/api/hubs/{hub}/permissions/{permission}/connections/{connectionId}"].put.parameters["0"]
-  transform: $["x-ms-parameter-location"] = "client"
 - from: swagger-document
   where: $.paths["/api/hubs/{hub}/permissions/{permission}/connections/{connectionId}"].put.parameters["3"].description
   transform: return "Optional. If not set, grant the permission to all the targets. If set, grant the permission to the specific target. The meaning of the target depends on the specific permission.";
@@ -212,9 +167,6 @@ directive:
   where: $.paths["/api/hubs/{hub}/permissions/{permission}/connections/{connectionId}"].delete.operationId
   transform: return "WebPubSubService_RevokePermission";
 - from: swagger-document
-  where: $.paths["/api/hubs/{hub}/permissions/{permission}/connections/{connectionId}"].delete.parameters["0"]
-  transform: $["x-ms-parameter-location"] = "client"
-- from: swagger-document
   where: $.paths["/api/hubs/{hub}/permissions/{permission}/connections/{connectionId}"].delete.parameters["3"].description
   transform: return "Optional. If not set, revoke the permission for all targets. If set, revoke the permission for the specific target. The meaning of the target depends on the specific permission.";
 - from: swagger-document
@@ -229,9 +181,6 @@ directive:
   where: $.paths["/api/hubs/{hub}/permissions/{permission}/connections/{connectionId}"].head.operationId
   transform: return "WebPubSubService_CheckPermission";
 - from: swagger-document
-  where: $.paths["/api/hubs/{hub}/permissions/{permission}/connections/{connectionId}"].head.parameters["0"]
-  transform: $["x-ms-parameter-location"] = "client"
-- from: swagger-document
   where: $.paths["/api/hubs/{hub}/permissions/{permission}/connections/{connectionId}"].head.parameters["3"].description
   transform: return "Optional. If not set, get the permission for all targets. If set, get the permission for the specific target. The meaning of the target depends on the specific permission.";
 - from: swagger-document
@@ -245,9 +194,6 @@ directive:
 - from: swagger-document
   where: $.paths["/api/hubs/{hub}/:closeConnections"].post.operationId
   transform: return "WebPubSubService_CloseAllConnections";
-- from: swagger-document
-  where: $.paths["/api/hubs/{hub}/:closeConnections"].post.parameters["0"]
-  transform: $["x-ms-parameter-location"] = "client"
 ```
 
 ### CloseGroupConnections
@@ -256,9 +202,6 @@ directive:
 - from: swagger-document
   where: $.paths["/api/hubs/{hub}/groups/{group}/:closeConnections"].post.operationId
   transform: return "WebPubSubService_CloseGroupConnections";
-- from: swagger-document
-  where: $.paths["/api/hubs/{hub}/groups/{group}/:closeConnections"].post.parameters["0"]
-  transform: $["x-ms-parameter-location"] = "client"
 ```
 
 ### CloseUserConnections
@@ -267,7 +210,4 @@ directive:
 - from: swagger-document
   where: $.paths["/api/hubs/{hub}/users/{userId}/:closeConnections"].post.operationId
   transform: return "WebPubSubService_CloseUserConnections";
-- from: swagger-document
-  where: $.paths["/api/hubs/{hub}/users/{userId}/:closeConnections"].post.parameters["0"]
-  transform: $["x-ms-parameter-location"] = "client"
 ```

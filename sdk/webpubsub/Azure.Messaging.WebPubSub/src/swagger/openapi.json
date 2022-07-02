@@ -1,0 +1,976 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "WebPubSub Service",
+    "version": "2021-10-01",
+    "x-cadl-generated": [
+      {
+        "emitter": "@azure-tools/cadl-autorest"
+      }
+    ]
+  },
+  "schemes": [
+    "https"
+  ],
+  "x-ms-parameterized-host": {
+    "hostTemplate": "{Endpoint}",
+    "useSchemePrefix": false,
+    "parameters": [
+        {
+            "name": "Endpoint",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "url",
+            "x-ms-skip-url-encoding": true,
+            "x-ms-parameter-location": "client"
+        }
+    ]
+  },
+  "produces": [
+    "application/json"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "tags": [
+    {
+      "name": "webpubsub"
+    }
+  ],
+  "paths": {
+    "/api/hubs/{hub}/:closeConnections": {
+      "post": {
+        "tags": [
+          "webpubsub"
+        ],
+        "operationId": "WebPubSubService_CloseAllConnections",
+        "summary": "Close the connections in the hub.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/CommonParameters.hub"
+          },
+          {
+            "$ref": "#/parameters/CommonParameters.api-version"
+          },
+          {
+            "name": "excluded",
+            "in": "query",
+            "required": false,
+            "description": "Exclude these connectionIds when closing the connections in the hub.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "reason",
+            "in": "query",
+            "required": false,
+            "description": "The reason closing the client connection.",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "There is no content to send for this request, but the headers may be useful. "
+          },
+          "default": {
+            "description": "A response containing error details.",
+            "schema": {
+              "$ref": "#/definitions/Azure.Core.Operations.ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/api/hubs/{hub}/:generateToken": {
+      "post": {
+        "tags": [
+          "webpubsub"
+        ],
+        "operationId": "WebPubSubService_GenerateClientToken",
+        "summary": "Close connections in the specific user.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/CommonParameters.hub"
+          },
+          {
+            "$ref": "#/parameters/CommonParameters.api-version"
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "required": false,
+            "description": "The user Id.",
+            "type": "string"
+          },
+          {
+            "name": "role",
+            "in": "query",
+            "required": false,
+            "description": "Roles that the connection with the generated token will have.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "minutesToExpire",
+            "in": "query",
+            "required": false,
+            "description": "The expire time of the generated token.",
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Http response with status code"
+          },
+          "default": {
+            "description": "A response containing error details.",
+            "schema": {
+              "$ref": "#/definitions/Azure.Core.Operations.ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/api/hubs/{hub}/:send": {
+      "post": {
+        "tags": [
+          "webpubsub"
+        ],
+        "operationId": "WebPubSubService_SendToAll",
+        "summary": "Broadcast content inside request body to all the connected client connections.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/CommonParameters.hub"
+          },
+          {
+            "$ref": "#/parameters/CommonParameters.api-version"
+          },
+          {
+            "name": "excluded",
+            "in": "query",
+            "required": false,
+            "description": "Excluded connection Ids.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/parameters/MessageBytes.contentType"
+          },
+          {
+            "$ref": "#/parameters/MessageBytes.message"
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "The request has been received but not yet acted upon."
+          },
+          "default": {
+            "description": "A response containing error details.",
+            "schema": {
+              "$ref": "#/definitions/Azure.Core.Operations.ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/api/hubs/{hub}/connections/{connectionId}": {
+      "head": {
+        "tags": [
+          "webpubsub"
+        ],
+        "operationId": "WebPubSubService_ConnectionExists",
+        "summary": "Check if the connection with the given connectionId exists.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/CommonParameters.hub"
+          },
+          {
+            "$ref": "#/parameters/CommonParameters.api-version"
+          },
+          {
+            "$ref": "#/parameters/ConnectionIdParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Http response with status code"
+          },
+          "404": {
+            "description": "The server can not find the requested resource."
+          },
+          "default": {
+            "description": "A response containing error details.",
+            "schema": {
+              "$ref": "#/definitions/Azure.Core.Operations.ErrorResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "webpubsub"
+        ],
+        "operationId": "WebPubSubService_CloseConnection",
+        "summary": "Close the client connection.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/CommonParameters.hub"
+          },
+          {
+            "$ref": "#/parameters/CommonParameters.api-version"
+          },
+          {
+            "$ref": "#/parameters/ConnectionIdParameter"
+          },
+          {
+            "name": "reason",
+            "in": "query",
+            "required": false,
+            "description": "The reason closing the client connection.",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Http response with status code"
+          },
+          "default": {
+            "description": "A response containing error details.",
+            "schema": {
+              "$ref": "#/definitions/Azure.Core.Operations.ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/api/hubs/{hub}/connections/{connectionId}/:send": {
+      "post": {
+        "tags": [
+          "webpubsub"
+        ],
+        "operationId": "WebPubSubService_SendToConnection",
+        "summary": "Send content inside request body to the specific connection.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/CommonParameters.hub"
+          },
+          {
+            "$ref": "#/parameters/CommonParameters.api-version"
+          },
+          {
+            "$ref": "#/parameters/ConnectionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/MessageBytes.contentType"
+          },
+          {
+            "$ref": "#/parameters/MessageBytes.message"
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "The request has been received but not yet acted upon."
+          },
+          "default": {
+            "description": "A response containing error details.",
+            "schema": {
+              "$ref": "#/definitions/Azure.Core.Operations.ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/api/hubs/{hub}/groups/{group}": {
+      "head": {
+        "tags": [
+          "webpubsub"
+        ],
+        "operationId": "WebPubSubService_GroupExists",
+        "summary": "Check if there are any client connections inside the given group",
+        "parameters": [
+          {
+            "$ref": "#/parameters/CommonParameters.hub"
+          },
+          {
+            "$ref": "#/parameters/CommonParameters.api-version"
+          },
+          {
+            "$ref": "#/parameters/GroupParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Http response with status code"
+          },
+          "404": {
+            "description": "The server can not find the requested resource."
+          },
+          "default": {
+            "description": "A response containing error details.",
+            "schema": {
+              "$ref": "#/definitions/Azure.Core.Operations.ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/api/hubs/{hub}/groups/{group}/:closeConnections": {
+      "post": {
+        "tags": [
+          "webpubsub"
+        ],
+        "operationId": "WebPubSubService_CloseGroupConnections",
+        "summary": "Close connections in the specific group.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/CommonParameters.hub"
+          },
+          {
+            "$ref": "#/parameters/CommonParameters.api-version"
+          },
+          {
+            "$ref": "#/parameters/GroupParameter"
+          },
+          {
+            "name": "excluded",
+            "in": "query",
+            "required": false,
+            "description": "Exclude these connectionIds when closing the connections in the group.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "reason",
+            "in": "query",
+            "required": false,
+            "description": "The reason closing the client connection.",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "There is no content to send for this request, but the headers may be useful. "
+          },
+          "default": {
+            "description": "A response containing error details.",
+            "schema": {
+              "$ref": "#/definitions/Azure.Core.Operations.ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/api/hubs/{hub}/groups/{group}/:send": {
+      "post": {
+        "tags": [
+          "webpubsub"
+        ],
+        "operationId": "WebPubSubService_SendToGroup",
+        "summary": "Send content inside request body to a group of connections.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/CommonParameters.hub"
+          },
+          {
+            "$ref": "#/parameters/CommonParameters.api-version"
+          },
+          {
+            "$ref": "#/parameters/GroupParameter"
+          },
+          {
+            "$ref": "#/parameters/MessageBytes.contentType"
+          },
+          {
+            "name": "excluded",
+            "in": "query",
+            "required": false,
+            "description": "Excluded connectionIds.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/parameters/MessageBytes.message"
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "The request has been received but not yet acted upon."
+          },
+          "default": {
+            "description": "A response containing error details.",
+            "schema": {
+              "$ref": "#/definitions/Azure.Core.Operations.ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/api/hubs/{hub}/groups/{group}/connections/{connectionId}": {
+      "put": {
+        "tags": [
+          "webpubsub"
+        ],
+        "operationId": "WebPubSubService_AddConnectionToGroup",
+        "summary": "Add a connection to the target group.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/CommonParameters.hub"
+          },
+          {
+            "$ref": "#/parameters/CommonParameters.api-version"
+          },
+          {
+            "$ref": "#/parameters/GroupParameter"
+          },
+          {
+            "$ref": "#/parameters/ConnectionIdParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Http response with status code"
+          },
+          "default": {
+            "description": "A response containing error details.",
+            "schema": {
+              "$ref": "#/definitions/Azure.Core.Operations.ErrorResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "webpubsub"
+        ],
+        "operationId": "WebPubSubService_RemoveConnectionFromGroup",
+        "summary": "Remove a connection from the target group.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/CommonParameters.hub"
+          },
+          {
+            "$ref": "#/parameters/CommonParameters.api-version"
+          },
+          {
+            "$ref": "#/parameters/ConnectionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/GroupParameter"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "There is no content to send for this request, but the headers may be useful. "
+          },
+          "default": {
+            "description": "A response containing error details.",
+            "schema": {
+              "$ref": "#/definitions/Azure.Core.Operations.ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/api/hubs/{hub}/permissions/{permission}/connections/{connectionId}": {
+      "put": {
+        "tags": [
+          "webpubsub"
+        ],
+        "operationId": "WebPubSubService_GrantPermission",
+        "summary": "Grant permission to the connection.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/CommonParameters.hub"
+          },
+          {
+            "$ref": "#/parameters/CommonParameters.api-version"
+          },
+          {
+            "$ref": "#/parameters/PermissionParameter"
+          },
+          {
+            "$ref": "#/parameters/ConnectionIdParameter"
+          },
+          {
+            "name": "targetName",
+            "in": "query",
+            "required": false,
+            "description": "The meaning of the target depends on the specific permission. For joinLeaveGroup and sendToGroup, targetName is a required parameter standing for the group name.",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Http response with status code"
+          },
+          "default": {
+            "description": "A response containing error details.",
+            "schema": {
+              "$ref": "#/definitions/Azure.Core.Operations.ErrorResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "webpubsub"
+        ],
+        "operationId": "WebPubSubService_RevokePermission",
+        "summary": "Revoke permission for the connection.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/CommonParameters.hub"
+          },
+          {
+            "$ref": "#/parameters/CommonParameters.api-version"
+          },
+          {
+            "$ref": "#/parameters/PermissionParameter"
+          },
+          {
+            "$ref": "#/parameters/ConnectionIdParameter"
+          },
+          {
+            "name": "targetName",
+            "in": "query",
+            "required": false,
+            "description": "The meaning of the target depends on the specific permission. For joinLeaveGroup and sendToGroup, targetName is a required parameter standing for the group name.",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "There is no content to send for this request, but the headers may be useful. "
+          },
+          "default": {
+            "description": "A response containing error details.",
+            "schema": {
+              "$ref": "#/definitions/Azure.Core.Operations.ErrorResponse"
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "webpubsub"
+        ],
+        "operationId": "WebPubSubService_CheckPermission",
+        "summary": "Check if a connection has permission to the specified action.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/CommonParameters.hub"
+          },
+          {
+            "$ref": "#/parameters/CommonParameters.api-version"
+          },
+          {
+            "$ref": "#/parameters/PermissionParameter"
+          },
+          {
+            "$ref": "#/parameters/ConnectionIdParameter"
+          },
+          {
+            "name": "targetName",
+            "in": "query",
+            "required": false,
+            "description": "The meaning of the target depends on the specific permission. For joinLeaveGroup and sendToGroup, targetName is a required parameter standing for the group name.",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Http response with status code"
+          },
+          "404": {
+            "description": "The server can not find the requested resource."
+          },
+          "default": {
+            "description": "A response containing error details.",
+            "schema": {
+              "$ref": "#/definitions/Azure.Core.Operations.ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/api/hubs/{hub}/users/{userId}": {
+      "head": {
+        "tags": [
+          "webpubsub"
+        ],
+        "operationId": "WebPubSubService_UserExists",
+        "summary": "Check if there are any client connections connected for the given user.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/CommonParameters.hub"
+          },
+          {
+            "$ref": "#/parameters/CommonParameters.api-version"
+          },
+          {
+            "$ref": "#/parameters/UserIdParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Http response with status code"
+          },
+          "default": {
+            "description": "A response containing error details.",
+            "schema": {
+              "$ref": "#/definitions/Azure.Core.Operations.ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/api/hubs/{hub}/users/{userId}/:closeConnections": {
+      "post": {
+        "tags": [
+          "webpubsub"
+        ],
+        "operationId": "WebPubSubService_CloseUserConnections",
+        "summary": "Close connections in the specific user.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/CommonParameters.hub"
+          },
+          {
+            "$ref": "#/parameters/CommonParameters.api-version"
+          },
+          {
+            "$ref": "#/parameters/UserIdParameter"
+          },
+          {
+            "name": "excluded",
+            "in": "query",
+            "required": false,
+            "description": "Exclude these connectionIds when closing the connections in the group.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "reason",
+            "in": "query",
+            "required": false,
+            "description": "The reason closing the client connection.",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "There is no content to send for this request, but the headers may be useful. "
+          },
+          "default": {
+            "description": "A response containing error details.",
+            "schema": {
+              "$ref": "#/definitions/Azure.Core.Operations.ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/api/hubs/{hub}/users/{userId}/:send": {
+      "post": {
+        "tags": [
+          "webpubsub"
+        ],
+        "operationId": "WebPubSubService_SendToUser",
+        "summary": "Send content inside request body to the specific user.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/CommonParameters.hub"
+          },
+          {
+            "$ref": "#/parameters/CommonParameters.api-version"
+          },
+          {
+            "$ref": "#/parameters/UserIdParameter"
+          },
+          {
+            "$ref": "#/parameters/MessageBytes.contentType"
+          },
+          {
+            "$ref": "#/parameters/MessageBytes.message"
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "The request has been received but not yet acted upon."
+          },
+          "default": {
+            "description": "A response containing error details.",
+            "schema": {
+              "$ref": "#/definitions/Azure.Core.Operations.ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/api/hubs/{hub}/users/{userId}/groups": {
+      "delete": {
+        "tags": [
+          "webpubsub"
+        ],
+        "operationId": "WebPubSubService_RemoveUserFromAllGroups",
+        "summary": "Remove a user from all groups.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/CommonParameters.hub"
+          },
+          {
+            "$ref": "#/parameters/CommonParameters.api-version"
+          },
+          {
+            "$ref": "#/parameters/UserIdParameter"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "There is no content to send for this request, but the headers may be useful. "
+          },
+          "default": {
+            "description": "A response containing error details.",
+            "schema": {
+              "$ref": "#/definitions/Azure.Core.Operations.ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/api/hubs/{hub}/users/{userId}/groups/{group}": {
+      "put": {
+        "tags": [
+          "webpubsub"
+        ],
+        "operationId": "WebPubSubService_AddUserToGroup",
+        "summary": "Add a user to the target group.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/CommonParameters.hub"
+          },
+          {
+            "$ref": "#/parameters/CommonParameters.api-version"
+          },
+          {
+            "$ref": "#/parameters/GroupParameter"
+          },
+          {
+            "$ref": "#/parameters/UserIdParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Http response with status code"
+          },
+          "default": {
+            "description": "A response containing error details.",
+            "schema": {
+              "$ref": "#/definitions/Azure.Core.Operations.ErrorResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "WebPubSubService_RemoveUserFromGroup",
+        "summary": "Remove a user from the target group.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/CommonParameters.hub"
+          },
+          {
+            "$ref": "#/parameters/CommonParameters.api-version"
+          },
+          {
+            "$ref": "#/parameters/UserIdParameter"
+          },
+          {
+            "$ref": "#/parameters/GroupParameter"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "There is no content to send for this request, but the headers may be useful. "
+          },
+          "default": {
+            "description": "A response containing error details.",
+            "schema": {
+              "$ref": "#/definitions/Azure.Core.Operations.ErrorResponse"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Azure.Core.Operations.Error": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "description": "One of a server-defined set of error codes."
+        },
+        "message": {
+          "type": "string",
+          "description": "A human-readable representation of the error."
+        },
+        "target": {
+          "type": "string",
+          "description": "The target of the error."
+        },
+        "details": {
+          "$ref": "#/definitions/Azure.Core.Operations.Error",
+          "description": "An array of details about specific errors that led to this reported error."
+        },
+        "innererror": {
+          "$ref": "#/definitions/Azure.Core.Operations.InnerError",
+          "description": "An object containing more specific information than the current object about the error."
+        }
+      },
+      "description": "The error object.",
+      "required": [
+        "code",
+        "message",
+        "details"
+      ]
+    },
+    "Azure.Core.Operations.ErrorResponse": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "$ref": "#/definitions/Azure.Core.Operations.Error",
+          "description": "The error object."
+        }
+      },
+      "description": "A response containing error details.",
+      "required": [
+        "error"
+      ]
+    },
+    "Azure.Core.Operations.InnerError": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "description": "One of a server-defined set of error codes."
+        },
+        "innererror": {
+          "$ref": "#/definitions/Azure.Core.Operations.InnerError",
+          "description": "Inner error."
+        }
+      },
+      "description": "An object containing more specific information about the error. As per Microsoft One API guidelines - https://github.com/Microsoft/api-guidelines/blob/vNext/Guidelines.md#7102-error-condition-responses.",
+      "required": [
+        "code"
+      ]
+    },
+    "WebPubSubPermission": {
+      "type": "string",
+      "enum": [
+        "sendToGroup",
+        "joinLeaveGroup"
+      ],
+      "x-ms-enum": {
+        "name": "WebPubSubPermission",
+        "modelAsString": false
+      }
+    }
+  },
+  "parameters": {
+    "CommonParameters.api-version": {
+      "name": "api-version",
+      "in": "query",
+      "required": true,
+      "description": "The version of the REST APIs.",
+      "type": "string",
+      "x-ms-parameter-location": "method"
+    },
+    "CommonParameters.hub": {
+      "name": "hub",
+      "in": "path",
+      "required": true,
+      "description": "Target hub name, which should start with alphabetic characters and only contain alpha-numeric characters or underscore.",
+      "pattern": "^[A-Za-z][A-Za-z0-9_`,.[\\]]{0,127}$",
+      "type": "string",
+      "x-ms-parameter-location": "client"
+    },
+    "ConnectionIdParameter": {
+      "name": "connectionId",
+      "in": "path",
+      "required": true,
+      "description": "Target connection Id",
+      "minLength": 1,
+      "type": "string",
+      "x-ms-parameter-location": "method"
+    },
+    "GroupParameter": {
+      "name": "group",
+      "in": "path",
+      "required": true,
+      "description": "Target group name, which length should be greater than 0 and less than 1025.",
+      "minLength": 1,
+      "maxLength": 1024,
+      "type": "string",
+      "x-ms-parameter-location": "method"
+    },
+    "MessageBytes.contentType": {
+      "name": "contentType",
+      "in": "header",
+      "required": true,
+      "type": "string",
+      "enum": [
+        "application/octet-stream"
+      ],
+      "x-ms-parameter-location": "method"
+    },
+    "MessageBytes.message": {
+      "name": "message",
+      "in": "body",
+      "required": true,
+      "description": "The payload body.",
+      "schema": {
+        "type": "string",
+        "format": "byte"
+      },
+      "x-ms-parameter-location": "method"
+    },
+    "PermissionParameter": {
+      "name": "permission",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "enum": [
+        "sendToGroup",
+        "joinLeaveGroup"
+      ],
+      "x-ms-enum": {
+        "name": "WebPubSubPermission",
+        "modelAsString": false
+      },
+      "x-ms-parameter-location": "method"
+    },
+    "UserIdParameter": {
+      "name": "userId",
+      "in": "path",
+      "required": true,
+      "description": "Target user Id.",
+      "minLength": 1,
+      "type": "string",
+      "x-ms-parameter-location": "method"
+    }
+  }
+}

@@ -23,5 +23,8 @@
     <Compile Include="$(AzureCoreSharedSources)ArrayBufferWriter.cs" LinkBase="Shared" />
     <Compile Include="$(AzureCoreSharedSources)AzureResourceProviderNamespaceAttribute.cs" LinkBase="Shared" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="swagger\" />
+  </ItemGroup>
 
 </Project>
