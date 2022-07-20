@@ -117,14 +117,58 @@
         "requiredString": {
           "type": "string"
         },
+        "requiredBytes": {
+          "type": "string",
+          "format": "byte"
+        },
         "requiredInt": {
           "type": "integer",
           "format": "int32"
+        },
+        "requiredLong": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "requiredFloat": {
+          "type": "number",
+          "format": "float"
+        },
+        "requiredDouble": {
+          "type": "number",
+          "format": "double"
+        },
+        "requiredPlainDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "requiredPlainTime": {
+          "type": "string",
+          "format": "time"
+        },
+        "requiredZonedDateTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "requiredDuration": {
+          "type": "string",
+          "format": "duration"
+        },
+        "requiredBoolean": {
+          "type": "boolean"
         }
       },
       "required": [
         "requiredString",
-        "requiredInt"
+        "requiredBytes",
+        "requiredInt",
+        "requiredLong",
+        "requiredFloat",
+        "requiredDouble",
+        "requiredPlainDate",
+        "requiredPlainTime",
+        "requiredZonedDateTime",
+        "requiredDuration",
+        "requiredBoolean"
       ]
     }
   },

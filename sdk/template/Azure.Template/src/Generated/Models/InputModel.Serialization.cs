@@ -17,8 +17,26 @@ namespace Azure.Template.Models
             writer.WriteStartObject();
             writer.WritePropertyName("requiredString");
             writer.WriteStringValue(RequiredString);
+            writer.WritePropertyName("requiredBytes");
+            writer.WriteBase64StringValue(RequiredBytes, "D");
             writer.WritePropertyName("requiredInt");
             writer.WriteNumberValue(RequiredInt);
+            writer.WritePropertyName("requiredLong");
+            writer.WriteNumberValue(RequiredLong);
+            writer.WritePropertyName("requiredFloat");
+            writer.WriteNumberValue(RequiredFloat);
+            writer.WritePropertyName("requiredDouble");
+            writer.WriteNumberValue(RequiredDouble);
+            writer.WritePropertyName("requiredPlainDate");
+            writer.WriteStringValue(RequiredPlainDate, "D");
+            writer.WritePropertyName("requiredPlainTime");
+            writer.WriteStringValue(RequiredPlainTime, "T");
+            writer.WritePropertyName("requiredZonedDateTime");
+            writer.WriteStringValue(RequiredZonedDateTime, "O");
+            writer.WritePropertyName("requiredDuration");
+            writer.WriteStringValue(RequiredDuration, "P");
+            writer.WritePropertyName("requiredBoolean");
+            writer.WriteBooleanValue(RequiredBoolean);
             writer.WriteEndObject();
         }
     }

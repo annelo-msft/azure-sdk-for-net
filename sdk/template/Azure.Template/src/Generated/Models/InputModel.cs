@@ -14,22 +14,62 @@ namespace Azure.Template.Models
     {
         /// <summary> Initializes a new instance of InputModel. </summary>
         /// <param name="requiredString"></param>
+        /// <param name="requiredBytes"></param>
         /// <param name="requiredInt"></param>
-        /// <exception cref="ArgumentNullException"> <paramref name="requiredString"/> is null. </exception>
-        public InputModel(string requiredString, int requiredInt)
+        /// <param name="requiredLong"></param>
+        /// <param name="requiredFloat"></param>
+        /// <param name="requiredDouble"></param>
+        /// <param name="requiredPlainDate"></param>
+        /// <param name="requiredPlainTime"></param>
+        /// <param name="requiredZonedDateTime"></param>
+        /// <param name="requiredDuration"></param>
+        /// <param name="requiredBoolean"></param>
+        /// <exception cref="ArgumentNullException"> <paramref name="requiredString"/> or <paramref name="requiredBytes"/> is null. </exception>
+        public InputModel(string requiredString, byte[] requiredBytes, int requiredInt, long requiredLong, float requiredFloat, double requiredDouble, DateTimeOffset requiredPlainDate, TimeSpan requiredPlainTime, DateTimeOffset requiredZonedDateTime, TimeSpan requiredDuration, bool requiredBoolean)
         {
             if (requiredString == null)
             {
                 throw new ArgumentNullException(nameof(requiredString));
             }
+            if (requiredBytes == null)
+            {
+                throw new ArgumentNullException(nameof(requiredBytes));
+            }
 
             RequiredString = requiredString;
+            RequiredBytes = requiredBytes;
             RequiredInt = requiredInt;
+            RequiredLong = requiredLong;
+            RequiredFloat = requiredFloat;
+            RequiredDouble = requiredDouble;
+            RequiredPlainDate = requiredPlainDate;
+            RequiredPlainTime = requiredPlainTime;
+            RequiredZonedDateTime = requiredZonedDateTime;
+            RequiredDuration = requiredDuration;
+            RequiredBoolean = requiredBoolean;
         }
 
         /// <summary> Gets the required string. </summary>
         public string RequiredString { get; }
+        /// <summary> Gets the required bytes. </summary>
+        public byte[] RequiredBytes { get; }
         /// <summary> Gets the required int. </summary>
         public int RequiredInt { get; }
+        /// <summary> Gets the required long. </summary>
+        public long RequiredLong { get; }
+        /// <summary> Gets the required float. </summary>
+        public float RequiredFloat { get; }
+        /// <summary> Gets the required double. </summary>
+        public double RequiredDouble { get; }
+        /// <summary> Gets the required plain date. </summary>
+        public DateTimeOffset RequiredPlainDate { get; }
+        /// <summary> Gets the required plain time. </summary>
+        public TimeSpan RequiredPlainTime { get; }
+        /// <summary> Gets the required zoned date time. </summary>
+        public DateTimeOffset RequiredZonedDateTime { get; }
+        /// <summary> Gets the required duration. </summary>
+        public TimeSpan RequiredDuration { get; }
+        /// <summary> Gets the required boolean. </summary>
+        public bool RequiredBoolean { get; }
     }
 }
