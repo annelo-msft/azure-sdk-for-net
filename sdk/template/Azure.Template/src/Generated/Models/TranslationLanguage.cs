@@ -7,6 +7,7 @@
 
 using System;
 using System.ComponentModel;
+using Azure.Core;
 
 namespace Azure.Template.Models
 {
@@ -19,7 +20,9 @@ namespace Azure.Template.Models
         /// <exception cref="ArgumentNullException"> <paramref name="value"/> is null. </exception>
         public TranslationLanguage(string value)
         {
-            _value = value ?? throw new ArgumentNullException(nameof(value));
+            Argument.AssertNotNull(value, nameof(value));
+
+            _value = value;
         }
 
         private const string EnglishValue = "English";
