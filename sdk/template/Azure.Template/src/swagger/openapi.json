@@ -1,9 +1,9 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "ModelCollectionPropertiesClient",
+    "title": "CollectionPropertiesBasicClient",
     "version": "1.0.0",
-    "description": "Illustrates input, output, and round-trip models that have properties that are collections of models.",
+    "description": "Illustrates input, output, and round-trip models with required collection type properties.",
     "x-cadl-generated": [
       {
         "emitter": "@azure-tools/cadl-autorest"
@@ -24,14 +24,14 @@
   "paths": {
     "/models": {
       "post": {
-        "operationId": "ModelCollectionProperties_SendCollectionModel",
+        "operationId": "CollectionPropertiesBasic_SendCollectionModel",
         "parameters": [
           {
             "name": "input",
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/ModelCollectionModel"
+              "$ref": "#/definitions/InputModel"
             }
           }
         ],
@@ -48,13 +48,13 @@
         }
       },
       "get": {
-        "operationId": "ModelCollectionProperties_GetCollectionModel",
+        "operationId": "CollectionPropertiesBasic_GetCollectionModel",
         "parameters": [],
         "responses": {
           "200": {
             "description": "The request has succeeded.",
             "schema": {
-              "$ref": "#/definitions/ModelCollectionModel"
+              "$ref": "#/definitions/OutputModel"
             }
           },
           "default": {
@@ -66,22 +66,22 @@
         }
       },
       "put": {
-        "operationId": "ModelCollectionProperties_SetCollectionModel",
+        "operationId": "CollectionPropertiesBasic_SetCollectionModel",
         "parameters": [
           {
             "name": "input",
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/ModelCollectionModel"
+              "$ref": "#/definitions/RoundTripModel"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Simple model with model collection properties",
+            "description": "The request has succeeded.",
             "schema": {
-              "$ref": "#/definitions/ModelCollectionModel"
+              "$ref": "#/definitions/RoundTripModel"
             }
           },
           "default": {
@@ -156,50 +156,85 @@
         "code"
       ]
     },
-    "ModelCollectionModel": {
+    "InputModel": {
       "type": "object",
       "properties": {
-        "requiredModelCollection": {
+        "requiredStringList": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/SimpleModel"
+            "type": "string"
           },
-          "x-ms-identifiers": [],
-          "x-cadl-name": "SimpleModel[]",
-          "description": "Required collection of models."
+          "x-cadl-name": "string[]",
+          "description": "Required collection of strings, illustrating a collection of reference types."
         },
-        "optionalModelCollection": {
+        "requiredIntList": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/SimpleModel"
+            "type": "integer",
+            "format": "int32"
           },
-          "x-ms-identifiers": [],
-          "x-cadl-name": "SimpleModel[]",
-          "description": "Optional collection of models."
+          "x-cadl-name": "int32[]",
+          "description": "Required collection of ints, illustrating a collection of value types."
         }
       },
-      "description": "Simple model with model collection properties",
+      "description": "Input model with collection properties",
       "required": [
-        "requiredModelCollection"
+        "requiredStringList",
+        "requiredIntList"
       ]
     },
-    "SimpleModel": {
+    "OutputModel": {
       "type": "object",
       "properties": {
-        "requiredString": {
-          "type": "string",
-          "description": "Required string."
+        "requiredStringList": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-cadl-name": "string[]",
+          "description": "Required collection of strings, illustrating a collection of reference types."
         },
-        "requiredInt": {
-          "type": "integer",
-          "format": "int32",
-          "description": "Required int."
+        "requiredIntList": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "x-cadl-name": "int32[]",
+          "description": "Required collection of ints, illustrating a collection of value types."
         }
       },
-      "description": "Simple model that will appear in a collection.",
+      "description": "Output model with collection properties",
       "required": [
-        "requiredString",
-        "requiredInt"
+        "requiredStringList",
+        "requiredIntList"
+      ]
+    },
+    "RoundTripModel": {
+      "type": "object",
+      "properties": {
+        "requiredStringList": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-cadl-name": "string[]",
+          "description": "Required collection of strings, illustrating a collection of reference types."
+        },
+        "requiredIntList": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "x-cadl-name": "int32[]",
+          "description": "Required collection of ints, illustrating a collection of value types."
+        }
+      },
+      "description": "Round-trip model with collection properties",
+      "required": [
+        "requiredStringList",
+        "requiredIntList"
       ]
     }
   },
