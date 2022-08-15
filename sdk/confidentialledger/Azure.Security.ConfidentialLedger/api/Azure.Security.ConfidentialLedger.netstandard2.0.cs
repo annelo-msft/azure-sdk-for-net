@@ -1,12 +1,19 @@
 namespace Azure.Security.ConfidentialLedger
 {
+    public partial class ConfidentialLedgerCertificateClient
+    {
+        protected ConfidentialLedgerCertificateClient() { }
+        public ConfidentialLedgerCertificateClient(System.Uri certificateEndpoint, Azure.Core.TokenCredential credential) { }
+        public ConfidentialLedgerCertificateClient(System.Uri certificateEndpoint, Azure.Core.TokenCredential credential, Azure.Security.ConfidentialLedger.ConfidentialLedgerClientOptions options) { }
+        public virtual Azure.Core.Pipeline.HttpPipeline Pipeline { get { throw null; } }
+        public virtual Azure.Response GetLedgerIdentity(string ledgerId, Azure.RequestContext context = null) { throw null; }
+        public virtual System.Threading.Tasks.Task<Azure.Response> GetLedgerIdentityAsync(string ledgerId, Azure.RequestContext context = null) { throw null; }
+    }
     public partial class ConfidentialLedgerClient
     {
         protected ConfidentialLedgerClient() { }
         public ConfidentialLedgerClient(System.Uri ledgerEndpoint, Azure.Core.TokenCredential credential) { }
         public ConfidentialLedgerClient(System.Uri ledgerEndpoint, Azure.Core.TokenCredential credential, Azure.Security.ConfidentialLedger.ConfidentialLedgerClientOptions options) { }
-        public ConfidentialLedgerClient(System.Uri ledgerEndpoint, System.Security.Cryptography.X509Certificates.X509Certificate2 clientCertificate) { }
-        public ConfidentialLedgerClient(System.Uri ledgerEndpoint, System.Security.Cryptography.X509Certificates.X509Certificate2 clientCertificate, Azure.Security.ConfidentialLedger.ConfidentialLedgerClientOptions options) { }
         public virtual Azure.Core.Pipeline.HttpPipeline Pipeline { get { throw null; } }
         public virtual Azure.Response CreateLedgerEntry(Azure.Core.RequestContent content, string collectionId = null, Azure.RequestContext context = null) { throw null; }
         public virtual System.Threading.Tasks.Task<Azure.Response> CreateLedgerEntryAsync(Azure.Core.RequestContent content, string collectionId = null, Azure.RequestContext context = null) { throw null; }
@@ -34,33 +41,10 @@ namespace Azure.Security.ConfidentialLedger
         public virtual System.Threading.Tasks.Task<Azure.Response> GetTransactionStatusAsync(string transactionId, Azure.RequestContext context = null) { throw null; }
         public virtual Azure.Response GetUser(string userId, Azure.RequestContext context = null) { throw null; }
         public virtual System.Threading.Tasks.Task<Azure.Response> GetUserAsync(string userId, Azure.RequestContext context = null) { throw null; }
-        public virtual Azure.Operation PostLedgerEntry(Azure.WaitUntil waitUntil, Azure.Core.RequestContent content, string collectionId = null, Azure.RequestContext context = null) { throw null; }
-        public virtual System.Threading.Tasks.Task<Azure.Operation> PostLedgerEntryAsync(Azure.WaitUntil waitUntil, Azure.Core.RequestContent content, string collectionId = null, Azure.RequestContext context = null) { throw null; }
     }
     public partial class ConfidentialLedgerClientOptions : Azure.Core.ClientOptions
     {
         public ConfidentialLedgerClientOptions(Azure.Security.ConfidentialLedger.ConfidentialLedgerClientOptions.ServiceVersion version = Azure.Security.ConfidentialLedger.ConfidentialLedgerClientOptions.ServiceVersion.V2022_05_13) { }
-        public System.Uri CertificateEndpoint { get { throw null; } set { } }
-        public enum ServiceVersion
-        {
-            V2022_05_13 = 1,
-        }
-    }
-}
-namespace Azure.Security.ConfidentialLedger.Certificate
-{
-    public partial class ConfidentialLedgerCertificateClient
-    {
-        protected ConfidentialLedgerCertificateClient() { }
-        public ConfidentialLedgerCertificateClient(System.Uri certificateEndpoint) { }
-        public ConfidentialLedgerCertificateClient(System.Uri certificateEndpoint, Azure.Security.ConfidentialLedger.Certificate.ConfidentialLedgerCertificateClientOptions options) { }
-        public virtual Azure.Core.Pipeline.HttpPipeline Pipeline { get { throw null; } }
-        public virtual Azure.Response GetLedgerIdentity(string ledgerId, Azure.RequestContext context = null) { throw null; }
-        public virtual System.Threading.Tasks.Task<Azure.Response> GetLedgerIdentityAsync(string ledgerId, Azure.RequestContext context = null) { throw null; }
-    }
-    public partial class ConfidentialLedgerCertificateClientOptions : Azure.Core.ClientOptions
-    {
-        public ConfidentialLedgerCertificateClientOptions(Azure.Security.ConfidentialLedger.Certificate.ConfidentialLedgerCertificateClientOptions.ServiceVersion version = Azure.Security.ConfidentialLedger.Certificate.ConfidentialLedgerCertificateClientOptions.ServiceVersion.V2022_05_13) { }
         public enum ServiceVersion
         {
             V2022_05_13 = 1,

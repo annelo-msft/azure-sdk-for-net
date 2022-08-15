@@ -10,9 +10,8 @@ using System.Threading.Tasks;
 using Azure;
 using Azure.Core;
 using Azure.Core.Pipeline;
-using Azure.Security.ConfidentialLedger;
 
-namespace Azure.Security.ConfidentialLedger.Certificate
+namespace Azure.Security.ConfidentialLedger
 {
     /// <summary> The ConfidentialLedgerCertificate service client. </summary>
     public partial class ConfidentialLedgerCertificateClient
@@ -32,6 +31,32 @@ namespace Azure.Security.ConfidentialLedger.Certificate
         /// <summary> Initializes a new instance of ConfidentialLedgerCertificateClient for mocking. </summary>
         protected ConfidentialLedgerCertificateClient()
         {
+        }
+
+        /// <summary> Initializes a new instance of ConfidentialLedgerCertificateClient. </summary>
+        /// <param name="certificateEndpoint"> The certificate endpoint (or &quot;Identity Service Endpoint&quot; in the Azure portal), for example https://identity.confidential-ledger.core.azure.com. </param>
+        /// <param name="credential"> A credential used to authenticate to an Azure Service. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="certificateEndpoint"/> or <paramref name="credential"/> is null. </exception>
+        public ConfidentialLedgerCertificateClient(Uri certificateEndpoint, TokenCredential credential) : this(certificateEndpoint, credential, new ConfidentialLedgerClientOptions())
+        {
+        }
+
+        /// <summary> Initializes a new instance of ConfidentialLedgerCertificateClient. </summary>
+        /// <param name="certificateEndpoint"> The certificate endpoint (or &quot;Identity Service Endpoint&quot; in the Azure portal), for example https://identity.confidential-ledger.core.azure.com. </param>
+        /// <param name="credential"> A credential used to authenticate to an Azure Service. </param>
+        /// <param name="options"> The options for configuring the client. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="certificateEndpoint"/> or <paramref name="credential"/> is null. </exception>
+        public ConfidentialLedgerCertificateClient(Uri certificateEndpoint, TokenCredential credential, ConfidentialLedgerClientOptions options)
+        {
+            Argument.AssertNotNull(certificateEndpoint, nameof(certificateEndpoint));
+            Argument.AssertNotNull(credential, nameof(credential));
+            options ??= new ConfidentialLedgerClientOptions();
+
+            ClientDiagnostics = new ClientDiagnostics(options, true);
+            _tokenCredential = credential;
+            _pipeline = HttpPipelineBuilder.Build(options, Array.Empty<HttpPipelinePolicy>(), new HttpPipelinePolicy[] { new BearerTokenAuthenticationPolicy(_tokenCredential, AuthorizationScopes) }, new ResponseClassifier());
+            _certificateEndpoint = certificateEndpoint;
+            _apiVersion = options.Version;
         }
 
         /// <summary> Gets identity information for a Confidential Ledger instance. </summary>

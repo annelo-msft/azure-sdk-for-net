@@ -36,6 +36,32 @@ namespace Azure.Security.ConfidentialLedger
         {
         }
 
+        /// <summary> Initializes a new instance of ConfidentialLedgerClient. </summary>
+        /// <param name="ledgerEndpoint"> The Confidential Ledger URL, for example https://contoso.confidentialledger.azure.com. </param>
+        /// <param name="credential"> A credential used to authenticate to an Azure Service. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="ledgerEndpoint"/> or <paramref name="credential"/> is null. </exception>
+        public ConfidentialLedgerClient(Uri ledgerEndpoint, TokenCredential credential) : this(ledgerEndpoint, credential, new ConfidentialLedgerClientOptions())
+        {
+        }
+
+        /// <summary> Initializes a new instance of ConfidentialLedgerClient. </summary>
+        /// <param name="ledgerEndpoint"> The Confidential Ledger URL, for example https://contoso.confidentialledger.azure.com. </param>
+        /// <param name="credential"> A credential used to authenticate to an Azure Service. </param>
+        /// <param name="options"> The options for configuring the client. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="ledgerEndpoint"/> or <paramref name="credential"/> is null. </exception>
+        public ConfidentialLedgerClient(Uri ledgerEndpoint, TokenCredential credential, ConfidentialLedgerClientOptions options)
+        {
+            Argument.AssertNotNull(ledgerEndpoint, nameof(ledgerEndpoint));
+            Argument.AssertNotNull(credential, nameof(credential));
+            options ??= new ConfidentialLedgerClientOptions();
+
+            ClientDiagnostics = new ClientDiagnostics(options, true);
+            _tokenCredential = credential;
+            _pipeline = HttpPipelineBuilder.Build(options, Array.Empty<HttpPipelinePolicy>(), new HttpPipelinePolicy[] { new BearerTokenAuthenticationPolicy(_tokenCredential, AuthorizationScopes) }, new ResponseClassifier());
+            _ledgerEndpoint = ledgerEndpoint;
+            _apiVersion = options.Version;
+        }
+
         /// <summary> Gets the constitution used for governance. </summary>
         /// <param name="context"> The request context, which can override default behaviors of the client pipeline on a per-call basis. </param>
         /// <exception cref="RequestFailedException"> Service returned a non-success status code. </exception>
