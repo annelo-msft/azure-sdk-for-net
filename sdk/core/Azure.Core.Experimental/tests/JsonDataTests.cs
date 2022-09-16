@@ -13,27 +13,11 @@ namespace Azure.Core.Tests
     public class JsonDataTests
     {
         [Test]
-        public void DefaultConstructorMakesEmptyObject()
-        {
-            var jsonData = new JsonData();
-
-            Assert.AreEqual(0, jsonData.Properties.Count());
-        }
-
-        [Test]
         public void CanCreateFromJson()
         {
             var jsonData = new JsonData("\"string\"");
 
             Assert.AreEqual("\"string\"", jsonData.ToJsonString());
-        }
-
-        [Test]
-        public void CanCreateFromNull()
-        {
-            // This has become an ambiguous call-site
-            var jsonData = new JsonData(null);
-            Assert.AreEqual(JsonValueKind.Null, jsonData.Kind);
         }
 
         [Test]
@@ -232,7 +216,6 @@ namespace Azure.Core.Tests
             Assert.AreEqual(new JsonData(true), new JsonData(true));
             Assert.AreEqual(new JsonData(false), new JsonData(false));
             Assert.AreEqual(new JsonData("hello"), new JsonData("hello"));
-            Assert.AreEqual(new JsonData(null), new JsonData(null));
         }
 
         [Test]
@@ -257,13 +240,6 @@ namespace Azure.Core.Tests
 
             Assert.AreNotEqual(obj1, obj2);
             Assert.AreNotEqual(arr1, arr2);
-        }
-
-        [Test]
-        public void EqualsAndNull()
-        {
-            Assert.AreNotEqual(new JsonData(null), null);
-            Assert.AreNotEqual(null, new JsonData(null));
         }
 
         [Test]
@@ -312,7 +288,7 @@ namespace Azure.Core.Tests
         private T JsonAsType<T>(string json)
         {
             dynamic jsonData = new JsonData(json);
-            return (T) jsonData;
+            return (T)jsonData;
         }
 
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()

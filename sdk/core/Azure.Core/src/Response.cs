@@ -93,6 +93,36 @@ namespace Azure
         internal RequestFailedDetailsParser?  RequestFailedDetailsParser { get; set; }
 
         /// <summary>
+        /// </summary>
+        /// <returns></returns>
+#pragma warning disable CA1822 // Mark members as static
+        public dynamic GetJsonTypedInstance()
+#pragma warning restore CA1822 // Mark members as static
+        {
+            // return an anonymous type
+            return new { Key = "hi", Value = "ok" };
+        }
+
+        //        /// <summary>
+        //        /// </summary>
+        //        /// <typeparam name="T"></typeparam>
+        //        /// <param name="instance"></param>
+        //        /// <returns></returns>
+        //#pragma warning disable CA1801 // Review unused parameters
+        //        public T GetTypedJson<T>(T instance)
+        //#pragma warning restore CA1801 // Review unused parameters
+        //        {
+        //            return Content.ToObjectFromJson<T>();
+        //        }
+
+        internal T value;
+
+        public TypedJson<T> GetTypedJson<T>()
+        {
+
+        }
+
+        /// <summary>
         /// Returns header value if the header is stored in the collection. If header has multiple values they are going to be joined with a comma.
         /// </summary>
         /// <param name="name">The header name.</param>

@@ -267,7 +267,9 @@ namespace Azure.Data.AppConfiguration
             try
             {
                 using HttpMessage message = CreateGetKeyValueRequest(key, label, acceptDatetime, select, matchConditions, context);
-                return await _pipeline.ProcessMessageAsync(message, context).ConfigureAwait(false);
+                var response = await _pipeline.ProcessMessageAsync(message, context).ConfigureAwait(false);
+                response
+                return response;
             }
             catch (Exception e)
             {
@@ -275,6 +277,14 @@ namespace Azure.Data.AppConfiguration
                 throw;
             }
         }
+
+        ///// <summary>
+        ///// </summary>
+        ///// <returns></returns>
+        //public TypedJson GetTypedJson()
+        //{
+        //    return new KeyValueAnonymousJson();
+        //}
 
         /// <summary> Gets a single key-value. </summary>
         /// <param name="key"> The key of the key-value to retrieve. </param>

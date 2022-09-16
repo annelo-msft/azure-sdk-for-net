@@ -251,6 +251,8 @@ namespace Azure.Core
         /// <returns>A new instance of <typeparamref name="T"/> constructed from the underlying JSON value.</returns>
         public T To<T>(JsonSerializerOptions options)
         {
+            // This uses reflection - once in Azure.Core, we can test to see if it's IDeserializable
+            // and use the higher-performance writer capability.
             return JsonSerializer.Deserialize<T>(ToJsonString(), options);
         }
 
