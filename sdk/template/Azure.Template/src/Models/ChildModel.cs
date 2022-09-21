@@ -17,7 +17,5 @@ namespace Azure.Template
         public int Qux { get; internal set; }
 
         public bool Thud { get; internal set; }
-
-        //internal IDictionary<string, JsonNode> UnknownProperties { get; set; }
     }
 }
