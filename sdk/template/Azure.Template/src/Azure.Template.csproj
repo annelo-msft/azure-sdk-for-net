@@ -6,6 +6,7 @@
     <PackageTags>Azure Template</PackageTags>
     <TargetFrameworks>$(RequiredTargetFrameworks)</TargetFrameworks>
     <IncludeOperationsSharedSource>true</IncludeOperationsSharedSource>
+    <NoWarn>CS1591,CA1812</NoWarn>
   </PropertyGroup>
 
   <!-- Shared source from Azure.Core -->
