@@ -13,19 +13,17 @@ namespace Azure.Template
 {
     public partial class ChildModel : IUtf8JsonSerializable, IUtf8JsonDeserializable
     {
-        // These are internal in client libraries.
         void IUtf8JsonSerializable.Write(Utf8JsonWriter writer)
         {
             writer.WriteStartObject();
+
             writer.WritePropertyName("qux");
             writer.WriteNumberValue(Qux);
+
             writer.WritePropertyName("thud");
             writer.WriteBooleanValue(Thud);
 
             writer.WriteEndObject();
-
-            //// Needed for sample
-            //writer.Flush();
         }
 
         internal static ChildModel Deserialize(ref Utf8JsonReader reader)

@@ -13,7 +13,6 @@ namespace Azure.Template
 {
     public partial class AzureModel : IUtf8JsonSerializable, IUtf8JsonDeserializable
     {
-        // These are internal in client libraries.
         void IUtf8JsonSerializable.Write(Utf8JsonWriter writer)
         {
             writer.WriteStartObject();
@@ -76,9 +75,6 @@ namespace Azure.Template
             }
 
             writer.WriteEndObject();
-
-            // Needed for sample
-            writer.Flush();
         }
 
         // These only need to appear on top-level models
@@ -88,6 +84,8 @@ namespace Azure.Template
             return Deserialize(ref reader);
         }
 
+        // Because we can generate these, there's not, strictly speaking, the need
+        // for IUtf8JsonDeserializable
         internal static AzureModel Deserialize(ref Utf8JsonReader reader)
         {
             IUtf8JsonDeserializable model = new AzureModel();
@@ -95,7 +93,6 @@ namespace Azure.Template
             return (AzureModel)model;
         }
 
-        // These are internal in client libraries.
         void IUtf8JsonDeserializable.Read(ref Utf8JsonReader reader)
         {
             while (reader.Read())

@@ -12,10 +12,7 @@ namespace Azure.Template
 {
     public partial class AzureModel
     {
-        // This should be internal so users can't access it publicly
-        public AzureModel()
-        {
-        }
+        internal AzureModel() { }
 
         public string RequiredString { get; internal set; }
 

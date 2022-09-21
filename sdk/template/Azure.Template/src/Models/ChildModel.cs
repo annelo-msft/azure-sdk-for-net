@@ -12,8 +12,11 @@ namespace Azure.Template
 {
     public partial class ChildModel
     {
+        // TODO: Add internal parameterless intialization constructor
         internal ChildModel() { }
 
+        // TODO: Add internal setters so initialization doesn't need to allocate
+        // a local that is then GC'ed.
         public int Qux { get; internal set; }
 
         public bool Thud { get; internal set; }
