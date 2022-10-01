@@ -33,22 +33,11 @@ namespace Azure.Core
         private List<JsonData>? _arrayRepresentation;
         private object? _value;
 
-        private static readonly JsonSerializerOptions DefaultJsonSerializerOptions = new JsonSerializerOptions();
-
-        /// <summary>
-        ///  Creates a new JsonData object which represents the value of the given JsonDocument.
-        /// </summary>
-        /// <param name="jsonDocument">The JsonDocument to convert.</param>
-        /// <remarks>A JsonDocument can be constructed from a JSON string using <see cref="JsonDocument.Parse(string, JsonDocumentOptions)"/>.</remarks>
-        public JsonData(JsonDocument jsonDocument) : this((object?)jsonDocument, DefaultJsonSerializerOptions, null)
-        {
-        }
-
         /// <summary>
         /// Initializes a new instance of the <see cref="JsonData"/> class.
         /// </summary>
-        /// <param name="jsonString">The json string.</param>
-        public JsonData(string jsonString) : this(JsonDocument.Parse(jsonString))
+        /// <param name="json">The json string.</param>
+        public JsonData(string json) : this(JsonDocument.Parse(json))
         {
         }
 
@@ -64,14 +53,6 @@ namespace Azure.Core
         /// Creates a new JsonData object which represents the given object.
         /// </summary>
         /// <param name="bytes">The value to convert.</param>
-        public JsonData(byte[] bytes) : this(JsonDocument.Parse(bytes))
-        {
-        }
-
-        /// <summary>
-        /// Creates a new JsonData object which represents the given object.
-        /// </summary>
-        /// <param name="bytes">The value to convert.</param>
         public JsonData(ReadOnlyMemory<byte> bytes) : this(JsonDocument.Parse(bytes))
         {
         }
@@ -80,8 +61,7 @@ namespace Azure.Core
         /// Creates a new JsonData object which represents the given object.
         /// </summary>
         /// <param name="value">The value to convert.</param>
-        /// <param name="options">Options to control the conversion behavior.</param>
-        public JsonData(object value, JsonSerializerOptions? options = null) : this(value, options ?? DefaultJsonSerializerOptions, null)
+        public JsonData(object value) : this(value, null)
         {
         }
 
@@ -241,7 +221,7 @@ namespace Azure.Core
         /// </summary>
         /// <typeparam name="T">The type to convert the value into.</typeparam>
         /// <returns>A new instance of <typeparamref name="T"/> constructed from the underlying JSON value.</returns>
-        public T To<T>() => To<T>(DefaultJsonSerializerOptions);
+        public T To<T>() => JsonSerializer.Deserialize<T>(ToJsonString());
 
         /// <summary>
         /// Deserializes the given JSON value into an instance of a given type.
