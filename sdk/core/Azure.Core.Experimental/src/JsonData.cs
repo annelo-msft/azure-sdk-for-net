@@ -16,8 +16,6 @@ using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
-#pragma warning disable AZC0014 // Avoid using banned types in public API
-
 namespace Azure.Core
 {
     /// <summary>
@@ -25,7 +23,6 @@ namespace Azure.Core
     /// </summary>
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     [DebuggerTypeProxy(typeof(JsonDataDebuggerProxy))]
-    [JsonConverter(typeof(JsonConverter))]
     public class JsonData : IDynamicMetaObjectProvider, IEquatable<JsonData>
     {
         private readonly JsonValueKind _kind;
@@ -36,43 +33,31 @@ namespace Azure.Core
         private static readonly JsonSerializerOptions DefaultJsonSerializerOptions = new JsonSerializerOptions();
 
         /// <summary>
+        /// Parses text representing a single JSON value into a <see cref="JsonData"/>.
+        /// </summary>
+        /// <param name="utf8Json">A UTF8 encoded string representing a JSON value.</param>
+        /// <returns>A <see cref="JsonData"/> representation of the value.</returns>
+        public static JsonData Parse(BinaryData utf8Json) => new JsonData(JsonDocument.Parse(utf8Json));
+
+        /// <summary>
+        /// Gets or sets a value at the given index in an array.
+        /// </summary>
+        /// <param name="arrayIndex">The index in the array of the value to get or set.</param>
+        /// <returns>The value at the given index.</returns>
+        /// <remarks>
+        /// If the <see cref="Kind"/> property is not <see cref="JsonValueKind.Array"/> this method throws <see cref="InvalidOperationException"/>.
+        /// </remarks>
+        public JsonData this[int arrayIndex]
+        {
+            get => GetValueAt(arrayIndex);
+        }
+
+        /// <summary>
         ///  Creates a new JsonData object which represents the value of the given JsonDocument.
         /// </summary>
         /// <param name="jsonDocument">The JsonDocument to convert.</param>
         /// <remarks>A JsonDocument can be constructed from a JSON string using <see cref="JsonDocument.Parse(string, JsonDocumentOptions)"/>.</remarks>
-        public JsonData(JsonDocument jsonDocument) : this((object?)jsonDocument, DefaultJsonSerializerOptions, null)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="JsonData"/> class.
-        /// </summary>
-        /// <param name="jsonString">The json string.</param>
-        public JsonData(string jsonString) : this(JsonDocument.Parse(jsonString))
-        {
-        }
-
-        /// <summary>
-        /// Creates a new JsonData object which represents the given object.
-        /// </summary>
-        /// <param name="binaryData">The value to convert.</param>
-        public JsonData(BinaryData binaryData) : this(binaryData.ToMemory())
-        {
-        }
-
-        /// <summary>
-        /// Creates a new JsonData object which represents the given object.
-        /// </summary>
-        /// <param name="bytes">The value to convert.</param>
-        public JsonData(byte[] bytes) : this(JsonDocument.Parse(bytes))
-        {
-        }
-
-        /// <summary>
-        /// Creates a new JsonData object which represents the given object.
-        /// </summary>
-        /// <param name="bytes">The value to convert.</param>
-        public JsonData(ReadOnlyMemory<byte> bytes) : this(JsonDocument.Parse(bytes))
+        internal JsonData(JsonDocument jsonDocument) : this((object?)jsonDocument, DefaultJsonSerializerOptions, null)
         {
         }
 
@@ -81,24 +66,7 @@ namespace Azure.Core
         /// </summary>
         /// <param name="value">The value to convert.</param>
         /// <param name="options">Options to control the conversion behavior.</param>
-        public JsonData(object value, JsonSerializerOptions? options = null) : this(value, options ?? DefaultJsonSerializerOptions, null)
-        {
-        }
-
-        /// <summary>
-        /// Creates a new JsonData object which represents the given response content.
-        /// </summary>
-        /// <param name="response">The response containing JSON content to convert.</param>
-        public JsonData(Response response) : this(response.Content)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="JsonData"/> class.
-        /// </summary>
-        /// <param name="value">The string to consider.</param>
-        /// <param name="treatAsPrimitive"><c>true</c> to treat the value as a primitive string; otherwise, the string will be treated as JSON and parsed.</param>
-        internal JsonData(string value, bool treatAsPrimitive) : this(treatAsPrimitive ? (object?)value : JsonDocument.Parse(value), DefaultJsonSerializerOptions, null)
+        internal JsonData(object value, JsonSerializerOptions? options = null) : this(value, options ?? DefaultJsonSerializerOptions, null)
         {
         }
 
@@ -196,70 +164,10 @@ namespace Azure.Core
         }
 
         /// <summary>
-        /// Returns the value for a given property.
-        /// </summary>
-        /// <typeparam name="T">The type of the object to return.</typeparam>
-        /// <param name="propertyName">The name of the property to get.</param>
-        /// <returns>The value for a given property</returns>
-        /// <remarks>If the <see cref="Kind"/> property is not <see cref="JsonValueKind.Object"/> this method throws <see cref="InvalidOperationException"/>.</remarks>
-        public T Get<T>(string propertyName)
-        {
-            return GetPropertyValue(propertyName).To<T>();
-        }
-
-        /// <summary>
-        /// Gets the value of a property from an object.
-        /// </summary>
-        /// <typeparam name="T">The type of the object to return.</typeparam>
-        /// <param name="propertyName">The name of the property to get.</param>
-        /// <param name="options">Options to control the conversion behavior.</param>
-        /// <returns>The value for a given property.</returns>
-        /// <remarks>If the <see cref="Kind"/> property is not <see cref="JsonValueKind.Object"/> this method throws <see cref="InvalidOperationException"/>.</remarks>
-        public T Get<T>(string propertyName, JsonSerializerOptions options)
-        {
-            return GetPropertyValue(propertyName).To<T>(options);
-        }
-
-        /// <summary>
-        /// Gets the value of a property from an object, or <code>null</code> if no such property exists.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to get</param>
-        /// <returns>The value for a given property, or <code>null</code> if no such property exists.</returns>
-        /// <remarks>If the <see cref="Kind"/> property is not <see cref="JsonValueKind.Object"/> this method throws <see cref="InvalidOperationException"/>.</remarks>
-        public JsonData? Get(string propertyName)
-        {
-            if (EnsureObject().TryGetValue(propertyName, out JsonData? value))
-            {
-                return value;
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Converts the given JSON value into an instance of a given type.
-        /// </summary>
-        /// <typeparam name="T">The type to convert the value into.</typeparam>
-        /// <returns>A new instance of <typeparamref name="T"/> constructed from the underlying JSON value.</returns>
-        public T To<T>() => To<T>(DefaultJsonSerializerOptions);
-
-        /// <summary>
-        /// Deserializes the given JSON value into an instance of a given type.
-        /// </summary>
-        /// <typeparam name="T">The type to deserialize the value into</typeparam>
-        /// <param name="options">Options to control the conversion behavior.</param>
-        /// <returns>A new instance of <typeparamref name="T"/> constructed from the underlying JSON value.</returns>
-        public T To<T>(JsonSerializerOptions options)
-        {
-            // TODO: come back and address CS8603
-            return JsonSerializer.Deserialize<T>(ToJsonString(), options)!;
-        }
-
-        /// <summary>
         /// Returns a stringified version of the JSON for this value.
         /// </summary>
         /// <returns>Returns a stringified version of the JSON for this value.</returns>
-        public string ToJsonString()
+        internal string ToJsonString()
         {
             using var memoryStream = new MemoryStream();
             using (var writer = new Utf8JsonWriter(memoryStream))
@@ -267,46 +175,6 @@ namespace Azure.Core
                 WriteTo(writer);
             }
             return Encoding.UTF8.GetString(memoryStream.ToArray());
-        }
-
-        /// <summary>
-        /// Returns a <see cref="BinaryData"/> representation of the stringified version of the JSON for this value.
-        /// </summary>
-        /// <returns>Returns a <see cref="BinaryData"/> representation of the stringified version of the JSON for this value.</returns>
-        public BinaryData ToBinaryData()
-        {
-            using var memoryStream = new MemoryStream();
-            using (var writer = new Utf8JsonWriter(memoryStream))
-            {
-                WriteTo(writer);
-            }
-            return new BinaryData(memoryStream.ToArray());
-        }
-
-        /// <summary>
-        /// Gets or sets a value at the given index in an array.
-        /// </summary>
-        /// <param name="arrayIndex">The index in the array of the value to get or set.</param>
-        /// <returns>The value at the given index.</returns>
-        /// <remarks>
-        /// If the <see cref="Kind"/> property is not <see cref="JsonValueKind.Array"/> this method throws <see cref="InvalidOperationException"/>.
-        /// </remarks>
-        public JsonData this[int arrayIndex]
-        {
-            get => GetValueAt(arrayIndex);
-        }
-
-        /// <summary>
-        /// Gets or sets a value for a given property in an object.
-        /// </summary>
-        /// <param name="propertyName">The name of the property in the object to get or set.</param>
-        /// <returns>The value for the given property name.</returns>
-        /// <remarks>
-        /// If the <see cref="Kind"/> property is not <see cref="JsonValueKind.Object"/> this method throws <see cref="InvalidOperationException"/>.
-        /// </remarks>
-        public JsonData this[string propertyName]
-        {
-            get => GetPropertyValue(propertyName);
         }
 
         #region operators
@@ -440,24 +308,9 @@ namespace Azure.Core
         #endregion operators
 
         /// <summary>
-        /// Parses text representing a single JSON value into a <see cref="JsonData"/>.
-        /// </summary>
-        /// <param name="utf8JsonStream">A UTF8 encoded string representing a JSON value.</param>
-        /// <returns>A <see cref="JsonData"/> representation of the value</returns>
-        public static JsonData FromStream(Stream utf8JsonStream) => new JsonData(JsonDocument.Parse(utf8JsonStream));
-
-        /// <summary>
-        /// Parses text representing a single JSON value into a <see cref="JsonData"/>.
-        /// </summary>
-        /// <param name="utf8JsonStream">A UTF8 encoded string representing a JSON value.</param>
-        /// <param name="cancellationToken">A token to monitor for cancelation requests.</param>
-        /// <returns>A Task which will construct the <see cref="JsonData"/> representation of the value</returns>
-        public static async Task<JsonData> FromStreamAsync(Stream utf8JsonStream, CancellationToken cancellationToken = default) => new JsonData((await JsonDocument.ParseAsync(utf8JsonStream, cancellationToken: cancellationToken).ConfigureAwait(false)).RootElement);
-
-        /// <summary>
         /// The <see cref="JsonValueKind"/> of the value of this instance.
         /// </summary>
-        public JsonValueKind Kind
+        internal JsonValueKind Kind
         {
             get => _kind;
         }
@@ -466,7 +319,7 @@ namespace Azure.Core
         /// Returns the number of elements in this array.
         /// </summary>
         /// <remarks>If <see cref="Kind"/> is not <see cref="JsonValueKind.Array"/> this methods throws <see cref="InvalidOperationException"/>.</remarks>
-        public int Length
+        internal int Length
         {
             get => EnsureArray().Count;
         }
@@ -475,7 +328,7 @@ namespace Azure.Core
         /// Returns the names of all the properties of this object.
         /// </summary>
         /// <remarks>If <see cref="Kind"/> is not <see cref="JsonValueKind.Object"/> this methods throws <see cref="InvalidOperationException"/>.</remarks>
-        public IEnumerable<string> Properties
+        internal IEnumerable<string> Properties
         {
             get => EnsureObject().Keys;
         }
@@ -484,38 +337,12 @@ namespace Azure.Core
         /// Returns all the elements in this array.
         /// </summary>
         /// <remarks>If<see cref="Kind"/> is not<see cref="JsonValueKind.Array"/> this methods throws <see cref = "InvalidOperationException" />.</remarks>
-        public IEnumerable<JsonData> Items
+        internal IEnumerable<JsonData> Items
         {
             get => EnsureArray();
         }
 
-        /// <summary>
-        /// Writes the UTF-8 encoded string representation of this instance.
-        /// </summary>
-        /// <param name="stream">The stream to write to.</param>
-        /// <returns>The number of bytes written into the stream.</returns>
-        public long WriteTo(Stream stream)
-        {
-            using Utf8JsonWriter writer = new Utf8JsonWriter(stream);
-            WriteTo(writer);
-            writer.Flush();
-            return writer.BytesCommitted;
-        }
-
-        /// <summary>
-        /// Writes the UTF-8 encoded string representation of this instance.
-        /// </summary>
-        /// <param name="stream">The stream to write to.</param>
-        /// <param name="cancellationToken">A token to monitor for cancelation requests.</param>
-        /// <returns>The number of bytes written into the stream.</returns>
-        public async Task<long> WriteToAsync(Stream stream, CancellationToken cancellationToken = default)
-        {
-            using Utf8JsonWriter writer = new Utf8JsonWriter(stream);
-            WriteTo(writer);
-            await writer.FlushAsync(cancellationToken).ConfigureAwait(false);
-            return writer.BytesCommitted;
-        }
-
+        #region inherited
         /// <inheritdoc />
         public override string ToString()
         {
@@ -581,8 +408,11 @@ namespace Azure.Core
 
             return base.GetHashCode();
         }
+        #endregion inherited
 
+        #region get
         private string? GetString() => (string?)EnsureValue();
+
         private int GetIn32()
         {
             var value = EnsureNumberValue().AsLong();
@@ -594,6 +424,7 @@ namespace Azure.Core
         }
 
         private long GetLong() => EnsureNumberValue().AsLong();
+
         private float GetFloat()
         {
             var value = EnsureNumberValue().AsDouble();
@@ -604,8 +435,65 @@ namespace Azure.Core
             return (float)value;
         }
         private double GetDouble() => EnsureNumberValue().AsDouble();
+
         private bool GetBoolean() => (bool)EnsureValue()!;
 
+        private JsonData GetValueAt(int index)
+        {
+            return EnsureArray()[index];
+        }
+
+        private IEnumerable GetDynamicEnumerable()
+        {
+            if (_kind == JsonValueKind.Array)
+            {
+                return EnsureArray();
+            }
+
+            return EnsureObject();
+        }
+
+        /// <summary>
+        /// Used by the dynamic meta object to fetch properties. We can't use GetPropertyValue because when the underlying
+        /// value is an array, we want `.Length` to mean "the length of the array" and not "treat the array as an object
+        /// and get the Length property", and we also want the return type to be "int" and not a JsonData wrapping the int.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to get the value of.</param>
+        /// <returns></returns>
+        private object GetDynamicProperty(string propertyName)
+        {
+            if (_kind == JsonValueKind.Array && propertyName == nameof(Length))
+            {
+                return Length;
+            }
+
+            if (EnsureObject().TryGetValue(propertyName, out JsonData? element))
+            {
+                return element;
+            }
+
+            throw new InvalidOperationException($"Property {propertyName} not found");
+        }
+
+        /// <summary>
+        /// Gets the value of a property from an object, or <code>null</code> if no such property exists.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to get</param>
+        /// <returns>The value for a given property, or <code>null</code> if no such property exists.</returns>
+        /// <remarks>If the <see cref="Kind"/> property is not <see cref="JsonValueKind.Object"/> this method throws <see cref="InvalidOperationException"/>.</remarks>
+        internal JsonData? Get(string propertyName)
+        {
+            if (EnsureObject().TryGetValue(propertyName, out JsonData? value))
+            {
+                return value;
+            }
+
+            return null;
+        }
+
+        #endregion get
+
+        #region write
         private void WriteTo(Utf8JsonWriter writer)
         {
             switch (_kind)
@@ -640,7 +528,9 @@ namespace Azure.Core
                     break;
             }
         }
+        #endregion write
 
+        #region ensure
         private Dictionary<string, JsonData> EnsureObject()
         {
             if (_kind != JsonValueKind.Object)
@@ -652,49 +542,6 @@ namespace Azure.Core
             return _objectRepresentation!;
         }
 
-        private JsonData GetPropertyValue(string propertyName)
-        {
-            if (EnsureObject().TryGetValue(propertyName, out JsonData? element))
-            {
-                return element;
-            }
-
-            throw new InvalidOperationException($"Property {propertyName} not found");
-        }
-
-        /// <summary>
-        /// Used by the dynamic meta object to fetch properties. We can't use GetPropertyValue because when the underlying
-        /// value is an array, we want `.Length` to mean "the length of the array" and not "treat the array as an object
-        /// and get the Length property", and we also want the return type to be "int" and not a JsonData wrapping the int.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to get the value of.</param>
-        /// <returns></returns>
-        private object GetDynamicProperty(string propertyName)
-        {
-            if (_kind == JsonValueKind.Array && propertyName == nameof(Length))
-            {
-                return Length;
-            }
-
-            if (EnsureObject().TryGetValue(propertyName, out JsonData? element))
-            {
-                return element;
-            }
-
-            throw new InvalidOperationException($"Property {propertyName} not found");
-        }
-
-        private JsonData SetValue(string propertyName, object value)
-        {
-            if (!(value is JsonData json))
-            {
-                json = new JsonData(value);
-            }
-
-            EnsureObject()[propertyName] = json;
-            return json;
-        }
-
         private List<JsonData> EnsureArray()
         {
             if (_kind != JsonValueKind.Array)
@@ -704,11 +551,6 @@ namespace Azure.Core
 
             Debug.Assert(_arrayRepresentation != null);
             return _arrayRepresentation!;
-        }
-
-        private JsonData GetValueAt(int index)
-        {
-            return EnsureArray()[index];
         }
 
         private object? EnsureValue()
@@ -729,21 +571,7 @@ namespace Azure.Core
 
             return (Number)EnsureValue()!;
         }
-
-        /// <inheritdoc />
-        DynamicMetaObject IDynamicMetaObjectProvider.GetMetaObject(Expression parameter) => new MetaObject(parameter, this);
-
-        private IEnumerable GetDynamicEnumerable()
-        {
-            if (_kind == JsonValueKind.Array)
-            {
-                return EnsureArray();
-            }
-
-            return EnsureObject();
-        }
-
-        private string DebuggerDisplay => ToJsonString();
+        #endregion ensure
 
         private struct Number
         {
@@ -801,14 +629,16 @@ namespace Azure.Core
             }
         }
 
+        #region DynamicMetaObject
+        /// <inheritdoc />
+        DynamicMetaObject IDynamicMetaObjectProvider.GetMetaObject(Expression parameter) => new MetaObject(parameter, this);
+
         private class MetaObject : DynamicMetaObject
         {
             // TODO: come back and figure out the right thing to do wrt nullability CS8601
             private static readonly MethodInfo GetDynamicValueMethod = typeof(JsonData).GetMethod(nameof(GetDynamicProperty), BindingFlags.NonPublic | BindingFlags.Instance)!;
 
             private static readonly MethodInfo GetDynamicEnumerableMethod = typeof(JsonData).GetMethod(nameof(GetDynamicEnumerable), BindingFlags.NonPublic | BindingFlags.Instance)!;
-
-            private static readonly MethodInfo SetValueMethod = typeof(JsonData).GetMethod(nameof(SetValue), BindingFlags.NonPublic | BindingFlags.Instance)!;
 
             internal MetaObject(Expression parameter, IDynamicMetaObjectProvider value) : base(parameter, BindingRestrictions.Empty, value)
             {
@@ -837,18 +667,11 @@ namespace Azure.Core
                 }
                 return base.BindConvert(binder);
             }
-
-            public override DynamicMetaObject BindSetMember(SetMemberBinder binder, DynamicMetaObject value)
-            {
-                Expression targetObject = Expression.Convert(Expression, LimitType);
-                var arguments = new Expression[2] { Expression.Constant(binder.Name), Expression.Convert(value.Expression, typeof(object)) };
-
-                Expression setPropertyCall = Expression.Call(targetObject, SetValueMethod, arguments);
-                BindingRestrictions restrictions = BindingRestrictions.GetTypeRestriction(Expression, LimitType);
-                DynamicMetaObject setProperty = new DynamicMetaObject(setPropertyCall, restrictions);
-                return setProperty;
-            }
         }
+        #endregion DynamicMetaObject
+
+        #region debugger
+        private string DebuggerDisplay => ToJsonString();
 
         internal class JsonDataDebuggerProxy
         {
@@ -906,23 +729,6 @@ namespace Azure.Core
                 }
             }
         }
-
-        /// <summary>
-        /// The default serialization behavior for <see cref="JsonData"/> is not the behavior we want, we want to use
-        /// the underlying JSON value that <see cref="JsonData"/> wraps, instead of using the default behavior for
-        /// POCOs.
-        /// </summary>
-        private class JsonConverter : JsonConverter<JsonData>
-        {
-            public override JsonData Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-            {
-                return new JsonData(JsonDocument.ParseValue(ref reader));
-            }
-
-            public override void Write(Utf8JsonWriter writer, JsonData value, JsonSerializerOptions options)
-            {
-                value.WriteTo(writer);
-            }
-        }
+        #endregion debugger
     }
 }

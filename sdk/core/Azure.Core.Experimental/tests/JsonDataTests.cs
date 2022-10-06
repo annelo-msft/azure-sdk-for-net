@@ -218,14 +218,14 @@ namespace Azure.Core.Tests
             Assert.Throws<InvalidOperationException>(() => _ = (int)jsonData);
         }
 
-        [Test]
-        public void RoundtripObjects()
-        {
-            var model = new SampleModel("Hello World", 5);
-            var roundtripped = new JsonData(model).To<SampleModel>();
+        //[Test]
+        //public void RoundtripObjects()
+        //{
+        //    var model = new SampleModel("Hello World", 5);
+        //    var roundtripped = new JsonData(model).To<SampleModel>();
 
-            Assert.AreEqual(model, roundtripped);
-        }
+        //    Assert.AreEqual(model, roundtripped);
+        //}
 
         [Test]
         public void EqualsProvidesValueEqualityPrimitives()
@@ -274,34 +274,34 @@ namespace Azure.Core.Tests
             Assert.IsTrue("foo" != new JsonData("bar"));
         }
 
-        [Test]
-        public void JsonDataInPOCOsWorks()
-        {
-            JsonData orig = new JsonData(new
-            {
-                property = new JsonData("hello")
-            });
+        //[Test]
+        //public void JsonDataInPOCOsWorks()
+        //{
+        //    JsonData orig = new JsonData(new
+        //    {
+        //        property = new JsonData("hello")
+        //    });
 
-            void validate(JsonData d)
-            {
-                Assert.AreEqual(JsonValueKind.Object, d.Kind);
-                Assert.AreEqual(d.Properties.Count(), 1);
-                Assert.AreEqual(d["property"], "hello");
-            }
+        //    void validate(JsonData d)
+        //    {
+        //        Assert.AreEqual(JsonValueKind.Object, d.Kind);
+        //        Assert.AreEqual(d.Properties.Count(), 1);
+        //        Assert.AreEqual(d["property"], "hello");
+        //    }
 
-            validate(orig);
+        //    validate(orig);
 
-            JsonData roundTrip = JsonSerializer.Deserialize<JsonData>(JsonSerializer.Serialize(orig, orig.GetType()));
+        //    JsonData roundTrip = JsonSerializer.Deserialize<JsonData>(JsonSerializer.Serialize(orig, orig.GetType()));
 
-            validate(roundTrip);
-        }
+        //    validate(roundTrip);
+        //}
 
-        [Test]
-        public void GetOfTWithStringWorks()
-        {
-            JsonData d = new JsonData("\"property\": \"Hello\"");
-            Assert.AreEqual("Hello", d.Get<string>("property"));
-        }
+        //[Test]
+        //public void GetOfTWithStringWorks()
+        //{
+        //    JsonData d = new JsonData("\"property\": \"Hello\"");
+        //    Assert.AreEqual("Hello", d.Get<string>("property"));
+        //}
 
         private T JsonAsType<T>(string json)
         {
