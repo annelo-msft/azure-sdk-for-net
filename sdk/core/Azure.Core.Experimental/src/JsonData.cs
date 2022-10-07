@@ -66,18 +66,11 @@ namespace Azure.Core
         /// </summary>
         /// <param name="value">The value to convert.</param>
         /// <param name="options">Options to control the conversion behavior.</param>
-        internal JsonData(object value, JsonSerializerOptions? options = null) : this(value, options ?? DefaultJsonSerializerOptions, null)
-        {
-        }
-
-        /// <summary>
-        /// Creates a new JsonData object which represents the given object.
-        /// </summary>
-        /// <param name="value">The value to convert.</param>
-        /// <param name="options">Options to control the conversion behavior.</param>
         /// <param name="type">The type of the value to convert. </param>
-        internal JsonData(object? value, JsonSerializerOptions options, Type? type = null)
+        internal JsonData(object? value, JsonSerializerOptions? options = default, Type? type = null)
         {
+            options ??= DefaultJsonSerializerOptions;
+
             _value = value;
             switch (value)
             {
@@ -175,6 +168,41 @@ namespace Azure.Core
                 WriteTo(writer);
             }
             return Encoding.UTF8.GetString(memoryStream.ToArray());
+        }
+
+        /// <summary>
+        /// The <see cref="JsonValueKind"/> of the value of this instance.
+        /// </summary>
+        internal JsonValueKind Kind
+        {
+            get => _kind;
+        }
+
+        /// <summary>
+        /// Returns the number of elements in this array.
+        /// </summary>
+        /// <remarks>If <see cref="Kind"/> is not <see cref="JsonValueKind.Array"/> this methods throws <see cref="InvalidOperationException"/>.</remarks>
+        internal int Length
+        {
+            get => EnsureArray().Count;
+        }
+
+        /// <summary>
+        /// Returns the names of all the properties of this object.
+        /// </summary>
+        /// <remarks>If <see cref="Kind"/> is not <see cref="JsonValueKind.Object"/> this methods throws <see cref="InvalidOperationException"/>.</remarks>
+        internal IEnumerable<string> Properties
+        {
+            get => EnsureObject().Keys;
+        }
+
+        /// <summary>
+        /// Returns all the elements in this array.
+        /// </summary>
+        /// <remarks>If<see cref="Kind"/> is not<see cref="JsonValueKind.Array"/> this methods throws <see cref = "InvalidOperationException" />.</remarks>
+        internal IEnumerable<JsonData> Items
+        {
+            get => EnsureArray();
         }
 
         #region operators
@@ -306,41 +334,6 @@ namespace Azure.Core
         /// <returns>False if the given JsonData represents the given string, and false otherwise</returns>
         public static bool operator !=(string? left, JsonData? right) => !(left == right);
         #endregion operators
-
-        /// <summary>
-        /// The <see cref="JsonValueKind"/> of the value of this instance.
-        /// </summary>
-        internal JsonValueKind Kind
-        {
-            get => _kind;
-        }
-
-        /// <summary>
-        /// Returns the number of elements in this array.
-        /// </summary>
-        /// <remarks>If <see cref="Kind"/> is not <see cref="JsonValueKind.Array"/> this methods throws <see cref="InvalidOperationException"/>.</remarks>
-        internal int Length
-        {
-            get => EnsureArray().Count;
-        }
-
-        /// <summary>
-        /// Returns the names of all the properties of this object.
-        /// </summary>
-        /// <remarks>If <see cref="Kind"/> is not <see cref="JsonValueKind.Object"/> this methods throws <see cref="InvalidOperationException"/>.</remarks>
-        internal IEnumerable<string> Properties
-        {
-            get => EnsureObject().Keys;
-        }
-
-        /// <summary>
-        /// Returns all the elements in this array.
-        /// </summary>
-        /// <remarks>If<see cref="Kind"/> is not<see cref="JsonValueKind.Array"/> this methods throws <see cref = "InvalidOperationException" />.</remarks>
-        internal IEnumerable<JsonData> Items
-        {
-            get => EnsureArray();
-        }
 
         #region inherited
         /// <inheritdoc />
@@ -631,7 +624,10 @@ namespace Azure.Core
 
         #region DynamicMetaObject
         /// <inheritdoc />
-        DynamicMetaObject IDynamicMetaObjectProvider.GetMetaObject(Expression parameter) => new MetaObject(parameter, this);
+        DynamicMetaObject IDynamicMetaObjectProvider.GetMetaObject(Expression parameter)
+        {
+            return new MetaObject(parameter, this);
+        }
 
         private class MetaObject : DynamicMetaObject
         {
