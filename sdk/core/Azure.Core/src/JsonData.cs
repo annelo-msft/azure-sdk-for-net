@@ -312,6 +312,13 @@ namespace Azure
         public static explicit operator double?(JsonData json) => json.Kind == JsonValueKind.Null ? null : json.GetDouble();
 
         /// <summary>
+        /// Converts the value to a <see cref="double"/> or null.
+        /// </summary>
+        /// <param name="json">The value to convert.</param>
+        public static explicit operator T?(JsonData json) => json.Kind == JsonValueKind.Null ? null : json.GetDouble();
+
+
+        /// <summary>
         /// Returns true if a <see cref="JsonData"/> has the same value as a given string,
         /// and false otherwise.
         /// </summary>

@@ -16,8 +16,8 @@ Console.WriteLine(json.Foo);
 Console.WriteLine(json.Foo.Bar);
 Console.WriteLine(json);
 
-//var model = (FooModel)json;
-//Console.WriteLine(model.Bar);
+var model = (FooModel)json;
+Console.WriteLine(model.Bar);
 
 json = JsonData.Parse("5");
 
