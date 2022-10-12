@@ -4,6 +4,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Dynamic;
 using System.IO;
@@ -34,7 +35,7 @@ namespace Azure
         private static readonly JsonSerializerOptions DefaultJsonSerializerOptions = new JsonSerializerOptions();
 
         /// <summary>
-        /// Parses text representing a single JSON value into a <see cref="JsonData"/>.
+        /// Parses a UTF8 encoded string representing a single JSON value into a <see cref="JsonData"/>.
         /// </summary>
         /// <param name="utf8Json">A UTF8 encoded string representing a JSON value.</param>
         /// <returns>A <see cref="JsonData"/> representation of the value.</returns>
@@ -43,9 +44,28 @@ namespace Azure
         /// <summary>
         /// Parses text representing a single JSON value into a <see cref="JsonData"/>.
         /// </summary>
-        /// <param name="json">A UTF8 encoded string representing a JSON value.</param>
+        /// <param name="json">The JSON text to parse</param>
         /// <returns>A <see cref="JsonData"/> representation of the value.</returns>
         public static JsonData Parse(string json) => new JsonData(JsonDocument.Parse(json));
+
+        /// <summary>
+        /// </summary>
+        /// <param name="utf8Json">.</param>
+        /// <returns>A <see cref="JsonData"/> representation of the value.</returns>
+        public static JsonData Parse(ReadOnlyMemory<byte> utf8Json) => new JsonData(JsonDocument.Parse(utf8Json));
+
+        /// <summary>
+        /// </summary>
+        /// <param name="utf8Json">.</param>
+        /// <returns>A <see cref="JsonData"/> representation of the value.</returns>
+        public static JsonData Parse(Stream utf8Json) => new JsonData(JsonDocument.Parse(utf8Json));
+
+        /// <summary>
+        /// </summary>
+        /// <param name="utf8Json">.</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>A <see cref="JsonData"/> representation of the value.</returns>
+        public static async Task<JsonData> ParseAsync(Stream utf8Json, CancellationToken cancellationToken) => new JsonData(await JsonDocument.ParseAsync(utf8Json, cancellationToken: cancellationToken).ConfigureAwait(false));
 
         /// <summary>
         /// Gets or sets a value at the given index in an array.
@@ -58,6 +78,19 @@ namespace Azure
         public JsonData this[int arrayIndex]
         {
             get => GetValueAt(arrayIndex);
+        }
+
+        /// <summary>
+        /// Gets or sets a value for a given property in an object.
+        /// </summary>
+        /// <param name="propertyName">The name of the property in the object to get or set.</param>
+        /// <returns>The value for the given property name.</returns>
+        /// <remarks>
+        /// If the <see cref="Kind"/> property is not <see cref="JsonValueKind.Object"/> this method throws <see cref="InvalidOperationException"/>.
+        /// </remarks>
+        public JsonData this[string propertyName]
+        {
+            get => GetPropertyValue(propertyName);
         }
 
         /// <summary>
@@ -352,11 +385,11 @@ namespace Azure
                 return ToJsonString();
             }
 
-            // TODO: come back and address CS8603
-            return (_value ?? "<null>").ToString()!;
+            return _value?.ToString() ?? "<null>";
         }
 
         /// <inheritdoc />
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object? obj)
         {
             if (obj is string)
@@ -400,6 +433,7 @@ namespace Azure
         }
 
         /// <inheritdoc />
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode()
         {
             if (_kind == JsonValueKind.String)
@@ -442,6 +476,16 @@ namespace Azure
         private JsonData GetValueAt(int index)
         {
             return EnsureArray()[index];
+        }
+
+        private JsonData GetPropertyValue(string propertyName)
+        {
+            if (EnsureObject().TryGetValue(propertyName, out JsonData? element))
+            {
+                return element;
+            }
+
+            throw new InvalidOperationException($"Property {propertyName} not found");
         }
 
         private IEnumerable GetDynamicEnumerable()
