@@ -10,7 +10,7 @@ using Azure.Core;
 
 namespace Azure.Containers.ContainerRegistry
 {
-    internal partial class FsLayer
+    public partial class FsLayer
     {
         internal static FsLayer DeserializeFsLayer(JsonElement element)
         {

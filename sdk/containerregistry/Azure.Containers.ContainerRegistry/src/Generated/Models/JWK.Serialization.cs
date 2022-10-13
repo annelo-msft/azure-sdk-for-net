@@ -10,7 +10,7 @@ using Azure.Core;
 
 namespace Azure.Containers.ContainerRegistry
 {
-    internal partial class JWK
+    public partial class JWK
     {
         internal static JWK DeserializeJWK(JsonElement element)
         {

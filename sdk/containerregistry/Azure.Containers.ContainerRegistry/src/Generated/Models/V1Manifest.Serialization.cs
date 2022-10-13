@@ -11,7 +11,7 @@ using Azure.Core;
 
 namespace Azure.Containers.ContainerRegistry
 {
-    internal partial class V1Manifest
+    public partial class V1Manifest
     {
         internal static V1Manifest DeserializeV1Manifest(JsonElement element)
         {

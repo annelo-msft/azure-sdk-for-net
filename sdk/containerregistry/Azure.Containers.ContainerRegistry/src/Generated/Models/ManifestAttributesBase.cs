@@ -12,7 +12,7 @@ using Azure.Core;
 namespace Azure.Containers.ContainerRegistry
 {
     /// <summary> Manifest details. </summary>
-    internal partial class ManifestAttributesBase
+    public partial class ManifestAttributesBase
     {
         /// <summary> Initializes a new instance of ManifestAttributesBase. </summary>
         /// <param name="digest"> Manifest. </param>

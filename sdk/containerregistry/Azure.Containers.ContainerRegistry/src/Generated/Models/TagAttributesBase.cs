@@ -10,7 +10,7 @@ using System;
 namespace Azure.Containers.ContainerRegistry
 {
     /// <summary> Tag attribute details. </summary>
-    internal partial class TagAttributesBase
+    public partial class TagAttributesBase
     {
         /// <summary> Initializes a new instance of TagAttributesBase. </summary>
         /// <param name="name"> Tag name. </param>

@@ -11,7 +11,7 @@ using Azure.Core;
 
 namespace Azure.Containers.ContainerRegistry
 {
-    internal partial class TagAttributesBase
+    public partial class TagAttributesBase
     {
         internal static TagAttributesBase DeserializeTagAttributesBase(JsonElement element)
         {

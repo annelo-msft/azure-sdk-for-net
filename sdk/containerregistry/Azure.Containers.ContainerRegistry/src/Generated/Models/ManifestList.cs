@@ -11,7 +11,7 @@ using Azure.Core;
 namespace Azure.Containers.ContainerRegistry
 {
     /// <summary> Returns the requested Docker multi-arch-manifest file. </summary>
-    internal partial class ManifestList : Manifest
+    public partial class ManifestList : Manifest
     {
         /// <summary> Initializes a new instance of ManifestList. </summary>
         internal ManifestList()

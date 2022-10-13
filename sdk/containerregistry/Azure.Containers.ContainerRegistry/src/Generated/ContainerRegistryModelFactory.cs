@@ -8,12 +8,120 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Azure.Containers.ContainerRegistry.Specialized;
 
 namespace Azure.Containers.ContainerRegistry
 {
     /// <summary> Model factory for read-only models. </summary>
     public static partial class ContainerRegistryModelFactory
     {
+        /// <summary> Initializes a new instance of ManifestWrapper. </summary>
+        /// <param name="schemaVersion"> Schema version. </param>
+        /// <param name="mediaType"> Media type for this Manifest. </param>
+        /// <param name="manifests"> (ManifestList, OCIIndex) List of V2 image layer information. </param>
+        /// <param name="config"> (V2, OCI) Image config descriptor. </param>
+        /// <param name="layers"> (V2, OCI) List of V2 image layer information. </param>
+        /// <param name="annotations"> (OCI, OCIIndex) Additional metadata. </param>
+        /// <param name="architecture"> (V1) CPU architecture. </param>
+        /// <param name="name"> (V1) Image name. </param>
+        /// <param name="tag"> (V1) Image tag. </param>
+        /// <param name="fsLayers"> (V1) List of layer information. </param>
+        /// <param name="history"> (V1) Image history. </param>
+        /// <param name="signatures"> (V1) Image signature. </param>
+        /// <returns> A new <see cref="ContainerRegistry.ManifestWrapper"/> instance for mocking. </returns>
+        public static ManifestWrapper ManifestWrapper(int? schemaVersion = null, string mediaType = null, IEnumerable<ManifestListAttributes> manifests = null, OciBlobDescriptor config = null, IEnumerable<OciBlobDescriptor> layers = null, OciAnnotations annotations = null, string architecture = null, string name = null, string tag = null, IEnumerable<FsLayer> fsLayers = null, IEnumerable<History> history = null, IEnumerable<ImageSignature> signatures = null)
+        {
+            manifests ??= new List<ManifestListAttributes>();
+            layers ??= new List<OciBlobDescriptor>();
+            fsLayers ??= new List<FsLayer>();
+            history ??= new List<History>();
+            signatures ??= new List<ImageSignature>();
+
+            return new ManifestWrapper(schemaVersion, mediaType, manifests?.ToList(), config, layers?.ToList(), annotations, architecture, name, tag, fsLayers?.ToList(), history?.ToList(), signatures?.ToList());
+        }
+
+        /// <summary> Initializes a new instance of ManifestListAttributes. </summary>
+        /// <param name="mediaType"> The MIME type of the referenced object. This will generally be application/vnd.docker.image.manifest.v2+json, but it could also be application/vnd.docker.image.manifest.v1+json. </param>
+        /// <param name="size"> The size in bytes of the object. </param>
+        /// <param name="digest"> The digest of the content, as defined by the Registry V2 HTTP API Specification. </param>
+        /// <param name="platform"> The platform object describes the platform which the image in the manifest runs on. A full list of valid operating system and architecture values are listed in the Go language documentation for $GOOS and $GOARCH. </param>
+        /// <returns> A new <see cref="ContainerRegistry.ManifestListAttributes"/> instance for mocking. </returns>
+        public static ManifestListAttributes ManifestListAttributes(string mediaType = null, long? size = null, string digest = null, Platform platform = null)
+        {
+            return new ManifestListAttributes(mediaType, size, digest, platform);
+        }
+
+        /// <summary> Initializes a new instance of Platform. </summary>
+        /// <param name="architecture"> Specifies the CPU architecture, for example amd64 or ppc64le. </param>
+        /// <param name="os"> The os field specifies the operating system, for example linux or windows. </param>
+        /// <param name="osVersion"> The optional os.version field specifies the operating system version, for example 10.0.10586. </param>
+        /// <param name="osFeatures"> The optional os.features field specifies an array of strings, each listing a required OS feature (for example on Windows win32k. </param>
+        /// <param name="variant"> The optional variant field specifies a variant of the CPU, for example armv6l to specify a particular CPU variant of the ARM CPU. </param>
+        /// <param name="features"> The optional features field specifies an array of strings, each listing a required CPU feature (for example sse4 or aes. </param>
+        /// <returns> A new <see cref="ContainerRegistry.Platform"/> instance for mocking. </returns>
+        public static Platform Platform(string architecture = null, string os = null, string osVersion = null, IEnumerable<string> osFeatures = null, string variant = null, IEnumerable<string> features = null)
+        {
+            osFeatures ??= new List<string>();
+            features ??= new List<string>();
+
+            return new Platform(architecture, os, osVersion, osFeatures?.ToList(), variant, features?.ToList());
+        }
+
+        /// <summary> Initializes a new instance of FsLayer. </summary>
+        /// <param name="blobSum"> SHA of an image layer. </param>
+        /// <returns> A new <see cref="ContainerRegistry.FsLayer"/> instance for mocking. </returns>
+        public static FsLayer FsLayer(string blobSum = null)
+        {
+            return new FsLayer(blobSum);
+        }
+
+        /// <summary> Initializes a new instance of History. </summary>
+        /// <param name="v1Compatibility"> The raw v1 compatibility information. </param>
+        /// <returns> A new <see cref="ContainerRegistry.History"/> instance for mocking. </returns>
+        public static History History(string v1Compatibility = null)
+        {
+            return new History(v1Compatibility);
+        }
+
+        /// <summary> Initializes a new instance of ImageSignature. </summary>
+        /// <param name="header"> A JSON web signature. </param>
+        /// <param name="signature"> A signature for the image manifest, signed by a libtrust private key. </param>
+        /// <param name="protected"> The signed protected header. </param>
+        /// <returns> A new <see cref="ContainerRegistry.ImageSignature"/> instance for mocking. </returns>
+        public static ImageSignature ImageSignature(JWK header = null, string signature = null, string @protected = null)
+        {
+            return new ImageSignature(header, signature, @protected);
+        }
+
+        /// <summary> Initializes a new instance of JWK. </summary>
+        /// <param name="jwk"> JSON web key parameter. </param>
+        /// <param name="alg"> The algorithm used to sign or encrypt the JWT. </param>
+        /// <returns> A new <see cref="ContainerRegistry.JWK"/> instance for mocking. </returns>
+        public static JWK JWK(JWKHeader jwk = null, string alg = null)
+        {
+            return new JWK(jwk, alg);
+        }
+
+        /// <summary> Initializes a new instance of JWKHeader. </summary>
+        /// <param name="crv"> crv value. </param>
+        /// <param name="kid"> kid value. </param>
+        /// <param name="kty"> kty value. </param>
+        /// <param name="x"> x value. </param>
+        /// <param name="y"> y value. </param>
+        /// <returns> A new <see cref="ContainerRegistry.JWKHeader"/> instance for mocking. </returns>
+        public static JWKHeader JWKHeader(string crv = null, string kid = null, string kty = null, string x = null, string y = null)
+        {
+            return new JWKHeader(crv, kid, kty, x, y);
+        }
+
+        /// <summary> Initializes a new instance of Manifest. </summary>
+        /// <param name="schemaVersion"> Schema version. </param>
+        /// <returns> A new <see cref="ContainerRegistry.Manifest"/> instance for mocking. </returns>
+        public static Manifest Manifest(int? schemaVersion = null)
+        {
+            return new Manifest(schemaVersion);
+        }
+
         /// <summary> Initializes a new instance of ContainerRepositoryProperties. </summary>
         /// <param name="registryLoginServer"> Registry login server name. This is likely to be similar to {registry-name}.azurecr.io. </param>
         /// <param name="name"> Image name. </param>
@@ -31,6 +139,21 @@ namespace Azure.Containers.ContainerRegistry
             return new ContainerRepositoryProperties(registryLoginServer, name, createdOn, lastUpdatedOn, manifestCount, tagCount, canDelete, canWrite, canList, canRead);
         }
 
+        /// <summary> Initializes a new instance of TagAttributesBase. </summary>
+        /// <param name="name"> Tag name. </param>
+        /// <param name="digest"> Tag digest. </param>
+        /// <param name="createdOn"> Tag created time. </param>
+        /// <param name="lastUpdatedOn"> Tag last update time. </param>
+        /// <param name="canDelete"> Delete enabled. </param>
+        /// <param name="canWrite"> Write enabled. </param>
+        /// <param name="canList"> List enabled. </param>
+        /// <param name="canRead"> Read enabled. </param>
+        /// <returns> A new <see cref="ContainerRegistry.TagAttributesBase"/> instance for mocking. </returns>
+        public static TagAttributesBase TagAttributesBase(string name = null, string digest = null, DateTimeOffset createdOn = default, DateTimeOffset lastUpdatedOn = default, bool? canDelete = null, bool? canWrite = null, bool? canList = null, bool? canRead = null)
+        {
+            return new TagAttributesBase(name, digest, createdOn, lastUpdatedOn, canDelete, canWrite, canList, canRead);
+        }
+
         /// <summary> Initializes a new instance of ArtifactTagProperties. </summary>
         /// <param name="registryLoginServer"> Registry login server name. This is likely to be similar to {registry-name}.azurecr.io. </param>
         /// <param name="repositoryName"> Image name. </param>
@@ -46,6 +169,28 @@ namespace Azure.Containers.ContainerRegistry
         public static ArtifactTagProperties ArtifactTagProperties(string registryLoginServer = null, string repositoryName = null, string name = null, string digest = null, DateTimeOffset createdOn = default, DateTimeOffset lastUpdatedOn = default, bool? canDelete = null, bool? canWrite = null, bool? canList = null, bool? canRead = null)
         {
             return new ArtifactTagProperties(registryLoginServer, repositoryName, name, digest, createdOn, lastUpdatedOn, canDelete, canWrite, canList, canRead);
+        }
+
+        /// <summary> Initializes a new instance of ManifestAttributesBase. </summary>
+        /// <param name="digest"> Manifest. </param>
+        /// <param name="size"> Image size. </param>
+        /// <param name="createdOn"> Created time. </param>
+        /// <param name="lastUpdatedOn"> Last update time. </param>
+        /// <param name="architecture"> CPU architecture. </param>
+        /// <param name="operatingSystem"> Operating system. </param>
+        /// <param name="relatedArtifacts"> List of artifacts that are referenced by this manifest list, with information about the platform each supports.  This list will be empty if this is a leaf manifest and not a manifest list. </param>
+        /// <param name="tags"> List of tags. </param>
+        /// <param name="canDelete"> Delete enabled. </param>
+        /// <param name="canWrite"> Write enabled. </param>
+        /// <param name="canList"> List enabled. </param>
+        /// <param name="canRead"> Read enabled. </param>
+        /// <returns> A new <see cref="ContainerRegistry.ManifestAttributesBase"/> instance for mocking. </returns>
+        public static ManifestAttributesBase ManifestAttributesBase(string digest = null, long? size = null, DateTimeOffset createdOn = default, DateTimeOffset lastUpdatedOn = default, ArtifactArchitecture? architecture = null, ArtifactOperatingSystem? operatingSystem = null, IEnumerable<ArtifactManifestPlatform> relatedArtifacts = null, IEnumerable<string> tags = null, bool? canDelete = null, bool? canWrite = null, bool? canList = null, bool? canRead = null)
+        {
+            relatedArtifacts ??= new List<ArtifactManifestPlatform>();
+            tags ??= new List<string>();
+
+            return new ManifestAttributesBase(digest, size, createdOn, lastUpdatedOn, architecture, operatingSystem, relatedArtifacts?.ToList(), tags?.ToList(), canDelete, canWrite, canList, canRead);
         }
 
         /// <summary> Initializes a new instance of ArtifactManifestPlatform. </summary>
@@ -80,6 +225,77 @@ namespace Azure.Containers.ContainerRegistry
             tags ??= new List<string>();
 
             return new ArtifactManifestProperties(registryLoginServer, repositoryName, digest, sizeInBytes, createdOn, lastUpdatedOn, architecture, operatingSystem, relatedArtifacts?.ToList(), tags?.ToList(), canDelete, canWrite, canList, canRead);
+        }
+
+        /// <summary> Initializes a new instance of AcrRefreshToken. </summary>
+        /// <param name="refreshToken"> The refresh token to be used for generating access tokens. </param>
+        /// <returns> A new <see cref="ContainerRegistry.AcrRefreshToken"/> instance for mocking. </returns>
+        public static AcrRefreshToken AcrRefreshToken(string refreshToken = null)
+        {
+            return new AcrRefreshToken(refreshToken);
+        }
+
+        /// <summary> Initializes a new instance of AcrAccessToken. </summary>
+        /// <param name="accessToken"> The access token for performing authenticated requests. </param>
+        /// <returns> A new <see cref="ContainerRegistry.AcrAccessToken"/> instance for mocking. </returns>
+        public static AcrAccessToken AcrAccessToken(string accessToken = null)
+        {
+            return new AcrAccessToken(accessToken);
+        }
+
+        /// <summary> Initializes a new instance of ManifestList. </summary>
+        /// <param name="schemaVersion"> Schema version. </param>
+        /// <param name="mediaType"> Media type for this Manifest. </param>
+        /// <param name="manifests"> List of V2 image layer information. </param>
+        /// <returns> A new <see cref="ContainerRegistry.ManifestList"/> instance for mocking. </returns>
+        public static ManifestList ManifestList(int? schemaVersion = null, string mediaType = null, IEnumerable<ManifestListAttributes> manifests = null)
+        {
+            manifests ??= new List<ManifestListAttributes>();
+
+            return new ManifestList(schemaVersion, mediaType, manifests?.ToList());
+        }
+
+        /// <summary> Initializes a new instance of V2Manifest. </summary>
+        /// <param name="schemaVersion"> Schema version. </param>
+        /// <param name="mediaType"> Media type for this Manifest. </param>
+        /// <param name="config"> V2 image config descriptor. </param>
+        /// <param name="layers"> List of V2 image layer information. </param>
+        /// <returns> A new <see cref="ContainerRegistry.V2Manifest"/> instance for mocking. </returns>
+        public static V2Manifest V2Manifest(int? schemaVersion = null, string mediaType = null, OciBlobDescriptor config = null, IEnumerable<OciBlobDescriptor> layers = null)
+        {
+            layers ??= new List<OciBlobDescriptor>();
+
+            return new V2Manifest(schemaVersion, mediaType, config, layers?.ToList());
+        }
+
+        /// <summary> Initializes a new instance of OCIIndex. </summary>
+        /// <param name="schemaVersion"> Schema version. </param>
+        /// <param name="manifests"> List of OCI image layer information. </param>
+        /// <param name="annotations"> Additional information provided through arbitrary metadata. </param>
+        /// <returns> A new <see cref="ContainerRegistry.OCIIndex"/> instance for mocking. </returns>
+        public static OCIIndex OCIIndex(int? schemaVersion = null, IEnumerable<ManifestListAttributes> manifests = null, OciAnnotations annotations = null)
+        {
+            manifests ??= new List<ManifestListAttributes>();
+
+            return new OCIIndex(schemaVersion, manifests?.ToList(), annotations);
+        }
+
+        /// <summary> Initializes a new instance of V1Manifest. </summary>
+        /// <param name="schemaVersion"> Schema version. </param>
+        /// <param name="architecture"> CPU architecture. </param>
+        /// <param name="name"> Image name. </param>
+        /// <param name="tag"> Image tag. </param>
+        /// <param name="fsLayers"> List of layer information. </param>
+        /// <param name="history"> Image history. </param>
+        /// <param name="signatures"> Image signature. </param>
+        /// <returns> A new <see cref="ContainerRegistry.V1Manifest"/> instance for mocking. </returns>
+        public static V1Manifest V1Manifest(int? schemaVersion = null, string architecture = null, string name = null, string tag = null, IEnumerable<FsLayer> fsLayers = null, IEnumerable<History> history = null, IEnumerable<ImageSignature> signatures = null)
+        {
+            fsLayers ??= new List<FsLayer>();
+            history ??= new List<History>();
+            signatures ??= new List<ImageSignature>();
+
+            return new V1Manifest(schemaVersion, architecture, name, tag, fsLayers?.ToList(), history?.ToList(), signatures?.ToList());
         }
     }
 }

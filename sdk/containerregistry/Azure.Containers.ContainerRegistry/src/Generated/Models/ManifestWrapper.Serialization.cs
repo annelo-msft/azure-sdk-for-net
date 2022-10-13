@@ -12,7 +12,7 @@ using Azure.Core;
 
 namespace Azure.Containers.ContainerRegistry
 {
-    internal partial class ManifestWrapper
+    public partial class ManifestWrapper
     {
         internal static ManifestWrapper DeserializeManifestWrapper(JsonElement element)
         {

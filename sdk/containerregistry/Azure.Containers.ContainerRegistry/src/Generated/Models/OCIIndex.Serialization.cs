@@ -12,7 +12,7 @@ using Azure.Core;
 
 namespace Azure.Containers.ContainerRegistry
 {
-    internal partial class OCIIndex
+    public partial class OCIIndex
     {
         internal static OCIIndex DeserializeOCIIndex(JsonElement element)
         {

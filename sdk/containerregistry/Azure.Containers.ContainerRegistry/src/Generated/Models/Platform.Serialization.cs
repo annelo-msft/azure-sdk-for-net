@@ -11,7 +11,7 @@ using Azure.Core;
 
 namespace Azure.Containers.ContainerRegistry
 {
-    internal partial class Platform
+    public partial class Platform
     {
         internal static Platform DeserializePlatform(JsonElement element)
         {

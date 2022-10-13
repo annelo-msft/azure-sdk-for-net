@@ -10,7 +10,7 @@ using Azure.Core;
 
 namespace Azure.Containers.ContainerRegistry
 {
-    internal partial class History
+    public partial class History
     {
         internal static History DeserializeHistory(JsonElement element)
         {

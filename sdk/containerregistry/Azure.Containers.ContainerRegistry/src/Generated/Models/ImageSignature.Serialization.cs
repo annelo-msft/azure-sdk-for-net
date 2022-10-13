@@ -10,7 +10,7 @@ using Azure.Core;
 
 namespace Azure.Containers.ContainerRegistry
 {
-    internal partial class ImageSignature
+    public partial class ImageSignature
     {
         internal static ImageSignature DeserializeImageSignature(JsonElement element)
         {

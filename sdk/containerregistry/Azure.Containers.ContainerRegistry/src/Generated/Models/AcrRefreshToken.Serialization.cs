@@ -10,7 +10,7 @@ using Azure.Core;
 
 namespace Azure.Containers.ContainerRegistry
 {
-    internal partial class AcrRefreshToken
+    public partial class AcrRefreshToken
     {
         internal static AcrRefreshToken DeserializeAcrRefreshToken(JsonElement element)
         {
