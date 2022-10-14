@@ -15,6 +15,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Azure.Core;
 
 namespace Azure
 {
@@ -38,7 +39,10 @@ namespace Azure
         /// </summary>
         /// <param name="utf8Json">A UTF8 encoded string representing a JSON value.</param>
         /// <returns>A <see cref="JsonData"/> representation of the value.</returns>
-        public static JsonData Parse(BinaryData utf8Json) => new JsonData(JsonDocument.Parse(utf8Json));
+        public static JsonData Parse(BinaryData utf8Json)
+        {
+            return new JsonData(JsonDocument.Parse(utf8Json));
+        }
 
         /// <summary>
         /// Parses text representing a single JSON value into a <see cref="JsonData"/>.
@@ -160,6 +164,42 @@ namespace Azure
             InitFromElement(element);
         }
 
+        private void InitFromElement(JsonElement element)
+        {
+            switch (element.ValueKind)
+            {
+                case JsonValueKind.Object:
+                    _objectRepresentation = new Dictionary<string, JsonData>();
+                    foreach (var item in element.EnumerateObject())
+                    {
+                        _objectRepresentation[item.Name] = new JsonData(item.Value);
+                    }
+                    break;
+                case JsonValueKind.Array:
+                    _arrayRepresentation = new List<JsonData>();
+                    foreach (var item in element.EnumerateArray())
+                    {
+                        _arrayRepresentation.Add(new JsonData(item));
+                    }
+                    break;
+                case JsonValueKind.String:
+                    _value = element.GetString();
+                    break;
+                case JsonValueKind.Number:
+                    _value = new Number(element);
+                    break;
+                case JsonValueKind.True:
+                case JsonValueKind.False:
+                    _value = element.GetBoolean();
+                    break;
+                case JsonValueKind.Null:
+                    _value = null;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(element), "Unsupported element kind");
+            }
+        }
+
         /// <summary>
         /// Returns a stringified version of the JSON for this value.
         /// </summary>
@@ -207,42 +247,6 @@ namespace Azure
         internal IEnumerable<JsonData> Items
         {
             get => EnsureArray();
-        }
-
-        private void InitFromElement(JsonElement element)
-        {
-            switch (element.ValueKind)
-            {
-                case JsonValueKind.Object:
-                    _objectRepresentation = new Dictionary<string, JsonData>();
-                    foreach (var item in element.EnumerateObject())
-                    {
-                        _objectRepresentation[item.Name] = new JsonData(item.Value);
-                    }
-                    break;
-                case JsonValueKind.Array:
-                    _arrayRepresentation = new List<JsonData>();
-                    foreach (var item in element.EnumerateArray())
-                    {
-                        _arrayRepresentation.Add(new JsonData(item));
-                    }
-                    break;
-                case JsonValueKind.String:
-                    _value = element.GetString();
-                    break;
-                case JsonValueKind.Number:
-                    _value = new Number(element);
-                    break;
-                case JsonValueKind.True:
-                case JsonValueKind.False:
-                    _value = element.GetBoolean();
-                    break;
-                case JsonValueKind.Null:
-                    _value = null;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(element), "Unsupported element kind");
-            }
         }
 
         /// <summary>
@@ -535,7 +539,15 @@ namespace Azure
         /// </summary>
         /// <typeparam name="T">The type to convert the value into.</typeparam>
         /// <returns>A new instance of <typeparamref name="T"/> constructed from the underlying JSON value.</returns>
-        public T To<T>() => To<T>(DefaultJsonSerializerOptions);
+        public T? To<T>()
+        {
+            if (typeof(IUtf8JsonDeserializable).IsAssignableFrom(typeof(T)))
+            {
+                return ToIUtf8JsonDeserializable<T>();
+            }
+
+            return To<T>(DefaultJsonSerializerOptions);
+        }
 
         /// <summary>
         /// Deserializes the given JSON value into an instance of a given type.
@@ -543,9 +555,31 @@ namespace Azure
         /// <typeparam name="T">The type to deserialize the value into</typeparam>
         /// <param name="options">Options to control the conversion behavior.</param>
         /// <returns>A new instance of <typeparamref name="T"/> constructed from the underlying JSON value.</returns>
-        internal T To<T>(JsonSerializerOptions options)
+        internal T? To<T>(JsonSerializerOptions options)
         {
             return JsonSerializer.Deserialize<T>(ToJsonString(), options);
+        }
+
+        /// <summary>
+        /// Deserializes the given JSON value into an instance of a given type.
+        /// </summary>
+        /// <typeparam name="T">The type to deserialize the value into</typeparam>
+        /// <returns>A new instance of <typeparamref name="T"/> constructed from the underlying JSON value.</returns>
+        internal T? ToIUtf8JsonDeserializable<T>() where T : IUtf8JsonDeserializable<T>, new()
+        {
+            T value = new();
+
+            // This is a kludge for the sake of experiment - maybe we would cache the binary data?
+            using var memoryStream = new MemoryStream();
+            using (var writer = new Utf8JsonWriter(memoryStream))
+            {
+                WriteTo(writer);
+            }
+
+            Utf8JsonReader reader = new Utf8JsonReader(memoryStream.ToArray());
+
+            value.Read(ref reader);
+            return value;
         }
 
         private void WriteTo(Utf8JsonWriter writer)

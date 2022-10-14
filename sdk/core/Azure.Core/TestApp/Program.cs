@@ -10,7 +10,8 @@ dynamic json = new JsonData(new
 {
     Foo = new
     {
-        Bar = "hi"
+        Bar = "hi",
+        CreatedOn = DateTimeOffset.Now,
     }
 });
 
@@ -18,8 +19,12 @@ Console.WriteLine(json.Foo);
 Console.WriteLine(json.Foo.Bar);
 Console.WriteLine(json);
 
-FooModel model = (FooModel)json;
-Console.WriteLine(model.Bar);
+//DateTimeOffset createdOn = (DateTimeOffset)json.Foo.CreatedOn;
+DateTimeOffset createdOn = json.Foo.CreatedOn.To<DateTimeOffset>();
+Console.WriteLine(createdOn);
+
+//FooModel model = (FooModel)json;
+//Console.WriteLine(model.Bar);
 
 json = JsonData.FromString("5");
 
@@ -36,26 +41,36 @@ Console.WriteLine((int)json[5]);
 
 Console.ReadLine();
 
-
-public class FooModel : IFooModel
+public class FooModel
 {
     public string Bar { get; set; }
 
-    private static FooModel FromJsonData(JsonData jsonData)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <summary>
-    /// Converts the value to a <see cref="double"/> or null.
-    /// </summary>
-    /// <param name="json">The value to convert.</param>
-
-    // This works
-    public static explicit operator FooModel?(JsonData json) => FromJsonData(json);
+    public DateTimeOffset CreatedOn { get; set; }
 }
 
-public interface IFooModel
-{
-}
+//public interface IFooModel
+//{
+//}
+//
+//public class FooModel : IFooModel
+//{
+//    public string Bar { get; set; }
+
+//    private static FooModel FromJsonData(JsonData jsonData)
+//    {
+//        throw new NotImplementedException();
+//    }
+
+//    /// <summary>
+//    /// Converts the value to a <see cref="double"/> or null.
+//    /// </summary>
+//    /// <param name="json">The value to convert.</param>
+
+//    // This works
+//    public static explicit operator FooModel?(JsonData json) => FromJsonData(json);
+//}
+
+//public interface IFooModel
+//{
+//}
 
