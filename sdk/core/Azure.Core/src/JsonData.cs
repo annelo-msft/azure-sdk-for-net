@@ -531,21 +531,13 @@ namespace Azure
         }
 
         /// <summary>
-        /// Converts the given JSON value into an instance of a given type.
-        /// </summary>
-        /// <typeparam name="T">The type to convert the value into.</typeparam>
-        /// <returns>A new instance of <typeparamref name="T"/> constructed from the underlying JSON value.</returns>
-        public T To<T>() => To<T>(DefaultJsonSerializerOptions);
-
-        /// <summary>
         /// Deserializes the given JSON value into an instance of a given type.
         /// </summary>
         /// <typeparam name="T">The type to deserialize the value into</typeparam>
-        /// <param name="options">Options to control the conversion behavior.</param>
         /// <returns>A new instance of <typeparamref name="T"/> constructed from the underlying JSON value.</returns>
-        internal T To<T>(JsonSerializerOptions options)
+        internal T? To<T>()
         {
-            return JsonSerializer.Deserialize<T>(ToJsonString(), options);
+            return JsonSerializer.Deserialize<T>(ToJsonString(), DefaultJsonSerializerOptions);
         }
 
         private void WriteTo(Utf8JsonWriter writer)
@@ -693,6 +685,8 @@ namespace Azure
 
             private static readonly MethodInfo GetDynamicEnumerableMethod = typeof(JsonData).GetMethod(nameof(GetDynamicEnumerable), BindingFlags.NonPublic | BindingFlags.Instance)!;
 
+            private static readonly MethodInfo GetDynamicConvertMethod = typeof(JsonData).GetMethod(nameof(To), BindingFlags.NonPublic | BindingFlags.Instance)!;
+
             internal MetaObject(Expression parameter, IDynamicMetaObjectProvider value) : base(parameter, BindingRestrictions.Empty, value)
             {
             }
@@ -713,12 +707,26 @@ namespace Azure
                 if (binder.Type == typeof(IEnumerable))
                 {
                     var targetObject = Expression.Convert(Expression, LimitType);
-                    var getPropertyCall = Expression.Call(targetObject, GetDynamicEnumerableMethod);
+                    var convertCall = Expression.Call(targetObject, GetDynamicEnumerableMethod);
 
                     var restrictions = BindingRestrictions.GetTypeRestriction(Expression, LimitType);
-                    return new DynamicMetaObject(getPropertyCall, restrictions);
+                    return new DynamicMetaObject(convertCall, restrictions);
                 }
-                return base.BindConvert(binder);
+                else
+                {
+                    try
+                    {
+                        var targetObject = Expression.Convert(Expression, LimitType);
+                        var convertCall = Expression.Call(targetObject, GetDynamicConvertMethod.Name, new Type[] { binder.Type });
+
+                        var restrictions = BindingRestrictions.GetTypeRestriction(Expression, LimitType);
+                        return new DynamicMetaObject(convertCall, restrictions);
+                    }
+                    catch (Exception)
+                    {
+                        return base.BindConvert(binder);
+                    }
+                }
             }
         }
 
