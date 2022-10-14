@@ -312,13 +312,6 @@ namespace Azure
         public static explicit operator double?(JsonData json) => json.Kind == JsonValueKind.Null ? null : json.GetDouble();
 
         /// <summary>
-        /// Converts the value to a <see cref="double"/> or null.
-        /// </summary>
-        /// <param name="json">The value to convert.</param>
-        public static explicit operator T?(JsonData json) => json.Kind == JsonValueKind.Null ? null : json.GetDouble();
-
-
-        /// <summary>
         /// Returns true if a <see cref="JsonData"/> has the same value as a given string,
         /// and false otherwise.
         /// </summary>
@@ -535,6 +528,24 @@ namespace Azure
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Converts the given JSON value into an instance of a given type.
+        /// </summary>
+        /// <typeparam name="T">The type to convert the value into.</typeparam>
+        /// <returns>A new instance of <typeparamref name="T"/> constructed from the underlying JSON value.</returns>
+        public T To<T>() => To<T>(DefaultJsonSerializerOptions);
+
+        /// <summary>
+        /// Deserializes the given JSON value into an instance of a given type.
+        /// </summary>
+        /// <typeparam name="T">The type to deserialize the value into</typeparam>
+        /// <param name="options">Options to control the conversion behavior.</param>
+        /// <returns>A new instance of <typeparamref name="T"/> constructed from the underlying JSON value.</returns>
+        internal T To<T>(JsonSerializerOptions options)
+        {
+            return JsonSerializer.Deserialize<T>(ToJsonString(), options);
         }
 
         private void WriteTo(Utf8JsonWriter writer)
