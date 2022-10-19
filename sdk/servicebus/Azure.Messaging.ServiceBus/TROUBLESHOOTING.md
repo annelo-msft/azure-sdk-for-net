@@ -25,6 +25,7 @@ This troubleshooting guide covers failure investigation techniques, common error
   - [Message or session lock is lost before lock expiration time](#message-or-session-lock-is-lost-before-lock-expiration-time)
   - [How to browse scheduled or deferred messages](#how-to-browse-scheduled-or-deferred-messages)
   - [How to browse session messages across all sessions](#how-to-browse-session-messages-across-all-sessions)
+  - [NotSupportedException thrown when accessing Body property](#notsupportedexception-thrown-when-accessing-message-body)
 - [Troubleshoot processor issues](#troubleshoot-processor-issues)
   - [Autolock renewal does not appear to be working](#autolock-renewal-is-not-working)
   - [Processor appears to hang or have latency issues when using extremely high concurrency](#processor-appears-to-hang-or-have-latency-issues-when-using-high-concurrency)
@@ -60,19 +61,37 @@ The exception includes some contextual information to assist in understanding th
 
 - `Reason` : Provides a set of well-known reasons for the failure that help to categorize and clarify the root cause. These are intended to allow for applying exception filtering and other logic where inspecting the text of an exception message wouldn't be ideal. Some key failure reasons are:
 
-  - **Service Timeout** : This indicates that the Service Bus service did not respond to an operation within the expected amount of time. This may have been caused by a transient network issue or service problem. The Service Bus service may or may not have successfully completed the request; the status is not known. In the case of accepting the next available session, this exception indicates that there were no unlocked sessions available in the entity. These are transient errors that will be automatically retried.
+  - **ServiceTimeout** : This indicates that the Service Bus service did not respond to an operation within the expected amount of time. This may have been caused by a transient network issue or service problem. The Service Bus service may or may not have successfully completed the request; the status is not known. In the case of accepting the next available session, this exception indicates that there were no unlocked sessions available in the entity. These are transient errors that will be automatically retried.
 
-  - **Quota Exceeded** : This typically indicates that there are too many active receive operations for a single entity. In order to avoid this error, reduce the number of potential concurrent receives. You can use batch receives to attempt to receive multiple messages per receive request. Please see [Service Bus quotas][ServiceBusQuotas] for more information.
+  - **QuotaExceeded** : This typically indicates that there are too many active receive operations for a single entity. In order to avoid this error, reduce the number of potential concurrent receives. You can use batch receives to attempt to receive multiple messages per receive request. Please see [Service Bus quotas][ServiceBusQuotas] for more information.
 
-  - **Message Size Exceeded** : This indicates that the max message size has been exceeded. The message size includes the body of the message, as well as any associated metadata and system overhead. The best approach for resolving this error is to reduce the number of messages being sent in a batch or the size of the body included in the message. Because size limits are subject to change, please refer to [Service Bus quotas][ServiceBusQuotas] for specifics.  
+  - **MessageSizeExceeded** : This indicates that the max message size has been exceeded. The message size includes the body of the message, as well as any associated metadata and system overhead. The best approach for resolving this error is to reduce the number of messages being sent in a batch or the size of the body included in the message. Because size limits are subject to change, please refer to [Service Bus quotas][ServiceBusQuotas] for specifics.  
   
-  - **MessageLockLost** : This indicates that the lock on the message is lost. Callers should attempt to receive and process the message again. This only applies to non-session entities. This error occurs if processing takes longer than the lock duration and the message lock is not renewed. Note that this error can also occur when the link is detached due to a transient network issue or when the link is idle for 10 minutes.
+  - **MessageLockLost** : This indicates that the lock on the message is lost. Callers should attempt to receive and process the message again. This only applies to non-session entities. This error occurs if processing takes longer than the lock duration and the message lock is not renewed. Note that this error can also occur when the link is detached due to a transient network issue or when the link is idle for 10 minutes. See [Message or session lock is lost before lock expiration time](#message-or-session-lock-is-lost-before-lock-expiration-time) for more information.
   
-  - **SessionLockLost**: This indicates that the lock on the session has expired. Callers should attempt to accept the session again. This only applies to session-enabled entities. This error occurs if processing takes longer than the lock duration and the session lock is not renewed. Note that this error can also occur when the link is detached due to a transient network issue or when the link is idle for 10 minutes.
+  - **SessionLockLost**: This indicates that the lock on the session has expired. Callers should attempt to accept the session again. This only applies to session-enabled entities. This error occurs if processing takes longer than the lock duration and the session lock is not renewed. Note that this error can also occur when the link is detached due to a transient network issue or when the link is idle for 10 minutes. See [Message or session lock is lost before lock expiration time](#message-or-session-lock-is-lost-before-lock-expiration-time) for more information.
 
+  - **MessageNotFound**: This occurs when attempting to receive a deferred message by sequence number for a message that either doesn't exist in the entity, or is currently locked. 
+  
   - **SessionCannotBeLocked**: This indicates that the requested session cannot be locked because the lock is already held elsewhere. Once the lock expires, the session can be accepted.
 
   - **GeneralError**: This indicates that the Service Bus service encountered an error while processing the request. This is often caused by service upgrades and restarts. These are transient errors that will be automatically retried.
+
+  - **ServiceCommunicationProblem**: This indicates that there was an error communicating with the service. The issue may stem from a transient network problem, or a service problem. These are transient errors that will be automatically retried.
+
+As an example of how to handle a `ServiceBusException` and filter by the `Reason`, see the following:
+
+```C# Snippet:ServiceBusExceptionFailureReasonUsage
+try
+{
+    // Receive messages using the receiver client
+}
+catch (ServiceBusException ex) when
+    (ex.Reason == ServiceBusFailureReason.ServiceTimeout)
+{
+    // Take action based on a service timeout
+}
+```
 
 ### Other common exceptions
 
@@ -217,6 +236,10 @@ When working with topics, you cannot peek scheduled messages on the subscription
 
 You can use a regular [ServiceBusReceiver][ServiceBusReceiver] to peek across all sessions. To peek for a specific session you can use the [ServiceBusSessionReceiver][ServiceBusSessionReceiver], but you will need to obtain a session lock.
 
+### NotSupportedException thrown when accessing message body
+
+This issue occurs most often in interop scenarios when receiving a message sent from a different library that uses a different AMQP message body format. If you are interacting with these types of messages, see the [AMQP message body sample][MessageBody] to learn how to access the message body. 
+
 ## Troubleshoot processor issues
 
 ### Autolock renewal is not working
@@ -309,3 +332,4 @@ Information about Service Bus quotas can be found [here][ServiceBusQuotas].
 [DebugThreadPoolStarvation]: https://docs.microsoft.com/dotnet/core/diagnostics/debug-threadpool-starvation
 [DiagnoseThreadPoolExhaustion]: https://docs.microsoft.com/shows/on-net/diagnosing-thread-pool-exhaustion-issues-in-net-core-apps
 [TransactionTimeout]: https://docs.microsoft.com/azure/service-bus-messaging/service-bus-transactions#timeout
+[MessageBody]: https://github.com/Azure/azure-sdk-for-net/blob/main/sdk/servicebus/Azure.Messaging.ServiceBus/samples/Sample14_AMQPMessage.md#message-body
