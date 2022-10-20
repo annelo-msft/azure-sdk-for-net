@@ -15,7 +15,7 @@ namespace Azure.Containers.ContainerRegistry
     internal partial class ManifestList : ArtifactManifest
     {
         /// <summary> Initializes a new instance of ManifestList. </summary>
-        internal ManifestList()
+        public ManifestList()
         {
             Manifests = new ChangeTrackingList<ManifestListAttributes>();
         }
@@ -24,15 +24,15 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="schemaVersion"> Schema version. </param>
         /// <param name="mediaType"> Media type for this Manifest. </param>
         /// <param name="manifests"> List of V2 image layer information. </param>
-        internal ManifestList(int? schemaVersion, string mediaType, IReadOnlyList<ManifestListAttributes> manifests) : base(schemaVersion)
+        internal ManifestList(int? schemaVersion, string mediaType, IList<ManifestListAttributes> manifests) : base(schemaVersion)
         {
             MediaType = mediaType;
             Manifests = manifests;
         }
 
         /// <summary> Media type for this Manifest. </summary>
-        public string MediaType { get; }
+        public string MediaType { get; set; }
         /// <summary> List of V2 image layer information. </summary>
-        public IReadOnlyList<ManifestListAttributes> Manifests { get; }
+        public IList<ManifestListAttributes> Manifests { get; }
     }
 }

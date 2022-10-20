@@ -14,7 +14,7 @@ namespace Azure.Containers.ContainerRegistry.Specialized
     public partial class OciManifest : ArtifactManifest
     {
         /// <summary> Initializes a new instance of OciManifest. </summary>
-        internal OciManifest()
+        public OciManifest()
         {
             Layers = new ChangeTrackingList<OciBlobDescriptor>();
         }
@@ -24,7 +24,7 @@ namespace Azure.Containers.ContainerRegistry.Specialized
         /// <param name="config"> V2 image config descriptor. </param>
         /// <param name="layers"> List of V2 image layer information. </param>
         /// <param name="annotations"> Additional information provided through arbitrary metadata. </param>
-        internal OciManifest(int? schemaVersion, OciBlobDescriptor config, IReadOnlyList<OciBlobDescriptor> layers, OciAnnotations annotations) : base(schemaVersion)
+        internal OciManifest(int? schemaVersion, OciBlobDescriptor config, IList<OciBlobDescriptor> layers, OciAnnotations annotations) : base(schemaVersion)
         {
             Config = config;
             Layers = layers;
@@ -32,10 +32,10 @@ namespace Azure.Containers.ContainerRegistry.Specialized
         }
 
         /// <summary> V2 image config descriptor. </summary>
-        public OciBlobDescriptor Config { get; }
+        public OciBlobDescriptor Config { get; set; }
         /// <summary> List of V2 image layer information. </summary>
-        public IReadOnlyList<OciBlobDescriptor> Layers { get; }
+        public IList<OciBlobDescriptor> Layers { get; }
         /// <summary> Additional information provided through arbitrary metadata. </summary>
-        public OciAnnotations Annotations { get; }
+        public OciAnnotations Annotations { get; set; }
     }
 }

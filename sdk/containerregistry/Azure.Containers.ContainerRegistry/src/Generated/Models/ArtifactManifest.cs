@@ -11,7 +11,7 @@ namespace Azure.Containers.ContainerRegistry.Specialized
     public partial class ArtifactManifest
     {
         /// <summary> Initializes a new instance of ArtifactManifest. </summary>
-        internal ArtifactManifest()
+        public ArtifactManifest()
         {
         }
 
@@ -23,6 +23,6 @@ namespace Azure.Containers.ContainerRegistry.Specialized
         }
 
         /// <summary> Schema version. </summary>
-        public int? SchemaVersion { get; }
+        public int? SchemaVersion { get; set; }
     }
 }

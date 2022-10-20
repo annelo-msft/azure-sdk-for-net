@@ -129,3 +129,12 @@ directive:
   transform: >
     delete $["x-accessibility"]
 ```
+
+# Updates to OciManifest
+``` yaml
+directive:
+  from: swagger-document
+  where: $.definitions.OCIManifest
+  transform: >
+    $["x-csharp-usage"] = "model,input,output,converter";
+```

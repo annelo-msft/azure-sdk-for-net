@@ -12,8 +12,51 @@ using Azure.Core;
 
 namespace Azure.Containers.ContainerRegistry.Specialized
 {
-    public partial class OciBlobDescriptor
+    public partial class OciBlobDescriptor : IUtf8JsonSerializable
     {
+        void IUtf8JsonSerializable.Write(Utf8JsonWriter writer)
+        {
+            writer.WriteStartObject();
+            if (Optional.IsDefined(MediaType))
+            {
+                writer.WritePropertyName("mediaType");
+                writer.WriteStringValue(MediaType);
+            }
+            if (Optional.IsDefined(Size))
+            {
+                writer.WritePropertyName("size");
+                writer.WriteNumberValue(Size.Value);
+            }
+            if (Optional.IsDefined(Digest))
+            {
+                writer.WritePropertyName("digest");
+                writer.WriteStringValue(Digest);
+            }
+            if (Optional.IsCollectionDefined(Urls))
+            {
+                writer.WritePropertyName("urls");
+                writer.WriteStartArray();
+                foreach (var item in Urls)
+                {
+                    writer.WriteStringValue(item.AbsoluteUri);
+                }
+                writer.WriteEndArray();
+            }
+            if (Optional.IsDefined(Annotations))
+            {
+                if (Annotations != null)
+                {
+                    writer.WritePropertyName("annotations");
+                    writer.WriteObjectValue(Annotations);
+                }
+                else
+                {
+                    writer.WriteNull("annotations");
+                }
+            }
+            writer.WriteEndObject();
+        }
+
         internal static OciBlobDescriptor DeserializeOciBlobDescriptor(JsonElement element)
         {
             Optional<string> mediaType = default;
