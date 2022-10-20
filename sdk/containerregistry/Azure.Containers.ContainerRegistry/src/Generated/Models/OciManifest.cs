@@ -11,30 +11,31 @@ using Azure.Core;
 namespace Azure.Containers.ContainerRegistry.Specialized
 {
     /// <summary> Returns the requested OCI Manifest file. </summary>
-    public partial class OciManifest
+    public partial class OciManifest : ArtifactManifest
     {
         /// <summary> Initializes a new instance of OciManifest. </summary>
-        public OciManifest()
+        internal OciManifest()
         {
             Layers = new ChangeTrackingList<OciBlobDescriptor>();
         }
 
         /// <summary> Initializes a new instance of OciManifest. </summary>
+        /// <param name="schemaVersion"> Schema version. </param>
         /// <param name="config"> V2 image config descriptor. </param>
         /// <param name="layers"> List of V2 image layer information. </param>
         /// <param name="annotations"> Additional information provided through arbitrary metadata. </param>
-        /// <param name="schemaVersion"> Schema version. </param>
-        internal OciManifest(OciBlobDescriptor config, IList<OciBlobDescriptor> layers, OciAnnotations annotations, int? schemaVersion)
+        internal OciManifest(int? schemaVersion, OciBlobDescriptor config, IReadOnlyList<OciBlobDescriptor> layers, OciAnnotations annotations) : base(schemaVersion)
         {
             Config = config;
             Layers = layers;
             Annotations = annotations;
-            SchemaVersion = schemaVersion;
         }
 
         /// <summary> V2 image config descriptor. </summary>
-        public OciBlobDescriptor Config { get; set; }
+        public OciBlobDescriptor Config { get; }
         /// <summary> List of V2 image layer information. </summary>
-        public IList<OciBlobDescriptor> Layers { get; }
+        public IReadOnlyList<OciBlobDescriptor> Layers { get; }
+        /// <summary> Additional information provided through arbitrary metadata. </summary>
+        public OciAnnotations Annotations { get; }
     }
 }

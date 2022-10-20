@@ -162,6 +162,8 @@ namespace Azure.Containers.ContainerRegistry
         public static Azure.Containers.ContainerRegistry.ContainerRepositoryProperties ContainerRepositoryProperties(string registryLoginServer = null, string name = null, System.DateTimeOffset createdOn = default(System.DateTimeOffset), System.DateTimeOffset lastUpdatedOn = default(System.DateTimeOffset), int manifestCount = 0, int tagCount = 0, bool? canDelete = default(bool?), bool? canWrite = default(bool?), bool? canList = default(bool?), bool? canRead = default(bool?)) { throw null; }
         public static Azure.Containers.ContainerRegistry.Specialized.DownloadBlobResult DownloadBlobResult(string digest = null, System.IO.Stream content = null) { throw null; }
         public static Azure.Containers.ContainerRegistry.Specialized.DownloadManifestResult DownloadManifestResult(string digest = null, Azure.Containers.ContainerRegistry.Specialized.OciManifest manifest = null, System.IO.Stream manifestStream = null) { throw null; }
+        public static Azure.Containers.ContainerRegistry.Specialized.OciAnnotations OciAnnotations(System.DateTimeOffset? createdOn = default(System.DateTimeOffset?), string authors = null, string url = null, string documentation = null, string source = null, string version = null, string revision = null, string vendor = null, string licenses = null, string name = null, string title = null, string description = null, System.Collections.Generic.IReadOnlyDictionary<string, object> additionalProperties = null) { throw null; }
+        public static Azure.Containers.ContainerRegistry.Specialized.OciManifest OciManifest(int? schemaVersion = default(int?), Azure.Containers.ContainerRegistry.Specialized.OciBlobDescriptor config = null, System.Collections.Generic.IEnumerable<Azure.Containers.ContainerRegistry.Specialized.OciBlobDescriptor> layers = null, Azure.Containers.ContainerRegistry.Specialized.OciAnnotations annotations = null) { throw null; }
         public static Azure.Containers.ContainerRegistry.Specialized.UploadBlobResult UploadBlobResult(string digest = null) { throw null; }
         public static Azure.Containers.ContainerRegistry.Specialized.UploadManifestResult UploadManifestResult(string digest = null) { throw null; }
     }
@@ -222,8 +224,8 @@ namespace Azure.Containers.ContainerRegistry.Specialized
 {
     public abstract partial class ArtifactManifest
     {
-        protected ArtifactManifest() { }
-        public int? SchemaVersion { get { throw null; } set { } }
+        internal ArtifactManifest() { }
+        public int? SchemaVersion { get { throw null; } }
     }
     public partial class ContainerRegistryBlobClient
     {
@@ -272,24 +274,24 @@ namespace Azure.Containers.ContainerRegistry.Specialized
     }
     public partial class OciAnnotations
     {
-        public OciAnnotations() { }
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties { get { throw null; } }
-        public string Authors { get { throw null; } set { } }
+        internal OciAnnotations() { }
+        public System.Collections.Generic.IReadOnlyDictionary<string, object> AdditionalProperties { get { throw null; } }
+        public string Authors { get { throw null; } }
         public System.DateTimeOffset? CreatedOn { get { throw null; } set { } }
-        public string Description { get { throw null; } set { } }
-        public string Documentation { get { throw null; } set { } }
-        public string Licenses { get { throw null; } set { } }
-        public string Name { get { throw null; } set { } }
-        public string Revision { get { throw null; } set { } }
-        public string Source { get { throw null; } set { } }
-        public string Title { get { throw null; } set { } }
-        public string Url { get { throw null; } set { } }
-        public string Vendor { get { throw null; } set { } }
-        public string Version { get { throw null; } set { } }
+        public string Description { get { throw null; } }
+        public string Documentation { get { throw null; } }
+        public string Licenses { get { throw null; } }
+        public string Name { get { throw null; } }
+        public string Revision { get { throw null; } }
+        public string Source { get { throw null; } }
+        public string Title { get { throw null; } }
+        public string Url { get { throw null; } }
+        public string Vendor { get { throw null; } }
+        public string Version { get { throw null; } }
     }
     public partial class OciBlobDescriptor
     {
-        public OciBlobDescriptor() { }
+        internal OciBlobDescriptor() { }
         public Azure.Containers.ContainerRegistry.Specialized.OciAnnotations Annotations { get { throw null; } set { } }
         public string Digest { get { throw null; } set { } }
         public string MediaType { get { throw null; } set { } }
@@ -297,10 +299,10 @@ namespace Azure.Containers.ContainerRegistry.Specialized
     }
     public partial class OciManifest : Azure.Containers.ContainerRegistry.Specialized.ArtifactManifest
     {
-        public OciManifest() { }
+        internal OciManifest() { }
         public Azure.Containers.ContainerRegistry.Specialized.OciAnnotations Annotations { get { throw null; } }
-        public Azure.Containers.ContainerRegistry.Specialized.OciBlobDescriptor Config { get { throw null; } set { } }
-        public System.Collections.Generic.IList<Azure.Containers.ContainerRegistry.Specialized.OciBlobDescriptor> Layers { get { throw null; } }
+        public Azure.Containers.ContainerRegistry.Specialized.OciBlobDescriptor Config { get { throw null; } }
+        public System.Collections.Generic.IReadOnlyList<Azure.Containers.ContainerRegistry.Specialized.OciBlobDescriptor> Layers { get { throw null; } }
     }
     public partial class UploadBlobResult
     {

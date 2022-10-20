@@ -5,59 +5,18 @@
 
 #nullable disable
 
-using System;
 using System.Collections.Generic;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using Azure.Core;
 
 namespace Azure.Containers.ContainerRegistry.Specialized
 {
-    [JsonConverter(typeof(OciManifestConverter))]
-    public partial class OciManifest : IUtf8JsonSerializable
+    public partial class OciManifest
     {
-        void IUtf8JsonSerializable.Write(Utf8JsonWriter writer)
-        {
-            writer.WriteStartObject();
-            if (Optional.IsDefined(Config))
-            {
-                writer.WritePropertyName("config");
-                writer.WriteObjectValue(Config);
-            }
-            if (Optional.IsCollectionDefined(Layers))
-            {
-                writer.WritePropertyName("layers");
-                writer.WriteStartArray();
-                foreach (var item in Layers)
-                {
-                    writer.WriteObjectValue(item);
-                }
-                writer.WriteEndArray();
-            }
-            if (Optional.IsDefined(Annotations))
-            {
-                if (Annotations != null)
-                {
-                    writer.WritePropertyName("annotations");
-                    writer.WriteObjectValue(Annotations);
-                }
-                else
-                {
-                    writer.WriteNull("annotations");
-                }
-            }
-            if (Optional.IsDefined(SchemaVersion))
-            {
-                writer.WritePropertyName("schemaVersion");
-                writer.WriteNumberValue(SchemaVersion.Value);
-            }
-            writer.WriteEndObject();
-        }
-
         internal static OciManifest DeserializeOciManifest(JsonElement element)
         {
             Optional<OciBlobDescriptor> config = default;
-            Optional<IList<OciBlobDescriptor>> layers = default;
+            Optional<IReadOnlyList<OciBlobDescriptor>> layers = default;
             Optional<OciAnnotations> annotations = default;
             Optional<int> schemaVersion = default;
             foreach (var property in element.EnumerateObject())
@@ -108,20 +67,7 @@ namespace Azure.Containers.ContainerRegistry.Specialized
                     continue;
                 }
             }
-            return new OciManifest(config.Value, Optional.ToList(layers), annotations.Value, Optional.ToNullable(schemaVersion));
-        }
-
-        internal partial class OciManifestConverter : JsonConverter<OciManifest>
-        {
-            public override void Write(Utf8JsonWriter writer, OciManifest model, JsonSerializerOptions options)
-            {
-                writer.WriteObjectValue(model);
-            }
-            public override OciManifest Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-            {
-                using var document = JsonDocument.ParseValue(ref reader);
-                return DeserializeOciManifest(document.RootElement);
-            }
+            return new OciManifest(Optional.ToNullable(schemaVersion), config.Value, Optional.ToList(layers), annotations.Value);
         }
     }
 }

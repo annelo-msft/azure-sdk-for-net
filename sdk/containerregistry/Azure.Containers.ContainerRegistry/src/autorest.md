@@ -91,22 +91,6 @@ directive:
     $["x-ms-client-name"] = "nextLink"
 ```
 
-# Updates to OciManifest
-``` yaml
-directive:
-  from: swagger-document
-  where: $.definitions.OCIManifest
-  transform: >
-    $["x-csharp-usage"] = "model,input,output,converter";
-    $["x-csharp-formats"] = "json";
-    delete $["x-accessibility"];
-    delete $["allOf"];
-    $.properties["schemaVersion"] = {
-          "type": "integer",
-          "description": "Schema version"
-        };
-```
-
 # Take stream as manifest body
 ``` yaml
 directive:
@@ -133,6 +117,15 @@ directive:
 directive:
   from: swagger-document
   where: $.definitions.Annotations
+  transform: >
+    delete $["x-accessibility"]
+```
+
+# Make Manifest a public type
+``` yaml
+directive:
+  from: swagger-document
+  where: $.definitions["Manifest"]
   transform: >
     delete $["x-accessibility"]
 ```

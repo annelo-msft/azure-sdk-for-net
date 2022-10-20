@@ -15,7 +15,7 @@ namespace Azure.Containers.ContainerRegistry.Specialized
     public partial class OciBlobDescriptor
     {
         /// <summary> Initializes a new instance of OciBlobDescriptor. </summary>
-        public OciBlobDescriptor()
+        internal OciBlobDescriptor()
         {
             Urls = new ChangeTrackingList<Uri>();
         }
