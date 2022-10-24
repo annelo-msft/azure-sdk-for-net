@@ -23,7 +23,7 @@ namespace Azure
     /// </summary>
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     [DebuggerTypeProxy(typeof(JsonDataDebuggerProxy))]
-    internal class JsonData : IDynamicMetaObjectProvider, IEquatable<JsonData>
+    internal class JsonData : DynamicObject, IEquatable<JsonData>
     {
         private readonly JsonValueKind _kind;
 
@@ -669,11 +669,42 @@ namespace Azure
             }
         }
 
-        /// <inheritdoc />
-        DynamicMetaObject IDynamicMetaObjectProvider.GetMetaObject(Expression parameter)
+        #region DynamicObject overrides
+        public override bool TryConvert(ConvertBinder binder, out object? result)
         {
-            return new MetaObject(parameter, this);
+            if (binder.Type == typeof(IEnumerable))
+            {
+                result = GetDynamicEnumerable();
+                return true;
+            }
+
+            return base.TryConvert(binder, out result);
         }
+
+        public override bool TryGetMember(GetMemberBinder binder, out object? result)
+        {
+            result = GetDynamicProperty(binder.Name);
+            return true;
+        }
+
+        public override bool TryGetIndex(GetIndexBinder binder, object[] indexes, out object? result)
+        {
+            if (indexes.Length == 1 && indexes[0].GetType() == typeof(int))
+            {
+                result = this[(int)indexes[0]];
+                return true;
+            }
+
+            return base.TryGetIndex(binder, indexes, out result);
+        }
+
+        #endregion
+
+        ///// <inheritdoc />
+        //DynamicMetaObject IDynamicMetaObjectProvider.GetMetaObject(Expression parameter)
+        //{
+        //    return new MetaObject(parameter, this);
+        //}
 
         private class MetaObject : DynamicMetaObject
         {
