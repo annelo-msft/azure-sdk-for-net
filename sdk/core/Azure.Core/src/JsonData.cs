@@ -655,6 +655,7 @@ namespace Azure
             private JsonData _value;
 
             private static readonly MethodInfo GetPropertyMethod = typeof(JsonData).GetMethod(nameof(GetPropertyValue), BindingFlags.NonPublic | BindingFlags.Instance)!;
+            private static readonly MethodInfo GetStringMethod = typeof(JsonData).GetMethod(nameof(GetString), BindingFlags.NonPublic | BindingFlags.Instance)!;
             private static readonly MethodInfo GetDynamicEnumerableMethod = typeof(JsonData).GetMethod(nameof(GetDynamicEnumerable), BindingFlags.NonPublic | BindingFlags.Instance)!;
             private static readonly PropertyInfo LengthProperty = typeof(JsonData).GetProperty(nameof(Length), BindingFlags.NonPublic | BindingFlags.Instance)!;
             private static readonly Dictionary<Type, PropertyInfo> Indexers = GetIndexers();
@@ -683,6 +684,15 @@ namespace Azure
 
                 var arguments = new Expression[] { Expression.Constant(binder.Name) };
                 var getPropertyCall = Expression.Call(targetObject, GetPropertyMethod, arguments);
+
+                var propertyKind = _value.GetPropertyValue(binder.Name).Kind;
+                if (_value.Kind == JsonValueKind.Object &&
+                    propertyKind == JsonValueKind.String)
+                {
+                    return new DynamicMetaObject(
+                        Expression.Call(getPropertyCall, GetStringMethod),
+                        restrictions);
+                }
 
                 return new DynamicMetaObject(getPropertyCall, restrictions);
             }
