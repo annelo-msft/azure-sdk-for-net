@@ -106,6 +106,15 @@ namespace Azure.Core.Tests.Public
         }
 
         [Test]
+        public void GetMemberIsCaseInsensitive()
+        {
+            dynamic jsonData = new BinaryData("{ \"primitive\":\"Hello\", \"nested\": { \"nestedPrimitive\":true } }").ToDynamic();
+
+            Assert.AreEqual("Hello", (string)jsonData.Primitive);
+            Assert.AreEqual(true, (bool)jsonData.Nested.NestedPrimitive);
+        }
+
+        [Test]
         public void CanReadIntsAsFloatingPoints()
         {
             dynamic json = new BinaryData("{ \"value\": 5 }").ToDynamic().value;

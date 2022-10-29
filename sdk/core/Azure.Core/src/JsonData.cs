@@ -156,7 +156,7 @@ namespace Azure
             switch (element.ValueKind)
             {
                 case JsonValueKind.Object:
-                    _objectRepresentation = new Dictionary<string, JsonData>();
+                    _objectRepresentation = new Dictionary<string, JsonData>(StringComparer.OrdinalIgnoreCase);
                     foreach (var item in element.EnumerateObject())
                     {
                         _objectRepresentation[item.Name] = new JsonData(item.Value);
