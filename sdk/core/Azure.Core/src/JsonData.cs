@@ -288,67 +288,67 @@ namespace Azure
         /// <param name="json">The value to convert.</param>
         public static explicit operator double?(JsonData json) => json.Kind == JsonValueKind.Null ? null : json.GetDouble();
 
-        /// <summary>
-        /// Returns true if a <see cref="JsonData"/> has the same value as a given string,
-        /// and false otherwise.
-        /// </summary>
-        /// <param name="left">The <see cref="JsonData"/> to compare.</param>
-        /// <param name="right">The <see cref="string"/> to compare.</param>
-        /// <returns>True if the given JsonData represents the given string, and false otherwise.</returns>
-        public static bool operator ==(JsonData? left, string? right)
-        {
-            if (left is null && right is null)
-            {
-                return true;
-            }
+        ///// <summary>
+        ///// Returns true if a <see cref="JsonData"/> has the same value as a given string,
+        ///// and false otherwise.
+        ///// </summary>
+        ///// <param name="left">The <see cref="JsonData"/> to compare.</param>
+        ///// <param name="right">The <see cref="string"/> to compare.</param>
+        ///// <returns>True if the given JsonData represents the given string, and false otherwise.</returns>
+        //public static bool operator ==(JsonData? left, string? right)
+        //{
+        //    if (left is null && right is null)
+        //    {
+        //        return true;
+        //    }
 
-            if (left is null || right is null)
-            {
-                return false;
-            }
+        //    if (left is null || right is null)
+        //    {
+        //        return false;
+        //    }
 
-            return left.Kind == JsonValueKind.String && ((string?)left._value) == right;
-        }
+        //    return left.Kind == JsonValueKind.String && ((string?)left._value) == right;
+        //}
 
-        /// <summary>
-        /// Returns false if a <see cref="JsonData"/> has the same value as a given string,
-        /// and true otherwise.
-        /// </summary>
-        /// <param name="left">The <see cref="JsonData"/> to compare.</param>
-        /// <param name="right">The <see cref="string"/> to compare.</param>
-        /// <returns>False if the given JsonData represents the given string, and false otherwise</returns>
-        public static bool operator !=(JsonData? left, string? right) => !(left == right);
+        ///// <summary>
+        ///// Returns false if a <see cref="JsonData"/> has the same value as a given string,
+        ///// and true otherwise.
+        ///// </summary>
+        ///// <param name="left">The <see cref="JsonData"/> to compare.</param>
+        ///// <param name="right">The <see cref="string"/> to compare.</param>
+        ///// <returns>False if the given JsonData represents the given string, and false otherwise</returns>
+        //public static bool operator !=(JsonData? left, string? right) => !(left == right);
 
-        /// <summary>
-        /// Returns true if a <see cref="JsonData"/> has the same value as a given string,
-        /// and false otherwise.
-        /// </summary>
-        /// <param name="left">The <see cref="string"/> to compare.</param>
-        /// <param name="right">The <see cref="JsonData"/> to compare.</param>
-        /// <returns>True if the given JsonData represents the given string, and false otherwise.</returns>
-        public static bool operator ==(string? left, JsonData? right)
-        {
-            if (left is null && right is null)
-            {
-                return true;
-            }
+        ///// <summary>
+        ///// Returns true if a <see cref="JsonData"/> has the same value as a given string,
+        ///// and false otherwise.
+        ///// </summary>
+        ///// <param name="left">The <see cref="string"/> to compare.</param>
+        ///// <param name="right">The <see cref="JsonData"/> to compare.</param>
+        ///// <returns>True if the given JsonData represents the given string, and false otherwise.</returns>
+        //public static bool operator ==(string? left, JsonData? right)
+        //{
+        //    if (left is null && right is null)
+        //    {
+        //        return true;
+        //    }
 
-            if (left is null || right is null)
-            {
-                return false;
-            }
+        //    if (left is null || right is null)
+        //    {
+        //        return false;
+        //    }
 
-            return right.Kind == JsonValueKind.String && ((string?)right._value) == left;
-        }
+        //    return right.Kind == JsonValueKind.String && ((string?)right._value) == left;
+        //}
 
-        /// <summary>
-        /// Returns false if a <see cref="JsonData"/> has the same value as a given string,
-        /// and true otherwise.
-        /// </summary>
-        /// <param name="left">The <see cref="string"/> to compare.</param>
-        /// <param name="right">The <see cref="JsonData"/> to compare.</param>
-        /// <returns>False if the given JsonData represents the given string, and false otherwise</returns>
-        public static bool operator !=(string? left, JsonData? right) => !(left == right);
+        ///// <summary>
+        ///// Returns false if a <see cref="JsonData"/> has the same value as a given string,
+        ///// and true otherwise.
+        ///// </summary>
+        ///// <param name="left">The <see cref="string"/> to compare.</param>
+        ///// <param name="right">The <see cref="JsonData"/> to compare.</param>
+        ///// <returns>False if the given JsonData represents the given string, and false otherwise</returns>
+        //public static bool operator !=(string? left, JsonData? right) => !(left == right);
 
         /// <summary>
         /// Returns a stringified version of the JSON for this value.
@@ -381,7 +381,7 @@ namespace Azure
         {
             if (obj is string)
             {
-                return this == ((string?)obj);
+                return Equals((string?)obj);
             }
 
             if (obj is JsonData)

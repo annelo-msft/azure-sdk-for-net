@@ -283,6 +283,29 @@ namespace Azure.Core.Tests.Public
             Assert.IsTrue("foo" != bar);
         }
 
+        [Test]
+        public void EqualsForStringNUnit()
+        {
+            dynamic foo = new BinaryData("{ \"value\": \"foo\" }").ToDynamic();
+            var value = foo.Value;
+
+            string myFoo = "foo";
+            var eq = myFoo.Equals(value);
+
+            Assert.IsTrue(eq);
+
+            Assert.That(value, Is.EqualTo("foo"));
+
+            Assert.AreEqual(value, "foo");
+
+            Assert.That("foo", Is.EqualTo(value));
+
+            Assert.AreEqual("foo", value);
+
+            bool equals = "foo".Equals(value);
+            Assert.IsTrue(equals);
+        }
+
         private T JsonAsType<T>(string json)
         {
             dynamic jsonData = new BinaryData(json).ToDynamic();

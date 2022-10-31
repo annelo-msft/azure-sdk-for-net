@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -63,6 +64,36 @@ namespace Azure
         public static dynamic ToDynamic(this BinaryData data)
         {
             return JsonData.Parse(data);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="self"></param>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public static bool Equals(this object self, JsonData other)
+        {
+            return other.Equals(self);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="self"></param>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public static bool Equals(this string self, JsonData other)
+        {
+            return other.Equals(self);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="self"></param>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public static bool Equals(this string self, object other)
+        {
+            return other.Equals(self);
         }
 
         private static object? GetObject(in this JsonElement element)
