@@ -298,22 +298,25 @@ namespace Azure.Containers.ContainerRegistry.Tests
 
         [Test]
         [LiveOnly]
-        public async Task CanPushLargeArtifact()
+        public async Task CanPushAndPullLargeArtifact()
         {
-            // Arrange
+            // We test push and pull together so we can clean up after the test
+            // and not have to re-push a large artifact to test pull.
+
+            // Arrange - Push
             var name = "oci-artifact-large";
             var sizeInMiB = 32;
             var tag = $"big-{sizeInMiB}";
             var size = (1024 * 1024 * sizeInMiB) + 17;
             var client = CreateBlobClient(name);
 
-            // Act
+            // Act - Push
             OciManifest manifest = new OciManifest();
             manifest.SchemaVersion = 2;
 
             // Upload config
-            var path = Path.Combine(TestContext.CurrentContext.TestDirectory, "Data", "oci-artifact");
-            var configFilePath = Path.Combine(path, "config.json");
+            var uploadPath = Path.Combine(TestContext.CurrentContext.TestDirectory, "Data", "oci-artifact");
+            var configFilePath = Path.Combine(uploadPath, "config.json");
             if (File.Exists(configFilePath))
             {
                 using (var fs = File.OpenRead(configFilePath))
@@ -350,7 +353,7 @@ namespace Azure.Containers.ContainerRegistry.Tests
                 manifest,
                 new UploadManifestOptions(tag));
 
-            // Assert
+            // Assert - Push
             ContainerRegistryClient registryClient = CreateClient();
 
             var names = registryClient.GetRepositoryNamesAsync();
@@ -359,8 +362,49 @@ namespace Azure.Containers.ContainerRegistry.Tests
             var properties = await registryClient.GetArtifact(name, tag).GetManifestPropertiesAsync();
             Assert.AreEqual(uploadManifestResult.Value.Digest, properties.Value.Digest);
 
+            // Arrange - Pull
+
+            // Handled above
+
+            // Act - Pull
+
+            var manifestResult = await client.DownloadManifestAsync(new DownloadManifestOptions(tag));
+
+            var downloadPath = Path.Combine(TestContext.CurrentContext.TestDirectory, "Data", "validate-pull-large");
+            Directory.CreateDirectory(downloadPath);
+            string manifestFile = Path.Combine(downloadPath, "manifest.json");
+            using (FileStream fs = File.Create(manifestFile))
+            {
+                Stream stream = manifestResult.Value.ManifestStream;
+                await stream.CopyToAsync(fs);
+            }
+            manifest = (OciManifest)manifestResult.Value.Manifest;
+
+            // Download Config
+            string configFileName = Path.Combine(downloadPath, "config.json");
+            using (FileStream fs = File.Create(configFileName))
+            {
+                var layerResult = await client.DownloadBlobAsync(manifest.Config.Digest);
+                Stream stream = layerResult.Value.Content;
+                await stream.CopyToAsync(fs);
+            }
+
+            // Download Layers
+            foreach (var layerFile in manifest.Layers)
+            {
+                string fileName = Path.Combine(downloadPath, TrimSha(layerFile.Digest));
+
+                using (FileStream fs = File.Create(fileName))
+                {
+                    var layerResult = await client.DownloadBlobAsync(layerFile.Digest);
+                    Stream stream = layerResult.Value.Content;
+                    await stream.CopyToAsync(fs);
+                }
+            }
+
             // Clean up
-            await registryClient.DeleteRepositoryAsync(name);
+            //Directory.Delete(downloadPath, recursive: true);
+            //await registryClient.DeleteRepositoryAsync(name);
         }
 
         private async Task<UploadManifestResult> Push(ContainerRegistryBlobClient client)
