@@ -24,7 +24,7 @@ namespace Azure
     /// </summary>
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     [DebuggerTypeProxy(typeof(JsonDataDebuggerProxy))]
-    public class JsonData : IDynamicMetaObjectProvider, IEquatable<JsonData>
+    internal class JsonData : IDynamicMetaObjectProvider, IEquatable<JsonData>
     {
         private readonly JsonValueKind _kind;
 
@@ -678,12 +678,48 @@ namespace Azure
             return new MetaObject(parameter, this);
         }
 
+        private class TestMetaObject : DynamicMetaObject
+        {
+            private object? _value;
+
+            internal TestMetaObject(Expression parameter, BindingRestrictions restrictions) : base(parameter, restrictions)
+            {
+            }
+
+            internal TestMetaObject(Expression parameter, BindingRestrictions restrictions, IDynamicMetaObjectProvider value) : base(parameter, restrictions, value)
+            {
+                _value = value;
+            }
+
+            public override DynamicMetaObject BindBinaryOperation(BinaryOperationBinder binder, DynamicMetaObject arg)
+            {
+                return base.BindBinaryOperation(binder, arg);
+            }
+
+            public override DynamicMetaObject BindConvert(ConvertBinder binder)
+            {
+                return base.BindConvert(binder);
+            }
+
+            public override DynamicMetaObject BindGetMember(GetMemberBinder binder)
+            {
+                return base.BindGetMember(binder);
+            }
+
+            public override DynamicMetaObject BindGetIndex(GetIndexBinder binder, DynamicMetaObject[] indexes)
+            {
+                return base.BindGetIndex(binder, indexes);
+            }
+        }
+
         private class MetaObject : DynamicMetaObject
         {
             private JsonData _value;
 
             private static readonly MethodInfo GetPropertyMethod = typeof(JsonData).GetMethod(nameof(GetPropertyValue), BindingFlags.NonPublic | BindingFlags.Instance)!;
             private static readonly MethodInfo GetDynamicEnumerableMethod = typeof(JsonData).GetMethod(nameof(GetDynamicEnumerable), BindingFlags.NonPublic | BindingFlags.Instance)!;
+            //private static readonly MethodInfo EqualsOperator = typeof(JsonData).GetMethod("op_Explicit", BindingFlags.Public | BindingFlags.Static);
+            private static readonly MethodInfo EqualsMethod = typeof(JsonData).GetMethod(nameof(Equals), new Type[] { typeof(object) })!;
             private static readonly PropertyInfo LengthProperty = typeof(JsonData).GetProperty(nameof(Length), BindingFlags.NonPublic | BindingFlags.Instance)!;
             private static readonly Dictionary<Type, PropertyInfo> Indexers = GetIndexers();
             private static readonly Dictionary<Type, MethodInfo> CastOperators = GetCastOperators();
@@ -693,6 +729,17 @@ namespace Azure
                 _value = (JsonData)value;
             }
 
+            public override IEnumerable<string> GetDynamicMemberNames()
+            {
+                return _value.Kind switch
+                {
+                    JsonValueKind.Object => _value._objectRepresentation!.Keys,
+                    JsonValueKind.Array => new string[] { "Length" },
+                    _ => Array.Empty<string>(),
+                };
+            }
+
+            /*
             public override DynamicMetaObject BindGetMember(GetMemberBinder binder)
             {
                 var targetObject = Expression.Convert(Expression, LimitType);
@@ -712,7 +759,67 @@ namespace Azure
                 var getPropertyCall = Expression.Call(targetObject, GetPropertyMethod, arguments);
 
                 return new DynamicMetaObject(getPropertyCall, restrictions);
+            } */
+
+            public override DynamicMetaObject BindGetMember(GetMemberBinder binder)
+            {
+                var targetObject = Expression.Convert(Expression, LimitType);
+                var restrictions = BindingRestrictions.GetTypeRestriction(Expression, LimitType);
+
+                // When the underlying value is an array, we want `.Length` to mean "the length of the array" and not
+                // "treat the array as an object and get the Length property", and we also want the return type to be
+                // "int" and not a JsonData wrapping the int.
+                if (_value.Kind == JsonValueKind.Array && binder.Name == nameof(Length))
+                {
+                    return new DynamicMetaObject(
+                        Expression.Property(targetObject, LengthProperty),
+                        restrictions);
+                }
+
+                var arguments = new Expression[] { Expression.Constant(binder.Name) };
+                var getPropertyCall = Expression.Call(targetObject, GetPropertyMethod, arguments);
+
+                return new TestMetaObject(getPropertyCall, restrictions);
             }
+
+            /*
+            public override DynamicMetaObject BindGetMember(GetMemberBinder binder)
+            {
+                var self = Expression.Convert(Expression, LimitType);
+                var restrictions = BindingRestrictions.GetTypeRestriction(Expression, LimitType);
+
+                // When the underlying value is an array, we want `.Length` to mean "the length of the array" and not
+                // "treat the array as an object and get the Length property", and we also want the return type to be
+                // "int" and not a JsonData wrapping the int.
+                if (_value.Kind == JsonValueKind.Array && binder.Name == nameof(Length))
+                {
+                    return new DynamicMetaObject(
+                        Expression.Property(self, LengthProperty),
+                        restrictions);
+                }
+
+                var arguments = new Expression[] { Expression.Constant(binder.Name) };
+                var getPropertyCall = Expression.Call(self, GetPropertyMethod, arguments);
+                var getPropertyMO = new DynamicMetaObject(getPropertyCall, restrictions, _value);
+
+                // If the property being requested is a string type, hand back a regular JsonData, but add the option
+                // to convert it to a string if the binding fails.
+                if (_value.Kind == JsonValueKind.Object)
+                {
+                    // TODO: write TryGetPropertyValue
+                    var propertyValue = _value.GetPropertyValue(binder.Name);
+                    if (propertyValue != null && propertyValue.Kind == JsonValueKind.String)
+                    {
+                        var convertToString = Expression.Convert(getPropertyCall, typeof(string));
+                        var convertMO = new DynamicMetaObject(convertToString, restrictions, _value);
+
+                        return binder.FallbackGetMember(getPropertyMO, convertMO);
+                    }
+                }
+
+                return getPropertyMO;
+            }
+			*/
 
             public override DynamicMetaObject BindGetIndex(GetIndexBinder binder, DynamicMetaObject[] indexes)
             {
@@ -721,7 +828,7 @@ namespace Azure
                 var indexPropertyCall = Expression.Property(targetObject, Indexers[indexes[0].LimitType], arguments);
 
                 var restrictions = BindingRestrictions.GetTypeRestriction(Expression, LimitType);
-                return new DynamicMetaObject(indexPropertyCall, restrictions);
+                return new TestMetaObject(indexPropertyCall, restrictions);
             }
 
             public override DynamicMetaObject BindConvert(ConvertBinder binder)
@@ -734,17 +841,31 @@ namespace Azure
                 if (binder.Type == typeof(IEnumerable))
                 {
                     convertCall = Expression.Call(targetObject, GetDynamicEnumerableMethod);
-                    return new DynamicMetaObject(convertCall, restrictions);
+                    return new TestMetaObject(convertCall, restrictions);
                 }
 
                 if (CastOperators.TryGetValue(binder.Type, out MethodInfo? castOperator))
                 {
                     convertCall = Expression.Call(castOperator, targetObject);
-                    return new DynamicMetaObject(convertCall, restrictions);
+                    return new TestMetaObject(convertCall, restrictions);
                 }
 
                 convertCall = Expression.Call(targetObject, nameof(To), new Type[] { binder.Type });
-                return new DynamicMetaObject(convertCall, restrictions);
+                return new TestMetaObject(convertCall, restrictions);
+            }
+
+            public override DynamicMetaObject BindBinaryOperation(BinaryOperationBinder binder, DynamicMetaObject arg)
+            {
+                if (binder.Operation == ExpressionType.Equal)
+                {
+                    Expression self = Expression.Convert(Expression, LimitType);
+                    BindingRestrictions restrictions = BindingRestrictions.GetTypeRestriction(Expression, LimitType);
+                    var equalsCall = Expression.Call(self, EqualsMethod, arg.Expression);
+                    var convertResult = Expression.Convert(equalsCall, typeof(Object));
+                    return new TestMetaObject(convertResult, restrictions);
+                }
+
+                return base.BindBinaryOperation(binder, arg);
             }
 
             private static Dictionary<Type, PropertyInfo> GetIndexers()
