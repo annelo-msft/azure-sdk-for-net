@@ -718,7 +718,6 @@ namespace Azure
 
             private static readonly MethodInfo GetPropertyMethod = typeof(JsonData).GetMethod(nameof(GetPropertyValue), BindingFlags.NonPublic | BindingFlags.Instance)!;
             private static readonly MethodInfo GetDynamicEnumerableMethod = typeof(JsonData).GetMethod(nameof(GetDynamicEnumerable), BindingFlags.NonPublic | BindingFlags.Instance)!;
-            //private static readonly MethodInfo EqualsOperator = typeof(JsonData).GetMethod("op_Explicit", BindingFlags.Public | BindingFlags.Static);
             private static readonly MethodInfo EqualsMethod = typeof(JsonData).GetMethod(nameof(Equals), new Type[] { typeof(object) })!;
             private static readonly PropertyInfo LengthProperty = typeof(JsonData).GetProperty(nameof(Length), BindingFlags.NonPublic | BindingFlags.Instance)!;
             private static readonly Dictionary<Type, PropertyInfo> Indexers = GetIndexers();
@@ -779,7 +778,7 @@ namespace Azure
                 var arguments = new Expression[] { Expression.Constant(binder.Name) };
                 var getPropertyCall = Expression.Call(targetObject, GetPropertyMethod, arguments);
 
-                return new TestMetaObject(getPropertyCall, restrictions);
+                return new TestMetaObject(getPropertyCall, restrictions, _value);
             }
 
             /*

@@ -314,7 +314,7 @@ namespace Azure.Core.Tests.Public
         public void OperatorEqualsForString()
         {
             dynamic foo = new BinaryData("{ \"value\": \"foo\" }").ToDynamic().value;
-            var equals = foo == "foo";
+            var equals = "foo" == foo;
 
             //dynamic bar = new BinaryData("{ \"value\": \"bar\" }").ToDynamic().value;
 
