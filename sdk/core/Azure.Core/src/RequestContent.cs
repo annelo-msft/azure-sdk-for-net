@@ -9,6 +9,8 @@ using System.Threading;
 using System.Buffers;
 using Azure.Core.Serialization;
 using System.Text;
+using System.Text.Json;
+using System.Runtime.Serialization;
 
 namespace Azure.Core
 {
@@ -78,6 +80,29 @@ namespace Azure.Core
         /// <param name="serializer">The <see cref="ObjectSerializer"/> to use to convert the object to bytes. If not provided, <see cref="JsonObjectSerializer"/> is used.</param>
         /// <returns>An instance of <see cref="RequestContent"/> that wraps a serialized version of the object.</returns>
         public static RequestContent Create(object serializable, ObjectSerializer? serializer = null) => Create((serializer ?? JsonObjectSerializer.Default).Serialize(serializable));
+
+        /// <summary>
+        /// </summary>
+        /// <param name="content">The content to apply the patch to.</param>
+        /// <param name="patch">The patch to apply.</param>
+        /// <returns>The content with the patch applied.</returns>
+        public static RequestContent Merge(object content, object patch)
+        {
+            // This naive implementation assumes everything is JSON and content is JsonData.
+
+            // TODO:
+            // - Decide what formats to support for patch
+            // - Why a compiler error when take dyanmic as param?
+            JsonData contentData = (JsonData)content;
+            JsonData patchData = (JsonData)(object)JsonObjectSerializer.Default.Serialize(patch).ToDynamic();
+            contentData.Merge(patchData);
+            using MemoryStream stream = new();
+            using Utf8JsonWriter writer = new(stream);
+            contentData.WriteTo(writer);
+            writer.Flush();
+            stream.Flush();
+            return Create(stream.GetBuffer());
+        }
 
         /// <summary>
         /// Creates a RequestContent representing the UTF-8 Encoding of the given <see cref="string"/>.

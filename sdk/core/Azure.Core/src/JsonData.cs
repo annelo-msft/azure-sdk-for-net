@@ -16,6 +16,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace Azure
 {
@@ -85,6 +86,65 @@ namespace Azure
         {
             using var doc = await JsonDocument.ParseAsync(utf8Json, cancellationToken: cancellationToken).ConfigureAwait(false);
             return new JsonData(doc);
+        }
+
+        internal void Merge(JsonData patch)
+        {
+            // Note: this has us first serializing and then deserializing the anonymous type patch data.
+            // Would it be possible to use it without doing this?
+
+            // Could rewrite reading forward serialized data with Utf8JsonReader, see:
+            // https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/use-dom-utf8jsonreader-utf8jsonwriter?pivots=dotnet-7-0#use-utf8jsonreader
+
+            // JSON Merge Patch semantics: https://datatracker.ietf.org/doc/rfc7396/
+            //
+            // Assume it's in standard model key/value schema format and
+            // iterate over properties of the parent model.
+
+            if (Kind != JsonValueKind.Object || patch.Kind != JsonValueKind.Object)
+            {
+                throw new NotSupportedException("Merge not supported on non-Object JSON payloads.");
+            }
+
+            var target = EnsureObject();
+
+            foreach (var property in patch.EnsureObject())
+            {
+                // A null value means delete the property.
+                if (property.Value == null || property.Value.Kind == JsonValueKind.Null)
+                {
+                    target.Remove(property.Key);
+                    break;
+                }
+
+                // If it's an object, recurse.
+                if (property.Value.Kind == JsonValueKind.Object)
+                {
+                    if (!target.TryGetValue(property.Key, out JsonData? _))
+                    {
+                        target[property.Key] = new JsonData();
+                    }
+
+                    target[property.Key].Merge(property.Value);
+                    break;
+                }
+
+                // Otherwise, add/update value.
+                target[property.Key] = property.Value;
+            }
+        }
+
+        private JsonData()
+        {
+            _kind = JsonValueKind.Object;
+            _objectRepresentation = new Dictionary<string, JsonData>();
+        }
+
+        private JsonData Set(string propertyName, object? serializable)
+        {
+            JsonData value = new JsonData(serializable);
+            EnsureObject()[propertyName] = value;
+            return value;
         }
 
         /// <summary>
@@ -522,12 +582,12 @@ namespace Azure
         }
 
         /// <returns>A new instance of <typeparamref name="T"/> constructed from the underlying JSON value.</returns>
-        private T? To<T>()
+        internal T? To<T>()
         {
             return JsonSerializer.Deserialize<T>(ToJsonString(), DefaultJsonSerializerOptions);
         }
 
-        private void WriteTo(Utf8JsonWriter writer)
+        internal void WriteTo(Utf8JsonWriter writer)
         {
             switch (_kind)
             {

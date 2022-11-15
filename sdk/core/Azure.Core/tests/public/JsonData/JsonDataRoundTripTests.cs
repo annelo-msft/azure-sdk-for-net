@@ -65,6 +65,58 @@ namespace Azure.Core.Tests.Public
             Assert.AreEqual(resource.Last_Modified, updated.last_modified);
         }
 
+        // Note: These are better factored as RequestContext Merge tests.
+        [Test]
+        public void MergeDeletesValue()
+        {
+            // Arrange
+            dynamic resource = new BinaryData(_settingJson).ToDynamic();
+
+            // Act
+            RequestContent updatedResource = RequestContent.Merge(resource, patch:
+                new
+                {
+                    last_modified = (string)null
+                });
+
+            // Assert
+            dynamic updated = GetBinaryData(updatedResource).ToDynamic();
+
+            Assert.IsNull(updated.last_modified);
+
+            Assert.AreEqual(resource.Value, updated.value);
+            Assert.AreEqual(resource.Key, updated.key);
+            Assert.AreEqual(resource.Label, updated.label);
+        }
+
+        [Test]
+        public void MergeMergesObjects()
+        {
+            // Arrange
+            dynamic resource = new BinaryData(_settingJson).ToDynamic();
+
+            // Act
+            RequestContent updatedResource = RequestContent.Merge(resource, patch:
+                new
+                {
+                    tags = new
+                    {
+                        t2 = "updated2"
+                    }
+                });
+
+            // Assert
+            dynamic updated = GetBinaryData(updatedResource).ToDynamic();
+
+            Assert.AreEqual(resource.Tags.T1, updated.tags.t1);
+            Assert.AreNotEqual(resource.Tags.T2, updated.tags.t2);
+            Assert.AreEqual("updated2", updated.tags.t2);
+
+            Assert.AreEqual(resource.Value, updated.value);
+            Assert.AreEqual(resource.Key, updated.key);
+            Assert.AreEqual(resource.Label, updated.label);
+        }
+
         #region Helpers
         private static BinaryData GetBinaryData(RequestContent content)
         {

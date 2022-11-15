@@ -47,7 +47,8 @@ namespace Azure.AI.Language.Conversations.Tests.Samples
                 kind = "Conversation",
             };
 
-            Response response = client.AnalyzeConversation(RequestContent.Create(data));
+            var content = RequestContent.Create(data);
+            Response response = client.AnalyzeConversation(content);
 
             var json = response.Content.ToDynamic();
             var conversationPrediction = json.Result.Prediction;
