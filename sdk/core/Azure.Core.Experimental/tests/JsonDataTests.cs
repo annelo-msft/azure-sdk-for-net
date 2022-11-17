@@ -2,10 +2,8 @@
 // Licensed under the MIT License.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using NUnit.Framework;
 
 namespace Azure.Core.Tests
@@ -293,10 +291,37 @@ namespace Azure.Core.Tests
             validate(roundTrip);
         }
 
+        [Test]
+        public void CanConvertDifferentTypes()
+        {
+            // Test that cached DMO doesn't prevent valid conversions later.
+
+            dynamic jsonArray = new JsonData(new int[] { 1, 2, 3 });
+
+            // First, call BindConvert with IEnumerable
+            int intVal = 1;
+            foreach (int i in jsonArray)
+            {
+                Assert.AreEqual(intVal++, i);
+            }
+
+            // Then, call BindConvert with something support casting from
+            dynamic jsonBool = new JsonData(true);
+            Assert.AreEqual(true, (bool)jsonBool);
+
+            // Last, call BindConvert with something we have to serialize
+            dynamic jsonModel = new JsonData(new {
+                Message = "Hello",
+                Number = 5
+            });
+
+            Assert.AreEqual(new SampleModel("Hello", 5), (SampleModel)jsonModel);
+        }
+
         private T JsonAsType<T>(string json)
         {
             dynamic jsonData = JsonData.Parse(json);
-            return (T) jsonData;
+            return (T)jsonData;
         }
 
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()

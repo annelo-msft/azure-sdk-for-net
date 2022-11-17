@@ -10,11 +10,11 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Threading;
-using System.Threading.Tasks;
+using Azure.Core.Experimental;
 
 namespace Azure.Core
 {
@@ -31,6 +31,7 @@ namespace Azure.Core
         private List<JsonData>? _arrayRepresentation;
         private object? _value;
 
+        private static readonly DynamicDataOptions DefaultDynamicDataOptions = new DynamicDataOptions();
         private static readonly JsonSerializerOptions DefaultJsonSerializerOptions = new JsonSerializerOptions();
 
         /// <summary>
@@ -38,11 +39,19 @@ namespace Azure.Core
         /// </summary>
         /// <param name="utf8Json">A UTF8 encoded string representing a JSON value.</param>
         /// <returns>A <see cref="JsonData"/> representation of the value.</returns>
-        internal static JsonData Parse(BinaryData utf8Json)
-        {
-            using var doc = JsonDocument.Parse(utf8Json);
-            return new JsonData(doc);
-        }
+        internal static JsonData Parse(BinaryData utf8Json) => Parse(utf8Json, DefaultDynamicDataOptions);
+
+        ///// <summary>
+        ///// Parses a UTF8 encoded string representing a single JSON value into a <see cref="JsonData"/>.
+        ///// </summary>
+        ///// <param name="utf8Json">A UTF8 encoded string representing a JSON value.</param>
+        ///// <param name="options">Options to control the conversion behavior.</param>
+        ///// <returns>A <see cref="JsonData"/> representation of the value.</returns>
+        //internal static JsonData Parse(BinaryData utf8Json, DynamicDataOptions options)
+        //{
+        //    using var doc = JsonDocument.Parse(utf8Json);
+        //    return new JsonData(doc, options);
+        //}
 
         /// <summary>
         /// Parses test representing a single JSON value into a <see cref="JsonData"/>.
@@ -76,9 +85,9 @@ namespace Azure.Core
         /// Creates a new JsonData object which represents the given object.
         /// </summary>
         /// <param name="value">The value to convert.</param>
-        /// <param name="options">Options to control the conversion behavior.</param>
+        /// <param name="serializerOptions">Options to control the conversion behavior.</param>
         /// <param name="type">The type of the value to convert. </param>
-        public JsonData(object? value, JsonSerializerOptions options, Type? type = null)
+        public JsonData(object? value, JsonSerializerOptions serializerOptions, Type? type = null)
         {
             _value = value;
             switch (value)
@@ -134,6 +143,7 @@ namespace Azure.Core
             switch (element.ValueKind)
             {
                 case JsonValueKind.Object:
+
                     _objectRepresentation = new Dictionary<string, JsonData>();
                     foreach (var item in element.EnumerateObject())
                     {
@@ -700,7 +710,6 @@ namespace Azure.Core
 
             private static readonly MethodInfo SetViaIndexerMethod = typeof(JsonData).GetMethod(nameof(SetViaIndexer), BindingFlags.NonPublic | BindingFlags.Instance);
 
-            // Operators that cast from JsonData to another type
             private static readonly Dictionary<Type, MethodInfo> CastFromOperators = GetCastFromOperators();
 
             internal MetaObject(Expression parameter, IDynamicMetaObjectProvider value) : base(parameter, BindingRestrictions.Empty, value)

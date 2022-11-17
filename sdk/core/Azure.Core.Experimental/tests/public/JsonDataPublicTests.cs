@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Text.Json;
 using NUnit.Framework;
 
 namespace Azure.Core.Tests.Public
@@ -153,9 +154,16 @@ namespace Azure.Core.Tests.Public
         }
 
         [Test]
-        public void GetMemberIsCaseInsensitive()
+        public void GetMemberCanBeCaseInsensitive()
         {
-            dynamic jsonData = new BinaryData("{ \"primitive\":\"Hello\", \"nested\": { \"nestedPrimitive\":true } }").ToDynamic();
+            JsonSerializerOptions options = new()
+            {
+                PropertyNameCaseInsensitive = true
+            };
+
+            var data = new BinaryData("{ \"primitive\":\"Hello\", \"nested\": { \"nestedPrimitive\":true } }");
+
+            dynamic jsonData = data.ToDynamic(options);
 
             Assert.AreEqual("Hello", (string)jsonData.Primitive);
             Assert.AreEqual(true, (bool)jsonData.Nested.NestedPrimitive);
