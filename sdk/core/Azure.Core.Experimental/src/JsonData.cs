@@ -344,6 +344,57 @@ namespace Azure.Core
         public static bool operator !=(string? left, JsonData? right) => !(left == right);
 
         /// <summary>
+        /// Returns true if a <see cref="JsonData"/> has the same value as a given string,
+        /// and false otherwise.
+        /// </summary>
+        /// <param name="left">The <see cref="JsonData"/> to compare.</param>
+        /// <param name="right">The <see cref="int"/> to compare.</param>
+        /// <returns>True if the given JsonData represents the given string, and false otherwise.</returns>
+        public static bool operator ==(JsonData? left, int right)
+        {
+            if (left == null || left._value == null)
+            {
+                return false;
+            }
+
+            return left.Kind == JsonValueKind.Number && ((int)left._value) == right;
+        }
+
+        /// <summary>
+        /// Returns false if a <see cref="JsonData"/> has the same value as a given string,
+        /// and true otherwise.
+        /// </summary>
+        /// <param name="left">The <see cref="JsonData"/> to compare.</param>
+        /// <param name="right">The <see cref="string"/> to compare.</param>
+        /// <returns>False if the given JsonData represents the given string, and false otherwise</returns>
+        public static bool operator !=(JsonData? left, int right) => !(left == right);
+        /// <summary>
+        /// Returns true if a <see cref="JsonData"/> has the same value as a given string,
+        /// and false otherwise.
+        /// </summary>
+        /// <param name="left">The <see cref="string"/> to compare.</param>
+        /// <param name="right">The <see cref="JsonData"/> to compare.</param>
+        /// <returns>True if the given JsonData represents the given string, and false otherwise.</returns>
+        public static bool operator ==(int left, JsonData? right)
+        {
+            if (right == null || right._value == null)
+            {
+                return false;
+            }
+
+            return right.Kind == JsonValueKind.Number && ((int)right._value) == left;
+        }
+
+        /// <summary>
+        /// Returns false if a <see cref="JsonData"/> has the same value as a given string,
+        /// and true otherwise.
+        /// </summary>
+        /// <param name="left">The <see cref="string"/> to compare.</param>
+        /// <param name="right">The <see cref="JsonData"/> to compare.</param>
+        /// <returns>False if the given JsonData represents the given string, and false otherwise</returns>
+        public static bool operator !=(int left, JsonData? right) => !(left == right);
+
+        /// <summary>
         /// The <see cref="JsonValueKind"/> of the value of this instance.
         /// </summary>
         public JsonValueKind Kind

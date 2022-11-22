@@ -323,6 +323,15 @@ namespace Azure.Core.Tests.Public
         }
 
         [Test]
+        public void CanTestIntEqualityWithEqualsOperator()
+        {
+            dynamic value = new BinaryData(new { foo = 2 }).ToDynamic();
+
+            Assert.IsTrue(value.foo == 2);
+            Assert.IsTrue(2 == value.foo);
+        }
+
+        [Test]
         public void EqualsHandlesStringsSpecial()
         {
             dynamic json = new BinaryData("\"test\"").ToDynamic();
