@@ -746,10 +746,10 @@ namespace Azure.Containers.ContainerRegistry.Tests
             var repositoryId = "cb0a4fd1-40d8-40a6-8fc3-bff00e2a93f2";
             var tag = "download-test";
 
-            if (Mode != RecordedTestMode.Playback)
-            {
-                var digest = await CreateImageAsync(repositoryId, tag);
-            }
+            //if (Mode != RecordedTestMode.Playback)
+            //{
+            //    var digest = await CreateImageAsync(repositoryId, tag);
+            //}
 
             var blobClient = CreateBlobClient(repositoryId);
 
@@ -763,17 +763,19 @@ namespace Azure.Containers.ContainerRegistry.Tests
             // Get the blob's digest
             long size = manifest.Layers[0].Size.Value;
             string theDigest = manifest.Layers[0].Digest;
-            Response<DownloadBlobResult> blobResponse = await blobClient.DownloadBlobAsync(theDigest);
-            DownloadBlobResult blobResult = blobResponse.Value;
+            //Response<DownloadBlobResult> blobResponse = await blobClient.DownloadBlobAsync(theDigest);
+            //DownloadBlobResult blobResult = blobResponse.Value;
 
-            Assert.AreEqual(theDigest, blobResult.Digest);
+            using MemoryStream stream = new MemoryStream();
+            await blobClient.DownloadBlobToAsync(theDigest, stream, new DownloadBlobToOptions(10) {  BlobSize = size });
+
+            //Assert.AreEqual(theDigest, blobResult.Digest);
+            Assert.AreEqual(stream.Length, size);
 
             // Assert
             // TODO: Port to known image
             //Assert.AreEqual(result.Digest, digest);
         }
-
-
 
         public async Task DownloadManifestPrerequisites()
         {

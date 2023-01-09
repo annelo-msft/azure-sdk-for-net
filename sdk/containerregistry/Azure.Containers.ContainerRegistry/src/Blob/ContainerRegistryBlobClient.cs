@@ -779,7 +779,7 @@ namespace Azure.Containers.ContainerRegistry.Specialized
                     // Incrementally compute hash for digest.
                     sha256.TransformBlock(buffer, 0, chunkSize, buffer, 0);
 
-                    await destination.WriteAsync(buffer, offset, chunkSize, cancellationToken).ConfigureAwait(false);
+                    await destination.WriteAsync(buffer, 0, chunkSize, cancellationToken).ConfigureAwait(false);
 
                     chunkCount++;
                     bytesDownloaded += chunkSize;
