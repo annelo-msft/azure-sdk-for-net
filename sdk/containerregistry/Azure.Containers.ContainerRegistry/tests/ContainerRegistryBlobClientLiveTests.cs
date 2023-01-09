@@ -739,6 +739,42 @@ namespace Azure.Containers.ContainerRegistry.Tests
             //Assert.AreEqual(result.Digest, digest);
         }
 
+        [RecordedTest]
+        public async Task CanDownloadBlobToStream()
+        {
+            // Arrange
+            var repositoryId = "cb0a4fd1-40d8-40a6-8fc3-bff00e2a93f2";
+            var tag = "download-test";
+
+            if (Mode != RecordedTestMode.Playback)
+            {
+                var digest = await CreateImageAsync(repositoryId, tag);
+            }
+
+            var blobClient = CreateBlobClient(repositoryId);
+
+            // Act
+
+            // Get the manifest:
+            Response<DownloadManifestResult> response = await blobClient.DownloadManifestAsync(new DownloadManifestOptions(tag));
+            DownloadManifestResult result = response.Value;
+            OciManifest manifest = (OciManifest)result.Manifest;
+
+            // Get the blob's digest
+            long size = manifest.Layers[0].Size.Value;
+            string theDigest = manifest.Layers[0].Digest;
+            Response<DownloadBlobResult> blobResponse = await blobClient.DownloadBlobAsync(theDigest);
+            DownloadBlobResult blobResult = blobResponse.Value;
+
+            Assert.AreEqual(theDigest, blobResult.Digest);
+
+            // Assert
+            // TODO: Port to known image
+            //Assert.AreEqual(result.Digest, digest);
+        }
+
+
+
         public async Task DownloadManifestPrerequisites()
         {
             // Arrange

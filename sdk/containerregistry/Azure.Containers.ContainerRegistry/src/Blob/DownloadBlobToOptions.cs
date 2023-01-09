@@ -8,13 +8,13 @@ namespace Azure.Containers.ContainerRegistry.Specialized
     /// <summary>
     /// Options that can be specified to modify blob download defaults.
     /// </summary>
-    public class DownloadBlobOptions
+    public class DownloadBlobToOptions
     {
         /// <summary>
         /// Creates a new instance of DownloadBlobOptions.
         /// </summary>
         /// <param name="maxChunkSize">The maximum size of chunk to download during the blob download.</param>
-        public DownloadBlobOptions(int maxChunkSize)
+        public DownloadBlobToOptions(int maxChunkSize)
         {
             if (maxChunkSize <= 0)
             {
@@ -23,6 +23,11 @@ namespace Azure.Containers.ContainerRegistry.Specialized
 
             MaxChunkSize = maxChunkSize;
         }
+
+        /// <summary>
+        /// The size of the blob to download, if known.
+        /// </summary>
+        public long? BlobSize { get; set; }
 
         /// <summary>
         /// The maximum size of chunk to download.
