@@ -19,7 +19,7 @@ namespace Azure.Containers.ContainerRegistry.Tests
     [NonParallelizable]
     public class ContainerRegistryBlobClientLiveTests : ContainerRegistryRecordedTestBase
     {
-        public ContainerRegistryBlobClientLiveTests(bool isAsync) : base(isAsync)
+        public ContainerRegistryBlobClientLiveTests(bool isAsync) : base(isAsync, RecordedTestMode.Live)
         {
         }
 
@@ -679,6 +679,87 @@ namespace Azure.Containers.ContainerRegistry.Tests
             // Clean up
             await registryClient.DeleteRepositoryAsync("oci-artifact");
             Directory.Delete(path, true);
+        }
+
+        [RecordedTest]
+        public async Task CanDownloadManifest()
+        {
+            // Arrange
+            var repositoryId = Recording.Random.NewGuid().ToString();
+            var tag = "download-test";
+
+            if (Mode != RecordedTestMode.Playback)
+            {
+                var digest = await CreateImageAsync(repositoryId, tag);
+            }
+
+            var blobClient = CreateBlobClient(repositoryId);
+
+            // Act
+            Response<DownloadManifestResult> response = await blobClient.DownloadManifestAsync(new DownloadManifestOptions(tag));
+            DownloadManifestResult result = response.Value;
+            OciManifest manifest = (OciManifest)result.Manifest;
+
+            // Assert
+            // TODO: Port to known image
+            //Assert.AreEqual(result.Digest, digest);
+        }
+
+        [RecordedTest]
+        public async Task CanDownloadBlob()
+        {
+            // Arrange
+            var repositoryId = "cb0a4fd1-40d8-40a6-8fc3-bff00e2a93f2";
+            var tag = "download-test";
+
+            if (Mode != RecordedTestMode.Playback)
+            {
+                var digest = await CreateImageAsync(repositoryId, tag);
+            }
+
+            var blobClient = CreateBlobClient(repositoryId);
+
+            // Act
+
+            // Get the manifest:
+            Response<DownloadManifestResult> response = await blobClient.DownloadManifestAsync(new DownloadManifestOptions(tag));
+            DownloadManifestResult result = response.Value;
+            OciManifest manifest = (OciManifest)result.Manifest;
+
+            // Get the blob's digest
+            long size = manifest.Layers[0].Size.Value;
+            string theDigest = manifest.Layers[0].Digest;
+            Response<DownloadBlobResult> blobResponse = await blobClient.DownloadBlobAsync(theDigest);
+            DownloadBlobResult blobResult = blobResponse.Value;
+
+            Assert.AreEqual(theDigest, blobResult.Digest);
+
+            // Assert
+            // TODO: Port to known image
+            //Assert.AreEqual(result.Digest, digest);
+        }
+
+        public async Task DownloadManifestPrerequisites()
+        {
+            // Arrange
+            var client = CreateBlobClient("oci-artifact");
+
+            await UploadManifestPrerequisites(client);
+
+            // Act
+            var manifest = CreateManifest();
+            var uploadResult = await client.UploadManifestAsync(manifest);
+            string digest = uploadResult.Value.Digest;
+
+            // Assert
+            DownloadManifestOptions downloadOptions = new DownloadManifestOptions(null, digest);
+            using var downloadResultValue = (await client.DownloadManifestAsync(downloadOptions)).Value;
+            Assert.AreEqual(0, downloadResultValue.ManifestStream.Position);
+            Assert.AreEqual(digest, downloadResultValue.Digest);
+            ValidateManifest((OciManifest)downloadResultValue.Manifest);
+
+            // Clean up
+            await client.DeleteManifestAsync(digest);
         }
 
         private static string TrimSha(string digest)

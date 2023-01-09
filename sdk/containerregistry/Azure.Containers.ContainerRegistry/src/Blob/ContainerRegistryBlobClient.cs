@@ -580,9 +580,10 @@ namespace Azure.Containers.ContainerRegistry.Specialized
         /// Download a blob that is part of an artifact.
         /// </summary>
         /// <param name="digest">The digest of the blob to download.</param>
+        /// <param name="options">Options for the blob download.</param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <returns></returns>
-        public virtual Response<DownloadBlobResult> DownloadBlob(string digest, CancellationToken cancellationToken = default)
+        public virtual Response<DownloadBlobResult> DownloadBlob(string digest, DownloadBlobOptions options = default, CancellationToken cancellationToken = default)
         {
             Argument.AssertNotNull(digest, nameof(digest));
 
@@ -611,9 +612,10 @@ namespace Azure.Containers.ContainerRegistry.Specialized
         /// Download a blob that is part of an artifact.
         /// </summary>
         /// <param name="digest">The digest of the blob to download.</param>
+        /// <param name="options">Options for the blob download.</param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <returns></returns>
-        public virtual async Task<Response<DownloadBlobResult>> DownloadBlobAsync(string digest, CancellationToken cancellationToken = default)
+        public virtual async Task<Response<DownloadBlobResult>> DownloadBlobAsync(string digest, DownloadBlobOptions options = default, CancellationToken cancellationToken = default)
         {
             Argument.AssertNotNull(digest, nameof(digest));
 
