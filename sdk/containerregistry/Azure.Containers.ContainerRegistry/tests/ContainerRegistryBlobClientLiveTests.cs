@@ -481,38 +481,26 @@ namespace Azure.Containers.ContainerRegistry.Tests
         public async Task CanDownloadBlobToStream()
         {
             // Arrange
-            var repositoryId = "cb0a4fd1-40d8-40a6-8fc3-bff00e2a93f2";
-            var tag = "download-test";
+            var repositoryId = Recording.Random.NewGuid().ToString();
+            var client = CreateBlobClient(repositoryId);
 
-            //if (Mode != RecordedTestMode.Playback)
-            //{
-            //    var digest = await CreateImageAsync(repositoryId, tag);
-            //}
+            int blobSize = 1024;
+            var data = GetConstantBuffer(blobSize, 1);
 
-            var blobClient = CreateBlobClient(repositoryId);
+            using var uploadStream = new MemoryStream(data);
+            UploadBlobResult uploadResult = await client.UploadBlobAsync(uploadStream);
+            var digest = uploadResult.Digest;
 
             // Act
+            using var downloadStream = new MemoryStream();
+            await client.DownloadBlobToAsync(digest, downloadStream);
+            var digestOfDownload = OciBlobDescriptor.ComputeDigest(downloadStream);
 
-            // Get the manifest:
-            Response<DownloadManifestResult> response = await blobClient.DownloadManifestAsync(new DownloadManifestOptions(tag));
-            DownloadManifestResult result = response.Value;
-            OciManifest manifest = (OciManifest)result.Manifest;
+            Assert.AreEqual(digest, digestOfDownload);
+            Assert.AreEqual(blobSize, downloadStream.Length);
 
-            // Get the blob's digest
-            long size = manifest.Layers[0].Size.Value;
-            string theDigest = manifest.Layers[0].Digest;
-            //Response<DownloadBlobResult> blobResponse = await blobClient.DownloadBlobAsync(theDigest);
-            //DownloadBlobResult blobResult = blobResponse.Value;
-
-            using MemoryStream stream = new MemoryStream();
-            await blobClient.DownloadBlobToAsync(theDigest, stream, new DownloadBlobToOptions(10) { BlobSize = size });
-
-            //Assert.AreEqual(theDigest, blobResult.Digest);
-            Assert.AreEqual(stream.Length, size);
-
-            // Assert
-            // TODO: Port to known image
-            //Assert.AreEqual(result.Digest, digest);
+            // Clean up
+            await client.DeleteBlobAsync(digest);
         }
 
         #endregion
