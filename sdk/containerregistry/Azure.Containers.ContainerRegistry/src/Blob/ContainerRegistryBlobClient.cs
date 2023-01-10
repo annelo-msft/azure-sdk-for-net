@@ -325,7 +325,7 @@ namespace Azure.Containers.ContainerRegistry.Specialized
                 ResponseWithHeaders<ContainerRegistryBlobStartUploadHeaders> startUploadResult =
                     _blobRestClient.StartUpload(_repositoryName, cancellationToken);
 
-                var result = UploadInChunksInternal(startUploadResult.Headers.Location, stream, maxChunkSize, async: false, cancellationToken: cancellationToken).EnsureCompleted();
+                var result = UploadInChunksInternalAsync(startUploadResult.Headers.Location, stream, maxChunkSize, async: false, cancellationToken: cancellationToken).EnsureCompleted();
 
                 ResponseWithHeaders<ContainerRegistryBlobCompleteUploadHeaders> completeUploadResult =
                     _blobRestClient.CompleteUpload(result.Digest, result.Location, null, cancellationToken);
@@ -364,7 +364,7 @@ namespace Azure.Containers.ContainerRegistry.Specialized
                 ResponseWithHeaders<ContainerRegistryBlobStartUploadHeaders> startUploadResult =
                     await _blobRestClient.StartUploadAsync(_repositoryName, cancellationToken).ConfigureAwait(false);
 
-                var result = await UploadInChunksInternal(startUploadResult.Headers.Location, stream, maxChunkSize, cancellationToken: cancellationToken).ConfigureAwait(false);
+                var result = await UploadInChunksInternalAsync(startUploadResult.Headers.Location, stream, maxChunkSize, cancellationToken: cancellationToken).ConfigureAwait(false);
 
                 ResponseWithHeaders<ContainerRegistryBlobCompleteUploadHeaders> completeUploadResult =
                     await _blobRestClient.CompleteUploadAsync(result.Digest, result.Location, null, cancellationToken).ConfigureAwait(false);
@@ -383,7 +383,7 @@ namespace Azure.Containers.ContainerRegistry.Specialized
             }
         }
 
-        private async Task<ChunkedUploadResult> UploadInChunksInternal(string location, Stream stream, int chunkSize, bool async = true, CancellationToken cancellationToken = default)
+        private async Task<ChunkedUploadResult> UploadInChunksInternalAsync(string location, Stream stream, int chunkSize, bool async = true, CancellationToken cancellationToken = default)
         {
             ResponseWithHeaders<ContainerRegistryBlobUploadChunkHeaders> uploadChunkResult = null;
 
@@ -592,7 +592,6 @@ namespace Azure.Containers.ContainerRegistry.Specialized
             {
                 ResponseWithHeaders<Stream, ContainerRegistryBlobGetBlobHeaders> blobResult = _blobRestClient.GetBlob(_repositoryName, digest, cancellationToken);
 
-                // TODO: Compute digest asynchronously, if large.
                 if (!ValidateDigest(blobResult.Value, digest))
                 {
                     throw new RequestFailedException("The requested digest does not match the digest of the received manifest.");
@@ -638,17 +637,15 @@ namespace Azure.Containers.ContainerRegistry.Specialized
         }
 
         /// <summary>
-        /// Download a blob that is part of an artifact.
+        /// Download a blob to a passed-in destination stream.
         /// </summary>
         /// <param name="digest">The digest of the blob to download.</param>
         /// <param name="destination">Destination for the downloaded blob.</param>
         /// <param name="options">Options for the blob download.</param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <returns></returns>
+        /// <returns>The raw response corresponding to the final GET blob chunk request.</returns>
         public virtual Response DownloadBlobTo(string digest, Stream destination, DownloadBlobToOptions options = default, CancellationToken cancellationToken = default)
         {
-            // TODO: refactor to reuse async code.
-
             Argument.AssertNotNull(digest, nameof(digest));
             Argument.AssertNotNull(destination, nameof(destination));
 
@@ -656,66 +653,9 @@ namespace Azure.Containers.ContainerRegistry.Specialized
             scope.Start();
             try
             {
-                // TODO: populate this.
-                long blobLength = options.BlobSize.Value;
-                //long blobLength = GetBlobLength(options);
                 int maxChunkSize = options?.MaxChunkSize ?? DefaultChunkSize;
-
-                if (blobLength <= maxChunkSize)
-                {
-                    // Download in a single chunk
-                    ResponseWithHeaders<Stream, ContainerRegistryBlobGetBlobHeaders> blobResult = _blobRestClient.GetBlob(_repositoryName, digest, cancellationToken);
-
-                    if (!ValidateDigest(blobResult.Value, digest))
-                    {
-                        throw new RequestFailedException("The digest of the downloaded blob does not match the requested digest.");
-                    }
-
-                    return blobResult.GetRawResponse();
-                }
-
-                byte[] buffer = new byte[maxChunkSize];
-                int chunkCount = 0;
-                int bytesDownloaded = 0;
-                using SHA256 sha256 = SHA256.Create();
-
-                Response result = null;
-
-                while (bytesDownloaded < blobLength)
-                {
-                    int chunkSize = (int)Math.Min(blobLength - bytesDownloaded, maxChunkSize);
-                    int offset = bytesDownloaded;
-                    HttpRange range = new HttpRange(offset, chunkSize);
-
-                    ResponseWithHeaders<Stream, ContainerRegistryBlobGetChunkHeaders> chunkResult = _blobRestClient.GetChunk(_repositoryName, digest, range.ToString(), cancellationToken);
-
-                    // TODO: Confirm we got as many bytes as we expected
-
-                    chunkResult.Value.Read(buffer, 0, chunkSize);
-
-                    // Incrementally compute hash for digest.
-                    sha256.TransformBlock(buffer, 0, chunkSize, buffer, 0);
-
-                    destination.Write(buffer, offset, chunkSize);
-
-                    chunkCount++;
-                    bytesDownloaded += chunkSize;
-
-                    result = chunkResult.GetRawResponse();
-                }
-
-                // Complete hash computation.
-                sha256.TransformFinalBlock(buffer, 0, 0);
-
-                var computedDigest = OciBlobDescriptor.FormatDigest(sha256.Hash);
-
-                if (!ValidateDigest(computedDigest, digest))
-                {
-                    throw new RequestFailedException("The digest of the downloaded blob does not match the requested digest.");
-                }
-
-                // Return the last response received.
-                return result;
+                long blobLength = options?.BlobSize ?? GetBlobLengthAsync(digest, false, cancellationToken).EnsureCompleted();
+                return DownloadBlobToInternalAsync(digest, blobLength, maxChunkSize, destination, false, cancellationToken).EnsureCompleted();
             }
             catch (Exception e)
             {
@@ -725,13 +665,14 @@ namespace Azure.Containers.ContainerRegistry.Specialized
         }
 
         /// <summary>
-        /// Download a blob that is part of an artifact.
+        /// Download a blob to a passed-in destination stream.  This approach will download the blob
+        /// to the destination stream in sequential chunks of bytes.
         /// </summary>
         /// <param name="digest">The digest of the blob to download.</param>
         /// <param name="destination">Destination for the downloaded blob.</param>
         /// <param name="options">Options for the blob download.</param>
-        /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <returns></returns>
+        /// <param name="cancellationToken"> The cancellation token to use.</param>
+        /// <returns>The raw response corresponding to the final GET blob chunk request.</returns>
         public virtual async Task<Response> DownloadBlobToAsync(string digest, Stream destination, DownloadBlobToOptions options = default, CancellationToken cancellationToken = default)
         {
             Argument.AssertNotNull(digest, nameof(digest));
@@ -741,64 +682,9 @@ namespace Azure.Containers.ContainerRegistry.Specialized
             scope.Start();
             try
             {
-                long blobLength = await GetBlobLengthAsync(options, digest, cancellationToken).ConfigureAwait(false);
                 int maxChunkSize = options?.MaxChunkSize ?? DefaultChunkSize;
-
-                if (blobLength <= maxChunkSize)
-                {
-                    // Download in a single chunk
-                    ResponseWithHeaders<Stream, ContainerRegistryBlobGetBlobHeaders> blobResult = await _blobRestClient.GetBlobAsync(_repositoryName, digest, cancellationToken).ConfigureAwait(false);
-
-                    if (!ValidateDigest(blobResult.Value, digest))
-                    {
-                        throw new RequestFailedException("The digest of the downloaded blob does not match the requested digest.");
-                    }
-
-                    return blobResult.GetRawResponse();
-                }
-
-                byte[] buffer = new byte[maxChunkSize];
-                int chunkCount = 0;
-                int bytesDownloaded = 0;
-                using SHA256 sha256 = SHA256.Create();
-
-                Response result = null;
-
-                while (bytesDownloaded < blobLength)
-                {
-                    int chunkSize = (int)Math.Min(blobLength - bytesDownloaded, maxChunkSize);
-                    int offset = bytesDownloaded;
-                    HttpRange range = new HttpRange(offset, chunkSize);
-
-                    ResponseWithHeaders<Stream, ContainerRegistryBlobGetChunkHeaders> chunkResult = await _blobRestClient.GetChunkAsync(_repositoryName, digest, range.ToString(), cancellationToken).ConfigureAwait(false);
-
-                    // TODO: Confirm we got as many bytes as we expected
-
-                    await chunkResult.Value.ReadAsync(buffer, 0, chunkSize, cancellationToken).ConfigureAwait(false);
-
-                    // Incrementally compute hash for digest.
-                    sha256.TransformBlock(buffer, 0, chunkSize, buffer, 0);
-
-                    await destination.WriteAsync(buffer, 0, chunkSize, cancellationToken).ConfigureAwait(false);
-
-                    chunkCount++;
-                    bytesDownloaded += chunkSize;
-
-                    result = chunkResult.GetRawResponse();
-                }
-
-                // Complete hash computation.
-                sha256.TransformFinalBlock(buffer, 0, 0);
-
-                var computedDigest = OciBlobDescriptor.FormatDigest(sha256.Hash);
-
-                if (!ValidateDigest(computedDigest, digest))
-                {
-                    throw new RequestFailedException("The digest of the downloaded blob does not match the requested digest.");
-                }
-
-                // Return the last response received.
-                return result;
+                long blobLength = options?.BlobSize ?? await GetBlobLengthAsync(digest, true, cancellationToken).ConfigureAwait(false);
+                return await DownloadBlobToInternalAsync(digest, blobLength, maxChunkSize, destination, true, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception e)
             {
@@ -807,14 +693,81 @@ namespace Azure.Containers.ContainerRegistry.Specialized
             }
         }
 
-        private async Task<long> GetBlobLengthAsync(DownloadBlobToOptions options, string digest, CancellationToken cancellationToken)
+        private async Task<Response> DownloadBlobToInternalAsync(string digest, long blobLength, int maxChunkSize, Stream destination, bool async, CancellationToken cancellationToken)
         {
-            if (options != null && options.BlobSize.HasValue)
+            if (blobLength <= maxChunkSize)
             {
-                return options.BlobSize.Value;
+                // Download in a single chunk
+                ResponseWithHeaders<Stream, ContainerRegistryBlobGetBlobHeaders> blobResult = async ?
+                    await _blobRestClient.GetBlobAsync(_repositoryName, digest, cancellationToken).ConfigureAwait(false) :
+                    _blobRestClient.GetBlob(_registryName, digest, cancellationToken);
+
+                if (!ValidateDigest(blobResult.Value, digest))
+                {
+                    throw new RequestFailedException("The digest of the downloaded blob does not match the requested digest.");
+                }
+
+                return blobResult.GetRawResponse();
             }
 
-            ResponseWithHeaders<ContainerRegistryBlobCheckBlobExistsHeaders> response = await _blobRestClient.CheckBlobExistsAsync(_repositoryName, digest, cancellationToken).ConfigureAwait(false);
+            byte[] buffer = new byte[maxChunkSize];
+            int chunkCount = 0;
+            int bytesDownloaded = 0;
+            using SHA256 sha256 = SHA256.Create();
+
+            Response result = null;
+
+            while (bytesDownloaded < blobLength)
+            {
+                int chunkSize = (int)Math.Min(blobLength - bytesDownloaded, maxChunkSize);
+                int offset = bytesDownloaded;
+                HttpRange range = new HttpRange(offset, chunkSize);
+
+                ResponseWithHeaders<Stream, ContainerRegistryBlobGetChunkHeaders> chunkResult = async ?
+                    await _blobRestClient.GetChunkAsync(_repositoryName, digest, range.ToString(), cancellationToken).ConfigureAwait(false) :
+                    _blobRestClient.GetChunk(_repositoryName, digest, range.ToString(), cancellationToken);
+
+                // TODO: Confirm we got as many bytes as we expected
+
+                if (async)
+                {
+                    await chunkResult.Value.ReadAsync(buffer, 0, chunkSize, cancellationToken).ConfigureAwait(false);
+                    sha256.TransformBlock(buffer, 0, chunkSize, buffer, 0);
+                    await destination.WriteAsync(buffer, 0, chunkSize, cancellationToken).ConfigureAwait(false);
+                }
+
+                else
+                {
+                    chunkResult.Value.Read(buffer, 0, chunkSize);
+                    sha256.TransformBlock(buffer, 0, chunkSize, buffer, 0);
+                    destination.Write(buffer, 0, chunkSize);
+                }
+
+                chunkCount++;
+                bytesDownloaded += chunkSize;
+
+                result = chunkResult.GetRawResponse();
+            }
+
+            // Complete hash computation.
+            sha256.TransformFinalBlock(buffer, 0, 0);
+
+            var computedDigest = OciBlobDescriptor.FormatDigest(sha256.Hash);
+
+            if (!ValidateDigest(computedDigest, digest))
+            {
+                throw new RequestFailedException("The digest of the downloaded blob does not match the requested digest.");
+            }
+
+            // Return the last response received.
+            return result;
+        }
+
+        private async Task<long> GetBlobLengthAsync(string digest, bool async, CancellationToken cancellationToken)
+        {
+            ResponseWithHeaders<ContainerRegistryBlobCheckBlobExistsHeaders> response = async ?
+                await _blobRestClient.CheckBlobExistsAsync(_repositoryName, digest, cancellationToken).ConfigureAwait(false) :
+                _blobRestClient.CheckBlobExists(_repositoryName, digest, cancellationToken);
 
             // TODO: Check for null header
 
