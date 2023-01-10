@@ -462,8 +462,6 @@ namespace Azure.Containers.ContainerRegistry.Tests
 
         [Test]
         [LiveOnly]
-        // TODO: why not sync/async in tests
-        // TODO: test for chunks where chunk size is uniform + test where last chunk is smaller than others.
         public async Task CanPushLargeArtifact()
         {
             // Arrange
