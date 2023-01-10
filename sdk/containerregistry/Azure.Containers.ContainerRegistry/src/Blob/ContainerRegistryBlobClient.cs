@@ -575,7 +575,11 @@ namespace Azure.Containers.ContainerRegistry.Specialized
         }
 
         /// <summary>
-        /// Download a blob that is part of an artifact.
+        /// Download an artifact blob.
+        /// This API is a prefered way to fetch blobs that can fit into memory.
+        /// The content is provided as <see cref="BinaryData"/> that provides a lightweight abstraction for a payload of bytes.
+        /// It provides convenient helper methods to get out commonly used primitives, such as streams, strings, or bytes.
+        /// To download a blob that does not fit in memory, please use the <see cref="DownloadBlobTo"/> method instead.
         /// </summary>
         /// <param name="digest">The digest of the blob to download.</param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
@@ -595,7 +599,7 @@ namespace Azure.Containers.ContainerRegistry.Specialized
                     throw new RequestFailedException("The requested digest does not match the digest of the received manifest.");
                 }
 
-                return Response.FromValue(new DownloadBlobResult(digest, blobResult.Value), blobResult.GetRawResponse());
+                return Response.FromValue(new DownloadBlobResult(digest, blobResult.GetRawResponse().Content), blobResult.GetRawResponse());
             }
             catch (Exception e)
             {
@@ -605,7 +609,11 @@ namespace Azure.Containers.ContainerRegistry.Specialized
         }
 
         /// <summary>
-        /// Download a blob that is part of an artifact.
+        /// Download an artifact blob.
+        /// This API is a prefered way to fetch blobs that can fit into memory.
+        /// The content is provided as <see cref="BinaryData"/> that provides a lightweight abstraction for a payload of bytes.
+        /// It provides convenient helper methods to get out commonly used primitives, such as streams, strings, or bytes.
+        /// To download a blob that does not fit in memory, please use the <see cref="DownloadBlobToAsync"/> method instead.
         /// </summary>
         /// <param name="digest">The digest of the blob to download.</param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
@@ -625,7 +633,7 @@ namespace Azure.Containers.ContainerRegistry.Specialized
                     throw new RequestFailedException("The requested digest does not match the digest of the received manifest.");
                 }
 
-                return Response.FromValue(new DownloadBlobResult(digest, blobResult.Value), blobResult.GetRawResponse());
+                return Response.FromValue(new DownloadBlobResult(digest, blobResult.GetRawResponse().Content), blobResult.GetRawResponse());
             }
             catch (Exception e)
             {

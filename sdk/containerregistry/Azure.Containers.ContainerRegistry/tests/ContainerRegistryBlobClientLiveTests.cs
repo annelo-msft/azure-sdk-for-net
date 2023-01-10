@@ -301,39 +301,47 @@ namespace Azure.Containers.ContainerRegistry.Tests
             Assert.AreEqual(28, manifest.Layers[0].Size);
         }
 
+        #region Upload Blob Tests
+
         [RecordedTest]
         public async Task CanUploadBlob()
         {
             // Arrange
-            var client = CreateBlobClient("oci-artifact");
-            var blob = "654b93f61054e4ce90ed203bb8d556a6200d5f906cf3eca0620738d6dc18cbed";
-            var path = Path.Combine(TestContext.CurrentContext.TestDirectory, "Data", "oci-artifact", blob);
+            var repositoryId = Recording.Random.NewGuid().ToString();
+            var client = CreateBlobClient(repositoryId);
 
             string digest = default;
             long streamLength;
-            // Act
-            using (var fs = File.OpenRead(path))
+
+            int blobSize = 1024;
+
+            var data = GetConstantBuffer(blobSize, 1);
+
+            using (var stream = new MemoryStream(data))
             {
-                var uploadResult = await client.UploadBlobAsync(fs);
-                digest = uploadResult.Value.Digest;
-                streamLength = uploadResult.Value.Size;
+                digest = OciBlobDescriptor.ComputeDigest(stream);
+                UploadBlobResult uploadResult = await client.UploadBlobAsync(stream);
+                streamLength = uploadResult.Size;
+
+                Assert.AreEqual(digest, uploadResult.Digest);
+                Assert.AreEqual(stream.Length, uploadResult.Size);
             }
 
             // Assert
             var downloadResult = await client.DownloadBlobAsync(digest);
             Assert.AreEqual(digest, downloadResult.Value.Digest);
-            Assert.AreEqual(streamLength, downloadResult.Value.Content.Length);
+            Assert.AreEqual(streamLength, downloadResult.Value.Content.ToArray().Length);
 
             // Clean up
             await client.DeleteBlobAsync(digest);
-            downloadResult.Value.Dispose();
         }
 
         [RecordedTest]
         public async Task CanUploadBlobInEqualSizeChunks()
         {
             // Arrange
-            var client = CreateBlobClient("chunked-blob");
+            var repositoryId = Recording.Random.NewGuid().ToString();
+            var client = CreateBlobClient(repositoryId);
 
             int blobSize = 1024;
             int chunkSize = 1024 / 4; // Four equal-sized chunks
@@ -360,7 +368,8 @@ namespace Azure.Containers.ContainerRegistry.Tests
         public async Task CanUploadBlobInUnequalChunks()
         {
             // Arrange
-            var client = CreateBlobClient("chunked-blob-uneven");
+            var repositoryId = Recording.Random.NewGuid().ToString();
+            var client = CreateBlobClient(repositoryId);
 
             int blobSize = 1024;
             int chunkSize = 1024 / 4;    // Equal-sized chunks
@@ -389,7 +398,8 @@ namespace Azure.Containers.ContainerRegistry.Tests
         public async Task CanUploadBlobInSingleChunk()
         {
             // Arrange
-            var client = CreateBlobClient("single-chunk-blob");
+            var repositoryId = Recording.Random.NewGuid().ToString();
+            var client = CreateBlobClient(repositoryId);
 
             int blobSize = 512;
             int chunkSize = 1024;
@@ -416,7 +426,8 @@ namespace Azure.Containers.ContainerRegistry.Tests
         public async Task CanUploadBlobFromNonSeekableStream()
         {
             // Arrange
-            var client = CreateBlobClient("blob-non-seekable");
+            var repositoryId = Recording.Random.NewGuid().ToString();
+            var client = CreateBlobClient(repositoryId);
 
             int blobSize = 1024;
             int chunkSize = 1024 / 4; // Four equal-sized chunks
@@ -437,6 +448,74 @@ namespace Azure.Containers.ContainerRegistry.Tests
             // Clean up
             await client.DeleteBlobAsync(digest);
         }
+
+        #endregion
+
+        #region Download Blob Tests
+
+        [RecordedTest]
+        public async Task CanDownloadBlob()
+        {
+            // Arrange
+            var repositoryId = Recording.Random.NewGuid().ToString();
+            var client = CreateBlobClient(repositoryId);
+
+            int blobSize = 1024;
+            var data = GetConstantBuffer(blobSize, 1);
+
+            using var stream = new MemoryStream(data);
+            UploadBlobResult uploadResult = await client.UploadBlobAsync(stream);
+            var digest = uploadResult.Digest;
+
+            // Act
+            DownloadBlobResult downloadResult = await client.DownloadBlobAsync(digest);
+
+            Assert.AreEqual(digest, downloadResult.Digest);
+            Assert.AreEqual(stream.Length, downloadResult.Content.ToArray().Length);
+
+            // Clean up
+            await client.DeleteBlobAsync(digest);
+        }
+
+        [RecordedTest]
+        public async Task CanDownloadBlobToStream()
+        {
+            // Arrange
+            var repositoryId = "cb0a4fd1-40d8-40a6-8fc3-bff00e2a93f2";
+            var tag = "download-test";
+
+            //if (Mode != RecordedTestMode.Playback)
+            //{
+            //    var digest = await CreateImageAsync(repositoryId, tag);
+            //}
+
+            var blobClient = CreateBlobClient(repositoryId);
+
+            // Act
+
+            // Get the manifest:
+            Response<DownloadManifestResult> response = await blobClient.DownloadManifestAsync(new DownloadManifestOptions(tag));
+            DownloadManifestResult result = response.Value;
+            OciManifest manifest = (OciManifest)result.Manifest;
+
+            // Get the blob's digest
+            long size = manifest.Layers[0].Size.Value;
+            string theDigest = manifest.Layers[0].Digest;
+            //Response<DownloadBlobResult> blobResponse = await blobClient.DownloadBlobAsync(theDigest);
+            //DownloadBlobResult blobResult = blobResponse.Value;
+
+            using MemoryStream stream = new MemoryStream();
+            await blobClient.DownloadBlobToAsync(theDigest, stream, new DownloadBlobToOptions(10) { BlobSize = size });
+
+            //Assert.AreEqual(theDigest, blobResult.Digest);
+            Assert.AreEqual(stream.Length, size);
+
+            // Assert
+            // TODO: Port to known image
+            //Assert.AreEqual(result.Digest, digest);
+        }
+
+        #endregion
 
         [RecordedTest]
         public async Task CanPushArtifact()
@@ -643,9 +722,8 @@ namespace Azure.Containers.ContainerRegistry.Tests
             string configFileName = Path.Combine(path, "config.json");
             using (FileStream fs = File.Create(configFileName))
             {
-                var layerResult = await client.DownloadBlobAsync(manifest.Config.Digest);
-                Stream stream = layerResult.Value.Content;
-                await stream.CopyToAsync(fs);
+                DownloadBlobResult layerResult = await client.DownloadBlobAsync(manifest.Config.Digest);
+                await layerResult.Content.ToStream().CopyToAsync(fs);
             }
 
             // Download Layers
@@ -655,9 +733,8 @@ namespace Azure.Containers.ContainerRegistry.Tests
 
                 using (FileStream fs = File.Create(fileName))
                 {
-                    var layerResult = await client.DownloadBlobAsync(layerFile.Digest);
-                    Stream stream = layerResult.Value.Content;
-                    await stream.CopyToAsync(fs);
+                    DownloadBlobResult layerResult = await client.DownloadBlobAsync(manifest.Config.Digest);
+                    await layerResult.Content.ToStream().CopyToAsync(fs);
                 }
             }
 
@@ -677,125 +754,6 @@ namespace Azure.Containers.ContainerRegistry.Tests
             // Clean up
             await registryClient.DeleteRepositoryAsync("oci-artifact");
             Directory.Delete(path, true);
-        }
-
-        [RecordedTest]
-        public async Task CanDownloadManifest()
-        {
-            // Arrange
-            var repositoryId = Recording.Random.NewGuid().ToString();
-            var tag = "download-test";
-
-            if (Mode != RecordedTestMode.Playback)
-            {
-                var digest = await CreateImageAsync(repositoryId, tag);
-            }
-
-            var blobClient = CreateBlobClient(repositoryId);
-
-            // Act
-            Response<DownloadManifestResult> response = await blobClient.DownloadManifestAsync(new DownloadManifestOptions(tag));
-            DownloadManifestResult result = response.Value;
-            OciManifest manifest = (OciManifest)result.Manifest;
-
-            // Assert
-            // TODO: Port to known image
-            //Assert.AreEqual(result.Digest, digest);
-        }
-
-        [RecordedTest]
-        public async Task CanDownloadBlob()
-        {
-            // Arrange
-            var repositoryId = "cb0a4fd1-40d8-40a6-8fc3-bff00e2a93f2";
-            var tag = "download-test";
-
-            if (Mode != RecordedTestMode.Playback)
-            {
-                var digest = await CreateImageAsync(repositoryId, tag);
-            }
-
-            var blobClient = CreateBlobClient(repositoryId);
-
-            // Act
-
-            // Get the manifest:
-            Response<DownloadManifestResult> response = await blobClient.DownloadManifestAsync(new DownloadManifestOptions(tag));
-            DownloadManifestResult result = response.Value;
-            OciManifest manifest = (OciManifest)result.Manifest;
-
-            // Get the blob's digest
-            long size = manifest.Layers[0].Size.Value;
-            string theDigest = manifest.Layers[0].Digest;
-            Response<DownloadBlobResult> blobResponse = await blobClient.DownloadBlobAsync(theDigest);
-            DownloadBlobResult blobResult = blobResponse.Value;
-
-            Assert.AreEqual(theDigest, blobResult.Digest);
-
-            // Assert
-            // TODO: Port to known image
-            //Assert.AreEqual(result.Digest, digest);
-        }
-
-        [RecordedTest]
-        public async Task CanDownloadBlobToStream()
-        {
-            // Arrange
-            var repositoryId = "cb0a4fd1-40d8-40a6-8fc3-bff00e2a93f2";
-            var tag = "download-test";
-
-            //if (Mode != RecordedTestMode.Playback)
-            //{
-            //    var digest = await CreateImageAsync(repositoryId, tag);
-            //}
-
-            var blobClient = CreateBlobClient(repositoryId);
-
-            // Act
-
-            // Get the manifest:
-            Response<DownloadManifestResult> response = await blobClient.DownloadManifestAsync(new DownloadManifestOptions(tag));
-            DownloadManifestResult result = response.Value;
-            OciManifest manifest = (OciManifest)result.Manifest;
-
-            // Get the blob's digest
-            long size = manifest.Layers[0].Size.Value;
-            string theDigest = manifest.Layers[0].Digest;
-            //Response<DownloadBlobResult> blobResponse = await blobClient.DownloadBlobAsync(theDigest);
-            //DownloadBlobResult blobResult = blobResponse.Value;
-
-            using MemoryStream stream = new MemoryStream();
-            await blobClient.DownloadBlobToAsync(theDigest, stream, new DownloadBlobToOptions(10) {  BlobSize = size });
-
-            //Assert.AreEqual(theDigest, blobResult.Digest);
-            Assert.AreEqual(stream.Length, size);
-
-            // Assert
-            // TODO: Port to known image
-            //Assert.AreEqual(result.Digest, digest);
-        }
-
-        public async Task DownloadManifestPrerequisites()
-        {
-            // Arrange
-            var client = CreateBlobClient("oci-artifact");
-
-            await UploadManifestPrerequisites(client);
-
-            // Act
-            var manifest = CreateManifest();
-            var uploadResult = await client.UploadManifestAsync(manifest);
-            string digest = uploadResult.Value.Digest;
-
-            // Assert
-            DownloadManifestOptions downloadOptions = new DownloadManifestOptions(null, digest);
-            using var downloadResultValue = (await client.DownloadManifestAsync(downloadOptions)).Value;
-            Assert.AreEqual(0, downloadResultValue.ManifestStream.Position);
-            Assert.AreEqual(digest, downloadResultValue.Digest);
-            ValidateManifest((OciManifest)downloadResultValue.Manifest);
-
-            // Clean up
-            await client.DeleteManifestAsync(digest);
         }
 
         private static string TrimSha(string digest)
