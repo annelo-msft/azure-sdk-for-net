@@ -492,7 +492,9 @@ namespace Azure.Containers.ContainerRegistry.Specialized
             scope.Start();
             try
             {
-                Response<ManifestWrapper> response = _restClient.GetManifest(_repositoryName, options.Tag ?? options.Digest, ManifestMediaType.OciManifest.ToString(), cancellationToken);
+                var accept = options.MediaType ?? ManifestMediaType.OciManifest.ToString();
+                Response<ManifestWrapper> response = _restClient.GetManifest(_repositoryName, options.Tag ?? options.Digest, accept, cancellationToken: cancellationToken);
+
                 Response rawResponse = response.GetRawResponse();
 
                 rawResponse.Headers.TryGetValue("Docker-Content-Digest", out var digest);
@@ -530,7 +532,8 @@ namespace Azure.Containers.ContainerRegistry.Specialized
             scope.Start();
             try
             {
-                Response<ManifestWrapper> response = await _restClient.GetManifestAsync(_repositoryName, options.Tag ?? options.Digest, ManifestMediaType.OciManifest.ToString(), cancellationToken).ConfigureAwait(false);
+                var accept = options.MediaType ?? ManifestMediaType.OciManifest.ToString();
+                Response<ManifestWrapper> response = await _restClient.GetManifestAsync(_repositoryName, options.Tag ?? options.Digest, accept, cancellationToken: cancellationToken).ConfigureAwait(false);
                 Response rawResponse = response.GetRawResponse();
 
                 rawResponse.Headers.TryGetValue("Docker-Content-Digest", out var digest);

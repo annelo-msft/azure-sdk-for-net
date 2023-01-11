@@ -24,12 +24,12 @@ namespace Azure.Containers.ContainerRegistry.Specialized
         public string Digest { get; }
 
         /// <summary>
-        /// The OCI manifest that was downloaded.
+        /// The downloaded manifest.
         /// </summary>
         public ArtifactManifest Manifest { get; }
 
         /// <summary>
-        /// The manifest stream that was downloaded.
+        /// A stream holding the downloaded manifest content.
         /// </summary>
         public Stream ManifestStream { get; }
 

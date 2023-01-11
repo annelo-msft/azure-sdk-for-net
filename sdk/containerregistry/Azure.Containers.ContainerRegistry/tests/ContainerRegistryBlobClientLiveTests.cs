@@ -19,7 +19,7 @@ namespace Azure.Containers.ContainerRegistry.Tests
     [NonParallelizable]
     public class ContainerRegistryBlobClientLiveTests : ContainerRegistryRecordedTestBase
     {
-        public ContainerRegistryBlobClientLiveTests(bool isAsync) : base(isAsync)
+        public ContainerRegistryBlobClientLiveTests(bool isAsync) : base(isAsync, RecordedTestMode.Live)
         {
         }
 
@@ -679,6 +679,50 @@ namespace Azure.Containers.ContainerRegistry.Tests
             // Clean up
             await registryClient.DeleteRepositoryAsync("oci-artifact");
             Directory.Delete(path, true);
+        }
+
+        [RecordedTest]
+        public async Task CanPullHelloWorld()
+        {
+            var repositoryId = "library/hello-world";
+            var tag = "latest";
+            ContainerRegistryBlobClient client = CreateBlobClient(repositoryId);
+            var directory = Recording.Random.NewGuid().ToString();
+
+            string path = Path.Combine(TestContext.CurrentContext.TestDirectory, "Data", directory);
+            Directory.CreateDirectory(path);
+
+            // Download the manifest to obtain the list of files in the artifact
+            DownloadManifestOptions options = new(tag)
+            {
+                MediaType = "application/vnd.docker.distribution.manifest.list.v2+json"
+            };
+            var manifestResult = await client.DownloadManifestAsync(options);
+
+            await WriteFileAsync(Path.Combine(path, "manifest.json"), manifestResult.Value.ManifestStream);
+
+            OciManifest manifest = (OciManifest)manifestResult.Value.Manifest;
+
+            // Download and write out the config
+            var configResult = await client.DownloadBlobAsync(manifest.Config.Digest);
+
+            await WriteFileAsync(Path.Combine(path, "config.json"), configResult.Value.Content);
+
+            // Download and write out the layers
+            foreach (var layerFile in manifest.Layers)
+            {
+                var layerResult = await client.DownloadBlobAsync(layerFile.Digest);
+                Stream stream = layerResult.Value.Content;
+
+                await WriteFileAsync(Path.Combine(path, TrimSha(layerFile.Digest)), configResult.Value.Content);
+            }
+        }
+        private async Task WriteFileAsync(string path, Stream content)
+        {
+            using (FileStream fs = File.Create(path))
+            {
+                await content.CopyToAsync(fs);
+            }
         }
 
         private static string TrimSha(string digest)
