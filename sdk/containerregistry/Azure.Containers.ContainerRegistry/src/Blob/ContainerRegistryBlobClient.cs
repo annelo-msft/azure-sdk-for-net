@@ -593,13 +593,15 @@ namespace Azure.Containers.ContainerRegistry.Specialized
             try
             {
                 ResponseWithHeaders<Stream, ContainerRegistryBlobGetBlobHeaders> blobResult = _blobRestClient.GetBlob(_repositoryName, digest, cancellationToken);
+                Stream stream = blobResult.Value;
+                BinaryData data = BinaryData.FromStream(stream);
 
-                if (!ValidateDigest(blobResult.Value, digest))
+                if (!ValidateDigest(data.ToStream(), digest))
                 {
                     throw new RequestFailedException("The requested digest does not match the digest of the received manifest.");
                 }
 
-                return Response.FromValue(new DownloadBlobResult(digest, blobResult.GetRawResponse().Content), blobResult.GetRawResponse());
+                return Response.FromValue(new DownloadBlobResult(digest, data), blobResult.GetRawResponse());
             }
             catch (Exception e)
             {
@@ -627,13 +629,15 @@ namespace Azure.Containers.ContainerRegistry.Specialized
             try
             {
                 ResponseWithHeaders<Stream, ContainerRegistryBlobGetBlobHeaders> blobResult = await _blobRestClient.GetBlobAsync(_repositoryName, digest, cancellationToken).ConfigureAwait(false);
+                Stream stream = blobResult.Value;
+                BinaryData data = BinaryData.FromStream(stream);
 
-                if (!ValidateDigest(blobResult.Value, digest))
+                if (!ValidateDigest(data.ToStream(), digest))
                 {
                     throw new RequestFailedException("The requested digest does not match the digest of the received manifest.");
                 }
 
-                return Response.FromValue(new DownloadBlobResult(digest, blobResult.GetRawResponse().Content), blobResult.GetRawResponse());
+                return Response.FromValue(new DownloadBlobResult(digest, data), blobResult.GetRawResponse());
             }
             catch (Exception e)
             {
@@ -706,11 +710,22 @@ namespace Azure.Containers.ContainerRegistry.Specialized
                 // Download in a single chunk
                 ResponseWithHeaders<Stream, ContainerRegistryBlobGetBlobHeaders> blobResult = async ?
                     await _blobRestClient.GetBlobAsync(_repositoryName, digest, cancellationToken).ConfigureAwait(false) :
-                    _blobRestClient.GetBlob(_registryName, digest, cancellationToken);
+                    _blobRestClient.GetBlob(_repositoryName, digest, cancellationToken);
+                Stream stream = blobResult.Value;
+                BinaryData data = BinaryData.FromStream(stream);
 
-                if (!ValidateDigest(blobResult.Value, digest))
+                if (!ValidateDigest(data.ToStream(), digest))
                 {
                     throw new RequestFailedException("The digest of the downloaded blob does not match the requested digest.");
+                }
+
+                if (async)
+                {
+                    await data.ToStream().CopyToAsync(destination).ConfigureAwait(false);
+                }
+                else
+                {
+                    data.ToStream().CopyTo(destination);
                 }
 
                 return blobResult.GetRawResponse();

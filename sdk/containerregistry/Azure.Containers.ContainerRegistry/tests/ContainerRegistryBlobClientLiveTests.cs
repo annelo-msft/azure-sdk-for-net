@@ -468,10 +468,10 @@ namespace Azure.Containers.ContainerRegistry.Tests
             var digest = uploadResult.Digest;
 
             // Act
-            DownloadBlobResult downloadResult = await client.DownloadBlobAsync(digest);
+            Response<DownloadBlobResult> downloadResult = await client.DownloadBlobAsync(digest);
 
-            Assert.AreEqual(digest, downloadResult.Digest);
-            Assert.AreEqual(stream.Length, downloadResult.Content.ToArray().Length);
+            Assert.AreEqual(digest, downloadResult.Value.Digest);
+            Assert.AreEqual(stream.Length, downloadResult.Value.Content.ToArray().Length);
 
             // Clean up
             await client.DeleteBlobAsync(digest);
