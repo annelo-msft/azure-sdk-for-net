@@ -592,16 +592,7 @@ namespace Azure.Containers.ContainerRegistry.Specialized
             scope.Start();
             try
             {
-                ResponseWithHeaders<Stream, ContainerRegistryBlobGetBlobHeaders> blobResult = _blobRestClient.GetBlob(_repositoryName, digest, cancellationToken);
-                Stream stream = blobResult.Value;
-                BinaryData data = BinaryData.FromStream(stream);
-
-                if (!ValidateDigest(data.ToStream(), digest))
-                {
-                    throw new RequestFailedException("The requested digest does not match the digest of the received manifest.");
-                }
-
-                return Response.FromValue(new DownloadBlobResult(digest, data), blobResult.GetRawResponse());
+                return DownloadBlobInternalAsync(digest, false, cancellationToken).EnsureCompleted();
             }
             catch (Exception e)
             {
@@ -628,22 +619,31 @@ namespace Azure.Containers.ContainerRegistry.Specialized
             scope.Start();
             try
             {
-                ResponseWithHeaders<Stream, ContainerRegistryBlobGetBlobHeaders> blobResult = await _blobRestClient.GetBlobAsync(_repositoryName, digest, cancellationToken).ConfigureAwait(false);
-                Stream stream = blobResult.Value;
-                BinaryData data = BinaryData.FromStream(stream);
-
-                if (!ValidateDigest(data.ToStream(), digest))
-                {
-                    throw new RequestFailedException("The requested digest does not match the digest of the received manifest.");
-                }
-
-                return Response.FromValue(new DownloadBlobResult(digest, data), blobResult.GetRawResponse());
+                return await DownloadBlobInternalAsync(digest, true, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception e)
             {
                 scope.Failed(e);
                 throw;
             }
+        }
+
+        private async Task<Response<DownloadBlobResult>> DownloadBlobInternalAsync(string digest, bool async, CancellationToken cancellationToken)
+        {
+            ResponseWithHeaders<Stream, ContainerRegistryBlobGetBlobHeaders> blobResult = async ?
+                await _blobRestClient.GetBlobAsync(_repositoryName, digest, cancellationToken).ConfigureAwait(false) :
+                _blobRestClient.GetBlob(_repositoryName, digest, cancellationToken);
+
+            BinaryData data = async ?
+                await BinaryData.FromStreamAsync(blobResult.Value, cancellationToken).ConfigureAwait(false) :
+                BinaryData.FromStream(blobResult.Value);
+
+            if (!ValidateDigest(data.ToStream(), digest))
+            {
+                throw new RequestFailedException("The requested digest does not match the digest of the received manifest.");
+            }
+
+            return Response.FromValue(new DownloadBlobResult(digest, data), blobResult.GetRawResponse());
         }
 
         /// <summary>
@@ -708,29 +708,23 @@ namespace Azure.Containers.ContainerRegistry.Specialized
             if (blobLength <= maxChunkSize)
             {
                 // Download in a single chunk
-                ResponseWithHeaders<Stream, ContainerRegistryBlobGetBlobHeaders> blobResult = async ?
-                    await _blobRestClient.GetBlobAsync(_repositoryName, digest, cancellationToken).ConfigureAwait(false) :
-                    _blobRestClient.GetBlob(_repositoryName, digest, cancellationToken);
-                Stream stream = blobResult.Value;
-                BinaryData data = BinaryData.FromStream(stream);
-
-                if (!ValidateDigest(data.ToStream(), digest))
-                {
-                    throw new RequestFailedException("The digest of the downloaded blob does not match the requested digest.");
-                }
+                var downloadResult = async ?
+                    await DownloadBlobInternalAsync(digest, true, cancellationToken).ConfigureAwait(false) :
+                    DownloadBlobInternalAsync(digest, false, cancellationToken).EnsureCompleted();
 
                 if (async)
                 {
-                    await data.ToStream().CopyToAsync(destination).ConfigureAwait(false);
+                    await downloadResult.Value.Content.ToStream().CopyToAsync(destination).ConfigureAwait(false);
                 }
                 else
                 {
-                    data.ToStream().CopyTo(destination);
+                    downloadResult.Value.Content.ToStream().CopyTo(destination);
                 }
 
-                return blobResult.GetRawResponse();
+                return downloadResult.GetRawResponse();
             }
 
+            // Download in multiple chunks.
             byte[] buffer = new byte[maxChunkSize];
             int chunkCount = 0;
             int bytesDownloaded = 0;
@@ -748,15 +742,12 @@ namespace Azure.Containers.ContainerRegistry.Specialized
                     await _blobRestClient.GetChunkAsync(_repositoryName, digest, range.ToString(), cancellationToken).ConfigureAwait(false) :
                     _blobRestClient.GetChunk(_repositoryName, digest, range.ToString(), cancellationToken);
 
-                // TODO: Confirm we got as many bytes as we expected
-
                 if (async)
                 {
                     await chunkResult.Value.ReadAsync(buffer, 0, chunkSize, cancellationToken).ConfigureAwait(false);
                     sha256.TransformBlock(buffer, 0, chunkSize, buffer, 0);
                     await destination.WriteAsync(buffer, 0, chunkSize, cancellationToken).ConfigureAwait(false);
                 }
-
                 else
                 {
                     chunkResult.Value.Read(buffer, 0, chunkSize);
