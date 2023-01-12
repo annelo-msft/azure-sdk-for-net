@@ -781,8 +781,6 @@ namespace Azure.Containers.ContainerRegistry.Specialized
                 await _blobRestClient.CheckBlobExistsAsync(_repositoryName, digest, cancellationToken).ConfigureAwait(false) :
                 _blobRestClient.CheckBlobExists(_repositoryName, digest, cancellationToken);
 
-            // TODO: Check for null header
-
             return response.Headers.ContentLength.Value;
         }
 
