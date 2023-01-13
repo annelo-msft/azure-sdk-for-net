@@ -682,64 +682,6 @@ namespace Azure.Containers.ContainerRegistry.Tests
             Directory.Delete(path, true);
         }
 
-        [RecordedTest]
-        public async Task CanPullHelloWorld()
-        {
-            var repositoryId = "library/hello-world";
-            var tag = "latest";
-            var artifactClient = CreateClient().GetRepository(repositoryId).GetArtifact(tag);
-
-            var manifestProperties = await artifactClient.GetManifestPropertiesAsync();
-            //manifestProperties.Value.
-
-            ContainerRegistryBlobClient blobClient = CreateBlobClient(repositoryId);
-            var directory = Recording.Random.NewGuid().ToString();
-
-            string path = Path.Combine(TestContext.CurrentContext.TestDirectory, "Data", directory);
-            Directory.CreateDirectory(path);
-
-            // Download the manifest to obtain the list of files in the artifact
-            DownloadManifestOptions options = new(tag)
-            {
-                MediaType = "application/vnd.docker.distribution.manifest.list.v2+json"
-            };
-            var manifestResult = await blobClient.DownloadManifestAsync(options);
-
-            BinaryData data = BinaryData.FromStream(manifestResult.Value.ManifestStream);
-            foreach (var manifest in JsonDocument.Parse(data).RootElement.GetProperty("manifests").EnumerateArray())
-            {
-                var mdigest = manifest.GetProperty("digest").GetString();
-                var submresult = await blobClient.DownloadManifestAsync(new DownloadManifestOptions(mdigest));
-            }
-
-            //await WriteFileAsync(Path.Combine(path, "manifest.json"), data.ToStream());
-
-            ////OciManifest manifest = (OciManifest)manifestResult.Value.Manifest;
-            //JsonDocument doc = JsonDocument.Parse(data);
-            //var configDigest = doc.RootElement.GetProperty("Config").GetProperty("Digest").GetString();
-
-            //// Download and write out the config
-            //var configResult = await client.DownloadBlobAsync(configDigest);
-
-            //await WriteFileAsync(Path.Combine(path, "config.json"), configResult.Value.Content);
-
-            //// Download and write out the layers
-            //foreach (var layerFile in manifest.Layers)
-            //{
-            //    var layerResult = await client.DownloadBlobAsync(layerFile.Digest);
-            //    Stream stream = layerResult.Value.Content;
-
-            //    await WriteFileAsync(Path.Combine(path, TrimSha(layerFile.Digest)), configResult.Value.Content);
-            //}
-        }
-        private async Task WriteFileAsync(string path, Stream content)
-        {
-            using (FileStream fs = File.Create(path))
-            {
-                await content.CopyToAsync(fs);
-            }
-        }
-
         private static string TrimSha(string digest)
         {
             int index = digest.IndexOf(':');
