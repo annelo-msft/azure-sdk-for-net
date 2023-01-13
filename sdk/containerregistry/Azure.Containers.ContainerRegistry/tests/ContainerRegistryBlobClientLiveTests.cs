@@ -706,6 +706,11 @@ namespace Azure.Containers.ContainerRegistry.Tests
             var manifestResult = await blobClient.DownloadManifestAsync(options);
 
             BinaryData data = BinaryData.FromStream(manifestResult.Value.ManifestStream);
+            foreach (var manifest in JsonDocument.Parse(data).RootElement.GetProperty("manifests").EnumerateArray())
+            {
+                var mdigest = manifest.GetProperty("digest").GetString();
+                var submresult = await blobClient.DownloadManifestAsync(new DownloadManifestOptions(mdigest));
+            }
 
             //await WriteFileAsync(Path.Combine(path, "manifest.json"), data.ToStream());
 
