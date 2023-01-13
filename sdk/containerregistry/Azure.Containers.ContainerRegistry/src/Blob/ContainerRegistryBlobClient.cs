@@ -165,7 +165,7 @@ namespace Azure.Containers.ContainerRegistry.Specialized
         }
 
         /// <summary>
-        /// Uploads a manifest for an OCI Artifact.
+        /// Uploads an artifact manifest.
         /// </summary>
         /// <param name="manifestStream">The <see cref="Stream"/> manifest to upload.</param>
         /// <param name="options">Options for configuring the upload operation.</param>
@@ -249,11 +249,11 @@ namespace Azure.Containers.ContainerRegistry.Specialized
         {
             string digest = OciBlobDescriptor.ComputeDigest(stream);
             string tagOrDigest = options.Tag ?? digest;
+            string mediaType = options.MediaType ?? ManifestMediaType.OciManifest.ToString();
 
             ResponseWithHeaders<ContainerRegistryCreateManifestHeaders> response = async ?
-                // TODO: media type should be configurable to support non-OCI types.
-                await _restClient.CreateManifestAsync(_repositoryName, tagOrDigest, stream, ManifestMediaType.OciManifest.ToString(), cancellationToken).ConfigureAwait(false) :
-                _restClient.CreateManifest(_repositoryName, tagOrDigest, stream, ManifestMediaType.OciManifest.ToString(), cancellationToken);
+                await _restClient.CreateManifestAsync(_repositoryName, tagOrDigest, stream, mediaType, cancellationToken).ConfigureAwait(false) :
+                _restClient.CreateManifest(_repositoryName, tagOrDigest, stream, mediaType, cancellationToken);
 
             if (!ValidateDigest(digest, response.Headers.DockerContentDigest))
             {
@@ -479,7 +479,7 @@ namespace Azure.Containers.ContainerRegistry.Specialized
         }
 
         /// <summary>
-        /// Downloads the manifest for an OCI artifact.
+        /// Downloads an artifact manifest.
         /// </summary>
         /// <param name="options">Options for the operation.</param>
         /// <param name="cancellationToken">The cancellation token to use.</param>
@@ -504,11 +504,7 @@ namespace Azure.Containers.ContainerRegistry.Specialized
                     throw new RequestFailedException("The requested digest does not match the digest of the received manifest.");
                 }
 
-                using var document = JsonDocument.Parse(rawResponse.ContentStream);
-                var manifest = OciManifest.DeserializeOciManifest(document.RootElement);
-
-                rawResponse.ContentStream.Position = 0;
-
+                ArtifactManifest manifest = GetManifestFromResponse(rawResponse);
                 return Response.FromValue(new DownloadManifestResult(digest, manifest, rawResponse.ContentStream), rawResponse);
             }
             catch (Exception e)
@@ -519,7 +515,7 @@ namespace Azure.Containers.ContainerRegistry.Specialized
         }
 
         /// <summary>
-        /// Downloads the manifest for an OCI artifact.
+        /// Downloads an artifact manifest.
         /// </summary>
         /// <param name="options">Options for the download operation.</param>
         /// <param name="cancellationToken">The cancellation token to use.</param>
@@ -543,11 +539,7 @@ namespace Azure.Containers.ContainerRegistry.Specialized
                     throw new RequestFailedException("The requested digest does not match the digest of the received manifest.");
                 }
 
-                using var document = JsonDocument.Parse(rawResponse.ContentStream);
-                var manifest = OciManifest.DeserializeOciManifest(document.RootElement);
-
-                rawResponse.ContentStream.Position = 0;
-
+                ArtifactManifest manifest = GetManifestFromResponse(rawResponse);
                 return Response.FromValue(new DownloadManifestResult(digest, manifest, rawResponse.ContentStream), rawResponse);
             }
             catch (Exception e)
@@ -555,6 +547,21 @@ namespace Azure.Containers.ContainerRegistry.Specialized
                 scope.Failed(e);
                 throw;
             }
+        }
+
+        private static ArtifactManifest GetManifestFromResponse(Response response)
+        {
+            using var document = JsonDocument.Parse(response.ContentStream);
+
+            ArtifactManifest manifest = default;
+            if (response.Headers.TryGetValue("Content-Type", out string contentType) &&
+                contentType == ManifestMediaType.OciManifest.ToString())
+            {
+                manifest = OciManifest.DeserializeOciManifest(document.RootElement);
+            }
+
+            response.ContentStream.Position = 0;
+            return manifest;
         }
 
         /// <summary>
