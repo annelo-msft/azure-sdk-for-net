@@ -6,12 +6,13 @@
 #nullable disable
 
 using System.Collections.Generic;
+using Azure.Containers.ContainerRegistry;
 using Azure.Core;
 
 namespace Azure.Containers.ContainerRegistry.Specialized
 {
     /// <summary> Returns the requested OCI Manifest file. </summary>
-    public partial class OciManifest : ArtifactManifest
+    public partial class OciManifest : Manifest
     {
         /// <summary> Initializes a new instance of OciManifest. </summary>
         public OciManifest()

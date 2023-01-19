@@ -497,6 +497,7 @@ namespace Azure.Containers.ContainerRegistry.Specialized
                 Response rawResponse = response.GetRawResponse();
 
                 rawResponse.Headers.TryGetValue("Docker-Content-Digest", out var digest);
+                rawResponse.Headers.TryGetValue("ContentType", out var mediaType);
 
                 var contentDigest = BlobHelper.ComputeDigest(rawResponse.ContentStream);
                 ValidateDigest(contentDigest, digest);
@@ -504,7 +505,7 @@ namespace Azure.Containers.ContainerRegistry.Specialized
                 using var document = JsonDocument.Parse(rawResponse.Content);
                 var manifest = OciManifest.DeserializeOciManifest(document.RootElement);
 
-                return Response.FromValue(new DownloadManifestResult(digest, manifest, rawResponse.Content), rawResponse);
+                return Response.FromValue(new DownloadManifestResult(digest, mediaType, rawResponse.Content), rawResponse);
             }
             catch (Exception e)
             {

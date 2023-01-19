@@ -118,6 +118,16 @@ directive:
   where: $.definitions.OCIManifest
   transform: >
     $["x-csharp-usage"] = "model,input,output,converter";
+    $["x-ms-client-name"] = "OciManifest";
+```
+
+# Updates to OciIndex
+``` yaml
+directive:
+  from: swagger-document
+  where: $.definitions.OCIIndex
+  transform: >
+    $["x-ms-client-name"] = "OciIndex"
 ```
 
 # Take stream as manifest body
@@ -147,14 +157,5 @@ directive:
   from: swagger-document
   where: $.definitions.Annotations
   transform: >
-    delete $["x-accessibility"]
-```
-
-# Make Manifest a public type
-``` yaml
-directive:
-  from: swagger-document
-  where: $.definitions["Manifest"]
-  transform: >
-    delete $["x-accessibility"]
+    delete $["x-accessibility"];
 ```

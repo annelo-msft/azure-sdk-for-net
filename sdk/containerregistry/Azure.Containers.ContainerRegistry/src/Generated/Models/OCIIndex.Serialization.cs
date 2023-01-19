@@ -12,7 +12,7 @@ using Azure.Core;
 
 namespace Azure.Containers.ContainerRegistry
 {
-    internal partial class OCIIndex : IUtf8JsonSerializable
+    internal partial class OciIndex : IUtf8JsonSerializable
     {
         void IUtf8JsonSerializable.Write(Utf8JsonWriter writer)
         {
@@ -47,7 +47,7 @@ namespace Azure.Containers.ContainerRegistry
             writer.WriteEndObject();
         }
 
-        internal static OCIIndex DeserializeOCIIndex(JsonElement element)
+        internal static OciIndex DeserializeOciIndex(JsonElement element)
         {
             Optional<IList<ManifestListAttributes>> manifests = default;
             Optional<OciAnnotations> annotations = default;
@@ -90,7 +90,7 @@ namespace Azure.Containers.ContainerRegistry
                     continue;
                 }
             }
-            return new OCIIndex(Optional.ToNullable(schemaVersion), Optional.ToList(manifests), annotations.Value);
+            return new OciIndex(Optional.ToNullable(schemaVersion), Optional.ToList(manifests), annotations.Value);
         }
     }
 }

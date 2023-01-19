@@ -11,10 +11,10 @@ namespace Azure.Containers.ContainerRegistry.Specialized
     /// </summary>
     public class DownloadManifestResult
     {
-        internal DownloadManifestResult(string digest, OciManifest manifest, Stream manifestStream)
+        internal DownloadManifestResult(string digest, string mediaType, BinaryData content)
         {
             Digest = digest;
-            Manifest = manifest;
+            MediaType = mediaType;
             Content = content;
         }
 
@@ -24,9 +24,9 @@ namespace Azure.Containers.ContainerRegistry.Specialized
         public string Digest { get; }
 
         /// <summary>
-        /// The downloaded manifest, or null if the manifest has an unsupported Content-Type.
+        /// Gets the manifest's MediaType, returned in the Content-Type header.
         /// </summary>
-        public ArtifactManifest Manifest { get; }
+        public string MediaType { get; }
 
         /// <summary>
         /// The serialized content that was downloaded.
