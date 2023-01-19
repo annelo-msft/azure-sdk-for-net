@@ -7,11 +7,11 @@ using System.IO;
 namespace Azure.Containers.ContainerRegistry.Specialized
 {
     /// <summary>
-    /// The result from downloading an OCI manifest from the registry.
+    /// The result from downloading an artifact manifest.
     /// </summary>
     public class DownloadManifestResult : IDisposable
     {
-        internal DownloadManifestResult(string digest, OciManifest manifest, Stream manifestStream)
+        internal DownloadManifestResult(string digest, ArtifactManifest manifest, Stream manifestStream)
         {
             Digest = digest;
             Manifest = manifest;
@@ -24,7 +24,7 @@ namespace Azure.Containers.ContainerRegistry.Specialized
         public string Digest { get; }
 
         /// <summary>
-        /// The downloaded manifest.
+        /// The downloaded manifest, or null if the manifest has an unsupported Content-Type.
         /// </summary>
         public ArtifactManifest Manifest { get; }
 
