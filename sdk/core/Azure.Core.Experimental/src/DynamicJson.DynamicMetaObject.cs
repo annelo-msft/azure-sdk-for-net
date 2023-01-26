@@ -61,28 +61,32 @@ namespace Azure.Core.Dynamic
             //    return new DynamicMetaObject(getViaIndexerCall, restrictions);
             //}
 
-            //public override DynamicMetaObject BindConvert(ConvertBinder binder)
-            //{
-            //    Expression targetObject = Expression.Convert(Expression, LimitType);
-            //    BindingRestrictions restrictions = BindingRestrictions.GetTypeRestriction(Expression, LimitType);
+            public override DynamicMetaObject BindConvert(ConvertBinder binder)
+            {
+                UnaryExpression this_ = Expression.Convert(Expression, LimitType);
+                MemberExpression rootElement = Expression.Property(this_, "RootElement");
 
-            //    Expression convertCall;
 
-            //    //if (binder.Type == typeof(IEnumerable))
-            //    //{
-            //    //    convertCall = Expression.Call(targetObject, GetDynamicEnumerableMethod);
-            //    //    return new DynamicMetaObject(convertCall, restrictions);
-            //    //}
+                Expression targetObject = Expression.Convert(Expression, LimitType);
+                BindingRestrictions restrictions = BindingRestrictions.GetTypeRestriction(Expression, LimitType);
 
-            //    if (CastFromOperators.TryGetValue(binder.Type, out MethodInfo? castOperator))
-            //    {
-            //        convertCall = Expression.Call(castOperator, targetObject);
-            //        return new DynamicMetaObject(convertCall, restrictions);
-            //    }
+                Expression convertCall;
 
-            //    convertCall = Expression.Call(targetObject, nameof(To), new Type[] { binder.Type });
-            //    return new DynamicMetaObject(convertCall, restrictions);
-            //}
+                //if (binder.Type == typeof(IEnumerable))
+                //{
+                //    convertCall = Expression.Call(targetObject, GetDynamicEnumerableMethod);
+                //    return new DynamicMetaObject(convertCall, restrictions);
+                //}
+
+                if (CastFromOperators.TryGetValue(binder.Type, out MethodInfo? castOperator))
+                {
+                    convertCall = Expression.Call(castOperator, targetObject);
+                    return new DynamicMetaObject(convertCall, restrictions);
+                }
+
+                convertCall = Expression.Call(targetObject, nameof(To), new Type[] { binder.Type });
+                return new DynamicMetaObject(convertCall, restrictions);
+            }
 
             public override DynamicMetaObject BindSetMember(SetMemberBinder binder, DynamicMetaObject value)
             {
@@ -112,14 +116,6 @@ namespace Azure.Core.Dynamic
 
             //    var restrictions = BindingRestrictions.GetTypeRestriction(Expression, LimitType);
             //    return new DynamicMetaObject(setCall, restrictions);
-            //}
-
-            //private static Dictionary<Type, MethodInfo> GetCastFromOperators()
-            //{
-            //    return typeof(JsonData)
-            //        .GetMethods(BindingFlags.Public | BindingFlags.Static)
-            //        .Where(method => method.Name == "op_Explicit" || method.Name == "op_Implicit")
-            //        .ToDictionary(method => method.ReturnType);
             //}
         }
     }

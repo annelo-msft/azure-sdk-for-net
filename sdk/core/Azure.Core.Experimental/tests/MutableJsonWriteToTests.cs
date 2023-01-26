@@ -9,7 +9,7 @@ using NUnit.Framework;
 
 namespace Azure.Core.Experimental.Tests
 {
-    internal class JsonDataWriteToTests
+    internal class MutableJsonWriteToTests
     {
         [Test]
         public void CanWriteBoolean()

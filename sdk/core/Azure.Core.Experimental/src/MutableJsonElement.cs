@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text.Json;
 
 namespace Azure.Core.Dynamic
@@ -25,6 +26,14 @@ namespace Azure.Core.Dynamic
             _root = root;
             _path = path;
             _highWaterMark = highWaterMark;
+        }
+
+        /// <summary>
+        /// Writes the element to the specified stream as a JSON value.
+        /// </summary>
+        public void WriteTo(Stream stream)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>

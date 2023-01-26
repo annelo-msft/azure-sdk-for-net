@@ -2,7 +2,9 @@
 // Licensed under the MIT License.
 
 using System;
+using System.Collections.Generic;
 using System.Dynamic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -53,6 +55,9 @@ namespace Azure.Core.Dynamic
 
         private class MetaObject : DynamicMetaObject
         {
+            // Operators that cast from MutableJsonElement to another type
+            private static readonly Dictionary<Type, MethodInfo> CastFromOperators = GetCastFromOperators();
+
             internal MetaObject(Expression parameter, IDynamicMetaObjectProvider value) : base(parameter, BindingRestrictions.Empty, value)
             {
             }
@@ -66,6 +71,23 @@ namespace Azure.Core.Dynamic
 
                 BindingRestrictions restrictions = BindingRestrictions.GetTypeRestriction(Expression, LimitType);
                 return new DynamicMetaObject(getPropertyCall, restrictions);
+            }
+
+            public override DynamicMetaObject BindConvert(ConvertBinder binder)
+            {
+                UnaryExpression this_ = Expression.Convert(Expression, LimitType);
+                BindingRestrictions restrictions = BindingRestrictions.GetTypeRestriction(Expression, LimitType);
+
+                Expression convertCall;
+
+                if (CastFromOperators.TryGetValue(binder.Type, out MethodInfo? castOperator))
+                {
+                    convertCall = Expression.Call(castOperator, this_);
+                    return new DynamicMetaObject(convertCall, restrictions);
+                }
+
+                convertCall = Expression.Call(this_, nameof(To), new Type[] { binder.Type });
+                return new DynamicMetaObject(convertCall, restrictions);
             }
 
             public override DynamicMetaObject BindSetMember(SetMemberBinder binder, DynamicMetaObject value)
@@ -82,6 +104,14 @@ namespace Azure.Core.Dynamic
 
                 BindingRestrictions restrictions = BindingRestrictions.GetTypeRestriction(Expression, LimitType);
                 return new DynamicMetaObject(setCall, restrictions);
+            }
+
+            private static Dictionary<Type, MethodInfo> GetCastFromOperators()
+            {
+                return typeof(DynamicJsonElement)
+                    .GetMethods(BindingFlags.Public | BindingFlags.Static)
+                    .Where(method => method.Name == "op_Explicit" || method.Name == "op_Implicit")
+                    .ToDictionary(method => method.ReturnType);
             }
         }
     }

@@ -4,10 +4,13 @@
 using System;
 using System.Diagnostics;
 using System.Text.Json;
+using static Azure.Core.Dynamic.MutableJsonDocument;
 
 namespace Azure.Core.Dynamic
 {
-    public partial class MutableJsonDocument
+    /// <summary>
+    /// </summary>
+    public partial struct MutableJsonElement
     {
         internal void WriteElementTo(Utf8JsonWriter writer)
         {
@@ -273,96 +276,6 @@ namespace Azure.Core.Dynamic
             }
 
             writer.WriteNullValue();
-        }
-
-        private void WriteTheHardWay(Utf8JsonWriter writer)
-        {
-            // TODO: Handle arrays
-            // TODO: Handle additions
-            // TODO: Handle removals
-
-            var original = _original.Span;
-            Utf8JsonReader reader = new Utf8JsonReader(original);
-
-            Span<byte> path = stackalloc byte[128];
-            int pathLength = 0;
-            ReadOnlySpan<byte> currentPropertyName = Span<byte>.Empty;
-
-            MutableJsonChange change = default;
-            bool changed = false;
-            while (reader.Read())
-            {
-                switch (reader.TokenType)
-                {
-                    case JsonTokenType.PropertyName:
-                        currentPropertyName = reader.ValueSpan;
-
-                        //push
-                        {
-                            if (pathLength != 0)
-                            {
-                                path[pathLength] = (byte)'.';
-                                pathLength++;
-                            }
-                            if (!currentPropertyName.TryCopyTo(path.Slice(pathLength)))
-                            {
-                                throw new NotImplementedException(); // need to use switch to pooled buffer
-                            }
-                            pathLength += currentPropertyName.Length;
-                        }
-                        changed = Changes.TryGetChange(path.Slice(0, pathLength), out change);
-                        // TODO: Handle nulls
-
-                        writer.WritePropertyName(currentPropertyName);
-                        break;
-                    case JsonTokenType.String:
-                        if (changed)
-                            writer.WriteStringValue((string)change.Value!);
-                        else
-                            writer.WriteStringValue(reader.ValueSpan);
-
-                        // pop
-                        {
-                            int lastDelimiter = path.LastIndexOf((byte)'.');
-                            if (lastDelimiter != -1)
-                            { pathLength = 0; }
-                            else
-                                pathLength = lastDelimiter;
-                        }
-                        break;
-                    case JsonTokenType.Number:
-                        if (changed)
-                            writer.WriteNumberValue((double)change.Value!);
-                        else
-                            writer.WriteStringValue(reader.ValueSpan);
-
-                        // pop
-                        {
-                            int lastDelimiter = path.LastIndexOf((byte)'.');
-                            if (lastDelimiter != -1)
-                            { pathLength = 0; }
-                            else
-                                pathLength = lastDelimiter;
-                        }
-
-                        break;
-                    case JsonTokenType.StartObject:
-                        writer.WriteStartObject();
-                        break;
-                    case JsonTokenType.EndObject:
-                        // pop
-                        {
-                            int lastDelimiter = path.LastIndexOf((byte)'.');
-                            if (lastDelimiter != -1)
-                            { pathLength = 0; }
-                            else
-                                pathLength = lastDelimiter;
-                            writer.WriteEndObject();
-                        }
-                        break;
-                }
-            }
-            writer.Flush();
         }
     }
 }

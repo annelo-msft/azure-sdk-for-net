@@ -2,13 +2,12 @@
 // Licensed under the MIT License.
 
 using System;
-using System.Text.Json;
 using Azure.Core.Dynamic;
 using NUnit.Framework;
 
 namespace Azure.Core.Experimental.Tests
 {
-    public class JsonDataDynamicTests
+    public class DynamicJsonTests
     {
         [Test]
         public void CanGetIntProperty()
@@ -66,8 +65,11 @@ namespace Azure.Core.Experimental.Tests
             Assert.AreEqual(2, (int)jsonData.Foo.Bar);
         }
 
+        // TODO: Add tests for property get and set for supported types.
+        // Do this with fewer tests via NUnit features.
+
         #region Helpers
-        internal dynamic GetDynamicJson(string json)
+        internal static dynamic GetDynamicJson(string json)
         {
             return new BinaryData(json).ToDynamic();
         }

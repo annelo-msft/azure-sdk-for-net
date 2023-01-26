@@ -57,6 +57,7 @@ namespace Azure.Core.Dynamic
             }
 
             Utf8JsonWriter writer = new Utf8JsonWriter(stream);
+
             if (!Changes.HasChanges)
             {
                 Write(stream, _original.Span);
