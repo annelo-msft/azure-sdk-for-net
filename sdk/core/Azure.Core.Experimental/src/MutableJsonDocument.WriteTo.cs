@@ -9,30 +9,30 @@ namespace Azure.Core.Dynamic
 {
     public partial class MutableJsonDocument
     {
+        private const int DefaultMaxPathLength = 128;
+
+        private ref struct WriteToState
+        {
+            public Span<byte> Path { get; set; }
+            public int PathLength { get; set; }
+            public int HighWaterMark;
+            public Utf8JsonReader Reader { get; set; }
+        }
+
         internal void WriteRootElementTo(Utf8JsonWriter writer)
         {
-            string path = string.Empty;
-
-            Utf8JsonReader reader;
-
             // Check for changes at the root.
-            bool changed = Changes.TryGetChange(path, -1, out MutableJsonChange change);
-            if (changed)
-            {
-                reader = change.GetReader();
-            }
-            else
-            {
-                reader = new Utf8JsonReader(_original.Span);
-            }
+            bool changed = Changes.TryGetChange(Span<byte>.Empty, -1, out MutableJsonChange change);
+            Utf8JsonReader reader = changed ? change.GetReader() : new Utf8JsonReader(_original.Span);
 
-            WriteElement(path, -1, ref reader, writer);
+            Span<byte> utf8Path = stackalloc byte[DefaultMaxPathLength];
+            WriteElement(utf8Path, 0, -1, ref reader, writer);
 
             writer.Flush();
         }
 
-        // TODO: Make this work path as ReadOnlySpan<byte>
-        internal void WriteElement(string path, int highWaterMark, ref Utf8JsonReader reader, Utf8JsonWriter writer)
+        // TODO: fully grok `scoped` keyword
+        internal void WriteElement(scoped Span<byte> utf8Path, int pathLength, int highWaterMark, ref Utf8JsonReader reader, Utf8JsonWriter writer)
         {
             while (reader.Read())
             {
@@ -40,30 +40,30 @@ namespace Azure.Core.Dynamic
                 {
                     case JsonTokenType.StartObject:
                         writer.WriteStartObject();
-                        WriteObjectProperties(path, highWaterMark, ref reader, writer);
+                        WriteObjectProperties(utf8Path, pathLength, highWaterMark, ref reader, writer);
                         break;
                     case JsonTokenType.StartArray:
                         writer.WriteStartArray();
-                        WriteArrayValues(path, highWaterMark, ref reader, writer);
+                        WriteArrayValues(utf8Path, pathLength, highWaterMark, ref reader, writer);
                         break;
                     case JsonTokenType.String:
-                        WriteString(path, highWaterMark, ref reader, writer);
+                        WriteString(utf8Path, pathLength, highWaterMark, ref reader, writer);
                         break;
                     case JsonTokenType.Number:
-                        WriteNumber(path, highWaterMark, ref reader, writer);
+                        WriteNumber(utf8Path, pathLength, highWaterMark, ref reader, writer);
                         break;
                     case JsonTokenType.True:
                     case JsonTokenType.False:
-                        WriteBoolean(path, highWaterMark, reader.TokenType, ref reader, writer);
+                        WriteBoolean(utf8Path, pathLength, highWaterMark, reader.TokenType, ref reader, writer);
                         break;
                     case JsonTokenType.Null:
-                        WriteNull(path, highWaterMark, ref reader, writer);
+                        WriteNull(utf8Path, pathLength, highWaterMark, ref reader, writer);
                         break;
                 }
             }
         }
 
-        private void WriteArrayValues(string path, int highWaterMark, ref Utf8JsonReader reader, Utf8JsonWriter writer)
+        private void WriteArrayValues(ReadOnlySpan<byte> utf8Path, int highWaterMark, ref Utf8JsonReader reader, Utf8JsonWriter writer)
         {
             int index = 0;
 
@@ -73,77 +73,77 @@ namespace Azure.Core.Dynamic
                 {
                     case JsonTokenType.StartObject:
                         path = ChangeTracker.PushIndex(path, index);
-                        WriteObject(path, highWaterMark, ref reader, writer);
+                        WriteObject(utf8Path, highWaterMark, ref reader, writer);
                         break;
                     case JsonTokenType.StartArray:
                         path = ChangeTracker.PushIndex(path, index);
                         writer.WriteStartArray();
-                        WriteArrayValues(path, highWaterMark, ref reader, writer);
+                        WriteArrayValues(utf8Path, highWaterMark, ref reader, writer);
                         break;
                     case JsonTokenType.String:
                         path = ChangeTracker.PushIndex(path, index);
-                        WriteString(path, highWaterMark, ref reader, writer);
+                        WriteString(utf8Path, highWaterMark, ref reader, writer);
                         break;
                     case JsonTokenType.Number:
                         path = ChangeTracker.PushIndex(path, index);
-                        WriteNumber(path, highWaterMark, ref reader, writer);
+                        WriteNumber(utf8Path, highWaterMark, ref reader, writer);
                         break;
                     case JsonTokenType.True:
                     case JsonTokenType.False:
                         path = ChangeTracker.PushIndex(path, index);
-                        WriteBoolean(path, highWaterMark, reader.TokenType, ref reader, writer);
+                        WriteBoolean(utf8Path, highWaterMark, reader.TokenType, ref reader, writer);
                         break;
                     case JsonTokenType.Null:
                         path = ChangeTracker.PushIndex(path, index);
-                        WriteNull(path, highWaterMark, ref reader, writer);
+                        WriteNull(utf8Path, highWaterMark, ref reader, writer);
                         break;
                     case JsonTokenType.EndArray:
                         writer.WriteEndArray();
                         return;
                 }
 
-                path = ChangeTracker.PopIndex(path);
+                utf8Path = ChangeTracker.PopIndex(utf8Path);
                 index++;
             }
         }
 
-        private void WriteObjectProperties(string path, int highWaterMark, ref Utf8JsonReader reader, Utf8JsonWriter writer)
+        private void WriteObjectProperties(Span<byte> utf8Path, int pathLength, int highWaterMark, ref Utf8JsonReader reader, Utf8JsonWriter writer)
         {
             while (reader.Read())
             {
                 switch (reader.TokenType)
                 {
                     case JsonTokenType.StartObject:
-                        WriteObject(path, highWaterMark, ref reader, writer);
-                        path = ChangeTracker.PopProperty(path);
+                        WriteObject(utf8Path, pathLength, highWaterMark, ref reader, writer);
+                        utf8Path = ChangeTracker.PopProperty(utf8Path);
                         continue;
                     case JsonTokenType.StartArray:
                         writer.WriteStartArray();
-                        WriteArrayValues(path, highWaterMark, ref reader, writer);
-                        path = ChangeTracker.PopProperty(path);
+                        WriteArrayValues(utf8Path, highWaterMark, ref reader, writer);
+                        utf8Path = ChangeTracker.PopProperty(utf8Path);
                         continue;
                     case JsonTokenType.PropertyName:
                         path = ChangeTracker.PushProperty(path, reader.ValueSpan);
 
                         writer.WritePropertyName(reader.ValueSpan);
-                        Debug.WriteLine($"Path: {path}, TokenStartIndex: {reader.TokenStartIndex}");
+                        Debug.WriteLine($"Path: {Utf8SpanToString(utf8Path)}, TokenStartIndex: {reader.TokenStartIndex}");
                         continue;
                     case JsonTokenType.String:
-                        WriteString(path, highWaterMark, ref reader, writer);
-                        path = ChangeTracker.PopProperty(path);
+                        WriteString(utf8Path, highWaterMark, ref reader, writer);
+                        utf8Path = ChangeTracker.PopProperty(utf8Path);
                         continue;
                     case JsonTokenType.Number:
-                        WriteNumber(path, highWaterMark, ref reader, writer);
-                        path = ChangeTracker.PopProperty(path);
+                        WriteNumber(utf8Path, highWaterMark, ref reader, writer);
+                        utf8Path = ChangeTracker.PopProperty(utf8Path);
                         continue;
                     case JsonTokenType.True:
                     case JsonTokenType.False:
-                        WriteBoolean(path, highWaterMark, reader.TokenType, ref reader, writer);
-                        path = ChangeTracker.PopProperty(path);
+                        WriteBoolean(utf8Path, highWaterMark, reader.TokenType, ref reader, writer);
+                        utf8Path = ChangeTracker.PopProperty(utf8Path);
                         continue;
                     case JsonTokenType.Null:
-                        WriteNull(path, highWaterMark, ref reader, writer);
-                        path = ChangeTracker.PopProperty(path);
+                        WriteNull(utf8Path, highWaterMark, ref reader, writer);
+                        utf8Path = ChangeTracker.PopProperty(utf8Path);
                         continue;
                     case JsonTokenType.EndObject:
                         writer.WriteEndObject();
@@ -152,34 +152,34 @@ namespace Azure.Core.Dynamic
             }
         }
 
-        private void WriteObject(string path, int highWaterMark, ref Utf8JsonReader reader, Utf8JsonWriter writer)
+        private void WriteObject(ReadOnlySpan<byte> utf8Path, int highWaterMark, ref Utf8JsonReader reader, Utf8JsonWriter writer)
         {
-            if (Changes.TryGetChange(path, highWaterMark, out MutableJsonChange change))
+            if (Changes.TryGetChange(utf8Path, highWaterMark, out MutableJsonChange change))
             {
-                WriteStructuralChange(path, change, ref reader, writer);
+                WriteStructuralChange(utf8Path, change, ref reader, writer);
                 return;
             }
 
             writer.WriteStartObject();
-            WriteObjectProperties(path, highWaterMark, ref reader, writer);
+            WriteObjectProperties(utf8Path, highWaterMark, ref reader, writer);
         }
 
-        private void WriteStructuralChange(string path, MutableJsonChange change, ref Utf8JsonReader reader, Utf8JsonWriter writer)
+        private void WriteStructuralChange(ReadOnlySpan<byte> utf8Path, MutableJsonChange change, ref Utf8JsonReader reader, Utf8JsonWriter writer)
         {
             Utf8JsonReader changedElementReader = change.GetReader();
-            WriteElement(path, change.Index, ref changedElementReader, writer);
+            WriteElement(utf8Path, change.Index, ref changedElementReader, writer);
 
             // Skip this element in the original json buffer.
             reader.Skip();
         }
 
-        private void WriteString(string path, int highWaterMark, ref Utf8JsonReader reader, Utf8JsonWriter writer)
+        private void WriteString(ReadOnlySpan<byte> utf8Path, int highWaterMark, ref Utf8JsonReader reader, Utf8JsonWriter writer)
         {
-            if (Changes.TryGetChange(path, highWaterMark, out MutableJsonChange change))
+            if (Changes.TryGetChange(utf8Path, highWaterMark, out MutableJsonChange change))
             {
                 if (change.ReplacesJsonElement)
                 {
-                    WriteStructuralChange(path, change, ref reader, writer);
+                    WriteStructuralChange(utf8Path, change, ref reader, writer);
                     return;
                 }
 
@@ -191,13 +191,13 @@ namespace Azure.Core.Dynamic
             return;
         }
 
-        private void WriteNumber(string path, int highWaterMark, ref Utf8JsonReader reader, Utf8JsonWriter writer)
+        private void WriteNumber(ReadOnlySpan<byte> utf8Path, int highWaterMark, ref Utf8JsonReader reader, Utf8JsonWriter writer)
         {
-            if (Changes.TryGetChange(path, highWaterMark, out MutableJsonChange change))
+            if (Changes.TryGetChange(utf8Path, highWaterMark, out MutableJsonChange change))
             {
                 if (change.ReplacesJsonElement)
                 {
-                    WriteStructuralChange(path, change, ref reader, writer);
+                    WriteStructuralChange(utf8Path, change, ref reader, writer);
                     return;
                 }
 
@@ -247,13 +247,13 @@ namespace Azure.Core.Dynamic
             throw new InvalidOperationException("Change doesn't store a number value.");
         }
 
-        private void WriteBoolean(string path, int highWaterMark, JsonTokenType token, ref Utf8JsonReader reader, Utf8JsonWriter writer)
+        private void WriteBoolean(ReadOnlySpan<byte> utf8Path, int highWaterMark, JsonTokenType token, ref Utf8JsonReader reader, Utf8JsonWriter writer)
         {
-            if (Changes.TryGetChange(path, highWaterMark, out MutableJsonChange change))
+            if (Changes.TryGetChange(utf8Path, highWaterMark, out MutableJsonChange change))
             {
                 if (change.ReplacesJsonElement)
                 {
-                    WriteStructuralChange(path, change, ref reader, writer);
+                    WriteStructuralChange(utf8Path, change, ref reader, writer);
                     return;
                 }
 
@@ -264,11 +264,11 @@ namespace Azure.Core.Dynamic
             writer.WriteBooleanValue(value: token == JsonTokenType.True);
         }
 
-        private void WriteNull(string path, int highWaterMark, ref Utf8JsonReader reader, Utf8JsonWriter writer)
+        private void WriteNull(ReadOnlySpan<byte> utf8Path, int highWaterMark, ref Utf8JsonReader reader, Utf8JsonWriter writer)
         {
-            if (Changes.TryGetChange(path, highWaterMark, out MutableJsonChange change) && change.ReplacesJsonElement)
+            if (Changes.TryGetChange(utf8Path, highWaterMark, out MutableJsonChange change) && change.ReplacesJsonElement)
             {
-                WriteStructuralChange(path, change, ref reader, writer);
+                WriteStructuralChange(utf8Path, change, ref reader, writer);
                 return;
             }
 

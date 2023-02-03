@@ -150,6 +150,8 @@ namespace Azure.Core.Dynamic
             _originalElement = JsonDocument.Parse(_original).RootElement;
         }
 
+        internal const byte Utf8Delimiter = (byte)'.';
+
         // TODO: Move into extensions
         internal static string Utf8SpanToString(ReadOnlySpan<byte> utf8)
         {

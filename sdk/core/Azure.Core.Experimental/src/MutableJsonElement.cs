@@ -16,7 +16,6 @@ namespace Azure.Core.Dynamic
     {
         private readonly MutableJsonDocument _root;
 
-        private readonly string _path;
         private readonly ReadOnlyMemory<byte> _utf8Path;
         private readonly int _highWaterMark;
 
@@ -31,7 +30,7 @@ namespace Azure.Core.Dynamic
             _highWaterMark = highWaterMark;
             _element = element;
 
-            _path= path;
+            //_path= path;
         }
 
         internal MutableJsonElement(MutableJsonDocument root, JsonElement element, ReadOnlyMemory<byte> utf8Path, int highWaterMark = -1)
@@ -41,7 +40,7 @@ namespace Azure.Core.Dynamic
             _highWaterMark = highWaterMark;
             _element = element;
 
-            _path = MutableJsonDocument.Utf8SpanToString(_utf8Path.Span);
+            //_path = MutableJsonDocument.Utf8SpanToString(_utf8Path.Span);
         }
 
         /// <summary>
@@ -495,7 +494,7 @@ namespace Azure.Core.Dynamic
         internal void WriteTo(Utf8JsonWriter writer)
         {
             Utf8JsonReader reader = GetReaderForElement(_element);
-            _root.WriteElement(_path, _highWaterMark, ref reader, writer);
+            _root.WriteElement(_utf8Path.Span, _highWaterMark, ref reader, writer);
         }
 
         /// <inheritdoc/>
@@ -545,7 +544,7 @@ namespace Azure.Core.Dynamic
 
             using MemoryStream changedElementStream = new();
             Utf8JsonWriter changedElementWriter = new(changedElementStream);
-            _root.WriteElement(_path, _highWaterMark, ref reader, changedElementWriter);
+            _root.WriteElement(_utf8Path.Span, _highWaterMark, ref reader, changedElementWriter);
             changedElementWriter.Flush();
 
             // TODO: How can we avoid an allocation here?  Copy into a passed-in buffer?
