@@ -150,6 +150,24 @@ namespace Azure.Core.Dynamic
             _originalElement = JsonDocument.Parse(_original).RootElement;
         }
 
+        // TODO: Move into extensions
+        internal static string Utf8SpanToString(ReadOnlySpan<byte> utf8)
+        {
+            // TODO: Don't use ToArray(), it makes an allocation.
+            byte[] utf8Bytes = utf8.ToArray();
+            return Encoding.UTF8.GetString(utf8Bytes);
+        }
+
+        internal static ReadOnlyMemory<byte> StringToUtf8(string value)
+        {
+            // Convert to Utf8 from Utf16
+            // TODO: use System.Text.Unicode.UTF8 where available
+            byte[] utf8Bytes = Encoding.UTF8.GetBytes(value);
+
+            // Does this allocate?
+            return utf8Bytes.AsMemory();
+        }
+
         private class JsonConverter : JsonConverter<MutableJsonDocument>
         {
             public override MutableJsonDocument Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)

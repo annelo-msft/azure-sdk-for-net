@@ -15,28 +15,33 @@ namespace Azure.Core.Dynamic
     public readonly partial struct MutableJsonElement
     {
         private readonly MutableJsonDocument _root;
-        private readonly JsonElement _element;
 
-        // TODO: Can we replace this with ReadOnlyMemory<byte>, does that make sense?
         private readonly string _path;
-
         private readonly ReadOnlyMemory<byte> _utf8Path;
-
         private readonly int _highWaterMark;
+
+        private readonly JsonElement _element;
 
         private readonly MutableJsonDocument.ChangeTracker Changes => _root.Changes;
 
         internal MutableJsonElement(MutableJsonDocument root, JsonElement element, string path, int highWaterMark = -1)
         {
-            _element = element;
             _root = root;
-            _path = path;
+            _utf8Path = MutableJsonDocument.StringToUtf8(path);
             _highWaterMark = highWaterMark;
+            _element = element;
 
-            // Convert to Utf8 from Utf16
-            // TODO: use System.Text.Unicode.UTF8 where available
-            byte[] utf8Bytes = Encoding.UTF8.GetBytes(path);
-            _utf8Path = utf8Bytes.AsMemory();
+            _path= path;
+        }
+
+        internal MutableJsonElement(MutableJsonDocument root, JsonElement element, ReadOnlyMemory<byte> utf8Path, int highWaterMark = -1)
+        {
+            _root = root;
+            _utf8Path = utf8Path;
+            _highWaterMark = highWaterMark;
+            _element = element;
+
+            _path = MutableJsonDocument.Utf8SpanToString(_utf8Path.Span);
         }
 
         /// <summary>
@@ -61,7 +66,8 @@ namespace Azure.Core.Dynamic
         {
             if (!TryGetProperty(name, out MutableJsonElement value))
             {
-                throw new InvalidOperationException($"{_path} does not containe property called {name}");
+                // TODO: lazily cache string? rather than converting each time. Maybe, look at pattern.
+                throw new InvalidOperationException($"{MutableJsonDocument.Utf8SpanToString(_utf8Path.Span)} does not contain property called {name}");
             }
 
             return value;
@@ -86,7 +92,7 @@ namespace Azure.Core.Dynamic
                 return false;
             }
 
-            var path = MutableJsonDocument.ChangeTracker.PushProperty(_path, name);
+            string path = MutableJsonDocument.ChangeTracker.PushProperty(_path, name);
             if (Changes.TryGetChange(path, _highWaterMark, out MutableJsonChange change))
             {
                 if (change.ReplacesJsonElement)
@@ -106,7 +112,7 @@ namespace Azure.Core.Dynamic
 
             EnsureArray();
 
-            var path = MutableJsonDocument.ChangeTracker.PushIndex(_path, index);
+            string path = MutableJsonDocument.ChangeTracker.PushIndex(_path, index);
 
             if (Changes.TryGetChange(path, _highWaterMark, out MutableJsonChange change))
             {
@@ -130,7 +136,7 @@ namespace Azure.Core.Dynamic
         {
             EnsureValid();
 
-            if (Changes.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
+            if (Changes.TryGetChange(_utf8Path.Span, _highWaterMark, out MutableJsonChange change))
             {
                 switch (change.Value)
                 {
@@ -139,7 +145,7 @@ namespace Azure.Core.Dynamic
                     case JsonElement element:
                         return element.GetDouble();
                     default:
-                        throw new InvalidOperationException($"Element at {_path} is not a double.");
+                        throw new InvalidOperationException($"Element at {MutableJsonDocument.Utf8SpanToString(_utf8Path.Span)} is not a double.");
                 }
             }
 
@@ -154,7 +160,7 @@ namespace Azure.Core.Dynamic
         {
             EnsureValid();
 
-            if (Changes.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
+            if (Changes.TryGetChange(_utf8Path.Span, _highWaterMark, out MutableJsonChange change))
             {
                 switch (change.Value)
                 {
@@ -163,7 +169,7 @@ namespace Azure.Core.Dynamic
                     case JsonElement element:
                         return element.GetInt32();
                     default:
-                        throw new InvalidOperationException($"Element at {_path} is not an Int32.");
+                        throw new InvalidOperationException($"Element at {MutableJsonDocument.Utf8SpanToString(_utf8Path.Span)} is not an Int32.");
                 }
             }
 
@@ -178,7 +184,7 @@ namespace Azure.Core.Dynamic
         {
             EnsureValid();
 
-            if (Changes.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
+            if (Changes.TryGetChange(_utf8Path.Span, _highWaterMark, out MutableJsonChange change))
             {
                 switch (change.Value)
                 {
@@ -187,7 +193,7 @@ namespace Azure.Core.Dynamic
                     case JsonElement element:
                         return element.GetInt64();
                     default:
-                        throw new InvalidOperationException($"Element at {_path} is not an Int32.");
+                        throw new InvalidOperationException($"Element at {MutableJsonDocument.Utf8SpanToString(_utf8Path.Span)} is not an Int32.");
                 }
             }
 
@@ -202,7 +208,7 @@ namespace Azure.Core.Dynamic
         {
             EnsureValid();
 
-            if (Changes.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
+            if (Changes.TryGetChange(_utf8Path.Span, _highWaterMark, out MutableJsonChange change))
             {
                 switch (change.Value)
                 {
@@ -211,7 +217,7 @@ namespace Azure.Core.Dynamic
                     case JsonElement element:
                         return element.GetSingle();
                     default:
-                        throw new InvalidOperationException($"Element at {_path} is not an Int32.");
+                        throw new InvalidOperationException($"Element at {MutableJsonDocument.Utf8SpanToString(_utf8Path.Span)} is not an Int32.");
                 }
             }
 
@@ -227,7 +233,7 @@ namespace Azure.Core.Dynamic
         {
             EnsureValid();
 
-            if (Changes.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
+            if (Changes.TryGetChange(_utf8Path.Span, _highWaterMark, out MutableJsonChange change))
             {
                 switch (change.Value)
                 {
@@ -240,7 +246,7 @@ namespace Azure.Core.Dynamic
                         {
                             return null;
                         }
-                        throw new InvalidOperationException($"Element at {_path} is not a string.");
+                        throw new InvalidOperationException($"Element at {MutableJsonDocument.Utf8SpanToString(_utf8Path.Span)} is not a string.");
                 }
             }
 
@@ -256,7 +262,7 @@ namespace Azure.Core.Dynamic
         {
             EnsureValid();
 
-            if (Changes.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
+            if (Changes.TryGetChange(_utf8Path.Span, _highWaterMark, out MutableJsonChange change))
             {
                 switch (change.Value)
                 {
@@ -265,7 +271,7 @@ namespace Azure.Core.Dynamic
                     case JsonElement element:
                         return element.GetBoolean();
                     default:
-                        throw new InvalidOperationException($"Element at {_path} is not a bool.");
+                        throw new InvalidOperationException($"Element at {MutableJsonDocument.Utf8SpanToString(_utf8Path.Span)} is not a bool.");
                 }
             }
 
@@ -315,7 +321,7 @@ namespace Azure.Core.Dynamic
             byte[] bytes = JsonSerializer.SerializeToUtf8Bytes(dict);
             JsonElement newElement = JsonDocument.Parse(bytes).RootElement;
 
-            int index = Changes.AddChange(_path, newElement, true);
+            int index = Changes.AddChange(_utf8Path, newElement, true);
 
             // Make sure the object reference is stored to ensure reference semantics
             string path = MutableJsonDocument.ChangeTracker.PushProperty(_path, name);
@@ -324,7 +330,7 @@ namespace Azure.Core.Dynamic
             Changes.AddChange(path, value, true);
 
             // Element has changed, return the new valid one.
-            return new MutableJsonElement(_root, newElement, _path, index);
+            return new MutableJsonElement(_root, newElement, _utf8Path, index);
         }
 
         /// <summary>
@@ -349,7 +355,7 @@ namespace Azure.Core.Dynamic
             byte[] bytes = JsonSerializer.SerializeToUtf8Bytes(dict);
             JsonElement newElement = JsonDocument.Parse(bytes).RootElement;
 
-            Changes.AddChange(_path, newElement, true);
+            Changes.AddChange(_utf8Path, newElement, true);
         }
 
         /// <summary>
@@ -360,7 +366,7 @@ namespace Azure.Core.Dynamic
         {
             EnsureValid();
 
-            Changes.AddChange(_path, value, _element.ValueKind != JsonValueKind.Number);
+            Changes.AddChange(_utf8Path, value, _element.ValueKind != JsonValueKind.Number);
         }
 
         /// <summary>
@@ -371,7 +377,7 @@ namespace Azure.Core.Dynamic
         {
             EnsureValid();
 
-            Changes.AddChange(_path, value, _element.ValueKind != JsonValueKind.Number);
+            Changes.AddChange(_utf8Path, value, _element.ValueKind != JsonValueKind.Number);
         }
 
         /// <summary>
@@ -382,7 +388,7 @@ namespace Azure.Core.Dynamic
         {
             EnsureValid();
 
-            Changes.AddChange(_path, value, _element.ValueKind != JsonValueKind.Number);
+            Changes.AddChange(_utf8Path, value, _element.ValueKind != JsonValueKind.Number);
         }
 
         /// <summary>
@@ -393,7 +399,7 @@ namespace Azure.Core.Dynamic
         {
             EnsureValid();
 
-            Changes.AddChange(_path, value, _element.ValueKind != JsonValueKind.Number);
+            Changes.AddChange(_utf8Path, value, _element.ValueKind != JsonValueKind.Number);
         }
 
         /// <summary>
@@ -404,7 +410,7 @@ namespace Azure.Core.Dynamic
         {
             EnsureValid();
 
-            Changes.AddChange(_path, value, _element.ValueKind != JsonValueKind.String);
+            Changes.AddChange(_utf8Path, value, _element.ValueKind != JsonValueKind.String);
         }
 
         /// <summary>
@@ -415,7 +421,7 @@ namespace Azure.Core.Dynamic
         {
             EnsureValid();
 
-            Changes.AddChange(_path, value,
+            Changes.AddChange(_utf8Path, value,
                 !(_element.ValueKind == JsonValueKind.True ||
                   _element.ValueKind == JsonValueKind.False));
         }
@@ -458,7 +464,7 @@ namespace Azure.Core.Dynamic
                     Set(d.RootElement);
                     break;
                 default:
-                    Changes.AddChange(_path, value, true);
+                    Changes.AddChange(_utf8Path, value, true);
                     break;
             }
         }
@@ -475,7 +481,7 @@ namespace Azure.Core.Dynamic
 
             JsonElement element = value._element;
 
-            if (Changes.TryGetChange(value._path, value._highWaterMark, out MutableJsonChange change))
+            if (Changes.TryGetChange(value._utf8Path.Span, value._highWaterMark, out MutableJsonChange change))
             {
                 if (change.ReplacesJsonElement)
                 {
@@ -483,7 +489,7 @@ namespace Azure.Core.Dynamic
                 }
             }
 
-            Changes.AddChange(_path, element, true);
+            Changes.AddChange(_utf8Path, element, true);
         }
 
         internal void WriteTo(Utf8JsonWriter writer)
@@ -497,7 +503,7 @@ namespace Azure.Core.Dynamic
         {
             EnsureValid();
 
-            if (Changes.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
+            if (Changes.TryGetChange(_utf8Path.Span, _highWaterMark, out MutableJsonChange change))
             {
                 if (change.Value == null)
                     return "null";
@@ -506,7 +512,7 @@ namespace Azure.Core.Dynamic
             }
 
             // Account for changes to descendants of this element as well
-            if (Changes.DescendantChanged(_path, _highWaterMark))
+            if (Changes.DescendantChanged(_utf8Path.Span, _highWaterMark))
             {
                 return Encoding.UTF8.GetString(GetRawBytes());
             }
@@ -518,13 +524,13 @@ namespace Azure.Core.Dynamic
         {
             EnsureValid();
 
-            if (Changes.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
+            if (Changes.TryGetChange(_utf8Path.Span, _highWaterMark, out MutableJsonChange change))
             {
                 return change.AsJsonElement();
             }
 
             // Account for changes to descendants of this element as well
-            if (Changes.DescendantChanged(_path, _highWaterMark))
+            if (Changes.DescendantChanged(_utf8Path.Span, _highWaterMark))
             {
                 JsonDocument document = JsonDocument.Parse(GetRawBytes());
                 return document.RootElement;
@@ -574,7 +580,7 @@ namespace Azure.Core.Dynamic
 
         private void EnsureValid()
         {
-            if (Changes.AncestorChanged(_path, _highWaterMark))
+            if (Changes.AncestorChanged(_utf8Path.Span, _highWaterMark))
             {
                 throw new InvalidOperationException("An ancestor node of this element has unapplied changes.  Please re-request this property from the RootElement.");
             }

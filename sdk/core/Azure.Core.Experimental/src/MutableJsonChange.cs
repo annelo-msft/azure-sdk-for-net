@@ -32,10 +32,17 @@ namespace Azure.Core.Dynamic
             Value = value;
             ReplacesJsonElement = replacesJsonElement;
 
-            // Convert to Utf8 from Utf16
-            // TODO: use System.Text.Unicode.UTF8 where available
-            byte[] utf8Bytes = Encoding.UTF8.GetBytes(path);
-            Utf8Path = utf8Bytes.AsMemory();
+            Utf8Path = MutableJsonDocument.StringToUtf8(path);
+        }
+
+        public MutableJsonChange(ReadOnlyMemory<byte> utf8Path, int index, object? value, bool replacesJsonElement)
+        {
+            Utf8Path = utf8Path;
+            Index = index;
+            Value = value;
+            ReplacesJsonElement = replacesJsonElement;
+
+            Path = MutableJsonDocument.Utf8SpanToString(utf8Path.Span);
         }
 
         internal Utf8JsonReader GetReader()

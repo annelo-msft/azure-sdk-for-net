@@ -11,12 +11,14 @@ namespace Azure.Core.Dynamic
     {
         internal class ChangeTracker
         {
+            private static ReadOnlyMemory<byte> Utf8Delimiter = Encoding.UTF8.GetBytes(".").AsMemory();
+            private static ReadOnlyMemory<byte> Utf8Empty = Encoding.UTF8.GetBytes(string.Empty).AsMemory();
+
             private List<MutableJsonChange>? _changes;
 
             internal bool HasChanges => _changes != null && _changes.Count > 0;
 
-            // TODO: take path as ReadOnlySpan<byte> utf8 json.
-            internal bool AncestorChanged(string path, int highWaterMark)
+            internal bool AncestorChanged(ReadOnlySpan<byte> utf8Path, int highWaterMark)
             {
                 if (_changes == null)
                 {
@@ -26,17 +28,16 @@ namespace Azure.Core.Dynamic
                 bool changed = false;
 
                 // Check for changes to ancestor elements
-                while (!changed && path.Length > 0)
+                while (!changed && utf8Path.Length > 0)
                 {
-                    path = PopProperty(path);
-                    changed = TryGetChange(path, highWaterMark, out MutableJsonChange _);
+                    utf8Path = PopProperty(utf8Path);
+                    changed = TryGetChange(utf8Path, highWaterMark, out MutableJsonChange _);
                 }
 
                 return changed;
             }
 
-            // TODO: take path as ReadOnlySpan<byte> utf8 json.
-            internal bool DescendantChanged(string path, int highWaterMark)
+            internal bool DescendantChanged(ReadOnlySpan<byte> utf8Path, int highWaterMark)
             {
                 if (_changes == null)
                 {
@@ -48,7 +49,7 @@ namespace Azure.Core.Dynamic
                 for (int i = _changes!.Count - 1; i > highWaterMark; i--)
                 {
                     MutableJsonChange c = _changes[i];
-                    if (c.Path.StartsWith(path, StringComparison.Ordinal))
+                    if (c.Utf8Path.Span.StartsWith(utf8Path))
                     {
                         return true;
                     }
@@ -101,7 +102,6 @@ namespace Azure.Core.Dynamic
                 return false;
             }
 
-            // TODO: take path as ReadOnlySpan<byte> utf8 json.
             internal int AddChange(string path, object? value, bool replaceJsonElement = false)
             {
                 if (_changes == null)
@@ -112,6 +112,20 @@ namespace Azure.Core.Dynamic
                 int index = _changes.Count;
 
                 _changes.Add(new MutableJsonChange(path, index, value, replaceJsonElement));
+
+                return index;
+            }
+
+            internal int AddChange(ReadOnlyMemory<byte> utf8Path, object? value, bool replaceJsonElement = false)
+            {
+                if (_changes == null)
+                {
+                    _changes = new List<MutableJsonChange>();
+                }
+
+                int index = _changes.Count;
+
+                _changes.Add(new MutableJsonChange(utf8Path, index, value, replaceJsonElement));
 
                 return index;
             }
@@ -153,6 +167,16 @@ namespace Azure.Core.Dynamic
                     return string.Empty;
                 }
                 return path.Substring(0, lastDelimiter);
+            }
+
+            internal static ReadOnlySpan<byte> PopProperty(ReadOnlySpan<byte> path)
+            {
+                int lastDelimiter = path.LastIndexOf(Utf8Delimiter.Span);
+                if (lastDelimiter == -1)
+                {
+                    return Utf8Empty.Span;
+                }
+                return path.Slice(0, lastDelimiter);
             }
         }
     }
