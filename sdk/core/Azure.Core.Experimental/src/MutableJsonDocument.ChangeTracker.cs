@@ -11,9 +11,8 @@ namespace Azure.Core.Dynamic
     {
         internal class ChangeTracker
         {
-            private static ReadOnlyMemory<byte> Utf8Delimiter = Encoding.UTF8.GetBytes(".").AsMemory();
-            private static ReadOnlyMemory<byte> Utf8Empty = Encoding.UTF8.GetBytes(string.Empty).AsMemory();
-
+            private const byte Delimiter = (byte)'.';
+			
             private List<MutableJsonChange>? _changes;
 
             internal bool HasChanges => _changes != null && _changes.Count > 0;
@@ -140,6 +139,11 @@ namespace Azure.Core.Dynamic
                 return PopProperty(path);
             }
 
+            internal static ReadOnlySpan<byte> PopIndex(ReadOnlySpan<byte> path)
+            {
+                return PopProperty(path);
+            }
+
             internal static string PushProperty(string path, string value)
             {
                 if (path.Length == 0)
@@ -171,10 +175,10 @@ namespace Azure.Core.Dynamic
 
             internal static ReadOnlySpan<byte> PopProperty(ReadOnlySpan<byte> path)
             {
-                int lastDelimiter = path.LastIndexOf(Utf8Delimiter.Span);
+                int lastDelimiter = path.LastIndexOf(Delimiter);
                 if (lastDelimiter == -1)
                 {
-                    return Utf8Empty.Span;
+                    return Span<byte>.Empty;
                 }
                 return path.Slice(0, lastDelimiter);
             }
