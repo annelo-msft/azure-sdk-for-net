@@ -31,6 +31,7 @@ namespace Azure.Core.Dynamic
             writer.Flush();
         }
 
+        // TODO: Make this work path as ReadOnlySpan<byte>
         internal void WriteElement(string path, int highWaterMark, ref Utf8JsonReader reader, Utf8JsonWriter writer)
         {
             while (reader.Read())

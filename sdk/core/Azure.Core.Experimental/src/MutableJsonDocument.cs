@@ -3,6 +3,7 @@
 
 using System;
 using System.Buffers;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Text.Json;
@@ -18,7 +19,7 @@ namespace Azure.Core.Dynamic
     {
         internal static readonly JsonSerializerOptions DefaultJsonSerializerOptions = new JsonSerializerOptions();
 
-        private readonly Memory<byte> _original;
+        private readonly ReadOnlyMemory<byte> _original;
         private readonly JsonElement _originalElement;
 
         internal ChangeTracker Changes { get; } = new();
@@ -30,6 +31,7 @@ namespace Azure.Core.Dynamic
         {
             get
             {
+                // TODO: hold static equivalent of string.Empty that is Memory<byte>
                 if (Changes.TryGetChange(string.Empty, -1, out MutableJsonChange change))
                 {
                     if (change.ReplacesJsonElement)
@@ -56,7 +58,7 @@ namespace Azure.Core.Dynamic
                 throw new ArgumentOutOfRangeException(nameof(format));
             }
 
-            Utf8JsonWriter writer = new Utf8JsonWriter(stream);
+            Utf8JsonWriter writer = new(stream);
             if (!Changes.HasChanges)
             {
                 Write(stream, _original.Span);
@@ -100,7 +102,7 @@ namespace Azure.Core.Dynamic
         public static MutableJsonDocument Parse(BinaryData utf8Json)
         {
             var doc = JsonDocument.Parse(utf8Json);
-            return new MutableJsonDocument(doc, utf8Json.ToArray().AsMemory());
+            return new MutableJsonDocument(doc, utf8Json.ToMemory());
         }
 
         /// <summary>
@@ -110,12 +112,13 @@ namespace Azure.Core.Dynamic
         /// <returns>A <see cref="MutableJsonDocument"/> representation of the value.</returns>
         public static MutableJsonDocument Parse(string json)
         {
+            // TODO: Use System.Text.Unicode.UTF8 instead on .NET6 and above.
             byte[] utf8 = Encoding.UTF8.GetBytes(json);
-            Memory<byte> jsonMemory = utf8.AsMemory();
+            ReadOnlyMemory<byte> jsonMemory = utf8.AsMemory();
             return new MutableJsonDocument(JsonDocument.Parse(jsonMemory), jsonMemory);
         }
 
-        internal MutableJsonDocument(JsonDocument jsonDocument, Memory<byte> utf8Json) : this(jsonDocument.RootElement)
+        internal MutableJsonDocument(JsonDocument jsonDocument, ReadOnlyMemory<byte> utf8Json) : this(jsonDocument.RootElement)
         {
             _original = utf8Json;
             _originalElement = jsonDocument.RootElement;
@@ -137,10 +140,12 @@ namespace Azure.Core.Dynamic
         /// <param name="type">The type of the value to convert. </param>
         internal MutableJsonDocument(object? value, JsonSerializerOptions options, Type? type = null)
         {
-            if (value is JsonDocument)
-                throw new InvalidOperationException("Calling wrong constructor.");
+            // TODO: can we combine this with the JsonDocument constructor now?
+            Debug.Assert(value is not JsonDocument);
 
             Type inputType = type ?? (value == null ? typeof(object) : value.GetType());
+
+            // TODO: if this is passed a JsonElement, can we do better?
             _original = JsonSerializer.SerializeToUtf8Bytes(value, inputType, options);
             _originalElement = JsonDocument.Parse(_original).RootElement;
         }
@@ -150,7 +155,7 @@ namespace Azure.Core.Dynamic
             public override MutableJsonDocument Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
             {
                 using JsonDocument document = JsonDocument.ParseValue(ref reader);
-                return new MutableJsonDocument(document);
+                return new MutableJsonDocument(document.RootElement);
             }
 
             public override void Write(Utf8JsonWriter writer, MutableJsonDocument value, JsonSerializerOptions options)

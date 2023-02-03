@@ -12,10 +12,12 @@ namespace Azure.Core.Dynamic
     /// <summary>
     /// A mutable representation of a JSON element.
     /// </summary>
-    public partial struct MutableJsonElement
+    public readonly partial struct MutableJsonElement
     {
         private readonly MutableJsonDocument _root;
         private readonly JsonElement _element;
+
+        // TODO: Can we replace this with ReadOnlyMemory<byte>, does that make sense?
         private readonly string _path;
         private readonly int _highWaterMark;
 
@@ -46,6 +48,7 @@ namespace Azure.Core.Dynamic
         /// <summary>
         /// Gets the MutableJsonElement for the value of the property with the specified name.
         /// </summary>
+        // TODO: provide a ReadOnlySpan<byte> overload
         public MutableJsonElement GetProperty(string name)
         {
             if (!TryGetProperty(name, out MutableJsonElement value))
@@ -103,6 +106,8 @@ namespace Azure.Core.Dynamic
                 {
                     return new MutableJsonElement(_root, change.AsJsonElement(), path, change.Index);
                 }
+
+                // TODO: if it doesn't then what?  Add a test case.
             }
 
             return new MutableJsonElement(_root, _element[index], path, _highWaterMark);
@@ -277,6 +282,7 @@ namespace Azure.Core.Dynamic
         /// </summary>
         /// <param name="name"></param>
         /// <param name="value"></param>
+        // TODO: provide a ReadOnlySpan<byte> overload.
         public MutableJsonElement SetProperty(string name, object value)
         {
             if (TryGetProperty(name, out MutableJsonElement element))
@@ -526,6 +532,8 @@ namespace Azure.Core.Dynamic
             _root.WriteElement(_path, _highWaterMark, ref reader, changedElementWriter);
             changedElementWriter.Flush();
 
+            // TODO: How can we avoid an allocation here?  Copy into a passed-in buffer?
+            // Rent the buffer from the pool and dispose it after use?
             return changedElementStream.ToArray();
         }
 

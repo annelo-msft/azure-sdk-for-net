@@ -9,6 +9,7 @@ namespace Azure.Core.Dynamic
 {
     internal struct MutableJsonChange
     {
+        // TODO: move to Memory<byte> ?
         public string Path { get; set; }
 
         public int Index { get; set; }

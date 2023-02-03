@@ -15,6 +15,7 @@ namespace Azure.Core.Dynamic
 
             internal bool HasChanges => _changes != null && _changes.Count > 0;
 
+            // TODO: take path as ReadOnlySpan<byte> utf8 json.
             internal bool AncestorChanged(string path, int highWaterMark)
             {
                 if (_changes == null)
@@ -34,6 +35,7 @@ namespace Azure.Core.Dynamic
                 return changed;
             }
 
+            // TODO: take path as ReadOnlySpan<byte> utf8 json.
             internal bool DescendantChanged(string path, int highWaterMark)
             {
                 if (_changes == null)
@@ -88,6 +90,7 @@ namespace Azure.Core.Dynamic
                 return false;
             }
 
+            // TODO: take path as ReadOnlySpan<byte> utf8 json.
             internal bool TryGetChange(string path, in int lastAppliedChange, out MutableJsonChange change)
             {
                 if (_changes == null)
@@ -99,6 +102,8 @@ namespace Azure.Core.Dynamic
                 for (int i = _changes!.Count - 1; i > lastAppliedChange; i--)
                 {
                     var c = _changes[i];
+
+                    // TODO: use Span.SequenceEqual() instead of string comparison.
                     if (c.Path == path)
                     {
                         change = c;
@@ -110,6 +115,7 @@ namespace Azure.Core.Dynamic
                 return false;
             }
 
+            // TODO: take path as ReadOnlySpan<byte> utf8 json.
             internal int AddChange(string path, object? value, bool replaceJsonElement = false)
             {
                 if (_changes == null)
