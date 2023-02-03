@@ -7,21 +7,36 @@ using System.Text.Json;
 
 namespace Azure.Core.Dynamic
 {
-    internal struct MutableJsonChange
+    internal readonly struct MutableJsonChange
     {
         // TODO: move to Memory<byte> ?
-        public string Path { get; set; }
+        public string Path { get; }
 
-        public int Index { get; set; }
+        public ReadOnlyMemory<byte> Utf8Path { get; }
 
-        public object? Value { get; set; }
+        public int Index { get; }
+
+        public object? Value { get; }
 
         /// <summary>
         /// The change invalidates the existing node's JsonElement
         /// due to changes in JsonValueKind or path structure.
         /// If this is true, Value holds a new JsonElement.
         /// </summary>
-        public bool ReplacesJsonElement { get; set; }
+        public bool ReplacesJsonElement { get; }
+
+        public MutableJsonChange(string path, int index, object? value, bool replacesJsonElement)
+        {
+            Path = path;
+            Index = index;
+            Value = value;
+            ReplacesJsonElement = replacesJsonElement;
+
+            // Convert to Utf8 from Utf16
+            // TODO: use System.Text.Unicode.UTF8 where available
+            byte[] utf8Bytes = Encoding.UTF8.GetBytes(path);
+            Utf8Path = utf8Bytes.AsMemory();
+        }
 
         internal Utf8JsonReader GetReader()
         {
@@ -36,9 +51,9 @@ namespace Azure.Core.Dynamic
 
         internal JsonElement AsJsonElement()
         {
-            if (Value is JsonElement)
+            if (Value is JsonElement element)
             {
-                return (JsonElement)Value;
+                return element;
             }
 
             byte[] bytes = JsonSerializer.SerializeToUtf8Bytes(Value);

@@ -29,7 +29,7 @@ namespace Azure.Core.Dynamic
                 while (!changed && path.Length > 0)
                 {
                     path = PopProperty(path);
-                    changed = TryGetChange(path, highWaterMark, out MutableJsonChange change);
+                    changed = TryGetChange(path, highWaterMark, out MutableJsonChange _);
                 }
 
                 return changed;
@@ -47,7 +47,7 @@ namespace Azure.Core.Dynamic
 
                 for (int i = _changes!.Count - 1; i > highWaterMark; i--)
                 {
-                    var c = _changes[i];
+                    MutableJsonChange c = _changes[i];
                     if (c.Path.StartsWith(path, StringComparison.Ordinal))
                     {
                         return true;
@@ -57,7 +57,7 @@ namespace Azure.Core.Dynamic
                 return changed;
             }
 
-            internal bool TryGetChange(ReadOnlySpan<byte> path, out MutableJsonChange change)
+            internal bool TryGetChange(ReadOnlySpan<byte> utf8Path, in int lastAppliedChange, out MutableJsonChange change)
             {
                 if (_changes == null)
                 {
@@ -65,21 +65,10 @@ namespace Azure.Core.Dynamic
                     return false;
                 }
 
-                // TODO: re-enable optimizations
-                // (System.Text.Unicode.Utf8 isn't available to us here)
-                var pathStr = Encoding.UTF8.GetString(path.ToArray());
-
-                //Span<char> utf16 = stackalloc char[path.Length];
-                //OperationStatus status = System.Text.Unicode.Utf8.ToUtf16(path, utf16, out _, out int written, false, true);
-                //if (status != OperationStatus.Done)
-                //{ throw new NotImplementedException(); } // TODO: needs to allocate from the pool
-                //utf16 = utf16.Slice(0, written);
-
-                for (int i = _changes.Count - 1; i >= 0; i--)
+                for (int i = _changes!.Count - 1; i > lastAppliedChange; i--)
                 {
-                    var c = _changes[i];
-                    if (c.Path == pathStr)
-                    //if (change.Property.AsSpan().SequenceEqual(utf16))
+                    MutableJsonChange c = _changes[i];
+                    if (c.Utf8Path.Span.SequenceEqual(utf8Path))
                     {
                         change = c;
                         return true;
@@ -90,7 +79,6 @@ namespace Azure.Core.Dynamic
                 return false;
             }
 
-            // TODO: take path as ReadOnlySpan<byte> utf8 json.
             internal bool TryGetChange(string path, in int lastAppliedChange, out MutableJsonChange change)
             {
                 if (_changes == null)
@@ -101,9 +89,7 @@ namespace Azure.Core.Dynamic
 
                 for (int i = _changes!.Count - 1; i > lastAppliedChange; i--)
                 {
-                    var c = _changes[i];
-
-                    // TODO: use Span.SequenceEqual() instead of string comparison.
+                    MutableJsonChange c = _changes[i];
                     if (c.Path == path)
                     {
                         change = c;
@@ -125,13 +111,7 @@ namespace Azure.Core.Dynamic
 
                 int index = _changes.Count;
 
-                _changes.Add(new MutableJsonChange()
-                {
-                    Path = path,
-                    Value = value,
-                    Index = index,
-                    ReplacesJsonElement = replaceJsonElement
-                });
+                _changes.Add(new MutableJsonChange(path, index, value, replaceJsonElement));
 
                 return index;
             }

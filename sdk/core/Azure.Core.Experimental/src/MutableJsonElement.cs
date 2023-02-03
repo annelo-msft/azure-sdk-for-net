@@ -19,6 +19,9 @@ namespace Azure.Core.Dynamic
 
         // TODO: Can we replace this with ReadOnlyMemory<byte>, does that make sense?
         private readonly string _path;
+
+        private readonly ReadOnlyMemory<byte> _utf8Path;
+
         private readonly int _highWaterMark;
 
         private readonly MutableJsonDocument.ChangeTracker Changes => _root.Changes;
@@ -29,6 +32,11 @@ namespace Azure.Core.Dynamic
             _root = root;
             _path = path;
             _highWaterMark = highWaterMark;
+
+            // Convert to Utf8 from Utf16
+            // TODO: use System.Text.Unicode.UTF8 where available
+            byte[] utf8Bytes = Encoding.UTF8.GetBytes(path);
+            _utf8Path = utf8Bytes.AsMemory();
         }
 
         /// <summary>
