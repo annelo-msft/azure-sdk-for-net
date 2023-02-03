@@ -311,6 +311,8 @@ namespace Azure.Core.Dynamic
 
             // Make sure the object reference is stored to ensure reference semantics
             string path = MutableJsonDocument.ChangeTracker.PushProperty(_path, name);
+
+            // TODO: If we can only set this to true when value is non-primitive, we'll get a small perf win here in WriteTo().
             Changes.AddChange(path, value, true);
 
             // Element has changed, return the new valid one.
