@@ -117,8 +117,7 @@ namespace Azure.Core.Dynamic
                 return false;
             }
 
-            // TODO: move this to stackalloc from Memory<byte>
-            Memory<byte> path = MutableJsonDocument.ChangeTracker.PushProperty(_utf8Path.Span, utf8Name);
+            ReadOnlyMemory<byte> path = MutableJsonDocument.ChangeTracker.PushProperty(_utf8Path.Span, utf8Name);
             if (Changes.TryGetChange(path.Span, _highWaterMark, out MutableJsonChange change))
             {
                 if (change.ReplacesJsonElement)

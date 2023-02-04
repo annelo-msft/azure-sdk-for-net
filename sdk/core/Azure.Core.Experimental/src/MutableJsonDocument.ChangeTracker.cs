@@ -163,7 +163,7 @@ namespace Azure.Core.Dynamic
                 return $"{path}.{propertyName}";
             }
 
-            internal static Memory<byte> PushProperty(ReadOnlySpan<byte> path, ReadOnlySpan<byte> value)
+            internal static ReadOnlyMemory<byte> PushProperty(ReadOnlySpan<byte> path, ReadOnlySpan<byte> value)
             {
                 int pathLength = path.Length;
                 Memory<byte> propertyPath = new byte[path.Length + value.Length + 1];
