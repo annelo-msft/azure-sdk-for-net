@@ -31,7 +31,7 @@ namespace Azure.Core.Dynamic
             _highWaterMark = highWaterMark;
             _element = element;
 
-            _path= path;
+            _path = path;
         }
 
         internal MutableJsonElement(MutableJsonDocument root, JsonElement element, ReadOnlyMemory<byte> utf8Path, int highWaterMark = -1)
@@ -61,7 +61,6 @@ namespace Azure.Core.Dynamic
         /// <summary>
         /// Gets the MutableJsonElement for the value of the property with the specified name.
         /// </summary>
-        // TODO: provide a ReadOnlySpan<byte> overload
         public MutableJsonElement GetProperty(string name)
         {
             if (!TryGetProperty(name, out MutableJsonElement value))
@@ -74,26 +73,53 @@ namespace Azure.Core.Dynamic
         }
 
         /// <summary>
-        /// Looks for a property named propertyName in the current object, returning a value that indicates whether or not such a property exists. When the property exists, its value is assigned to the value argument.
+        /// Gets the MutableJsonElement for the value of the property with the specified name.
+        /// </summary>
+        public MutableJsonElement GetProperty(ReadOnlySpan<byte> utf8Name)
+        {
+            if (!TryGetProperty(utf8Name, out MutableJsonElement value))
+            {
+                // TODO: lazily cache string? rather than converting each time. Maybe, look at pattern.
+                throw new InvalidOperationException($"{MutableJsonDocument.Utf8SpanToString(_utf8Path.Span)} does not contain property called {MutableJsonDocument.Utf8SpanToString(utf8Name)}");
+            }
+
+            return value;
+        }
+
+        /// <summary>
+        /// Looks for a property named name in the current object, returning a value that indicates whether or not such a property exists. When the property exists, its value is assigned to the value argument.
         /// </summary>
         /// <param name="name"></param>
         /// <param name="value"></param>
         /// <returns></returns>
         public bool TryGetProperty(string name, out MutableJsonElement value)
         {
+            ReadOnlySpan<byte> utf8Name = MutableJsonDocument.StringToUtf8(name).Span;
+            return TryGetProperty(utf8Name, out value);
+        }
+
+        /// <summary>
+        /// Looks for a property named propertyName in the current object, returning a value that indicates whether or not such a property exists. When the property exists, its value is assigned to the value argument.
+        /// </summary>
+        /// <param name="utf8Name"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public bool TryGetProperty(ReadOnlySpan<byte> utf8Name, out MutableJsonElement value)
+        {
             EnsureValid();
 
             EnsureObject();
 
-            bool hasProperty = _element.TryGetProperty(name, out JsonElement element);
+            bool hasProperty = _element.TryGetProperty(utf8Name, out JsonElement element);
             if (!hasProperty)
             {
                 value = default;
                 return false;
             }
 
-            string path = MutableJsonDocument.ChangeTracker.PushProperty(_path, name);
-            if (Changes.TryGetChange(path, _highWaterMark, out MutableJsonChange change))
+            // TODO: move this to stackalloc from Memory<byte>
+            Memory<byte> path = MutableJsonDocument.ChangeTracker.PushProperty(_utf8Path.Span, utf8Name);
+            if (Changes.TryGetChange(path.Span, _highWaterMark, out MutableJsonChange change))
             {
                 if (change.ReplacesJsonElement)
                 {
