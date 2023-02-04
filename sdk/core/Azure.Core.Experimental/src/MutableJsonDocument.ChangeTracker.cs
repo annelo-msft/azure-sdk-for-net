@@ -9,10 +9,10 @@ namespace Azure.Core.Dynamic
 {
     public partial class MutableJsonDocument
     {
+        internal const byte Delimiter = (byte)'.';
+
         internal class ChangeTracker
         {
-            private const byte Delimiter = (byte)'.';
-			
             private List<MutableJsonChange>? _changes;
 
             internal bool HasChanges => _changes != null && _changes.Count > 0;
@@ -161,6 +161,21 @@ namespace Azure.Core.Dynamic
                     return propertyName;
                 }
                 return $"{path}.{propertyName}";
+            }
+
+            internal static Memory<byte> PushProperty(ReadOnlySpan<byte> path, ReadOnlySpan<byte> value)
+            {
+                int pathLength = path.Length;
+                Memory<byte> propertyPath = new byte[path.Length + value.Length + 1];
+                if (pathLength > 0)
+                {
+                    path.CopyTo(propertyPath.Span);
+                    propertyPath.Span[pathLength] = Delimiter;
+                    pathLength++;
+                }
+                value.CopyTo(propertyPath.Span.Slice(pathLength));
+                pathLength += value.Length;
+                return propertyPath.Slice(0, pathLength);
             }
 
             internal static string PopProperty(string path)

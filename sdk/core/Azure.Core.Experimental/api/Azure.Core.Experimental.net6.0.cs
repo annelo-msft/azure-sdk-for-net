@@ -159,10 +159,10 @@ namespace Azure.Core.Dynamic
         public void WriteTo(System.IO.Stream stream, System.Buffers.StandardFormat format = default(System.Buffers.StandardFormat)) { }
     }
     [System.Runtime.InteropServices.StructLayoutAttribute(System.Runtime.InteropServices.LayoutKind.Sequential)]
-    public partial struct MutableJsonElement
+    public readonly partial struct MutableJsonElement
     {
-        private object _dummy;
-        private int _dummyPrimitive;
+        private readonly object _dummy;
+        private readonly int _dummyPrimitive;
         public System.Text.Json.JsonValueKind ValueKind { get { throw null; } }
         public Azure.Core.Dynamic.MutableJsonElement.ArrayEnumerator EnumerateArray() { throw null; }
         public bool GetBoolean() { throw null; }

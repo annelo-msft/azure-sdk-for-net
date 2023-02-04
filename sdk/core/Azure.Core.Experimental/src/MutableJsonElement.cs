@@ -113,7 +113,6 @@ namespace Azure.Core.Dynamic
             EnsureArray();
 
             string path = MutableJsonDocument.ChangeTracker.PushIndex(_path, index);
-
             if (Changes.TryGetChange(path, _highWaterMark, out MutableJsonChange change))
             {
                 if (change.ReplacesJsonElement)
@@ -121,7 +120,7 @@ namespace Azure.Core.Dynamic
                     return new MutableJsonElement(_root, change.AsJsonElement(), path, change.Index);
                 }
 
-                // TODO: if it doesn't then what?  Add a test case.
+                // If it doesn't change the element, we'll pick up the change from the changelist.
             }
 
             return new MutableJsonElement(_root, _element[index], path, _highWaterMark);
@@ -317,14 +316,14 @@ namespace Azure.Core.Dynamic
             // If it's not already there, we'll add a change to this element's JsonElement instead.
             Dictionary<string, object> dict = JsonSerializer.Deserialize<Dictionary<string, object>>(GetRawBytes())!;
             dict[name] = value;
-
             byte[] bytes = JsonSerializer.SerializeToUtf8Bytes(dict);
             JsonElement newElement = JsonDocument.Parse(bytes).RootElement;
-
             int index = Changes.AddChange(_utf8Path, newElement, true);
 
             // Make sure the object reference is stored to ensure reference semantics
-            string path = MutableJsonDocument.ChangeTracker.PushProperty(_path, name);
+            // TODO: take name as Utf8 in an overload.
+            ReadOnlySpan<byte> utf8Name = MutableJsonDocument.StringToUtf8(name).Span;
+            ReadOnlyMemory<byte> path = MutableJsonDocument.ChangeTracker.PushProperty(_utf8Path.Span, utf8Name);
 
             // TODO: If we can only set this to true when value is non-primitive, we'll get a small perf win here in WriteTo().
             Changes.AddChange(path, value, true);
