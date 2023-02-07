@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <members>
+    <member name="GetWidgetAsync(String,RequestContext)">
+<example>
+This sample shows how to call GetWidgetAsync with required parameters and parse the result.
+<code><![CDATA[
+var credential = new DefaultAzureCredential();
+var client = new WidgetsClient("<https://my-service.azure.com>", credential);
+
+Response response = await client.GetWidgetAsync("<id>");
+
+JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
+Console.WriteLine(result.GetProperty("id").ToString());
+Console.WriteLine(result.GetProperty("name").ToString());
+]]></code>
+</example>
+<remarks>
+Below is the JSON schema for the response payload.
+
+Response Body:
+
+Schema for <c>Widget</c>:
+<code>{
+  id: string, # Optional.
+  name: string, # Optional.
+}
+</code>
+
+</remarks>
+    </member>
+    <member name="GetWidget(String,RequestContext)">
+<example>
+This sample shows how to call GetWidget with required parameters and parse the result.
+<code><![CDATA[
+var credential = new DefaultAzureCredential();
+var client = new WidgetsClient("<https://my-service.azure.com>", credential);
+
+Response response = client.GetWidget("<id>");
+
+JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
+Console.WriteLine(result.GetProperty("id").ToString());
+Console.WriteLine(result.GetProperty("name").ToString());
+]]></code>
+</example>
+<remarks>
+Below is the JSON schema for the response payload.
+
+Response Body:
+
+Schema for <c>Widget</c>:
+<code>{
+  id: string, # Optional.
+  name: string, # Optional.
+}
+</code>
+
+</remarks>
+    </member>
+    <member name="SetWidgetAsync(String,RequestContent,RequestContext)">
+<example>
+This sample shows how to call SetWidgetAsync with required parameters and parse the result.
+<code><![CDATA[
+var credential = new DefaultAzureCredential();
+var client = new WidgetsClient("<https://my-service.azure.com>", credential);
+
+var data = new {};
+
+Response response = await client.SetWidgetAsync("<id>", RequestContent.Create(data));
+
+JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
+Console.WriteLine(result.ToString());
+]]></code>
+This sample shows how to call SetWidgetAsync with all parameters and request content, and how to parse the result.
+<code><![CDATA[
+var credential = new DefaultAzureCredential();
+var client = new WidgetsClient("<https://my-service.azure.com>", credential);
+
+var data = new {
+    id = "<id>",
+    name = "<name>",
+};
+
+Response response = await client.SetWidgetAsync("<id>", RequestContent.Create(data));
+
+JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
+Console.WriteLine(result.GetProperty("id").ToString());
+Console.WriteLine(result.GetProperty("name").ToString());
+]]></code>
+</example>
+<remarks>
+Below is the JSON schema for the request and response payloads.
+
+Request Body:
+
+Schema for <c>Widget</c>:
+<code>{
+  id: string, # Optional.
+  name: string, # Optional.
+}
+</code>
+
+Response Body:
+
+Schema for <c>Widget</c>:
+<code>{
+  id: string, # Optional.
+  name: string, # Optional.
+}
+</code>
+
+</remarks>
+    </member>
+    <member name="SetWidget(String,RequestContent,RequestContext)">
+<example>
+This sample shows how to call SetWidget with required parameters and parse the result.
+<code><![CDATA[
+var credential = new DefaultAzureCredential();
+var client = new WidgetsClient("<https://my-service.azure.com>", credential);
+
+var data = new {};
+
+Response response = client.SetWidget("<id>", RequestContent.Create(data));
+
+JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
+Console.WriteLine(result.ToString());
+]]></code>
+This sample shows how to call SetWidget with all parameters and request content, and how to parse the result.
+<code><![CDATA[
+var credential = new DefaultAzureCredential();
+var client = new WidgetsClient("<https://my-service.azure.com>", credential);
+
+var data = new {
+    id = "<id>",
+    name = "<name>",
+};
+
+Response response = client.SetWidget("<id>", RequestContent.Create(data));
+
+JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
+Console.WriteLine(result.GetProperty("id").ToString());
+Console.WriteLine(result.GetProperty("name").ToString());
+]]></code>
+</example>
+<remarks>
+Below is the JSON schema for the request and response payloads.
+
+Request Body:
+
+Schema for <c>Widget</c>:
+<code>{
+  id: string, # Optional.
+  name: string, # Optional.
+}
+</code>
+
+Response Body:
+
+Schema for <c>Widget</c>:
+<code>{
+  id: string, # Optional.
+  name: string, # Optional.
+}
+</code>
+
+</remarks>
+    </member>
+  </members>
+</doc>

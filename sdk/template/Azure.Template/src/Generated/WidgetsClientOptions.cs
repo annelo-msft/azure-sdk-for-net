@@ -10,26 +10,26 @@ using Azure.Core;
 
 namespace Azure.Template
 {
-    /// <summary> Client options for TemplateClient. </summary>
-    public partial class TemplateClientOptions : ClientOptions
+    /// <summary> Client options for WidgetsClient. </summary>
+    public partial class WidgetsClientOptions : ClientOptions
     {
-        private const ServiceVersion LatestVersion = ServiceVersion.V7_0;
+        private const ServiceVersion LatestVersion = ServiceVersion.V1_0;
 
         /// <summary> The version of the service to use. </summary>
         public enum ServiceVersion
         {
-            /// <summary> Service version "7.0". </summary>
-            V7_0 = 1,
+            /// <summary> Service version "1.0". </summary>
+            V1_0 = 1,
         }
 
         internal string Version { get; }
 
-        /// <summary> Initializes new instance of TemplateClientOptions. </summary>
-        public TemplateClientOptions(ServiceVersion version = LatestVersion)
+        /// <summary> Initializes new instance of WidgetsClientOptions. </summary>
+        public WidgetsClientOptions(ServiceVersion version = LatestVersion)
         {
             Version = version switch
             {
-                ServiceVersion.V7_0 => "7.0",
+                ServiceVersion.V1_0 => "1.0",
                 _ => throw new NotSupportedException()
             };
         }
