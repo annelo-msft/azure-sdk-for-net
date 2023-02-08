@@ -67,12 +67,12 @@ namespace Azure.AI.OpenAI
             writer.Flush();
             stream.Position = 0;
 
-            dynamic options = BinaryData.FromStream(stream).ToDynamic();
-            options.stream = true;
+            MutableJsonDocument options = MutableJsonDocument.Parse(BinaryData.FromStream(stream));
+            mdoc.RootElement.SetProperty("stream", true);
 
             try
             {
-                HttpMessage message = CreateGetCompletionsRequest(deploymentId, RequestContent.Create((object)options), context);
+                HttpMessage message = CreateGetCompletionsRequest(deploymentId, RequestContent.Create(mdoc), context);
                 message.BufferResponse = false;
                 Response baseResponse = _pipeline.ProcessMessage(message, context, cancellationToken);
                 return Response.FromValue(new StreamingCompletions(baseResponse), baseResponse);
