@@ -6,7 +6,8 @@
 This sample shows how to call GetWidgetAsync with required parameters and parse the result.
 <code><![CDATA[
 var credential = new DefaultAzureCredential();
-var client = new WidgetsClient("<https://my-service.azure.com>", credential);
+var endpoint = new Uri("<https://my-service.azure.com>");
+var client = new WidgetsClient(endpoint, credential);
 
 Response response = await client.GetWidgetAsync("<id>");
 
@@ -34,7 +35,8 @@ Schema for <c>Widget</c>:
 This sample shows how to call GetWidget with required parameters and parse the result.
 <code><![CDATA[
 var credential = new DefaultAzureCredential();
-var client = new WidgetsClient("<https://my-service.azure.com>", credential);
+var endpoint = new Uri("<https://my-service.azure.com>");
+var client = new WidgetsClient(endpoint, credential);
 
 Response response = client.GetWidget("<id>");
 
@@ -62,7 +64,8 @@ Schema for <c>Widget</c>:
 This sample shows how to call SetWidgetAsync with required parameters and parse the result.
 <code><![CDATA[
 var credential = new DefaultAzureCredential();
-var client = new WidgetsClient("<https://my-service.azure.com>", credential);
+var endpoint = new Uri("<https://my-service.azure.com>");
+var client = new WidgetsClient(endpoint, credential);
 
 var data = new {};
 
@@ -74,7 +77,8 @@ Console.WriteLine(result.ToString());
 This sample shows how to call SetWidgetAsync with all parameters and request content, and how to parse the result.
 <code><![CDATA[
 var credential = new DefaultAzureCredential();
-var client = new WidgetsClient("<https://my-service.azure.com>", credential);
+var endpoint = new Uri("<https://my-service.azure.com>");
+var client = new WidgetsClient(endpoint, credential);
 
 var data = new {
     id = "<id>",
@@ -116,7 +120,8 @@ Schema for <c>Widget</c>:
 This sample shows how to call SetWidget with required parameters and parse the result.
 <code><![CDATA[
 var credential = new DefaultAzureCredential();
-var client = new WidgetsClient("<https://my-service.azure.com>", credential);
+var endpoint = new Uri("<https://my-service.azure.com>");
+var client = new WidgetsClient(endpoint, credential);
 
 var data = new {};
 
@@ -128,7 +133,8 @@ Console.WriteLine(result.ToString());
 This sample shows how to call SetWidget with all parameters and request content, and how to parse the result.
 <code><![CDATA[
 var credential = new DefaultAzureCredential();
-var client = new WidgetsClient("<https://my-service.azure.com>", credential);
+var endpoint = new Uri("<https://my-service.azure.com>");
+var client = new WidgetsClient(endpoint, credential);
 
 var data = new {
     id = "<id>",
