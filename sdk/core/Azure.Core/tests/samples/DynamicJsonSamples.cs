@@ -2,10 +2,10 @@
 // Licensed under the MIT License.
 
 using System;
-using Azure.Identity;
-using Azure.Core.Dynamic;
-using NUnit.Framework;
 using System.Threading.Tasks;
+using Azure.Core.Dynamic;
+using Azure.Core.TestFramework;
+using NUnit.Framework;
 
 namespace Azure.Core.Samples
 {
@@ -14,7 +14,7 @@ namespace Azure.Core.Samples
         [Test]
         public async Task GetDynamicJson()
         {
-            WidgetsClient client = new(new Uri("http://example.azure.com"), new DefaultAzureCredential());
+            WidgetsClient client = GetMockClient();
 
             #region Snippet:GetDynamicJson
             Response response = await client.GetWidgetAsync("123");
@@ -25,7 +25,7 @@ namespace Azure.Core.Samples
         [Test]
         public async Task GetDynamicJsonProperty()
         {
-            WidgetsClient client = new(new Uri("http://example.azure.com"), new DefaultAzureCredential());
+            WidgetsClient client = GetMockClient();
 
             #region Snippet:GetDynamicJsonProperty
             Response response = await client.GetWidgetAsync("123");
@@ -37,7 +37,7 @@ namespace Azure.Core.Samples
         [Test]
         public async Task SetWidgetAnonymousType()
         {
-            WidgetsClient client = new(new Uri("http://example.azure.com"), new DefaultAzureCredential());
+            WidgetsClient client = GetMockClient();
 
             #region Snippet:RoundTripAnonymousType
             Response response = client.GetWidget("123");
@@ -58,7 +58,9 @@ namespace Azure.Core.Samples
         [Test]
         public async Task SetWidgetDynamicJson()
         {
-            WidgetsClient client = new(new Uri("http://example.azure.com"), new DefaultAzureCredential());
+            WidgetsClient client = GetMockClient();
+
+            // TODO: Add implicit cast to RequestContent.
 
             #region Snippet:RoundTripDynamicJson
             Response response = client.GetWidget("123");
@@ -68,6 +70,20 @@ namespace Azure.Core.Samples
 
             await client.SetWidgetAsync((string)widget.Id, widget);
             #endregion
+        }
+
+        private WidgetsClient GetMockClient()
+        {
+            string initial = @"{ ""Id"" : ""123"", ""Name"" : ""Widget"" }";
+            string updated = @"{ ""Id"" : ""123"", ""Name"" : ""New Name"" }";
+
+            WidgetsClientOptions options = new WidgetsClientOptions()
+            {
+                Transport = new MockTransport(
+                    new MockResponse(200).SetContent(initial),
+                    new MockResponse(200).SetContent(updated))
+            };
+            return new WidgetsClient(new Uri("https://example.azure.com"), new MockCredential(), options);
         }
     }
 }
