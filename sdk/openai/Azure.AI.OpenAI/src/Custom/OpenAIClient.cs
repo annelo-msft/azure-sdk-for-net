@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Azure.AI.OpenAI.Custom;
 using Azure.Core;
 using Azure.Core.Pipeline;
+using Azure.Core.Dynamic;
 
 namespace Azure.AI.OpenAI
 {
@@ -60,12 +61,18 @@ namespace Azure.AI.OpenAI
 
             RequestContext context = FromCancellationToken(cancellationToken);
 
-            RequestContent nonStreamingContent = completionsOptions.ToRequestContent();
-            RequestContent streamingContent = GetStreamingEnabledRequestContent(nonStreamingContent);
+            MemoryStream stream = new();
+            Utf8JsonWriter writer = new(stream);
+            writer.WriteObjectValue(completionsOptions);
+            writer.Flush();
+            stream.Position = 0;
+
+            dynamic options = BinaryData.FromStream(stream).ToDynamic();
+            options.stream = true;
 
             try
             {
-                HttpMessage message = CreateGetCompletionsRequest(deploymentId, streamingContent, context);
+                HttpMessage message = CreateGetCompletionsRequest(deploymentId, RequestContent.Create((object)options), context);
                 message.BufferResponse = false;
                 Response baseResponse = _pipeline.ProcessMessage(message, context, cancellationToken);
                 return Response.FromValue(new StreamingCompletions(baseResponse), baseResponse);
@@ -83,35 +90,6 @@ namespace Azure.AI.OpenAI
             CancellationToken cancellationToken = default)
         {
             return Task.FromResult<Response<StreamingCompletions>>(null);
-        }
-
-        private static RequestContent GetStreamingEnabledRequestContent(RequestContent originalRequestContent)
-        {
-            // Dump the original request content to a temporary stream and seek to start
-            using Stream originalRequestContentStream = new MemoryStream();
-            originalRequestContent.WriteTo(originalRequestContentStream, new CancellationToken());
-            originalRequestContentStream.Position = 0;
-
-            JsonDocument originalJson = JsonDocument.Parse(originalRequestContentStream);
-            JsonElement originalJsonRoot = originalJson.RootElement;
-
-            Utf8JsonRequestContent augmentedContent = new Utf8JsonRequestContent();
-            augmentedContent.JsonWriter.WriteStartObject();
-
-            // Copy the original JSON content back into the new copy
-            foreach (JsonProperty jsonThing in originalJsonRoot.EnumerateObject())
-            {
-                augmentedContent.JsonWriter.WritePropertyName(jsonThing.Name);
-                jsonThing.Value.WriteTo(augmentedContent.JsonWriter);
-            }
-
-            // ...Add the *one thing* we wanted to add
-            augmentedContent.JsonWriter.WritePropertyName("stream");
-            augmentedContent.JsonWriter.WriteBooleanValue(true);
-
-            augmentedContent.JsonWriter.WriteEndObject();
-
-            return augmentedContent;
         }
     }
 }
