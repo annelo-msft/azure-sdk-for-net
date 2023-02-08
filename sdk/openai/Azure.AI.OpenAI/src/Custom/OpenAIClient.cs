@@ -68,11 +68,11 @@ namespace Azure.AI.OpenAI
             stream.Position = 0;
 
             MutableJsonDocument options = MutableJsonDocument.Parse(BinaryData.FromStream(stream));
-            mdoc.RootElement.SetProperty("stream", true);
+            options.RootElement.SetProperty("stream", true);
 
             try
             {
-                HttpMessage message = CreateGetCompletionsRequest(deploymentId, RequestContent.Create(mdoc), context);
+                HttpMessage message = CreateGetCompletionsRequest(deploymentId, RequestContent.Create(options), context);
                 message.BufferResponse = false;
                 Response baseResponse = _pipeline.ProcessMessage(message, context, cancellationToken);
                 return Response.FromValue(new StreamingCompletions(baseResponse), baseResponse);
