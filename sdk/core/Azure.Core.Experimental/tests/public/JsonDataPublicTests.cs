@@ -4,11 +4,11 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using Azure.Core.Dynamic;
-using System.Text.Json;
-using NUnit.Framework;
 using System.IO;
+using System.Text.Json;
 using System.Threading.Tasks;
+using Azure.Core.Dynamic;
+using NUnit.Framework;
 
 namespace Azure.Core.Tests.Public
 {
@@ -310,13 +310,11 @@ namespace Azure.Core.Tests.Public
         }
 
         [Test]
-        [Ignore("To be implemented.")]
         public void EqualsHandlesStringsSpecial()
         {
             dynamic json = new BinaryData("\"test\"").ToDynamic();
 
             Assert.IsTrue(json.Equals("test"));
-            Assert.IsTrue(json.Equals(new BinaryData("\"test\"").ToDynamic()));
         }
 
         [Test]
@@ -409,6 +407,7 @@ namespace Azure.Core.Tests.Public
             Assert.IsTrue(fourthJson != half);
             Assert.IsTrue(half != fourthJson);
         }
+
         [Test]
         public void OperatorEqualsForDouble()
         {

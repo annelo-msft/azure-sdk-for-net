@@ -300,10 +300,10 @@ namespace Azure.Core.Experimental.Tests
                 }");
 
             // Property is present
-            Assert.IsFalse((string)json.Foo == null);
+            Assert.IsFalse(json.Foo == null);
 
             // Property is absent
-            Assert.IsTrue((string)json.Bar == null);
+            Assert.IsTrue(json.Bar == null);
         }
 
         [Test]

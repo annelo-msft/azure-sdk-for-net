@@ -105,6 +105,32 @@ namespace Azure.Core.Dynamic
             return _element.ToString();
         }
 
+        /// <inheritdoc/>
+        public override bool Equals(object? obj)
+        {
+            return obj switch
+            {
+                string s => this == s,
+                bool b => this == b,
+                int i => this == i,
+                long l => this == l,
+                float f => this == f,
+                double d => this == d,
+                _ => base.Equals(obj),
+            };
+        }
+
+        /// <inheritdoc/>
+        public override int GetHashCode()
+        {
+            if (_element.ValueKind == JsonValueKind.String)
+            {
+                return _element.GetString()!.GetHashCode();
+            }
+
+            return base.GetHashCode();
+        }
+
         private class JsonConverter : JsonConverter<DynamicJson>
         {
             public override DynamicJson Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
