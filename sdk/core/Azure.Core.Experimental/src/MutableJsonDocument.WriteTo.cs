@@ -9,15 +9,16 @@ namespace Azure.Core.Dynamic
 {
     public partial class MutableJsonDocument
     {
-        private const int DefaultMaxPathLength = 128;
+        //private const int DefaultMaxPathLength = 128;
 
         internal void WriteRootElementTo(Utf8JsonWriter writer)
         {
             bool changed = Changes.TryGetChange(Span<byte>.Empty, -1, out MutableJsonChange change);
             Utf8JsonReader reader = changed ? change.GetReader() : new Utf8JsonReader(_original.Span);
 
-            Span<byte> utf8Path = stackalloc byte[DefaultMaxPathLength];
-            WriteElement(utf8Path, 0, -1, ref reader, writer);
+            //Span<byte> utf8Path = stackalloc byte[DefaultMaxPathLength];
+            //WriteElement(utf8Path, 0, -1, ref reader, writer);
+            WriteElement(string.Empty, -1, ref reader, writer);
 
             writer.Flush();
         }
