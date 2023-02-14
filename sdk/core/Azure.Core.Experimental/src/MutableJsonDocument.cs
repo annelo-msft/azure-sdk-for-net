@@ -150,6 +150,57 @@ namespace Azure.Core.Dynamic
             _originalElement = JsonDocument.Parse(_original).RootElement;
         }
 
+//        // Reject any invalid UTF-8 data rather than silently replacing.
+//        private static readonly UTF8Encoding s_utf8Encoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false, throwOnInvalidBytes: true);
+
+//        internal static int GetUtf8FromText(ReadOnlySpan<char> text, Span<byte> dest)
+//        {
+//            try
+//            {
+//#if NETCOREAPP
+//                return s_utf8Encoding.GetBytes(text, dest);
+//#else
+//                if (text.IsEmpty)
+//                {
+//                    return 0;
+//                }
+
+//                unsafe
+//                {
+//                    fixed (char* charPtr = text)
+//                    fixed (byte* destPtr = dest)
+//                    {
+//                        return s_utf8Encoding.GetBytes(charPtr, text.Length, destPtr, dest.Length);
+//                    }
+//                }
+//#endif
+//            }
+//            catch (EncoderFallbackException ex)
+//            {
+//                throw new ArgumentException(ex.Message);
+//            }
+//        }
+
+//        internal static string GetTextFromUtf8(ReadOnlySpan<byte> utf8Text)
+//        {
+//#if NETCOREAPP
+//            return s_utf8Encoding.GetString(utf8Text);
+//#else
+//            if (utf8Text.IsEmpty)
+//            {
+//                return string.Empty;
+//            }
+
+//            unsafe
+//            {
+//                fixed (byte* bytePtr = utf8Text)
+//                {
+//                    return s_utf8Encoding.GetString(bytePtr, utf8Text.Length);
+//                }
+//            }
+//#endif
+//        }
+
         // TODO: Move into extensions
         internal static string Utf8SpanToString(ReadOnlySpan<byte> utf8)
         {
@@ -160,6 +211,11 @@ namespace Azure.Core.Dynamic
 
         internal static ReadOnlyMemory<byte> StringToUtf8(string value)
         {
+            if (string.IsNullOrEmpty(value))
+            {
+                return ReadOnlyMemory<byte>.Empty;
+            }
+
             // Convert to Utf8 from Utf16
             // TODO: use System.Text.Unicode.UTF8 where available
             byte[] utf8Bytes = Encoding.UTF8.GetBytes(value);
