@@ -134,6 +134,11 @@ namespace Azure.Core.Dynamic
                 return PushProperty(path, $"{index}");
             }
 
+            internal static ReadOnlyMemory<byte> PushIndex(ReadOnlySpan<byte> path, int index, out int pathLength)
+            {
+                return PushProperty(path, StringToUtf8($"{index}").Span, out pathLength);
+            }
+
             internal static string PopIndex(string path)
             {
                 return PopProperty(path);
@@ -163,9 +168,10 @@ namespace Azure.Core.Dynamic
                 return $"{path}.{propertyName}";
             }
 
-            internal static ReadOnlyMemory<byte> PushProperty(ReadOnlySpan<byte> path, ReadOnlySpan<byte> value)
+            // TODO: This should only allocate if the passed-in span isn't long enough.
+            internal static ReadOnlyMemory<byte> PushProperty(ReadOnlySpan<byte> path, ReadOnlySpan<byte> value, out int pathLength)
             {
-                int pathLength = path.Length;
+                pathLength = path.Length;
                 Memory<byte> propertyPath = new byte[path.Length + value.Length + 1];
                 if (pathLength > 0)
                 {

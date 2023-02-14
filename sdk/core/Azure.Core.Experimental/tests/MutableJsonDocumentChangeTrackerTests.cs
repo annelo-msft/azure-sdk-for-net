@@ -90,6 +90,43 @@ namespace Azure.Core.Experimental.Tests
             Assert.AreEqual(change.Value, true);
         }
 
+        [Test]
+        public void CanPushIndexUtf8()
+        {
+            ReadOnlySpan<byte> path = MutableJsonDocument.StringToUtf8("Foo").Span;
+            ReadOnlySpan<byte> path0 = MutableJsonDocument.ChangeTracker.PushIndex(path, 0, out int pathLength).Span;
+
+            ReadOnlySpan<byte> expected = MutableJsonDocument.StringToUtf8("Foo.0").Span;
+
+            Assert.IsTrue(expected.SequenceEqual(path0));
+        }
+
+        [Test]
+        public void CanPushPropertyUtf8()
+        {
+            int DefaultMaxPathLength = 128;
+            Span<byte> path = stackalloc byte[DefaultMaxPathLength];
+
+            ReadOnlySpan<byte> foo = MutableJsonDocument.StringToUtf8("Foo").Span;
+
+            path = MutableJsonDocument.ChangeTracker.PushProperty(path, foo, out int pathLength);
+
+            ReadOnlySpan<byte> expected = MutableJsonDocument.StringToUtf8("Foo.0").Span;
+
+            Assert.IsTrue(expected.SequenceEqual(path0));
+        }
+
+        [Test]
+        public void CanPopIndexUtf8()
+        {
+            ReadOnlySpan<byte> expected = MutableJsonDocument.StringToUtf8("Foo").Span;
+
+            ReadOnlySpan<byte> path0 = MutableJsonDocument.StringToUtf8("Foo.0").Span;
+            ReadOnlySpan<byte> path = MutableJsonDocument.ChangeTracker.PopIndex(path0);
+
+            Assert.IsTrue(expected.SequenceEqual(path));
+        }
+
         public static IEnumerable<object[]> PathCases()
         {
             yield return new object[] { string.Empty };

@@ -3,6 +3,7 @@
 
 using System;
 using Azure.Core.Experimental.Perf.Benchmarks;
+using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Running;
 
 namespace Azure.Core.Experimental.Performance
@@ -11,7 +12,7 @@ namespace Azure.Core.Experimental.Performance
     {
         public static void Main(string[] args)
         {
-            BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args);
+            BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args, new DebugInProcessConfig());
 
             //DebugBenchmark();
         }

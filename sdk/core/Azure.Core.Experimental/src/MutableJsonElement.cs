@@ -117,8 +117,8 @@ namespace Azure.Core.Dynamic
                 return false;
             }
 
-            ReadOnlyMemory<byte> path = MutableJsonDocument.ChangeTracker.PushProperty(_utf8Path.Span, utf8Name);
-            if (Changes.TryGetChange(path.Span, _highWaterMark, out MutableJsonChange change))
+            ReadOnlyMemory<byte> path = MutableJsonDocument.ChangeTracker.PushProperty(_utf8Path.Span, utf8Name, out int pathLength);
+            if (Changes.TryGetChange(path.Span.Slice(0, pathLength), _highWaterMark, out MutableJsonChange change))
             {
                 if (change.ReplacesJsonElement)
                 {
@@ -348,7 +348,7 @@ namespace Azure.Core.Dynamic
             // Make sure the object reference is stored to ensure reference semantics
             // TODO: take name as Utf8 in an overload.
             ReadOnlySpan<byte> utf8Name = MutableJsonDocument.StringToUtf8(name).Span;
-            ReadOnlyMemory<byte> path = MutableJsonDocument.ChangeTracker.PushProperty(_utf8Path.Span, utf8Name);
+            ReadOnlyMemory<byte> path = MutableJsonDocument.ChangeTracker.PushProperty(_utf8Path.Span, utf8Name, out int pathLength);
 
             // TODO: If we can only set this to true when value is non-primitive, we'll get a small perf win here in WriteTo().
             Changes.AddChange(path, value, true);
@@ -519,7 +519,7 @@ namespace Azure.Core.Dynamic
         internal void WriteTo(Utf8JsonWriter writer)
         {
             Utf8JsonReader reader = GetReaderForElement(_element);
-            _root.WriteElement(_path, _highWaterMark, ref reader, writer);
+            _root.WriteElement(_utf8Path.Span, _utf8Path.Span.Length, _highWaterMark, ref reader, writer);
         }
 
         /// <inheritdoc/>
@@ -569,7 +569,7 @@ namespace Azure.Core.Dynamic
 
             using MemoryStream changedElementStream = new();
             Utf8JsonWriter changedElementWriter = new(changedElementStream);
-            _root.WriteElement(_path, _highWaterMark, ref reader, changedElementWriter);
+            _root.WriteElement(_utf8Path.Span, _utf8Path.Span.Length, _highWaterMark, ref reader, changedElementWriter);
             changedElementWriter.Flush();
 
             // TODO: How can we avoid an allocation here?  Copy into a passed-in buffer?
