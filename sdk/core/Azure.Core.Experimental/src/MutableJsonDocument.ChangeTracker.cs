@@ -140,6 +140,12 @@ namespace Azure.Core.Dynamic
                 return PushProperty(path, StringToUtf8($"{index}").Span);
             }
 
+            internal static int PushIndex(Span<byte> path, int pathLength, int index)
+            {
+                // TODO: optimize int-to-utf8 conversion.
+                return PushProperty(path, pathLength, StringToUtf8($"{index}").Span);
+            }
+
             internal static string PopIndex(string path)
             {
                 return PopProperty(path);
@@ -182,6 +188,29 @@ namespace Azure.Core.Dynamic
                 value.CopyTo(propertyPath.Span.Slice(pathLength));
                 pathLength += value.Length;
                 return propertyPath.Slice(0, pathLength);
+            }
+
+            internal static int PushProperty(Span<byte> pathBuffer, int pathLength, ReadOnlySpan<byte> propertyName)
+            {
+                if (pathLength + propertyName.Length + 1 > pathBuffer.Length)
+                {
+                    // TODO: allocate a new buffer from ArrayPool when the path gets long.
+                    throw new InvalidOperationException("Pushing the path segment would exceed the buffer length.");
+                }
+
+                if (pathLength != 0)
+                {
+                    pathBuffer[pathLength] = Delimiter;
+                    pathLength++;
+                }
+
+                if (!propertyName.TryCopyTo(pathBuffer.Slice(pathLength)))
+                {
+                    throw new InvalidOperationException("Shouldn't have gotten here, per initial check.");
+                }
+                pathLength += propertyName.Length;
+
+                return pathLength;
             }
 
             internal static string PopProperty(string path)

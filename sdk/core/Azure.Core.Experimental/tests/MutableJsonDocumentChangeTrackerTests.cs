@@ -96,19 +96,31 @@ namespace Azure.Core.Experimental.Tests
         {
             ReadOnlySpan<byte> path = MutableJsonDocument.StringToUtf8("Foo").Span;
             ReadOnlySpan<byte> path0 = MutableJsonDocument.ChangeTracker.PushIndex(path, 0).Span;
-
             ReadOnlySpan<byte> expected = MutableJsonDocument.StringToUtf8("Foo.0").Span;
 
             Assert.IsTrue(expected.SequenceEqual(path0));
         }
 
         [Test]
+        public void CanPushIndexUtf8_NonAllocating()
+        {
+            int DefaultMaxPathLength = 128;
+            Span<byte> pathBuffer = stackalloc byte[DefaultMaxPathLength];
+
+            ReadOnlySpan<byte> foo = MutableJsonDocument.StringToUtf8("Foo").Span;
+            ReadOnlySpan<byte> expected = MutableJsonDocument.StringToUtf8("Foo.0").Span;
+
+            int pathLength = MutableJsonDocument.ChangeTracker.PushProperty(pathBuffer, 0, foo);
+            pathLength = MutableJsonDocument.ChangeTracker.PushIndex(pathBuffer, pathLength, index: 0);
+
+            ReadOnlySpan<byte> path = pathBuffer.Slice(0, pathLength);
+
+            Assert.IsTrue(expected.SequenceEqual(path));
+        }
+
+        [Test]
         public void CanPushPropertyUtf8()
         {
-            // This is not a non-allocating version of the method.
-            //int DefaultMaxPathLength = 128;
-            //Span<byte> path = stackalloc byte[DefaultMaxPathLength];
-
             Span<byte> path = Span<byte>.Empty;
 
             ReadOnlySpan<byte> foo = MutableJsonDocument.StringToUtf8("Foo").Span;
@@ -118,6 +130,22 @@ namespace Azure.Core.Experimental.Tests
             ReadOnlySpan<byte> expected = MutableJsonDocument.StringToUtf8("Foo").Span;
 
             Assert.IsTrue(expected.SequenceEqual(pathFoo));
+        }
+
+        [Test]
+        public void CanPushPropertyUtf8_NonAllocating()
+        {
+            int DefaultMaxPathLength = 128;
+            Span<byte> pathBuffer = stackalloc byte[DefaultMaxPathLength];
+
+            ReadOnlySpan<byte> foo = MutableJsonDocument.StringToUtf8("Foo").Span;
+
+            int pathLength = MutableJsonDocument.ChangeTracker.PushProperty(pathBuffer, 0, foo);
+            ReadOnlySpan<byte> path = pathBuffer.Slice(0, pathLength);
+
+            ReadOnlySpan<byte> expected = MutableJsonDocument.StringToUtf8("Foo").Span;
+
+            Assert.IsTrue(expected.SequenceEqual(path));
         }
 
         [Test]
