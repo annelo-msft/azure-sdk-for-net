@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Azure.Core.Dynamic;
 using NUnit.Framework;
 
@@ -88,6 +89,45 @@ namespace Azure.Core.Experimental.Tests
 
             Assert.IsTrue(changes.TryGetChange(utf8Path.Span, -1, out MutableJsonChange change));
             Assert.AreEqual(change.Value, true);
+        }
+
+        [Test]
+        public void CanPushIndexUtf8()
+        {
+            ReadOnlySpan<byte> path = MutableJsonDocument.StringToUtf8("Foo").Span;
+            ReadOnlySpan<byte> path0 = MutableJsonDocument.ChangeTracker.PushIndex(path, 0).Span;
+
+            ReadOnlySpan<byte> expected = MutableJsonDocument.StringToUtf8("Foo.0").Span;
+
+            Assert.IsTrue(expected.SequenceEqual(path0));
+        }
+
+        [Test]
+        public void CanPushPropertyUtf8()
+        {
+            // This is not a non-allocating version of the method.
+            //int DefaultMaxPathLength = 128;
+            //Span<byte> path = stackalloc byte[DefaultMaxPathLength];
+
+            Span<byte> path = Span<byte>.Empty;
+
+            ReadOnlySpan<byte> foo = MutableJsonDocument.StringToUtf8("Foo").Span;
+
+            var pathFoo = MutableJsonDocument.ChangeTracker.PushProperty(path, foo).Span;
+
+            ReadOnlySpan<byte> expected = MutableJsonDocument.StringToUtf8("Foo").Span;
+
+            Assert.IsTrue(expected.SequenceEqual(pathFoo));
+        }
+
+        [Test]
+        public void CanPopIndexUtf8()
+        {
+            ReadOnlySpan<byte> expected = MutableJsonDocument.StringToUtf8("Foo").Span;
+            ReadOnlySpan<byte> path0 = MutableJsonDocument.StringToUtf8("Foo.0").Span;
+            ReadOnlySpan<byte> path = MutableJsonDocument.ChangeTracker.PopIndex(path0);
+
+            Assert.IsTrue(expected.SequenceEqual(path));
         }
 
         public static IEnumerable<object[]> PathCases()

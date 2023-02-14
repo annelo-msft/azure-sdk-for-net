@@ -134,6 +134,12 @@ namespace Azure.Core.Dynamic
                 return PushProperty(path, $"{index}");
             }
 
+            internal static ReadOnlyMemory<byte> PushIndex(ReadOnlySpan<byte> path, int index)
+            {
+                // TODO: optimize int-to-utf8 conversion.
+                return PushProperty(path, StringToUtf8($"{index}").Span);
+            }
+
             internal static string PopIndex(string path)
             {
                 return PopProperty(path);
