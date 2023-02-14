@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace Azure.Core.Dynamic
@@ -156,6 +157,11 @@ namespace Azure.Core.Dynamic
                 return PopProperty(path);
             }
 
+            internal static int PopIndex(ReadOnlySpan<byte> path, int length)
+            {
+                return PopProperty(path, length);
+            }
+
             internal static string PushProperty(string path, string value)
             {
                 if (path.Length == 0)
@@ -190,27 +196,27 @@ namespace Azure.Core.Dynamic
                 return propertyPath.Slice(0, pathLength);
             }
 
-            internal static int PushProperty(Span<byte> pathBuffer, int pathLength, ReadOnlySpan<byte> propertyName)
+            internal static int PushProperty(Span<byte> path, int length, ReadOnlySpan<byte> propertyName)
             {
-                if (pathLength + propertyName.Length + 1 > pathBuffer.Length)
+                if (length + propertyName.Length + 1 > path.Length)
                 {
                     // TODO: allocate a new buffer from ArrayPool when the path gets long.
                     throw new InvalidOperationException("Pushing the path segment would exceed the buffer length.");
                 }
 
-                if (pathLength != 0)
+                if (length != 0)
                 {
-                    pathBuffer[pathLength] = Delimiter;
-                    pathLength++;
+                    path[length] = Delimiter;
+                    length++;
                 }
 
-                if (!propertyName.TryCopyTo(pathBuffer.Slice(pathLength)))
+                if (!propertyName.TryCopyTo(path.Slice(length)))
                 {
                     throw new InvalidOperationException("Shouldn't have gotten here, per initial check.");
                 }
-                pathLength += propertyName.Length;
+                length += propertyName.Length;
 
-                return pathLength;
+                return length;
             }
 
             internal static string PopProperty(string path)
@@ -231,6 +237,16 @@ namespace Azure.Core.Dynamic
                     return Span<byte>.Empty;
                 }
                 return path.Slice(0, lastDelimiter);
+            }
+
+            internal static int PopProperty(ReadOnlySpan<byte> path, int length)
+            {
+                int lastDelimiter = path.Slice(0, length).LastIndexOf(Delimiter);
+                if (lastDelimiter == -1)
+                {
+                    return 0;
+                }
+                return lastDelimiter;
             }
         }
     }

@@ -158,6 +158,25 @@ namespace Azure.Core.Experimental.Tests
             Assert.IsTrue(expected.SequenceEqual(path));
         }
 
+        [Test]
+        public void CanPopIndexUtf8_NonAllocating()
+        {
+            int DefaultMaxPathLength = 128;
+            Span<byte> pathBuffer = stackalloc byte[DefaultMaxPathLength];
+
+            ReadOnlySpan<byte> foo = MutableJsonDocument.StringToUtf8("Foo").Span;
+            ReadOnlySpan<byte> foo0 = MutableJsonDocument.StringToUtf8("Foo.0").Span;
+
+            int pathLength = MutableJsonDocument.ChangeTracker.PushProperty(pathBuffer, 0, foo);
+            pathLength = MutableJsonDocument.ChangeTracker.PushIndex(pathBuffer, pathLength, index: 0);
+
+            Assert.IsTrue(foo0.SequenceEqual(pathBuffer.Slice(0, pathLength)));
+
+            pathLength = MutableJsonDocument.ChangeTracker.PopIndex(pathBuffer, pathLength);
+
+            Assert.IsTrue(foo.SequenceEqual(pathBuffer.Slice(0, pathLength)));
+        }
+
         public static IEnumerable<object[]> PathCases()
         {
             yield return new object[] { string.Empty };
