@@ -524,7 +524,12 @@ namespace Azure.Core.Dynamic
         internal void WriteTo(Utf8JsonWriter writer)
         {
             Utf8JsonReader reader = GetReaderForElement(_element);
-            _root.WriteElement(_path, _highWaterMark, ref reader, writer);
+
+            // TODO: Check length first and make heap allocation if needed.
+            Span<byte> utf8Path = stackalloc byte[MutableJsonDocument.DefaultMaxPathLength];
+            _utf8Path.Span.CopyTo(utf8Path);
+
+            _root.WriteElement(utf8Path, _utf8Path.Span.Length, _highWaterMark, ref reader, writer);
         }
 
         /// <inheritdoc/>
@@ -574,7 +579,12 @@ namespace Azure.Core.Dynamic
 
             using MemoryStream changedElementStream = new();
             Utf8JsonWriter changedElementWriter = new(changedElementStream);
-            _root.WriteElement(_path, _highWaterMark, ref reader, changedElementWriter);
+
+            // TODO: Check length first and make heap allocation if needed.
+            Span<byte> utf8Path = stackalloc byte[MutableJsonDocument.DefaultMaxPathLength];
+            _utf8Path.Span.CopyTo(utf8Path);
+
+            _root.WriteElement(utf8Path, _utf8Path.Span.Length, _highWaterMark, ref reader, changedElementWriter);
             changedElementWriter.Flush();
 
             // TODO: How can we avoid an allocation here?  Copy into a passed-in buffer?
