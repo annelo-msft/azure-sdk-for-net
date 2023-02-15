@@ -131,7 +131,12 @@ namespace Azure.Core.Dynamic
             return true;
         }
 
-        internal MutableJsonElement GetIndexElement(int index)
+        /// <summary>
+        /// Get the element at the specified array index.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public MutableJsonElement GetIndexElement(int index)
         {
             EnsureValid();
 

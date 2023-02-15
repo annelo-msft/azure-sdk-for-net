@@ -55,6 +55,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.Core.Experimental.Tes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.Core.Experimental.Perf.Benchmarks", "..\Azure.Core.Experimental\tests\perf\Azure.Core.Experimental.Perf.Benchmarks.csproj", "{8812429A-CDA8-4951-B6FD-2CC84741FFA9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TryMutableJsonDocument", "TryMutableJsonDocument\TryMutableJsonDocument.csproj", "{CF34F0BE-5514-4AD1-9621-D6612829F7C5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -137,6 +139,10 @@ Global
 		{8812429A-CDA8-4951-B6FD-2CC84741FFA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8812429A-CDA8-4951-B6FD-2CC84741FFA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8812429A-CDA8-4951-B6FD-2CC84741FFA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF34F0BE-5514-4AD1-9621-D6612829F7C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF34F0BE-5514-4AD1-9621-D6612829F7C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF34F0BE-5514-4AD1-9621-D6612829F7C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF34F0BE-5514-4AD1-9621-D6612829F7C5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

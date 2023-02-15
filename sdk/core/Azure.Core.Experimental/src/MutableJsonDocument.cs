@@ -118,7 +118,7 @@ namespace Azure.Core.Dynamic
             return new MutableJsonDocument(JsonDocument.Parse(jsonMemory), jsonMemory);
         }
 
-        internal MutableJsonDocument(JsonDocument jsonDocument, ReadOnlyMemory<byte> utf8Json) : this(jsonDocument.RootElement)
+        internal MutableJsonDocument(JsonDocument jsonDocument, ReadOnlyMemory<byte> utf8Json)
         {
             _original = utf8Json;
             _originalElement = jsonDocument.RootElement;
