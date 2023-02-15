@@ -2,7 +2,6 @@
 // Licensed under the MIT License.
 
 using System;
-using System.Diagnostics;
 using System.Text.Json;
 
 namespace Azure.Core.Dynamic
@@ -22,7 +21,6 @@ namespace Azure.Core.Dynamic
             writer.Flush();
         }
 
-        // TODO: Make this work path as ReadOnlySpan<byte>
         internal void WriteElement(scoped Span<byte> path, int pathLength, int highWaterMark, ref Utf8JsonReader reader, Utf8JsonWriter writer)
         {
             while (reader.Read())
@@ -115,9 +113,7 @@ namespace Azure.Core.Dynamic
                         continue;
                     case JsonTokenType.PropertyName:
                         pathLength = ChangeTracker.PushProperty(path, pathLength, reader.ValueSpan);
-
                         writer.WritePropertyName(reader.ValueSpan);
-                        //Debug.WriteLine($"Path: {path}, TokenStartIndex: {reader.TokenStartIndex}");
                         continue;
                     case JsonTokenType.String:
                         WriteString(path, pathLength, highWaterMark, ref reader, writer);
