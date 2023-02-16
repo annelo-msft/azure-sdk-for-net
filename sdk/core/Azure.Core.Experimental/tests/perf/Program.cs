@@ -20,9 +20,9 @@ namespace Azure.Core.Experimental.Performance
         {
             ReadLargePayloadBenchmark b = new();
 
-            string value = b.ReadJsonElement();
+            string value = b.ReadJsonDocument();
 
-            value = b.ReadJsonData();
+            value = b.ReadDynamicJson();
         }
     }
 }

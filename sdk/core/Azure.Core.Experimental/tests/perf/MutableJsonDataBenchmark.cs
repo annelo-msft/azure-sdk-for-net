@@ -11,21 +11,7 @@ namespace Azure.Core.Experimental.Perf.Benchmarks
     [MemoryDiagnoser]
     public class MutableJsonDataBenchmark
     {
-        // Initialize for first test.
         private JsonDocument _doc = JsonDocument.Parse(JsonSamples.DocumentSentiment);
-
-        // Initialize for second test.
-        private MutableJsonDocument _mdoc = MutableJsonDocument.Parse(JsonSamples.DocumentSentiment);
-
-        // Initialize for third test.
-        private MutableJsonDocument _mcdoc = GetMutableJsonDocumentWithChanges();
-
-        private static MutableJsonDocument GetMutableJsonDocumentWithChanges()
-        {
-            var mdoc = MutableJsonDocument.Parse(JsonSamples.DocumentSentiment);
-            mdoc.RootElement.GetProperty("documents").GetIndexElement(0).GetProperty("sentences").GetIndexElement(1).GetProperty("sentiment").Set("positive");
-            return mdoc;
-        }
 
         [Benchmark(Baseline = true)]
         public void DocumentSentiment_WriteTo_JsonDocument()
@@ -35,32 +21,31 @@ namespace Azure.Core.Experimental.Perf.Benchmarks
             _doc.WriteTo(writer);
         }
 
+        private MutableJsonDocument _mdoc = MutableJsonDocument.Parse(JsonSamples.DocumentSentiment);
+
         [Benchmark]
-        public void DocumentSentiment_WriteTo_JsonData_NoChanges()
+        public void DocumentSentiment_WriteTo_MutableJsonDocument_NoChanges()
         {
             using MemoryStream stream = new();
             using Utf8JsonWriter writer = new(stream);
             _mdoc.WriteTo(writer);
         }
 
+        private MutableJsonDocument _mcdoc = GetMutableJsonDocumentWithChanges();
+
+        private static MutableJsonDocument GetMutableJsonDocumentWithChanges()
+        {
+            MutableJsonDocument mdoc = MutableJsonDocument.Parse(JsonSamples.DocumentSentiment);
+            mdoc.RootElement.GetProperty("documents").GetIndexElement(0).GetProperty("sentences").GetIndexElement(1).GetProperty("sentiment").Set("positive");
+            return mdoc;
+        }
+
         [Benchmark]
-        public void DocumentSentiment_WriteTo_JsonData_ChangeValue()
+        public void DocumentSentiment_WriteTo_MutableJsonDocument_ChangedValue()
         {
             using MemoryStream stream = new();
             using Utf8JsonWriter writer = new(stream);
             _mcdoc.WriteTo(writer);
         }
-
-        //[Benchmark]
-        //public void DocumentSentiment_WriteTo_JsonData_ChangeStructure()
-        //{
-        //    MutableJsonDocument jsonData = MutableJsonDocument.Parse(JsonSamples.DocumentSentiment);
-
-        //    // Make a small change
-        //    jsonData.RootElement.GetProperty("documents").GetIndexElement(0).GetProperty("sentences").GetIndexElement(1).GetProperty("sentiment").Set("positive");
-
-        //    MemoryStream stream = new();
-        //    jsonData.WriteTo(stream);
-        //}
     }
 }
