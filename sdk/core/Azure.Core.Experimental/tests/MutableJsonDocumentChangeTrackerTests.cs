@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Azure.Core.Dynamic;
+using Azure.Core.Json;
 using NUnit.Framework;
 
 namespace Azure.Core.Experimental.Tests

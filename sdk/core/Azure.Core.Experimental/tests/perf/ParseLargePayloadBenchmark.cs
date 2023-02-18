@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 #endif
 using Azure.Core.Dynamic;
+using Azure.Core.Json;
 using BenchmarkDotNet.Attributes;
 
 namespace Azure.Core.Experimental.Perf.Benchmarks

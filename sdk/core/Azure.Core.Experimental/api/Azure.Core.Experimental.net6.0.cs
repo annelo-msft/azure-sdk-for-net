@@ -172,8 +172,10 @@ namespace Azure.Core.Json
         public Azure.Core.Json.MutableJsonElement.ArrayEnumerator EnumerateArray() { throw null; }
         public bool GetBoolean() { throw null; }
         public double GetDouble() { throw null; }
+        public Azure.Core.Json.MutableJsonElement GetIndexElement(int index) { throw null; }
         public int GetInt32() { throw null; }
         public long GetInt64() { throw null; }
+        public Azure.Core.Json.MutableJsonElement GetProperty(System.ReadOnlySpan<byte> utf8Name) { throw null; }
         public Azure.Core.Json.MutableJsonElement GetProperty(string name) { throw null; }
         public float GetSingle() { throw null; }
         public string? GetString() { throw null; }
@@ -188,6 +190,7 @@ namespace Azure.Core.Json
         public void Set(string value) { }
         public Azure.Core.Json.MutableJsonElement SetProperty(string name, object value) { throw null; }
         public override string ToString() { throw null; }
+        public bool TryGetProperty(System.ReadOnlySpan<byte> utf8Name, out Azure.Core.Json.MutableJsonElement value) { throw null; }
         public bool TryGetProperty(string name, out Azure.Core.Json.MutableJsonElement value) { throw null; }
         [System.Diagnostics.DebuggerDisplayAttribute("{Current,nq}")]
         [System.Runtime.InteropServices.StructLayoutAttribute(System.Runtime.InteropServices.LayoutKind.Sequential)]
