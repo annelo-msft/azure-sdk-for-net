@@ -9,18 +9,18 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Azure.Core.Dynamic
+namespace Azure.Core.Json
 {
     /// <summary>
     /// A mutable representation of a JSON value.
     /// </summary>
     [JsonConverter(typeof(JsonConverter))]
-    public partial class MutableJsonDocument
+    public sealed partial class MutableJsonDocument : IDisposable
     {
         internal static readonly JsonSerializerOptions DefaultJsonSerializerOptions = new JsonSerializerOptions();
 
         private readonly ReadOnlyMemory<byte> _original;
-        private readonly JsonElement _originalElement;
+        private readonly JsonDocument _originalDocument;
 
         internal ChangeTracker Changes { get; } = new();
 
@@ -40,7 +40,7 @@ namespace Azure.Core.Dynamic
                     }
                 }
 
-                return new MutableJsonElement(this, _originalElement, string.Empty);
+                return new MutableJsonElement(this, _originalDocument.RootElement, string.Empty);
             }
         }
 
@@ -73,7 +73,7 @@ namespace Azure.Core.Dynamic
         {
             if (!Changes.HasChanges)
             {
-                _originalElement.WriteTo(writer);
+                _originalDocument.RootElement.WriteTo(writer);
                 return;
             }
 
@@ -118,10 +118,16 @@ namespace Azure.Core.Dynamic
             return new MutableJsonDocument(JsonDocument.Parse(jsonMemory), jsonMemory);
         }
 
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            _originalDocument.Dispose();
+        }
+
         internal MutableJsonDocument(JsonDocument jsonDocument, ReadOnlyMemory<byte> utf8Json)
         {
             _original = utf8Json;
-            _originalElement = jsonDocument.RootElement;
+            _originalDocument = jsonDocument;
         }
 
         /// <summary>
@@ -147,7 +153,7 @@ namespace Azure.Core.Dynamic
 
             // TODO: if this is passed a JsonElement, can we do better?
             _original = JsonSerializer.SerializeToUtf8Bytes(value, inputType, options);
-            _originalElement = JsonDocument.Parse(_original).RootElement;
+            _originalDocument = JsonDocument.Parse(_original);
         }
 
         // TODO: Move into extensions

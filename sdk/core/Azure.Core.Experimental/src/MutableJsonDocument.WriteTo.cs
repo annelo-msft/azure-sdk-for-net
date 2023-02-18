@@ -4,7 +4,7 @@
 using System;
 using System.Text.Json;
 
-namespace Azure.Core.Dynamic
+namespace Azure.Core.Json
 {
     public partial class MutableJsonDocument
     {

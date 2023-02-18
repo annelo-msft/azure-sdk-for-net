@@ -580,8 +580,7 @@ namespace Azure.Core.Experimental.Perf.Benchmarks
   "errors": [],
   "modelVersion": "2020-04-01"
 }
-"""
-);
+""");
 
         /// <summary>
         /// An example of a large Json response.

@@ -7,7 +7,7 @@ using System.IO;
 using System.Text;
 using System.Text.Json;
 
-namespace Azure.Core.Dynamic
+namespace Azure.Core.Json
 {
     /// <summary>
     /// A mutable representation of a JSON element.
@@ -599,6 +599,11 @@ namespace Azure.Core.Dynamic
             element.WriteTo(writer);
             writer.Flush();
             return new Utf8JsonReader(stream.GetBuffer().AsSpan().Slice(0, (int)stream.Position));
+        }
+
+        internal void DisposeRoot()
+        {
+            _root.Dispose();
         }
 
         private void EnsureObject()
