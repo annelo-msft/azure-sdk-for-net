@@ -33,10 +33,18 @@ namespace Azure.Core.Json
             /// <inheritdoc />
             public (string Name, MutableJsonElement Value) Current
             {
-                get => (
-                    _enumerator.Current.Name,
-                    new MutableJsonElement(_target._root, _enumerator.Current.Value, _target._path, _target._highWaterMark)
-                );
+                get
+                {
+                    var path = MutableJsonDocument.ChangeTracker.PushProperty(_target._path, _enumerator.Current.Name);
+                    return (
+                        _enumerator.Current.Name,
+                        new MutableJsonElement(
+                            _target._root,
+                            _enumerator.Current.Value,
+                            path,
+                            _target._highWaterMark)
+                    );
+                }
             }
 
             /// <summary>

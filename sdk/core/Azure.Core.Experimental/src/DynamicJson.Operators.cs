@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
+using Azure.Core.Json;
 
 namespace Azure.Core.Dynamic
 {
@@ -82,5 +83,17 @@ namespace Azure.Core.Dynamic
         /// </summary>
         /// <param name="value">The value to convert.</param>
         public static implicit operator double?(DynamicJson value) => value._element.ValueKind == JsonValueKind.Null ? null : value._element.GetDouble();
+
+        /// <summary>
+        /// Converts the value to a <see cref="MutableJsonElement"/>.
+        /// </summary>
+        /// <param name="value">The value to convert.</param>
+        public static implicit operator MutableJsonElement(DynamicJson value) => value._element;
+
+        ///// <summary>
+        ///// Converts the value to a <see cref="DynamicJson"/>.
+        ///// </summary>
+        ///// <param name="value">The value to convert.</param>
+        //public static implicit operator DynamicJson(int value) => new(new MutableJsonDocument(value).RootElement);
     }
 }

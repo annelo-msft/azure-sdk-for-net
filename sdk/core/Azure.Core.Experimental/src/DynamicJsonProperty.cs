@@ -1,12 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using System;
-using System.Collections;
-using System.IO;
-using System.Reflection;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using Azure.Core.Json;
 
 namespace Azure.Core.Dynamic
@@ -16,20 +10,27 @@ namespace Azure.Core.Dynamic
     /// </summary>
     public readonly struct DynamicJsonProperty
     {
+        private readonly string _name;
+        private readonly DynamicJson _value;
+
         internal DynamicJsonProperty(string name, DynamicJson value)
         {
-            Name = name;
-            Value = value;
+            _name = name;
+            _value = value;
         }
 
         /// <summary>
         /// Gets the name of this property.
         /// </summary>
-        public string Name { get; }
+        public string Name => _name;
 
         /// <summary>
-        /// Gets the value of this property.
+        /// Gets or sets the value of this property.
         /// </summary>
-        public DynamicJson Value { get; }
+        public DynamicJson Value
+        {
+            get => _value;
+            set => _value.Set(value);
+        }
     }
 }

@@ -122,17 +122,19 @@ namespace Azure.Core.Experimental.Tests
 
             string[] expectedNames = new string[] { "Zero", "One", "Two", "Three" };
 
-            for (int i = 0; i < 4; i++)
-            {
-                json[expectedNames[i]] = i + 1;
-            }
-
-            int index = 0;
+            int i = 0;
             foreach (dynamic property in json)
             {
-                Assert.AreEqual(expectedNames[index], property.Name);
-                Assert.IsTrue(index + 1 == property.Value);
-                index++;
+                property.Value = ++i;
+            }
+
+            i = 0;
+            foreach (dynamic property in json)
+            {
+                Assert.AreEqual(expectedNames[i], property.Name);
+                Assert.IsTrue(i + 1 == property.Value);
+
+                i++;
             }
         }
     }

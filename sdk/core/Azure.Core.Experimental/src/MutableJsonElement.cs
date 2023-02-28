@@ -397,7 +397,7 @@ namespace Azure.Core.Json
         /// Sets the value of this element to the passed-in value.
         /// </summary>
         /// <param name="value"></param>
-        public void Set(string value)
+        public void Set(string? value)
         {
             EnsureValid();
 

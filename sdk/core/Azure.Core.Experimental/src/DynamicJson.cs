@@ -37,6 +37,25 @@ namespace Azure.Core.Dynamic
             writer.Flush();
         }
 
+        internal object Set(DynamicJson value)
+        {
+            MutableJsonElement element = value._element;
+            switch (element.ValueKind)
+            {
+                case JsonValueKind.Object:
+                case JsonValueKind.Array:
+                    _element.Set(element);
+                    break;
+                case JsonValueKind.String:
+                    _element.Set(element.GetString());
+                    break;
+                case JsonValueKind.Number:
+                    if (element.TryGetProperty())
+
+
+            }
+        }
+
         private object? GetProperty(string name)
         {
             if (_element.TryGetProperty(name, out MutableJsonElement element))
