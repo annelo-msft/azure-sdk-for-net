@@ -5,6 +5,7 @@
 ### Breaking Changes
 
 - Removed `UploadBlobOptions` type and moved chunk size configuration into ClientOptions.
+- Reordered parameters in `ContainerRegistryBlobClient` constructor for consistency with other SDK clients.
 
 ## 1.1.0-beta.6 (2023-02-07)
 
