@@ -47,7 +47,7 @@ namespace Azure.Core.Dynamic
 
         public abstract IEnumerable GetEnumerable();
 
-        public abstract T ConvertTo<T>();
+        public abstract object? ConvertTo<T>();
 
         public object? GetViaIndexer(object index)
         {

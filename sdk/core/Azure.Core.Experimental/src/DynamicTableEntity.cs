@@ -23,7 +23,7 @@ namespace Azure.Core.Dynamic
             _entity = entity;
         }
 
-        public override T ConvertTo<T>()
+        public override object? ConvertTo<T>()
         {
             throw new NotImplementedException();
         }

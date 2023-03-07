@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using System;
+using System.CodeDom;
 using System.Collections;
 using System.IO;
 using System.Reflection;
@@ -43,15 +44,43 @@ namespace Azure.Core.Dynamic
 
             if (_element.TryGetProperty(name, out MutableJsonElement element))
             {
-                return new DynamicJson(element);
+                return AsClrTypeOrDynamic(element);
             }
 
             if (PascalCaseGetters() && char.IsUpper(name[0]))
             {
                 if (_element.TryGetProperty(GetAsCamelCase(name), out element))
                 {
-                    return new DynamicJson(element);
+                    return AsClrTypeOrDynamic(element);
                 }
+            }
+
+            return null;
+        }
+
+        private static object? AsClrTypeOrDynamic(MutableJsonElement element)
+        {
+            return element.ValueKind switch
+            {
+                JsonValueKind.String => element.GetString(),
+                JsonValueKind.Number => GetNumber(element),
+                JsonValueKind.Null => null,
+                JsonValueKind.True => true,
+                JsonValueKind.False => false,
+                _ => new DynamicJson(element),
+            }; 
+        }
+
+        private static object? GetNumber(MutableJsonElement element)
+        {
+            if (element.GetJsonElement().TryGetInt32(out int i))
+            {
+                return i;
+            }
+
+            if (element.GetJsonElement().TryGetDouble(out double d))
+            {
+                return d;
             }
 
             return null;
@@ -137,13 +166,43 @@ namespace Azure.Core.Dynamic
             return new DynamicJson(element);
         }
 
-        public override T ConvertTo<T>()
+        public override object? ConvertTo<T>()
         {
-            // TODO: is this better at the root?
-            if (CastFromOperators.TryGetValue(typeof(T), out MethodInfo? method))
+            //// TODO: is this better at the root?
+            //if (CastFromOperators.TryGetValue(typeof(T), out MethodInfo? method))
+            //{
+            //    // TODO: don't use reflection
+            //    return (T)method.Invoke(null, new object[] { this })!;
+            //}
+
+            if (_element.ValueKind == JsonValueKind.Null)
             {
-                // TODO: don't use reflection
-                return (T)method.Invoke(null, new object[] { this })!;
+                return null;
+            }
+
+            if (typeof(T) == typeof(string))
+            {
+                return _element.GetString();
+            }
+
+            if (typeof(T) == typeof(int))
+            {
+                return _element.GetInt32();
+            }
+
+            if (typeof(T) == typeof(long))
+            {
+                return _element.GetInt64();
+            }
+
+            if (typeof(T) == typeof(double))
+            {
+                return _element.GetDouble();
+            }
+
+            if (typeof(T) == typeof(bool))
+            {
+                return _element.GetBoolean();
             }
 
 #if NET6_0_OR_GREATER

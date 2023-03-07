@@ -66,7 +66,8 @@ namespace Azure.Core.Dynamic
                 }
 
                 MethodCallExpression convertTo = Expression.Call(this_, nameof(ConvertTo), new Type[] { binder.Type });
-                return new DynamicMetaObject(convertTo, restrictions);
+                UnaryExpression converted = Expression.Convert(convertTo, binder.Type);
+                return new DynamicMetaObject(converted, restrictions);
             }
 
             public override DynamicMetaObject BindSetMember(SetMemberBinder binder, DynamicMetaObject value)
