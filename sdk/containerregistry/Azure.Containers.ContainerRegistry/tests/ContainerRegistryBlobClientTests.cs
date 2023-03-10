@@ -28,10 +28,7 @@ namespace Azure.Containers.ContainerRegistry.Tests
         [SetUp]
         public void TestSetup()
         {
-            client = InstrumentClient(new ContainerRegistryBlobClient(_url, "<repository>", GetCredential(), new ContainerRegistryClientOptions()
-            {
-                Audience = ContainerRegistryAudience.AzureResourceManagerPublicCloud
-            }));
+            client = InstrumentClient(new ContainerRegistryBlobClient(_url, "<repository>", GetCredential()));
         }
 
         /// <summary>
@@ -84,8 +81,7 @@ namespace Azure.Containers.ContainerRegistry.Tests
                     new MockResponse(200).SetContent(manifestContent).AddHeader("Docker-Content-Digest", digest),
                     new MockResponse(200).SetContent(manifestContent).AddHeader("Docker-Content-Digest", digest),
                     new MockResponse(200).SetContent(manifestContent).AddHeader("Docker-Content-Digest", digest),
-                    new MockResponse(200).SetContent(manifestContent).AddHeader("Docker-Content-Digest", "Invalid server digest")),
-                Audience = ContainerRegistryAudience.AzureResourceManagerPublicCloud
+                    new MockResponse(200).SetContent(manifestContent).AddHeader("Docker-Content-Digest", "Invalid server digest"))
             };
 
             ContainerRegistryBlobClient client = new(endpoint, repository, new MockCredential(), options);
