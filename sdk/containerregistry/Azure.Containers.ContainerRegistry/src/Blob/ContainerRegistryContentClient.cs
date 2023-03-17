@@ -19,7 +19,7 @@ namespace Azure.Containers.ContainerRegistry.Specialized
 {
     /// <summary> The Azure Container Registry blob client, responsible for uploading and downloading
     /// blobs and manifests, the building blocks of artifacts. </summary>
-    public class ContainerRegistryBlobClient
+    public class ContainerRegistryContentClient
     {
         private const int DefaultChunkSize = 4 * 1024 * 1024; // 4MB
         private readonly int _maxChunkSize;
@@ -35,7 +35,7 @@ namespace Azure.Containers.ContainerRegistry.Specialized
         private readonly ContainerRegistryBlobRestClient _blobRestClient;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ContainerRegistryBlobClient"/> for managing container images and artifacts,
+        /// Initializes a new instance of the <see cref="ContainerRegistryContentClient"/> for managing container images and artifacts,
         /// using anonymous access to the registry.  Only operations that support anonymous access are enabled.  Other service
         /// methods will throw <see cref="RequestFailedException"/> if called from this client.
         /// </summary>
@@ -43,13 +43,13 @@ namespace Azure.Containers.ContainerRegistry.Specialized
         /// to "https://{registry-name}.azurecr.io".</param>
         /// <param name="repository">The name of the repository that logically groups the artifact parts.</param>
         /// <exception cref="ArgumentNullException"> Thrown when the <paramref name="endpoint"/> or <paramref name="repository"/> is null. </exception>
-        public ContainerRegistryBlobClient(Uri endpoint, string repository) :
+        public ContainerRegistryContentClient(Uri endpoint, string repository) :
             this(endpoint,  repository, new ContainerRegistryAnonymousAccessCredential(), new ContainerRegistryClientOptions())
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ContainerRegistryBlobClient"/> for managing container images and artifacts,
+        /// Initializes a new instance of the <see cref="ContainerRegistryContentClient"/> for managing container images and artifacts,
         /// using anonymous access to the registry.  Only operations that support anonymous access are enabled.  Other service
         /// methods will throw <see cref="RequestFailedException"/> if called from this client.
         /// </summary>
@@ -58,13 +58,13 @@ namespace Azure.Containers.ContainerRegistry.Specialized
         /// <param name="repository">The name of the repository that logically groups the artifact parts.</param>
         /// <param name="options">Client configuration options for connecting to Azure Container Registry.</param>
         /// <exception cref="ArgumentNullException"> Thrown when the <paramref name="endpoint"/> or <paramref name="repository"/> is null. </exception>
-        public ContainerRegistryBlobClient(Uri endpoint, string repository, ContainerRegistryClientOptions options) :
+        public ContainerRegistryContentClient(Uri endpoint, string repository, ContainerRegistryClientOptions options) :
             this(endpoint, repository, new ContainerRegistryAnonymousAccessCredential(), options)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ContainerRegistryBlobClient"/> for managing container images and artifacts.
+        /// Initializes a new instance of the <see cref="ContainerRegistryContentClient"/> for managing container images and artifacts.
         /// </summary>
         /// <param name="endpoint">The URI endpoint of the container registry.  This is likely to be similar
         /// to "https://{registry-name}.azurecr.io".</param>
@@ -72,12 +72,12 @@ namespace Azure.Containers.ContainerRegistry.Specialized
         /// against the container registry.  </param>
         /// <param name="repository">The name of the repository that logically groups the artifact parts.</param>
         /// <exception cref="ArgumentNullException"> Thrown when the <paramref name="endpoint"/>, <paramref name="credential"/>, or <paramref name="repository"/> is null. </exception>
-        public ContainerRegistryBlobClient(Uri endpoint, string repository, TokenCredential credential) : this(endpoint, repository, credential, new ContainerRegistryClientOptions())
+        public ContainerRegistryContentClient(Uri endpoint, string repository, TokenCredential credential) : this(endpoint, repository, credential, new ContainerRegistryClientOptions())
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ContainerRegistryBlobClient"/> for managing container images and artifacts.
+        /// Initializes a new instance of the <see cref="ContainerRegistryContentClient"/> for managing container images and artifacts.
         /// </summary>
         /// <param name="endpoint">The URI endpoint of the container registry.  This is likely to be similar
         /// to "https://{registry-name}.azurecr.io".</param>
@@ -86,11 +86,11 @@ namespace Azure.Containers.ContainerRegistry.Specialized
         /// <param name="repository">The name of the repository that logically groups the artifact parts.</param>
         /// <param name="options">Client configuration options for connecting to Azure Container Registry.</param>
         /// <exception cref="ArgumentNullException"> Thrown when the <paramref name="endpoint"/>, <paramref name="credential"/>, or <paramref name="repository"/> is null. </exception>
-        public ContainerRegistryBlobClient(Uri endpoint, string repository, TokenCredential credential, ContainerRegistryClientOptions options) : this(endpoint, credential, repository, null, options)
+        public ContainerRegistryContentClient(Uri endpoint, string repository, TokenCredential credential, ContainerRegistryClientOptions options) : this(endpoint, credential, repository, null, options)
         {
         }
 
-        internal ContainerRegistryBlobClient(
+        internal ContainerRegistryContentClient(
             Uri endpoint,
             TokenCredential credential,
             string repository,
@@ -116,8 +116,8 @@ namespace Azure.Containers.ContainerRegistry.Specialized
             _blobRestClient = new ContainerRegistryBlobRestClient(_clientDiagnostics, _pipeline, _endpoint.AbsoluteUri);
         }
 
-        /// <summary> Initializes a new instance of ContainerRegistryBlobClient for mocking. </summary>
-        protected ContainerRegistryBlobClient()
+        /// <summary> Initializes a new instance of ContainerRegistryContentClient for mocking. </summary>
+        protected ContainerRegistryContentClient()
         {
         }
 
@@ -149,7 +149,7 @@ namespace Azure.Containers.ContainerRegistry.Specialized
         {
             Argument.AssertNotNull(manifest, nameof(manifest));
 
-            using DiagnosticScope scope = _clientDiagnostics.CreateScope($"{nameof(ContainerRegistryBlobClient)}.{nameof(UploadManifest)}");
+            using DiagnosticScope scope = _clientDiagnostics.CreateScope($"{nameof(ContainerRegistryContentClient)}.{nameof(UploadManifest)}");
             scope.Start();
             try
             {
@@ -192,7 +192,7 @@ namespace Azure.Containers.ContainerRegistry.Specialized
         {
             Argument.AssertNotNull(stream, nameof(stream));
 
-            using DiagnosticScope scope = _clientDiagnostics.CreateScope($"{nameof(ContainerRegistryBlobClient)}.{nameof(UploadManifest)}");
+            using DiagnosticScope scope = _clientDiagnostics.CreateScope($"{nameof(ContainerRegistryContentClient)}.{nameof(UploadManifest)}");
             scope.Start();
             try
             {
@@ -219,7 +219,7 @@ namespace Azure.Containers.ContainerRegistry.Specialized
         {
             Argument.AssertNotNull(manifest, nameof(manifest));
 
-            using DiagnosticScope scope = _clientDiagnostics.CreateScope($"{nameof(ContainerRegistryBlobClient)}.{nameof(UploadManifest)}");
+            using DiagnosticScope scope = _clientDiagnostics.CreateScope($"{nameof(ContainerRegistryContentClient)}.{nameof(UploadManifest)}");
             scope.Start();
             try
             {
@@ -262,7 +262,7 @@ namespace Azure.Containers.ContainerRegistry.Specialized
         {
             Argument.AssertNotNull(stream, nameof(stream));
 
-            using DiagnosticScope scope = _clientDiagnostics.CreateScope($"{nameof(ContainerRegistryBlobClient)}.{nameof(UploadManifest)}");
+            using DiagnosticScope scope = _clientDiagnostics.CreateScope($"{nameof(ContainerRegistryContentClient)}.{nameof(UploadManifest)}");
             scope.Start();
             try
             {
@@ -356,7 +356,7 @@ namespace Azure.Containers.ContainerRegistry.Specialized
         {
             Argument.AssertNotNull(stream, nameof(stream));
 
-            using DiagnosticScope scope = _clientDiagnostics.CreateScope($"{nameof(ContainerRegistryBlobClient)}.{nameof(UploadBlob)}");
+            using DiagnosticScope scope = _clientDiagnostics.CreateScope($"{nameof(ContainerRegistryContentClient)}.{nameof(UploadBlob)}");
             scope.Start();
             try
             {
@@ -402,7 +402,7 @@ namespace Azure.Containers.ContainerRegistry.Specialized
         {
             Argument.AssertNotNull(stream, nameof(stream));
 
-            using DiagnosticScope scope = _clientDiagnostics.CreateScope($"{nameof(ContainerRegistryBlobClient)}.{nameof(UploadBlob)}");
+            using DiagnosticScope scope = _clientDiagnostics.CreateScope($"{nameof(ContainerRegistryContentClient)}.{nameof(UploadBlob)}");
             scope.Start();
             try
             {
@@ -559,7 +559,7 @@ namespace Azure.Containers.ContainerRegistry.Specialized
         {
             Argument.AssertNotNull(tagOrDigest, nameof(tagOrDigest));
 
-            using DiagnosticScope scope = _clientDiagnostics.CreateScope($"{nameof(ContainerRegistryBlobClient)}.{nameof(DownloadManifest)}");
+            using DiagnosticScope scope = _clientDiagnostics.CreateScope($"{nameof(ContainerRegistryContentClient)}.{nameof(DownloadManifest)}");
             scope.Start();
             try
             {
@@ -617,7 +617,7 @@ namespace Azure.Containers.ContainerRegistry.Specialized
         {
             Argument.AssertNotNull(tagOrDigest, nameof(tagOrDigest));
 
-            using DiagnosticScope scope = _clientDiagnostics.CreateScope($"{nameof(ContainerRegistryBlobClient)}.{nameof(DownloadManifest)}");
+            using DiagnosticScope scope = _clientDiagnostics.CreateScope($"{nameof(ContainerRegistryContentClient)}.{nameof(DownloadManifest)}");
             scope.Start();
             try
             {
@@ -700,7 +700,7 @@ namespace Azure.Containers.ContainerRegistry.Specialized
         {
             Argument.AssertNotNull(digest, nameof(digest));
 
-            using DiagnosticScope scope = _clientDiagnostics.CreateScope($"{nameof(ContainerRegistryBlobClient)}.{nameof(DownloadBlob)}");
+            using DiagnosticScope scope = _clientDiagnostics.CreateScope($"{nameof(ContainerRegistryContentClient)}.{nameof(DownloadBlob)}");
             scope.Start();
             try
             {
@@ -727,7 +727,7 @@ namespace Azure.Containers.ContainerRegistry.Specialized
         {
             Argument.AssertNotNull(digest, nameof(digest));
 
-            using DiagnosticScope scope = _clientDiagnostics.CreateScope($"{nameof(ContainerRegistryBlobClient)}.{nameof(DownloadBlob)}");
+            using DiagnosticScope scope = _clientDiagnostics.CreateScope($"{nameof(ContainerRegistryContentClient)}.{nameof(DownloadBlob)}");
             scope.Start();
             try
             {
@@ -768,7 +768,7 @@ namespace Azure.Containers.ContainerRegistry.Specialized
             Argument.AssertNotNull(digest, nameof(digest));
             Argument.AssertNotNull(destination, nameof(destination));
 
-            using DiagnosticScope scope = _clientDiagnostics.CreateScope($"{nameof(ContainerRegistryBlobClient)}.{nameof(DownloadBlobTo)}");
+            using DiagnosticScope scope = _clientDiagnostics.CreateScope($"{nameof(ContainerRegistryContentClient)}.{nameof(DownloadBlobTo)}");
             scope.Start();
             try
             {
@@ -794,7 +794,7 @@ namespace Azure.Containers.ContainerRegistry.Specialized
             Argument.AssertNotNull(digest, nameof(digest));
             Argument.AssertNotNull(destination, nameof(destination));
 
-            using DiagnosticScope scope = _clientDiagnostics.CreateScope($"{nameof(ContainerRegistryBlobClient)}.{nameof(DownloadBlobTo)}");
+            using DiagnosticScope scope = _clientDiagnostics.CreateScope($"{nameof(ContainerRegistryContentClient)}.{nameof(DownloadBlobTo)}");
             scope.Start();
             try
             {
@@ -884,7 +884,7 @@ namespace Azure.Containers.ContainerRegistry.Specialized
         {
             Argument.AssertNotNull(digest, nameof(digest));
 
-            using DiagnosticScope scope = _clientDiagnostics.CreateScope($"{nameof(ContainerRegistryBlobClient)}.{nameof(DeleteBlob)}");
+            using DiagnosticScope scope = _clientDiagnostics.CreateScope($"{nameof(ContainerRegistryContentClient)}.{nameof(DeleteBlob)}");
             scope.Start();
             try
             {
@@ -908,7 +908,7 @@ namespace Azure.Containers.ContainerRegistry.Specialized
         {
             Argument.AssertNotNull(digest, nameof(digest));
 
-            using DiagnosticScope scope = _clientDiagnostics.CreateScope($"{nameof(ContainerRegistryBlobClient)}.{nameof(DeleteBlob)}");
+            using DiagnosticScope scope = _clientDiagnostics.CreateScope($"{nameof(ContainerRegistryContentClient)}.{nameof(DeleteBlob)}");
             scope.Start();
             try
             {
@@ -932,7 +932,7 @@ namespace Azure.Containers.ContainerRegistry.Specialized
         {
             Argument.AssertNotNull(digest, nameof(digest));
 
-            using DiagnosticScope scope = _clientDiagnostics.CreateScope($"{nameof(ContainerRegistryBlobClient)}.{nameof(DeleteManifest)}");
+            using DiagnosticScope scope = _clientDiagnostics.CreateScope($"{nameof(ContainerRegistryContentClient)}.{nameof(DeleteManifest)}");
             scope.Start();
             try
             {
@@ -955,7 +955,7 @@ namespace Azure.Containers.ContainerRegistry.Specialized
         {
             Argument.AssertNotNull(digest, nameof(digest));
 
-            using DiagnosticScope scope = _clientDiagnostics.CreateScope($"{nameof(ContainerRegistryBlobClient)}.{nameof(DeleteManifest)}");
+            using DiagnosticScope scope = _clientDiagnostics.CreateScope($"{nameof(ContainerRegistryContentClient)}.{nameof(DeleteManifest)}");
             scope.Start();
             try
             {

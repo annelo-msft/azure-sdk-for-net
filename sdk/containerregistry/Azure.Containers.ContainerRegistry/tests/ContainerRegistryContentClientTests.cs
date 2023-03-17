@@ -11,13 +11,13 @@ using NUnit.Framework;
 
 namespace Azure.Containers.ContainerRegistry.Tests
 {
-    public class ContainerRegistryBlobClientTests : ClientTestBase
+    public class ContainerRegistryContentClientTests : ClientTestBase
     {
-        public ContainerRegistryBlobClientTests(bool isAsync) : base(isAsync)
+        public ContainerRegistryContentClientTests(bool isAsync) : base(isAsync)
         {
         }
 
-        private ContainerRegistryBlobClient client { get; set; }
+        private ContainerRegistryContentClient client { get; set; }
         private readonly Uri _url = new Uri("https://example.azurecr.io");
 
         private TokenCredential GetCredential()
@@ -28,7 +28,7 @@ namespace Azure.Containers.ContainerRegistry.Tests
         [SetUp]
         public void TestSetup()
         {
-            client = InstrumentClient(new ContainerRegistryBlobClient(_url, "<repository>", GetCredential(), new ContainerRegistryClientOptions()
+            client = InstrumentClient(new ContainerRegistryContentClient(_url, "<repository>", GetCredential(), new ContainerRegistryClientOptions()
             {
                 Audience = ContainerRegistryAudience.AzureResourceManagerPublicCloud
             }));
@@ -40,11 +40,11 @@ namespace Azure.Containers.ContainerRegistry.Tests
         [Test]
         public void ConstructorValidatesArguments()
         {
-            Assert.That(() => new ContainerRegistryBlobClient(null, "<repo>", GetCredential() ), Throws.InstanceOf<ArgumentNullException>(), "The constructor should validate the url.");
+            Assert.That(() => new ContainerRegistryContentClient(null, "<repo>", GetCredential() ), Throws.InstanceOf<ArgumentNullException>(), "The constructor should validate the url.");
 
-            Assert.That(() => new ContainerRegistryBlobClient(_url, "<repo>", credential: null), Throws.InstanceOf<ArgumentNullException>(), "The constructor should not accept a null credential.");
+            Assert.That(() => new ContainerRegistryContentClient(_url, "<repo>", credential: null), Throws.InstanceOf<ArgumentNullException>(), "The constructor should not accept a null credential.");
 
-            Assert.That(() => new ContainerRegistryBlobClient(_url, null, GetCredential()), Throws.InstanceOf<ArgumentNullException>(), "The constructor should not accept null repository.");
+            Assert.That(() => new ContainerRegistryContentClient(_url, null, GetCredential()), Throws.InstanceOf<ArgumentNullException>(), "The constructor should not accept null repository.");
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace Azure.Containers.ContainerRegistry.Tests
                 Audience = ContainerRegistryAudience.AzureResourceManagerPublicCloud
             };
 
-            ContainerRegistryBlobClient client = new(endpoint, repository, new MockCredential(), options);
+            ContainerRegistryContentClient client = new(endpoint, repository, new MockCredential(), options);
 
             // Act
 

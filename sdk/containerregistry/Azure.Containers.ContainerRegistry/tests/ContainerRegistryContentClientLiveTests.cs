@@ -17,9 +17,9 @@ using NUnit.Framework;
 namespace Azure.Containers.ContainerRegistry.Tests
 {
     [NonParallelizable]
-    public class ContainerRegistryBlobClientLiveTests : ContainerRegistryRecordedTestBase
+    public class ContainerRegistryContentClientLiveTests : ContainerRegistryRecordedTestBase
     {
-        public ContainerRegistryBlobClientLiveTests(bool isAsync) : base(isAsync)
+        public ContainerRegistryContentClientLiveTests(bool isAsync) : base(isAsync)
         {
         }
 
@@ -313,7 +313,7 @@ namespace Azure.Containers.ContainerRegistry.Tests
             Assert.AreEqual(ManifestMediaType.DockerManifest, result.MediaType);
         }
 
-        private async Task UploadManifestPrerequisites(ContainerRegistryBlobClient client)
+        private async Task UploadManifestPrerequisites(ContainerRegistryContentClient client)
         {
             var layer = "654b93f61054e4ce90ed203bb8d556a6200d5f906cf3eca0620738d6dc18cbed";
             var config = "config.json";
@@ -761,7 +761,7 @@ namespace Azure.Containers.ContainerRegistry.Tests
             await client.DeleteBlobAsync(digest);
         }
 
-        private async Task<UploadManifestResult> Push(ContainerRegistryBlobClient client)
+        private async Task<UploadManifestResult> Push(ContainerRegistryContentClient client)
         {
             var path = Path.Combine(TestContext.CurrentContext.TestDirectory, "Data", "oci-artifact");
 

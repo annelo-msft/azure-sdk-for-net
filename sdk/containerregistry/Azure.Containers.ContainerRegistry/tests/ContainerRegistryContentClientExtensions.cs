@@ -11,11 +11,11 @@ namespace Azure.Containers.ContainerRegistry.Tests
     /// <summary>
     /// Extensions to simplify test authoring for ACR tests.
     /// </summary>
-    internal static class ContainerRegistryBlobClientExtensions
+    internal static class ContainerRegistryContentClientExtensions
     {
         private static Random _random = new Random();
 
-        public static async Task<string> UploadTestImageAsync(this ContainerRegistryBlobClient client, string tag = default)
+        public static async Task<string> UploadTestImageAsync(this ContainerRegistryContentClient client, string tag = default)
         {
             OciImageManifest manifest = new()
             {
@@ -51,7 +51,7 @@ namespace Azure.Containers.ContainerRegistry.Tests
             return result.Value.Digest;
         }
 
-        public static async Task AddTagAsync(this ContainerRegistryBlobClient client, string reference, string tag)
+        public static async Task AddTagAsync(this ContainerRegistryContentClient client, string reference, string tag)
         {
             // Get the image manifest
             var manifestResult = await client.DownloadManifestAsync(reference);
