@@ -5,7 +5,11 @@ VisualStudioVersion = 17.4.33403.182
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppConfigDemo", "AppConfigDemo.csproj", "{97D0ADC1-4942-4339-8C56-632A980C732A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.Core.Experimental", "..\..\..\azure-sdk-for-net\sdk\core\Azure.Core.Experimental\src\Azure.Core.Experimental.csproj", "{1A90A7C2-0502-478F-89A1-79000913CE9F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.Core.Experimental", "..\..\sdk\core\Azure.Core.Experimental\src\Azure.Core.Experimental.csproj", "{1A90A7C2-0502-478F-89A1-79000913CE9F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.Core", "..\..\sdk\core\Azure.Core\src\Azure.Core.csproj", "{8140F0AB-C3ED-45C0-B465-850D361CADDC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.Data.AppConfiguration", "..\..\sdk\appconfiguration\Azure.Data.AppConfiguration\src\Azure.Data.AppConfiguration.csproj", "{DE8528BA-0527-4D2B-8C89-D429471AE295}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{1A90A7C2-0502-478F-89A1-79000913CE9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A90A7C2-0502-478F-89A1-79000913CE9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A90A7C2-0502-478F-89A1-79000913CE9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8140F0AB-C3ED-45C0-B465-850D361CADDC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8140F0AB-C3ED-45C0-B465-850D361CADDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8140F0AB-C3ED-45C0-B465-850D361CADDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8140F0AB-C3ED-45C0-B465-850D361CADDC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE8528BA-0527-4D2B-8C89-D429471AE295}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE8528BA-0527-4D2B-8C89-D429471AE295}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE8528BA-0527-4D2B-8C89-D429471AE295}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE8528BA-0527-4D2B-8C89-D429471AE295}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

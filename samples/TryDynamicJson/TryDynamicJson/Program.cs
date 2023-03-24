@@ -46,7 +46,7 @@ Console.WriteLine("ID: " + value.Id + ", Name: " + value.Name);
 // Response.Content contains the JSON set in value1.
 value.Name = "Bob";
 
-RequestContent content = RequestContent.Create((object)value);
+RequestContent content = RequestContent.Create((BinaryData)value);
 response = await client.SetValueAsync(content);
 value = response.Content.ToDynamic();
 

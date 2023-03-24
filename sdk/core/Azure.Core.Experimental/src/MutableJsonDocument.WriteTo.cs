@@ -3,6 +3,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 
 namespace Azure.Core.Json
@@ -174,6 +175,8 @@ namespace Azure.Core.Json
 
         private void WriteString(string path, int highWaterMark, ref Utf8JsonReader reader, Utf8JsonWriter writer)
         {
+            // Strings need to be escaped JsonDocument implements this.
+            // Delegate writing strings to the JsonElement.
             if (Changes.TryGetChange(path, highWaterMark, out MutableJsonChange change))
             {
                 if (change.ReplacesJsonElement)
@@ -182,11 +185,13 @@ namespace Azure.Core.Json
                     return;
                 }
 
-                writer.WriteStringValue((string)change.Value!);
+                change.AsJsonElement().WriteTo(writer);
                 return;
             }
 
-            writer.WriteStringValue(reader.ValueSpan);
+            //writer.WriteRawValue();
+            JsonEncodedText value = JsonEncodedText.Encode(reader.ValueSpan, JavaScriptEncoder.UnsafeRelaxedJsonEscaping);
+            writer.WriteStringValue(value);
             return;
         }
 

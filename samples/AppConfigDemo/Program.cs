@@ -6,4 +6,4 @@ using Azure.Identity;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
-RoundTripSample.Run();
+DateTimeSample.Run();

@@ -483,7 +483,12 @@ namespace Azure.Core.Json
             Changes.AddChange(_path, element, true);
         }
 
-        internal void WriteTo(Utf8JsonWriter writer)
+        /// <summary>
+        /// </summary>
+        /// <param name="writer"></param>
+#pragma warning disable AZC0014 // Avoid using banned types in public API
+        public void WriteTo(Utf8JsonWriter writer)
+#pragma warning restore AZC0014 // Avoid using banned types in public API
         {
             Utf8JsonReader reader = GetReaderForElement(_element);
             _root.WriteElement(_path, _highWaterMark, ref reader, writer);
