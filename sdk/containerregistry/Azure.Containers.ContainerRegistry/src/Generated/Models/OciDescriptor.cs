@@ -26,7 +26,7 @@ namespace Azure.Containers.ContainerRegistry
         /// <param name="digest"> Layer digest. </param>
         /// <param name="urls"> Specifies a list of URIs from which this object may be downloaded. </param>
         /// <param name="annotations"> Additional information provided through arbitrary metadata. </param>
-        internal OciDescriptor(string mediaType, long? sizeInBytes, string digest, IList<Uri> urls, OciAnnotations annotations)
+        internal OciDescriptor(RegistryMediaType mediaType, long? sizeInBytes, string digest, IList<Uri> urls, OciAnnotations annotations)
         {
             MediaType = mediaType;
             SizeInBytes = sizeInBytes;
@@ -35,8 +35,6 @@ namespace Azure.Containers.ContainerRegistry
             Annotations = annotations;
         }
 
-        /// <summary> Layer media type. </summary>
-        public string MediaType { get; set; }
         /// <summary> Layer size. </summary>
         public long? SizeInBytes { get; set; }
         /// <summary> Layer digest. </summary>

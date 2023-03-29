@@ -12,5 +12,9 @@ namespace Azure.Containers.ContainerRegistry
     {
         /// <summary> Specifies a list of URIs from which this object may be downloaded. </summary>
         internal IList<Uri> Urls { get; }
+
+        /// <summary> Layer media type. </summary>
+        [CodeGenMember("MediaType")]
+        public Azure.Containers.ContainerRegistry.RegistryMediaType MediaType { get; set; }
     }
 }

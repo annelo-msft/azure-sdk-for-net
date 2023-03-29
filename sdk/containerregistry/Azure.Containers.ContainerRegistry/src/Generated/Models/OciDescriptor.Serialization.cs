@@ -20,7 +20,7 @@ namespace Azure.Containers.ContainerRegistry
             if (Optional.IsDefined(MediaType))
             {
                 writer.WritePropertyName("mediaType"u8);
-                writer.WriteStringValue(MediaType);
+                writer.WriteStringValue((string)MediaType);
             }
             if (Optional.IsDefined(SizeInBytes))
             {
