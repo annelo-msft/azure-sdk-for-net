@@ -39,12 +39,10 @@ namespace Azure.Core.Json
                 switch (reader.TokenType)
                 {
                     case JsonTokenType.StartObject:
-                        writer.WriteStartObject();
-                        WriteObjectProperties(path, highWaterMark, ref reader, writer);
+                        WriteObject(path, highWaterMark, ref reader, writer);
                         break;
                     case JsonTokenType.StartArray:
-                        writer.WriteStartArray();
-                        WriteArrayValues(path, highWaterMark, ref reader, writer);
+                        WriteArray(path, highWaterMark, ref reader, writer);
                         break;
                     case JsonTokenType.String:
                         WriteString(path, highWaterMark, ref reader, writer);
@@ -63,6 +61,19 @@ namespace Azure.Core.Json
             }
         }
 
+        private void WriteArray(string path, int highWaterMark, ref Utf8JsonReader reader, Utf8JsonWriter writer)
+        {
+            if (Changes.TryGetChange(path, highWaterMark, out MutableJsonChange change))
+            {
+                WriteStructuralChange(path, change, ref reader, writer);
+                return;
+            }
+
+            writer.WriteStartArray();
+            WriteArrayValues(path, highWaterMark, ref reader, writer);
+            writer.WriteEndArray();
+        }
+
         private void WriteArrayValues(string path, int highWaterMark, ref Utf8JsonReader reader, Utf8JsonWriter writer)
         {
             int index = 0;
@@ -77,8 +88,7 @@ namespace Azure.Core.Json
                         break;
                     case JsonTokenType.StartArray:
                         path = ChangeTracker.PushIndex(path, index);
-                        writer.WriteStartArray();
-                        WriteArrayValues(path, highWaterMark, ref reader, writer);
+                        WriteArray(path, highWaterMark, ref reader, writer);
                         break;
                     case JsonTokenType.String:
                         path = ChangeTracker.PushIndex(path, index);
@@ -98,7 +108,6 @@ namespace Azure.Core.Json
                         WriteNull(path, highWaterMark, ref reader, writer);
                         break;
                     case JsonTokenType.EndArray:
-                        writer.WriteEndArray();
                         return;
                 }
 
@@ -118,15 +127,12 @@ namespace Azure.Core.Json
                         path = ChangeTracker.PopProperty(path);
                         continue;
                     case JsonTokenType.StartArray:
-                        writer.WriteStartArray();
-                        WriteArrayValues(path, highWaterMark, ref reader, writer);
+                        WriteArray(path, highWaterMark, ref reader, writer);
                         path = ChangeTracker.PopProperty(path);
                         continue;
                     case JsonTokenType.PropertyName:
                         path = ChangeTracker.PushProperty(path, reader.ValueSpan);
-
                         writer.WritePropertyName(reader.ValueSpan);
-                        Debug.WriteLine($"Path: {path}, TokenStartIndex: {reader.TokenStartIndex}");
                         continue;
                     case JsonTokenType.String:
                         WriteString(path, highWaterMark, ref reader, writer);
@@ -146,7 +152,6 @@ namespace Azure.Core.Json
                         path = ChangeTracker.PopProperty(path);
                         continue;
                     case JsonTokenType.EndObject:
-                        writer.WriteEndObject();
                         return;
                 }
             }
@@ -162,6 +167,7 @@ namespace Azure.Core.Json
 
             writer.WriteStartObject();
             WriteObjectProperties(path, highWaterMark, ref reader, writer);
+            writer.WriteEndObject();
         }
 
         private void WriteStructuralChange(string path, MutableJsonChange change, ref Utf8JsonReader reader, Utf8JsonWriter writer)
