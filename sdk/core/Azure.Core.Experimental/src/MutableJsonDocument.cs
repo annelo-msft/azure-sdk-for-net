@@ -50,10 +50,9 @@ namespace Azure.Core.Json
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         public void WriteTo(Stream stream, StandardFormat format = default)
         {
-            // this is so we can add JSON Patch in the future
-            if (format != default)
+            if (format != default || format.Symbol != 'J')
             {
-                throw new ArgumentOutOfRangeException(nameof(format));
+                throw new FormatException($"Unsupported format {format.Symbol}. Supported formats are: 'J' - JSON.");
             }
 
             Utf8JsonWriter writer = new Utf8JsonWriter(stream);
