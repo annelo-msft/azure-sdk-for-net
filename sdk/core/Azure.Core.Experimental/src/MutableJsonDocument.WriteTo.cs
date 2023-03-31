@@ -2,7 +2,6 @@
 // Licensed under the MIT License.
 
 using System;
-using System.Diagnostics;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 
@@ -116,6 +115,19 @@ namespace Azure.Core.Json
             }
         }
 
+        private void WriteObject(string path, int highWaterMark, ref Utf8JsonReader reader, Utf8JsonWriter writer)
+        {
+            if (Changes.TryGetChange(path, highWaterMark, out MutableJsonChange change))
+            {
+                WriteStructuralChange(path, change, ref reader, writer);
+                return;
+            }
+
+            writer.WriteStartObject();
+            WriteObjectProperties(path, highWaterMark, ref reader, writer);
+            writer.WriteEndObject();
+        }
+
         private void WriteObjectProperties(string path, int highWaterMark, ref Utf8JsonReader reader, Utf8JsonWriter writer)
         {
             while (reader.Read())
@@ -155,19 +167,6 @@ namespace Azure.Core.Json
                         return;
                 }
             }
-        }
-
-        private void WriteObject(string path, int highWaterMark, ref Utf8JsonReader reader, Utf8JsonWriter writer)
-        {
-            if (Changes.TryGetChange(path, highWaterMark, out MutableJsonChange change))
-            {
-                WriteStructuralChange(path, change, ref reader, writer);
-                return;
-            }
-
-            writer.WriteStartObject();
-            WriteObjectProperties(path, highWaterMark, ref reader, writer);
-            writer.WriteEndObject();
         }
 
         private void WriteStructuralChange(string path, MutableJsonChange change, ref Utf8JsonReader reader, Utf8JsonWriter writer)
