@@ -64,7 +64,8 @@ namespace Azure.Core.Json
                 return;
             }
 
-            WriteRootElementTo(writer);
+            RootElement.WriteTo(writer);
+            //WriteRootElementTo(writer);
         }
 
         internal void WriteTo(Utf8JsonWriter writer)
@@ -75,7 +76,7 @@ namespace Azure.Core.Json
                 return;
             }
 
-            WriteRootElementTo(writer);
+            RootElement.WriteTo(writer);
         }
 
         private static void Write(Stream stream, ReadOnlySpan<byte> buffer)
