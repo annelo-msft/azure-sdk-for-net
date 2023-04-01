@@ -75,7 +75,7 @@ namespace Azure.Core.Json
                 WriteElement(arrayElementPath, highWaterMark, arrayElement, writer);
             }
 
-            writer.WriteEndObject();
+            writer.WriteEndArray();
         }
     }
 }
