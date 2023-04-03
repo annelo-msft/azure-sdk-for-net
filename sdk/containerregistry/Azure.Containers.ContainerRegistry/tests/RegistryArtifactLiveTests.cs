@@ -156,7 +156,8 @@ namespace Azure.Containers.ContainerRegistry.Tests
                 await Delay(5000);
 
                 // Assert
-                Assert.ThrowsAsync<RequestFailedException>(async () => { await artifact.GetManifestPropertiesAsync(); });
+                Assert.ThrowsAsync<RequestFailedException>(async () => { await artifact.GetManifestPropertiesAsync(); },
+                    "Test succeeded in retrieving manifest properties after deleting the artifact.");
             }
             finally
             {
