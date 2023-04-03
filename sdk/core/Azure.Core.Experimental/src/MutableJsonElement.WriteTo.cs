@@ -48,10 +48,23 @@ namespace Azure.Core.Json
 
             foreach (JsonProperty property in originalElement.EnumerateObject())
             {
-                writer.WritePropertyName(property.Name);
-
                 string propertyPath = MutableJsonDocument.ChangeTracker.PushProperty(path, property.Name);
-                WriteElement(propertyPath, highWaterMark, property.Value, writer);
+
+                if (Changes.TryGetChange(propertyPath, highWaterMark, out MutableJsonChange change))
+                {
+                    writer.WritePropertyName(property.Name);
+                    change.AsJsonElement().WriteTo(writer);
+                    continue;
+                }
+
+                if (Changes.DescendantChanged(propertyPath, highWaterMark))
+                {
+                    writer.WritePropertyName(property.Name);
+                    WriteElement(propertyPath, highWaterMark, property.Value, writer);
+                    continue;
+                }
+
+                property.WriteTo(writer);
             }
 
             writer.WriteEndObject();
