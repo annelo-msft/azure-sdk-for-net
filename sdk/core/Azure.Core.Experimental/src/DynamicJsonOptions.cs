@@ -6,7 +6,7 @@ namespace Azure.Core.Dynamic
     /// <summary>
     /// Provides the ability for the user to define custom behavior when accessing JSON through a dynamic layer.
     /// </summary>
-    public struct DynamicJsonOptions
+    internal struct DynamicJsonOptions
     {
         /// <summary>
         /// Gets the default <see cref="DynamicJsonOptions"/> for Azure services.
