@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Description>Experimental types that might eventually move to Azure.Core</Description>
     <AssemblyTitle>Microsoft Azure Client Pipeline Experimental Extensions</AssemblyTitle>
@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <PackageReference Include="Azure.Core" />
+    <!--<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting"/>-->
     <PackageReference Include="Microsoft.CSharp" />
   </ItemGroup>
 

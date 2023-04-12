@@ -9,6 +9,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.Json;
+//using Microsoft.CodeAnalysis.CSharp.Scripting;
 
 namespace Azure.Core.Dynamic
 {
@@ -108,6 +109,36 @@ namespace Azure.Core.Dynamic
 
                 BindingRestrictions restrictions = BindingRestrictions.GetTypeRestriction(Expression, LimitType);
                 return new DynamicMetaObject(setCall, restrictions);
+            }
+
+            public override DynamicMetaObject BindBinaryOperation(BinaryOperationBinder binder, DynamicMetaObject arg)
+            {
+                if (binder.Operation == ExpressionType.Equal)
+                {
+                    UnaryExpression this_ = Expression.Convert(Expression, LimitType);
+                    BindingRestrictions restrictions = BindingRestrictions.GetTypeRestriction(Expression, LimitType);
+
+                    ////UnaryExpression thisAsCast = Expression.Convert(Expression, arg.LimitType);
+                    //MethodCallExpression thisAsCast = Expression.Call(this_, nameof(ConvertTo), new Type[] { arg.LimitType });
+                    //UnaryExpression argAsCast = Expression.Convert(arg.Expression, arg.LimitType);
+
+                    //BinaryExpression equals = Expression.Equal(
+                    //    Expression.Convert(thisAsCast, typeof(object)),
+                    //    Expression.Convert(argAsCast, typeof(object)));
+
+                    //UnaryExpression final = Expression.Convert(equals, typeof(object));
+
+                    ////var result = CSharpScript.EvaluateAsync(final.
+                    MethodCallExpression equals = Expression.Call(this_,
+                        EqualsMethod,
+                        Expression.Convert(arg.Expression, typeof(object)));
+                    return new DynamicMetaObject(Expression.Convert(equals, typeof(object)), restrictions);
+
+                    //return new DynamicMetaObject(final,
+                    //    restrictions);
+                }
+
+                return base.BindBinaryOperation(binder, arg);
             }
         }
     }

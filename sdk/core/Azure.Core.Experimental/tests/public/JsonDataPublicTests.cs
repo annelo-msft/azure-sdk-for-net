@@ -360,6 +360,11 @@ namespace Azure.Core.Tests.Public
             dynamic fiveJson = new BinaryData("{ \"value\": 5 }").ToDynamicFromJson().value;
             dynamic sixJson = new BinaryData("{ \"value\": 6 }").ToDynamicFromJson().value;
 
+            DynamicData d = (DynamicData)fiveJson;
+            if (5 == d)
+            { }
+
+
             Assert.IsTrue(fiveJson == 5);
             Assert.IsTrue(5 == fiveJson);
             Assert.IsFalse(fiveJson != 5);

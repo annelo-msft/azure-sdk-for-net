@@ -26,6 +26,7 @@ namespace Azure.Core.Dynamic
         private static readonly MethodInfo GetEnumerableMethod = typeof(DynamicData).GetMethod(nameof(GetEnumerable), BindingFlags.NonPublic | BindingFlags.Instance)!;
         private static readonly MethodInfo GetViaIndexerMethod = typeof(DynamicData).GetMethod(nameof(GetViaIndexer), BindingFlags.NonPublic | BindingFlags.Instance)!;
         private static readonly MethodInfo SetViaIndexerMethod = typeof(DynamicData).GetMethod(nameof(SetViaIndexer), BindingFlags.NonPublic | BindingFlags.Instance)!;
+        private static readonly MethodInfo EqualsMethod = typeof(DynamicData).GetMethod(nameof(Equals), BindingFlags.Public | BindingFlags.Instance)!;
 
         private MutableJsonElement _element;
         private DynamicJsonOptions _options;
@@ -170,6 +171,28 @@ namespace Azure.Core.Dynamic
             Utf8JsonReader reader = MutableJsonElement.GetReaderForElement(_element.GetJsonElement());
             return JsonSerializer.Deserialize<T>(ref reader, MutableJsonDocument.DefaultJsonSerializerOptions);
 #endif
+        }
+
+        //private object CompareTo(object other)
+        //{
+
+        //}
+
+        /// <summary>
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object? obj)
+        {
+            return this.ConvertTo<int>().Equals((int)obj!);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
 
         /// <inheritdoc/>
