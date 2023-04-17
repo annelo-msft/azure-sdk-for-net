@@ -8,13 +8,13 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Azure.Core.Json
+namespace Azure
 {
     /// <summary>
     /// A mutable representation of a JSON value.
     /// </summary>
     [JsonConverter(typeof(JsonConverter))]
-    public sealed partial class MutableJsonDocument : IDisposable
+    internal sealed partial class MutableJsonDocument : IDisposable
     {
         internal static readonly JsonSerializerOptions DefaultJsonSerializerOptions = new JsonSerializerOptions();
 

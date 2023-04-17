@@ -4,9 +4,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Azure.Core.Json;
 
-namespace Azure.Core.Dynamic
+namespace Azure
 {
     public partial class DynamicData
     {

@@ -5,9 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Azure.Core.Json
+namespace Azure
 {
-    public partial class MutableJsonDocument
+    internal partial class MutableJsonDocument
     {
         internal class ChangeTracker
         {

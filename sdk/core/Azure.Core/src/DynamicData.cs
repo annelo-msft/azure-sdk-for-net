@@ -8,9 +8,9 @@ using System.IO;
 using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Azure.Core.Json;
+using Azure.Core;
 
-namespace Azure.Core.Dynamic
+namespace Azure
 {
     /// <summary>
     /// A dynamic abstraction over content data, such as JSON.

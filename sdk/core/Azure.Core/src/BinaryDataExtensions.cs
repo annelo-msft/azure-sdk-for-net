@@ -2,9 +2,8 @@
 // Licensed under the MIT License.
 
 using System;
-using Azure.Core.Json;
 
-namespace Azure.Core.Dynamic
+namespace Azure
 {
     /// <summary>
     /// Extensions to BinaryData.
@@ -24,7 +23,7 @@ namespace Azure.Core.Dynamic
         /// </summary>
         public static dynamic ToDynamicFromJson(this BinaryData data, DynamicDataNameMapping propertyNameCasing)
         {
-            return new DynamicData(MutableJsonDocument.Parse(data).RootElement, new DynamicJsonOptions() {  PropertyNameCasing = propertyNameCasing });
+            return new DynamicData(MutableJsonDocument.Parse(data).RootElement, new DynamicJsonOptions() { PropertyNameCasing = propertyNameCasing });
         }
 
         /// <summary>

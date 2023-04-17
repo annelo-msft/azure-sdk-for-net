@@ -8,13 +8,13 @@ using System.IO;
 using System.Text;
 using System.Text.Json;
 
-namespace Azure.Core.Json
+namespace Azure
 {
     /// <summary>
     /// A mutable representation of a JSON element.
     /// </summary>
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
-    public readonly partial struct MutableJsonElement
+    internal readonly partial struct MutableJsonElement
     {
         private readonly MutableJsonDocument _root;
         private readonly JsonElement _element;
