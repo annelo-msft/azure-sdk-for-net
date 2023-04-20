@@ -17,6 +17,13 @@ namespace Azure.Core.Json
         {
             if (Changes.TryGetChange(path, highWaterMark, out MutableJsonChange change))
             {
+                switch (change.Value)
+                {
+                    case int i:
+                        writer.WriteNumberValue(i);
+                        return;
+                }
+
                 element = change.AsJsonElement();
                 highWaterMark = change.Index;
             }

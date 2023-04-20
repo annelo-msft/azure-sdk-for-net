@@ -51,10 +51,10 @@ namespace Azure.Core.Json
         /// <remarks>The value of <paramref name="format"/> can be default or 'J' to write the document as JSON.</remarks>
         public void WriteTo(Stream stream, StandardFormat format = default)
         {
-            if (format != default || format.Symbol != 'J')
-            {
-                throw new FormatException($"Unsupported format {format.Symbol}. Supported formats are: 'J' - JSON.");
-            }
+            //if (format != default || format.Symbol != 'J')
+            //{
+            //    throw new FormatException($"Unsupported format {format.Symbol}. Supported formats are: 'J' - JSON.");
+            //}
 
             if (!Changes.HasChanges)
             {
@@ -66,7 +66,12 @@ namespace Azure.Core.Json
             RootElement.WriteTo(writer);
         }
 
-        internal void WriteTo(Utf8JsonWriter writer)
+        /// <summary>
+        /// </summary>
+        /// <param name="writer"></param>
+#pragma warning disable AZC0014
+        public void WriteTo(Utf8JsonWriter writer)
+#pragma warning restore AZC0014
         {
             if (!Changes.HasChanges)
             {
