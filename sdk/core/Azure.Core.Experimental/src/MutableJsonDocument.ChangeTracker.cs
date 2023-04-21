@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Azure.Core.Json
 {
-    public partial class MutableJsonDocument
+    public partial /*struct*/ class MutableJsonDocument
     {
         internal class ChangeTracker
         {
@@ -104,6 +104,11 @@ namespace Azure.Core.Json
                 return index;
             }
 
+            //internal static string PushIndex(ReadOnlySpan<byte> path, int index)
+            //{
+            //    return PushProperty(path, $"{index}");
+            //}
+
             internal static string PushIndex(string path, int index)
             {
                 return PushProperty(path, $"{index}");
@@ -113,6 +118,16 @@ namespace Azure.Core.Json
             {
                 return PopProperty(path);
             }
+
+            //internal static ReadOnlySpan<byte> PushProperty(ReadOnlySpan<byte> path, ReadOnlySpan<byte> value)
+            //{
+            //    if (path.Length == 0)
+            //    {
+            //        return value;
+            //    }
+
+            //    return string.Concat(path, Delimiter, value);
+            //}
 
             internal static string PushProperty(string path, string value)
             {

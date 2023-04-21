@@ -40,7 +40,7 @@ namespace Azure.Core.Json
                     default:
                         break;
 
-                        // Note: string is not included to let JsonElement handle escaping.
+                    // Note: string is not included to let JsonElement handle escaping.
                 }
 
                 element = change.AsJsonElement();
