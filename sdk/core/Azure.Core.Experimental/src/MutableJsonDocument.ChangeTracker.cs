@@ -7,161 +7,143 @@ using System.Text;
 
 namespace Azure.Core.Json
 {
-    public partial /*struct*/ class MutableJsonDocument
+    public partial class MutableJsonDocument
     {
-        internal class ChangeTracker
+        private List<MutableJsonChange>? _changes;
+
+        internal const char Delimiter = (char)1;
+
+        internal bool HasChanges => _changes != null && _changes.Count > 0;
+
+
+        internal bool AncestorChanged(string path, int highWaterMark)
         {
-            private List<MutableJsonChange>? _changes;
-
-            internal const char Delimiter = (char)1;
-
-            internal bool HasChanges => _changes != null && _changes.Count > 0;
-
-            internal bool AncestorChanged(string path, int highWaterMark)
+            if (_changes == null)
             {
-                if (_changes == null)
-                {
-                    return false;
-                }
-
-                bool changed = false;
-
-                // Check for changes to ancestor elements
-                while (!changed && path.Length > 0)
-                {
-                    path = PopProperty(path);
-                    changed = TryGetChange(path, highWaterMark, out MutableJsonChange change);
-                }
-
-                return changed;
+                return false;
             }
 
-            internal bool DescendantChanged(string path, int highWaterMark)
+            bool changed = false;
+
+            // Check for changes to ancestor elements
+            while (!changed && path.Length > 0)
             {
-                if (_changes == null)
-                {
-                    return false;
-                }
-
-                bool changed = false;
-
-                if (path.Length > 0)
-                {
-                    path += Delimiter;
-                }
-
-                for (int i = _changes!.Count - 1; i > highWaterMark; i--)
-                {
-                    var c = _changes[i];
-                    if (c.Path.StartsWith(path, StringComparison.Ordinal))
-                    {
-                        return true;
-                    }
-                }
-
-                return changed;
+                path = PopProperty(path);
+                changed = TryGetChange(path, highWaterMark, out MutableJsonChange change);
             }
 
-            internal bool TryGetChange(string path, in int lastAppliedChange, out MutableJsonChange change)
+            return changed;
+        }
+
+        internal bool DescendantChanged(string path, int highWaterMark)
+        {
+            if (_changes == null)
             {
-                if (_changes == null)
-                {
-                    change = default;
-                    return false;
-                }
+                return false;
+            }
 
-                for (int i = _changes!.Count - 1; i > lastAppliedChange; i--)
-                {
-                    var c = _changes[i];
-                    if (c.Path == path)
-                    {
-                        change = c;
-                        return true;
-                    }
-                }
+            bool changed = false;
 
+            if (path.Length > 0)
+            {
+                path += Delimiter;
+            }
+
+            for (int i = _changes!.Count - 1; i > highWaterMark; i--)
+            {
+                var c = _changes[i];
+                if (c.Path.StartsWith(path, StringComparison.Ordinal))
+                {
+                    return true;
+                }
+            }
+
+            return changed;
+        }
+
+        internal bool TryGetChange(string path, in int lastAppliedChange, out MutableJsonChange change)
+        {
+            if (_changes == null)
+            {
                 change = default;
                 return false;
             }
 
-            internal int AddChange(string path, object? value, bool replaceJsonElement = false)
+            for (int i = _changes!.Count - 1; i > lastAppliedChange; i--)
             {
-                if (_changes == null)
+                var c = _changes[i];
+                if (c.Path == path)
                 {
-                    _changes = new List<MutableJsonChange>();
+                    change = c;
+                    return true;
                 }
-
-                int index = _changes.Count;
-
-                _changes.Add(new MutableJsonChange()
-                {
-                    Path = path,
-                    Value = value,
-                    Index = index,
-                    ReplacesJsonElement = replaceJsonElement
-                });
-
-                return index;
             }
 
-            //internal static string PushIndex(ReadOnlySpan<byte> path, int index)
-            //{
-            //    return PushProperty(path, $"{index}");
-            //}
+            change = default;
+            return false;
+        }
 
-            internal static string PushIndex(string path, int index)
+        internal int AddChange(string path, object? value, bool replaceJsonElement = false)
+        {
+            if (_changes == null)
             {
-                return PushProperty(path, $"{index}");
+                _changes = new List<MutableJsonChange>(8);
             }
 
-            internal static string PopIndex(string path)
+            int index = _changes.Count;
+
+            _changes.Add(new MutableJsonChange()
             {
-                return PopProperty(path);
-            }
+                Path = path,
+                Value = value,
+                Index = index,
+                ReplacesJsonElement = replaceJsonElement
+            });
 
-            //internal static ReadOnlySpan<byte> PushProperty(ReadOnlySpan<byte> path, ReadOnlySpan<byte> value)
-            //{
-            //    if (path.Length == 0)
-            //    {
-            //        return value;
-            //    }
+            return index;
+        }
+        internal static string PushIndex(string path, int index)
+        {
+            return PushProperty(path, $"{index}");
+        }
 
-            //    return string.Concat(path, Delimiter, value);
-            //}
+        internal static string PopIndex(string path)
+        {
+            return PopProperty(path);
+        }
 
-            internal static string PushProperty(string path, string value)
+        internal static string PushProperty(string path, string value)
+        {
+            if (path.Length == 0)
             {
-                if (path.Length == 0)
-                {
-                    return value;
-                }
-
-                return string.Concat(path, Delimiter, value);
+                return value;
             }
 
-            internal static string PushProperty(string path, ReadOnlySpan<byte> value)
+            return string.Concat(path, Delimiter, value);
+        }
+
+        internal static string PushProperty(string path, ReadOnlySpan<byte> value)
+        {
+            string propertyName = BinaryData.FromBytes(value.ToArray()).ToString();
+
+            if (path.Length == 0)
             {
-                string propertyName = BinaryData.FromBytes(value.ToArray()).ToString();
-
-                if (path.Length == 0)
-                {
-                    return propertyName;
-                }
-
-                return string.Concat(path, Delimiter, propertyName);
+                return propertyName;
             }
 
-            internal static string PopProperty(string path)
+            return string.Concat(path, Delimiter, propertyName);
+        }
+
+        internal static string PopProperty(string path)
+        {
+            int lastDelimiter = path.LastIndexOf(Delimiter);
+
+            if (lastDelimiter == -1)
             {
-                int lastDelimiter = path.LastIndexOf(Delimiter);
-
-                if (lastDelimiter == -1)
-                {
-                    return string.Empty;
-                }
-
-                return path.Substring(0, lastDelimiter);
+                return string.Empty;
             }
+
+            return path.Substring(0, lastDelimiter);
         }
     }
 }

@@ -21,8 +21,6 @@ namespace Azure.Core.Json
         private readonly ReadOnlyMemory<byte> _original;
         private readonly JsonDocument _originalDocument;
 
-        internal ChangeTracker Changes { get; } = new();
-
         /// <summary>
         /// Gets the root element of this JSON document.
         /// </summary>
@@ -30,7 +28,7 @@ namespace Azure.Core.Json
         {
             get
             {
-                if (Changes.TryGetChange(string.Empty, -1, out MutableJsonChange change))
+                if (TryGetChange(string.Empty, -1, out MutableJsonChange change))
                 {
                     if (change.ReplacesJsonElement)
                     {
@@ -59,7 +57,7 @@ namespace Azure.Core.Json
                 throw new FormatException($"Unsupported format {format.Symbol}. Supported formats are: 'J' - JSON.");
             }
 
-            if (!Changes.HasChanges)
+            if (!HasChanges)
             {
                 Write(stream, _original.Span);
                 return;
@@ -80,7 +78,7 @@ namespace Azure.Core.Json
         {
             Argument.AssertNotNull(writer, nameof(writer));
 
-            if (!Changes.HasChanges)
+            if (!HasChanges)
             {
                 _originalDocument.RootElement.WriteTo(writer);
                 return;

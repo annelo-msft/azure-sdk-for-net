@@ -15,8 +15,10 @@ namespace Azure.Core.Json
 
         private void WriteElement(string path, int highWaterMark, JsonElement element, Utf8JsonWriter writer)
         {
-            if (Changes.TryGetChange(path, highWaterMark, out MutableJsonChange change))
+            if (_root.TryGetChange(path, highWaterMark, out MutableJsonChange change))
             {
+                // Note: string is not included below so JsonElement will handle escaping.
+
                 switch (change.Value)
                 {
                     case int i:
@@ -39,15 +41,13 @@ namespace Azure.Core.Json
                         return;
                     default:
                         break;
-
-                    // Note: string is not included to let JsonElement handle escaping.
                 }
 
                 element = change.AsJsonElement();
                 highWaterMark = change.Index;
             }
 
-            if (Changes.DescendantChanged(path, highWaterMark))
+            if (_root.DescendantChanged(path, highWaterMark))
             {
                 switch (element.ValueKind)
                 {
@@ -73,7 +73,7 @@ namespace Azure.Core.Json
 
             foreach (JsonProperty property in element.EnumerateObject())
             {
-                string propertyPath = MutableJsonDocument.ChangeTracker.PushProperty(path, property.Name);
+                string propertyPath = MutableJsonDocument.PushProperty(path, property.Name);
 
                 writer.WritePropertyName(property.Name);
                 WriteElement(propertyPath, highWaterMark, property.Value, writer);
@@ -89,7 +89,7 @@ namespace Azure.Core.Json
             int arrayIndex = 0;
             foreach (JsonElement arrayElement in element.EnumerateArray())
             {
-                string arrayElementPath = MutableJsonDocument.ChangeTracker.PushIndex(path, arrayIndex++);
+                string arrayElementPath = MutableJsonDocument.PushIndex(path, arrayIndex++);
                 WriteElement(arrayElementPath, highWaterMark, arrayElement, writer);
             }
 

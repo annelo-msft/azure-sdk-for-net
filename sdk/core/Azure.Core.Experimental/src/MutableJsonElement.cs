@@ -21,8 +21,6 @@ namespace Azure.Core.Json
         private readonly string _path;
         private readonly int _highWaterMark;
 
-        private readonly MutableJsonDocument.ChangeTracker Changes => _root.Changes;
-
         internal MutableJsonElement(MutableJsonDocument root, JsonElement element, string path, int highWaterMark = -1)
         {
             _element = element;
@@ -77,8 +75,8 @@ namespace Azure.Core.Json
                 return false;
             }
 
-            var path = MutableJsonDocument.ChangeTracker.PushProperty(_path, name);
-            if (Changes.TryGetChange(path, _highWaterMark, out MutableJsonChange change))
+            var path = MutableJsonDocument.PushProperty(_path, name);
+            if (_root.TryGetChange(path, _highWaterMark, out MutableJsonChange change))
             {
                 if (change.ReplacesJsonElement)
                 {
@@ -97,9 +95,9 @@ namespace Azure.Core.Json
 
             EnsureArray();
 
-            var path = MutableJsonDocument.ChangeTracker.PushIndex(_path, index);
+            var path = MutableJsonDocument.PushIndex(_path, index);
 
-            if (Changes.TryGetChange(path, _highWaterMark, out MutableJsonChange change))
+            if (_root.TryGetChange(path, _highWaterMark, out MutableJsonChange change))
             {
                 if (change.ReplacesJsonElement)
                 {
@@ -119,7 +117,7 @@ namespace Azure.Core.Json
         {
             EnsureValid();
 
-            if (Changes.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
+            if (_root.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
             {
                 switch (change.Value)
                 {
@@ -143,7 +141,7 @@ namespace Azure.Core.Json
         {
             EnsureValid();
 
-            if (Changes.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
+            if (_root.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
             {
                 switch (change.Value)
                 {
@@ -167,7 +165,7 @@ namespace Azure.Core.Json
         {
             EnsureValid();
 
-            if (Changes.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
+            if (_root.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
             {
                 switch (change.Value)
                 {
@@ -191,7 +189,7 @@ namespace Azure.Core.Json
         {
             EnsureValid();
 
-            if (Changes.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
+            if (_root.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
             {
                 switch (change.Value)
                 {
@@ -216,7 +214,7 @@ namespace Azure.Core.Json
         {
             EnsureValid();
 
-            if (Changes.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
+            if (_root.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
             {
                 switch (change.Value)
                 {
@@ -245,7 +243,7 @@ namespace Azure.Core.Json
         {
             EnsureValid();
 
-            if (Changes.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
+            if (_root.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
             {
                 switch (change.Value)
                 {
@@ -314,11 +312,11 @@ namespace Azure.Core.Json
             byte[] bytes = JsonSerializer.SerializeToUtf8Bytes(dict);
             JsonElement newElement = JsonDocument.Parse(bytes).RootElement;
 
-            int index = Changes.AddChange(_path, newElement, true);
+            int index = _root.AddChange(_path, newElement, true);
 
             // Make sure the object reference is stored to ensure reference semantics
-            string path = MutableJsonDocument.ChangeTracker.PushProperty(_path, name);
-            Changes.AddChange(path, value, true);
+            string path = MutableJsonDocument.PushProperty(_path, name);
+            _root.AddChange(path, value, true);
 
             // Element has changed, return the new valid one.
             return new MutableJsonElement(_root, newElement, _path, index);
@@ -346,7 +344,7 @@ namespace Azure.Core.Json
             byte[] bytes = JsonSerializer.SerializeToUtf8Bytes(dict);
             JsonElement newElement = JsonDocument.Parse(bytes).RootElement;
 
-            Changes.AddChange(_path, newElement, true);
+            _root.AddChange(_path, newElement, true);
         }
 
         /// <summary>
@@ -357,7 +355,7 @@ namespace Azure.Core.Json
         {
             EnsureValid();
 
-            Changes.AddChange(_path, value, _element.ValueKind != JsonValueKind.Number);
+            _root.AddChange(_path, value, _element.ValueKind != JsonValueKind.Number);
         }
 
         /// <summary>
@@ -368,7 +366,7 @@ namespace Azure.Core.Json
         {
             EnsureValid();
 
-            Changes.AddChange(_path, value, _element.ValueKind != JsonValueKind.Number);
+            _root.AddChange(_path, value, _element.ValueKind != JsonValueKind.Number);
         }
 
         /// <summary>
@@ -379,7 +377,7 @@ namespace Azure.Core.Json
         {
             EnsureValid();
 
-            Changes.AddChange(_path, value, _element.ValueKind != JsonValueKind.Number);
+            _root.AddChange(_path, value, _element.ValueKind != JsonValueKind.Number);
         }
 
         /// <summary>
@@ -390,7 +388,7 @@ namespace Azure.Core.Json
         {
             EnsureValid();
 
-            Changes.AddChange(_path, value, _element.ValueKind != JsonValueKind.Number);
+            _root.AddChange(_path, value, _element.ValueKind != JsonValueKind.Number);
         }
 
         /// <summary>
@@ -401,7 +399,7 @@ namespace Azure.Core.Json
         {
             EnsureValid();
 
-            Changes.AddChange(_path, value, _element.ValueKind != JsonValueKind.String);
+            _root.AddChange(_path, value, _element.ValueKind != JsonValueKind.String);
         }
 
         /// <summary>
@@ -412,7 +410,7 @@ namespace Azure.Core.Json
         {
             EnsureValid();
 
-            Changes.AddChange(_path, value,
+            _root.AddChange(_path, value,
                 !(_element.ValueKind == JsonValueKind.True ||
                   _element.ValueKind == JsonValueKind.False));
         }
@@ -455,7 +453,7 @@ namespace Azure.Core.Json
                     Set(d.RootElement);
                     break;
                 default:
-                    Changes.AddChange(_path, value, true);
+                    _root.AddChange(_path, value, true);
                     break;
             }
         }
@@ -472,7 +470,7 @@ namespace Azure.Core.Json
 
             JsonElement element = value._element;
 
-            if (Changes.TryGetChange(value._path, value._highWaterMark, out MutableJsonChange change))
+            if (_root.TryGetChange(value._path, value._highWaterMark, out MutableJsonChange change))
             {
                 if (change.ReplacesJsonElement)
                 {
@@ -480,7 +478,7 @@ namespace Azure.Core.Json
                 }
             }
 
-            Changes.AddChange(_path, element, true);
+            _root.AddChange(_path, element, true);
         }
 
         /// <inheritdoc/>
@@ -488,7 +486,7 @@ namespace Azure.Core.Json
         {
             EnsureValid();
 
-            if (Changes.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
+            if (_root.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
             {
                 if (change.Value == null)
                     return "null";
@@ -497,7 +495,7 @@ namespace Azure.Core.Json
             }
 
             // Account for changes to descendants of this element as well
-            if (Changes.DescendantChanged(_path, _highWaterMark))
+            if (_root.DescendantChanged(_path, _highWaterMark))
             {
                 return Encoding.UTF8.GetString(GetRawBytes());
             }
@@ -509,13 +507,13 @@ namespace Azure.Core.Json
         {
             EnsureValid();
 
-            if (Changes.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
+            if (_root.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
             {
                 return change.AsJsonElement();
             }
 
             // Account for changes to descendants of this element as well
-            if (Changes.DescendantChanged(_path, _highWaterMark))
+            if (_root.DescendantChanged(_path, _highWaterMark))
             {
                 JsonDocument document = JsonDocument.Parse(GetRawBytes());
                 return document.RootElement;
@@ -569,7 +567,7 @@ namespace Azure.Core.Json
 
         private void EnsureValid()
         {
-            if (Changes.AncestorChanged(_path, _highWaterMark))
+            if (_root.AncestorChanged(_path, _highWaterMark))
             {
                 throw new InvalidOperationException("An ancestor node of this element has unapplied changes.  Please re-request this property from the RootElement.");
             }

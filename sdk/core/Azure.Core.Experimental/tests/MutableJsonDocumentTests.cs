@@ -144,7 +144,7 @@ namespace Azure.Core.Experimental.Tests
         [Test]
         public void JsonWithDelimiterIsInvalidJson()
         {
-            char delimiter = MutableJsonDocument.ChangeTracker.Delimiter;
+            char delimiter = MutableJsonDocument.Delimiter;
             string propertyName = "\"Baz" + delimiter + "NotChild\"";
             string json = "{" + propertyName + ": {\"A\": 3}, \"Foo\":1}";
 
