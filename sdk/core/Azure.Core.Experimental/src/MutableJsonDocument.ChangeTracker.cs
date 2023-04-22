@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Azure.Core.Json
 {
@@ -14,7 +13,6 @@ namespace Azure.Core.Json
         internal const char Delimiter = (char)1;
 
         internal bool HasChanges => _changes != null && _changes.Count > 0;
-
 
         internal bool AncestorChanged(string path, int highWaterMark)
         {
@@ -85,10 +83,7 @@ namespace Azure.Core.Json
 
         internal int AddChange(string path, object? value, bool replaceJsonElement = false)
         {
-            if (_changes == null)
-            {
-                _changes = new List<MutableJsonChange>(8);
-            }
+            _changes ??= new List<MutableJsonChange>();
 
             int index = _changes.Count;
 
