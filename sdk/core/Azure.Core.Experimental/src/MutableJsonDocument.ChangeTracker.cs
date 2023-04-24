@@ -2,7 +2,9 @@
 // Licensed under the MIT License.
 
 using System;
+using System.Buffers;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Azure.Core.Json
 {
@@ -11,6 +13,7 @@ namespace Azure.Core.Json
         private List<MutableJsonChange>? _changes;
 
         internal const char Delimiter = (char)1;
+        private static ReadOnlyMemory<byte> Utf8Delimiter = Encoding.UTF8.GetBytes(new char[] { (char)1 }).AsMemory();
 
         internal bool HasChanges => _changes != null && _changes.Count > 0;
 
@@ -107,6 +110,11 @@ namespace Azure.Core.Json
             return PopProperty(path);
         }
 
+        internal static ReadOnlySpan<byte> PopIndex(ReadOnlySpan<byte> path)
+        {
+            return PopProperty(path);
+        }
+
         internal static string PushProperty(string path, string value)
         {
             if (path.Length == 0)
@@ -116,6 +124,33 @@ namespace Azure.Core.Json
 
             return string.Concat(path, Delimiter, value);
         }
+
+        //internal static void PushProperty(Span<byte> path, Span<byte> name, ref int pathLength)
+        //{
+        //    if (pathLength != 0)
+        //    {
+        //        AppendPath(path, Utf8Delimiter.Span, ref pathLength);
+        //    }
+
+        //    AppendPath(path, name, ref pathLength);
+        //}
+
+        //internal static void AppendPath(Span<byte> path, ReadOnlySpan<byte> value, ref int pathLength)
+        //{
+        //    if (value.TryCopyTo(path.Slice(pathLength)))
+        //    {
+        //        pathLength += value.Length;
+        //        return;
+        //    }
+
+        //    //// We need to reallocate the Span
+        //    //// TODO: use pooled buffer
+        //    //Span<byte> newPath = new byte[path.Length * 2];
+        //    //path.Slice(0, pathLength).CopyTo(newPath);
+        //    //path = newPath;
+
+        //    Span<byte> newPath = ArrayPool<byte>.Rent(path.Length * 2);
+        //}
 
         internal static string PushProperty(string path, ReadOnlySpan<byte> value)
         {
@@ -139,6 +174,16 @@ namespace Azure.Core.Json
             }
 
             return path.Substring(0, lastDelimiter);
+        }
+
+        internal static ReadOnlySpan<byte> PopProperty(ReadOnlySpan<byte> path)
+        {
+            int lastDelimiter = path.LastIndexOf(Utf8Delimiter.Span);
+            if (lastDelimiter == -1)
+            {
+                return Span<byte>.Empty;
+            }
+            return path.Slice(0, lastDelimiter);
         }
     }
 }
