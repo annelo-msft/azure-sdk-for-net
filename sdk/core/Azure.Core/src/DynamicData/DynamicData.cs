@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
@@ -29,9 +30,9 @@ namespace Azure
         private static readonly MethodInfo SetViaIndexerMethod = typeof(DynamicData).GetMethod(nameof(SetViaIndexer), BindingFlags.NonPublic | BindingFlags.Instance)!;
 
         private MutableJsonElement _element;
-        private DynamicJsonOptions _options;
+        private DynamicDataOptions _options;
 
-        internal DynamicData(MutableJsonElement element, DynamicJsonOptions options = default)
+        internal DynamicData(MutableJsonElement element, DynamicDataOptions options = default)
         {
             _element = element;
             _options = options;
@@ -66,13 +67,13 @@ namespace Azure
         private bool PascalCaseGetters()
         {
             return
-                _options.PropertyNameCasing == DynamicDataNameMapping.PascalCaseGetters ||
-                _options.PropertyNameCasing == DynamicDataNameMapping.PascalCaseGettersCamelCaseSetters;
+                _options.NameMapping == DynamicDataNameMapping.PascalCaseGetters ||
+                _options.NameMapping == DynamicDataNameMapping.PascalCaseGettersCamelCaseSetters;
         }
 
         private bool CamelCaseSetters()
         {
-            return _options.PropertyNameCasing == DynamicDataNameMapping.PascalCaseGettersCamelCaseSetters;
+            return _options.NameMapping == DynamicDataNameMapping.PascalCaseGettersCamelCaseSetters;
         }
 
         private static string GetAsCamelCase(string value)
@@ -104,7 +105,7 @@ namespace Azure
             {
                 JsonValueKind.Array => new ArrayEnumerator(_element.EnumerateArray(), _options),
                 JsonValueKind.Object => new ObjectEnumerator(_element.EnumerateObject(), _options),
-                _ => throw new InvalidCastException($"Unable to enumerate JSON element of kind {_element.ValueKind}.  Cannot cast value to IEnumerable."),
+                _ => throw new InvalidCastException($"Unable to enumerate JSON element of kind '{_element.ValueKind}'.  Cannot cast value to IEnumerable."),
             };
         }
 
@@ -112,7 +113,7 @@ namespace Azure
         {
             Argument.AssertNotNullOrEmpty(name, nameof(name));
 
-            if (_options.PropertyNameCasing == DynamicDataNameMapping.None)
+            if (_options.NameMapping == DynamicDataNameMapping.None)
             {
                 _element = _element.SetProperty(name, value);
                 return null;
@@ -177,7 +178,7 @@ namespace Azure
             }
             catch (JsonException e)
             {
-                throw new InvalidCastException($"Unable to convert value of kind {element.ValueKind} to type {typeof(T)}.", e);
+                throw new InvalidCastException($"Unable to convert value of kind '{element.ValueKind}' to type '{typeof(T)}'.", e);
             }
         }
 
@@ -194,6 +195,7 @@ namespace Azure
         }
 
         /// <inheritdoc/>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object? obj)
         {
             if (obj is null)
@@ -278,6 +280,7 @@ namespace Azure
         }
 
         /// <inheritdoc/>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode()
         {
             return _element.GetHashCode();
