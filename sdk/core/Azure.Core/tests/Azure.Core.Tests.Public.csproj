@@ -1,0 +1,146 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>$(RequiredTargetFrameworks)</TargetFrameworks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="ApiVersionStringTests.cs" />
+    <Compile Remove="AppConfigHelperTests.cs" />
+    <Compile Remove="ArgumentTests.cs" />
+    <Compile Remove="ARMChallengeAuthenticationPolicyTests.cs" />
+    <Compile Remove="ArrayBackedPropertyBagTests.cs" />
+    <Compile Remove="AsyncAssertTests.cs" />
+    <Compile Remove="AsyncLockWithValueTests.cs" />
+    <Compile Remove="AsyncOnlyClientTestBaseTests.cs" />
+    <Compile Remove="AuthorizationChallengeParserTests.cs" />
+    <Compile Remove="AzureEventSourceListenerTests.cs" />
+    <Compile Remove="AzureEventSourceTests.cs" />
+    <Compile Remove="AzureKeyCredentialPolicyTests.cs" />
+    <Compile Remove="AzureNamedKeyCredentialTests.cs" />
+    <Compile Remove="AzureSasCredentialSynchronousPolicyTests.cs" />
+    <Compile Remove="Base64UrlTests.cs" />
+    <Compile Remove="BearerTokenAuthenticationPolicyTests.cs" />
+    <Compile Remove="BinaryDataSerializationTests.cs" />
+    <Compile Remove="CancellationHelperTests.cs" />
+    <Compile Remove="ChainingClassifierTests.cs" />
+    <Compile Remove="ClientDiagnosticsTests.cs" />
+    <Compile Remove="ClientDiagnosticsTests.Net50.cs" />
+    <Compile Remove="ClientOptionsTests.cs" />
+    <Compile Remove="ClientRequestIdPolicyTests.cs" />
+    <Compile Remove="CloudEventTests.cs" />
+    <Compile Remove="ConnectionStringTests.cs" />
+    <Compile Remove="ConstantDelayStrategyTests.cs" />
+    <Compile Remove="ContentTypeTests.cs" />
+    <Compile Remove="ContentTypeUtilitiesTests.cs" />
+    <Compile Remove="DataPlaneGeneratedClientTests.cs" />
+    <Compile Remove="DelegatedTokenCredentialTests.cs" />
+    <Compile Remove="DisposableHttpPipelineTests.cs" />
+    <Compile Remove="EnumValuesAttributeTests.cs" />
+    <Compile Remove="ETagConverterTests.cs" />
+    <Compile Remove="ETagTests.cs" />
+    <Compile Remove="EventSourceTests.cs" />
+    <Compile Remove="ExponentialPolicyTest.cs" />
+    <Compile Remove="FailedResponseExceptionTests.cs" />
+    <Compile Remove="FixedRetryPolicyTests.cs" />
+    <Compile Remove="GeoArrayTests.cs" />
+    <Compile Remove="GeoJsonSerializationTests.cs" />
+    <Compile Remove="GeoJsonTests.cs" />
+    <Compile Remove="GuidUtilitiesTests.cs" />
+    <Compile Remove="GZipUtf8JsonRequestContentTests.cs" />
+    <Compile Remove="HashCodeBuilderTests.cs" />
+    <Compile Remove="HeadersTests.cs" />
+    <Compile Remove="HttpAuthorizationTests.cs" />
+    <Compile Remove="HttpClientTransportFunctionalTest.cs" />
+    <Compile Remove="HttpClientTransportTests.cs" />
+    <Compile Remove="HttpEnvironmentProxyTest.cs" />
+    <Compile Remove="HttpMessageSanitizerTests.cs" />
+    <Compile Remove="HttpMessageTests.cs" />
+    <Compile Remove="HttpPipelineBuilderTest.cs" />
+    <Compile Remove="HttpPipelineFunctionalTests.cs" />
+    <Compile Remove="HttpPipelineHttpClientHandlerTests.cs" />
+    <Compile Remove="HttpPipelineMessageTest.cs" />
+    <Compile Remove="HttpPipelineRequestContentTests.cs" />
+    <Compile Remove="HttpPipelineTests.cs" />
+    <Compile Remove="HttpPipelineTransportTests.cs" />
+    <Compile Remove="HttpRangeTests.cs" />
+    <Compile Remove="HttpWebRequestTransportFunctionalTest.cs" />
+    <Compile Remove="IgnoreServiceErrorAttributeTests.cs" />
+    <Compile Remove="JsonConverterTestBase.cs" />
+    <Compile Remove="JsonObjectSerializerTest.cs" />
+    <Compile Remove="JsonPatchDocumentTests.cs" />
+    <Compile Remove="LightweightPkcs8DecoderTests.cs" />
+    <Compile Remove="LocationTests.cs" />
+    <Compile Remove="ManagementPipelineBuilderTests.cs" />
+    <Compile Remove="MessageContentTests.cs" />
+    <Compile Remove="MockHttpClientHandler.cs" />
+    <Compile Remove="ModelWithBinaryData.cs" />
+    <Compile Remove="ModelWithBinaryDataInDictionary.cs" />
+    <Compile Remove="ModelWithObject.cs" />
+    <Compile Remove="MultipartFormDataContentTests.cs" />
+    <Compile Remove="MultipartReaderTests.cs" />
+    <Compile Remove="MultipartTests.cs" />
+    <Compile Remove="NoValueResponseOfTTests.cs" />
+    <Compile Remove="NullableResponseOfTTests.cs" />
+    <Compile Remove="ObjectNotDisposedExceptionTests.cs" />
+    <Compile Remove="OperationInternalOfTTests.cs" />
+    <Compile Remove="OperationInternalTests.cs" />
+    <Compile Remove="OperationPollerTests.cs" />
+    <Compile Remove="OperationStateTests.cs" />
+    <Compile Remove="OperationTests.cs" />
+    <Compile Remove="PageableOperationTests.cs" />
+    <Compile Remove="PageableTests.cs" />
+    <Compile Remove="PageResponseEnumeratorTests.cs" />
+    <Compile Remove="PemReaderTests.cs" />
+    <Compile Remove="PemReaderTests.Keys.cs" />
+    <Compile Remove="PipelineTestBase.cs" />
+    <Compile Remove="PolicyTestBase.cs" />
+    <Compile Remove="ReadTimeoutStreamTests.cs" />
+    <Compile Remove="RedirectPolicyTests.cs" />
+    <Compile Remove="RequestActivityPolicyTests.cs" />
+    <Compile Remove="RequestContextTests.cs" />
+    <Compile Remove="RequestMethodTests.cs" />
+    <Compile Remove="RequestScopedHttpMessagePropertiesTests.cs" />
+    <Compile Remove="RequestUriBuilderTest.cs" />
+    <Compile Remove="ResourceIdentifierTests.cs" />
+    <Compile Remove="ResourceTypeTests.cs" />
+    <Compile Remove="ResponseBodyPolicyTests.cs" />
+    <Compile Remove="ResponseClassifierTests.cs" />
+    <Compile Remove="ResponseErrorTests.cs" />
+    <Compile Remove="ResponseTests.cs" />
+    <Compile Remove="RetriableStreamTests.cs" />
+    <Compile Remove="RetryAfterPollingStrategyTests.cs" />
+    <Compile Remove="RetryPolicyTestBase.cs" />
+    <Compile Remove="SanitizerTests.cs" />
+    <Compile Remove="SequentialPollingStrategyTests.cs" />
+    <Compile Remove="StatusCodeClassifierTests.cs" />
+    <Compile Remove="SyncAsyncEventHandlerTests.cs" />
+    <Compile Remove="SyncOnlyClientTestBaseTests.cs" />
+    <Compile Remove="TaskExtensionsTest.cs" />
+    <Compile Remove="TelemetryDetailsTests.cs" />
+    <Compile Remove="TelemetryPolicyTests.cs" />
+    <Compile Remove="TestOperation.cs" />
+    <Compile Remove="TestPageableOperation.cs" />
+    <Compile Remove="TransportFunctionalTests.cs" />
+    <Compile Remove="TypeBinderTests.cs" />
+    <Compile Remove="ValueStopwatchTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="LiveOnly.props" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Moq" />
+    <PackageReference Include="NUnit" />
+    <PackageReference Include="NUnit3TestAdapter" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(AzureCoreTestFramework)" />
+  </ItemGroup>
+  
+  <!-- Shared source from Azure.Core -->
+  <ItemGroup>
+    <Compile Include="$(AzureCoreSharedSources)AppContextSwitchHelper.cs" LinkBase="Shared" />
+    <Compile Include="$(AzureCoreSharedSources)ArrayBufferWriter.cs" LinkBase="Shared" />
+  </ItemGroup>
+
+</Project>
