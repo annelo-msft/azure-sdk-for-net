@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-namespace Azure
+namespace Azure.Core.Dynamic
 {
     /// <summary>
     /// Provides the ability for the user to define custom behavior when accessing JSON through a dynamic layer.

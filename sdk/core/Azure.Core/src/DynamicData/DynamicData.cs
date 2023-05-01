@@ -12,7 +12,7 @@ using System.Text.Json.Serialization;
 using Azure.Core;
 using Azure.Core.Json;
 
-namespace Azure
+namespace Azure.Core.Dynamic
 {
     /// <summary>
     /// A dynamic abstraction over content data, such as JSON.
