@@ -21,25 +21,14 @@ namespace Azure.Core.Json
         /// </summary>
         public bool ReplacesJsonElement { get; set; }
 
-        internal Utf8JsonReader GetReader()
+        internal JsonElement AsJsonElement(JsonSerializerOptions options)
         {
-            if (!ReplacesJsonElement)
+            if (Value is JsonElement element)
             {
-                // This change doesn't represent a new node, so we shouldn't need a new reader.
-                throw new InvalidOperationException("Unable to get Utf8JsonReader for this change.");
+                return element;
             }
 
-            return MutableJsonElement.GetReaderForElement(AsJsonElement());
-        }
-
-        internal JsonElement AsJsonElement()
-        {
-            if (Value is JsonElement)
-            {
-                return (JsonElement)Value;
-            }
-
-            byte[] bytes = JsonSerializer.SerializeToUtf8Bytes(Value);
+            byte[] bytes = JsonSerializer.SerializeToUtf8Bytes(Value, options);
             return JsonDocument.Parse(bytes).RootElement;
         }
 

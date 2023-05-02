@@ -50,7 +50,7 @@ namespace Azure
         internal void WriteTo(Stream stream)
         {
             using Utf8JsonWriter writer = new(stream);
-            _element.WriteTo(writer);
+            _element.WriteTo(writer, _serializerOptions);
         }
 
         private object? GetProperty(string name)
@@ -124,14 +124,14 @@ namespace Azure
 
             if (_options.NameMapping == DynamicDataNameMapping.None)
             {
-                _element = _element.SetProperty(name, value);
+                _element = _element.SetProperty(name, value, _serializerOptions);
                 return null;
             }
 
             if (!char.IsUpper(name[0]))
             {
                 // Lookup name is camelCase, so set unchanged.
-                _element = _element.SetProperty(name, value);
+                _element = _element.SetProperty(name, value, _serializerOptions);
                 return null;
             }
 
@@ -151,7 +151,7 @@ namespace Azure
 
             // It's a new property, so set according to the mapping.
             name = CamelCaseSetters() ? GetAsCamelCase(name) : name;
-            _element = _element.SetProperty(name, value);
+            _element = _element.SetProperty(name, value, _serializerOptions);
 
             // Binding machinery expects the call site signature to return an object
             return null;
@@ -174,7 +174,7 @@ namespace Azure
 
         private T? ConvertTo<T>()
         {
-            JsonElement element = _element.GetJsonElement();
+            JsonElement element = _element.GetJsonElement(_serializerOptions);
 
             try
             {
@@ -303,12 +303,12 @@ namespace Azure
             public override DynamicData Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
             {
                 JsonDocument document = JsonDocument.ParseValue(ref reader);
-                return new DynamicData(new MutableJsonDocument(document).RootElement);
+                return new DynamicData(new MutableJsonDocument(document, options).RootElement);
             }
 
             public override void Write(Utf8JsonWriter writer, DynamicData value, JsonSerializerOptions options)
             {
-                value._element.WriteTo(writer);
+                value._element.WriteTo(writer, options);
             }
         }
     }

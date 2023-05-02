@@ -8,12 +8,13 @@ namespace Azure.Core.Json
 {
     internal partial struct MutableJsonElement
     {
-        internal void WriteTo(Utf8JsonWriter writer)
+        internal void WriteTo(Utf8JsonWriter writer, JsonSerializerOptions? options)
         {
-            WriteElement(_path, _highWaterMark, _element, writer);
+            options = options ?? _root.SerializerOptions;
+            WriteElement(_path, _highWaterMark, _element, writer, options);
         }
 
-        private void WriteElement(string path, int highWaterMark, JsonElement element, Utf8JsonWriter writer)
+        private void WriteElement(string path, int highWaterMark, JsonElement element, Utf8JsonWriter writer, JsonSerializerOptions options)
         {
             if (Changes.TryGetChange(path, highWaterMark, out MutableJsonChange change))
             {
@@ -43,7 +44,7 @@ namespace Azure.Core.Json
                         // Note: string is not included to let JsonElement handle escaping.
                 }
 
-                element = change.AsJsonElement();
+                element = change.AsJsonElement(options);
                 highWaterMark = change.Index;
             }
 
@@ -52,10 +53,10 @@ namespace Azure.Core.Json
                 switch (element.ValueKind)
                 {
                     case JsonValueKind.Object:
-                        WriteObject(path, highWaterMark, element, writer);
+                        WriteObject(path, highWaterMark, element, writer, options);
                         break;
                     case JsonValueKind.Array:
-                        WriteArray(path, highWaterMark, element, writer);
+                        WriteArray(path, highWaterMark, element, writer, options);
                         break;
                     default:
                         throw new InvalidOperationException("Element doesn't have descendants.");
@@ -67,7 +68,7 @@ namespace Azure.Core.Json
             element.WriteTo(writer);
         }
 
-        private void WriteObject(string path, int highWaterMark, JsonElement element, Utf8JsonWriter writer)
+        private void WriteObject(string path, int highWaterMark, JsonElement element, Utf8JsonWriter writer, JsonSerializerOptions options)
         {
             writer.WriteStartObject();
 
@@ -76,13 +77,13 @@ namespace Azure.Core.Json
                 string propertyPath = MutableJsonDocument.ChangeTracker.PushProperty(path, property.Name);
 
                 writer.WritePropertyName(property.Name);
-                WriteElement(propertyPath, highWaterMark, property.Value, writer);
+                WriteElement(propertyPath, highWaterMark, property.Value, writer, options);
             }
 
             writer.WriteEndObject();
         }
 
-        private void WriteArray(string path, int highWaterMark, JsonElement element, Utf8JsonWriter writer)
+        private void WriteArray(string path, int highWaterMark, JsonElement element, Utf8JsonWriter writer, JsonSerializerOptions options)
         {
             writer.WriteStartArray();
 
@@ -90,7 +91,7 @@ namespace Azure.Core.Json
             foreach (JsonElement arrayElement in element.EnumerateArray())
             {
                 string arrayElementPath = MutableJsonDocument.ChangeTracker.PushIndex(path, arrayIndex++);
-                WriteElement(arrayElementPath, highWaterMark, arrayElement, writer);
+                WriteElement(arrayElementPath, highWaterMark, arrayElement, writer, options);
             }
 
             writer.WriteEndArray();

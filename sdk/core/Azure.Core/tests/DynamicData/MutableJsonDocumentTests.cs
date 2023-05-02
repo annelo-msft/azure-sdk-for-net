@@ -233,7 +233,7 @@ namespace Azure.Core.Tests
 
             // Has same semantics as Dictionary
             // https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.dictionary-2.item?view=net-7.0#property-value
-            mdoc.RootElement.SetProperty("Bar", "hi");
+            mdoc.RootElement.SetProperty("Bar", "hi", new JsonSerializerOptions());
 
             // Assert:
 
@@ -273,7 +273,7 @@ namespace Azure.Core.Tests
 
             MutableJsonDocument mdoc = MutableJsonDocument.Parse(json);
 
-            mdoc.RootElement.GetProperty("Foo").SetProperty("B", "hi");
+            mdoc.RootElement.GetProperty("Foo").SetProperty("B", "hi", new JsonSerializerOptions());
 
             // Assert:
 
@@ -315,7 +315,7 @@ namespace Azure.Core.Tests
             MutableJsonDocument mdoc = MutableJsonDocument.Parse(json);
             MutableJsonDocument anotherMDoc = MutableJsonDocument.Parse("""{ "Baz": "hi" }""");
 
-            mdoc.RootElement.SetProperty("A", anotherMDoc);
+            mdoc.RootElement.SetProperty("A", anotherMDoc, new JsonSerializerOptions());
 
             Assert.AreEqual("hi", mdoc.RootElement.GetProperty("A").GetProperty("Baz").GetString());
 
@@ -344,7 +344,7 @@ namespace Azure.Core.Tests
 
             JsonDocument doc = JsonDocument.Parse("""{ "Baz": "hi" }""");
 
-            mdoc.RootElement.SetProperty("A", doc);
+            mdoc.RootElement.SetProperty("A", doc, new JsonSerializerOptions());
 
             Assert.AreEqual("hi", mdoc.RootElement.GetProperty("A").GetProperty("Baz").GetString());
 
@@ -372,7 +372,7 @@ namespace Azure.Core.Tests
 
             MutableJsonDocument mdoc = MutableJsonDocument.Parse(json);
 
-            mdoc.RootElement.RemoveProperty("Bar");
+            mdoc.RootElement.RemoveProperty("Bar", new JsonSerializerOptions());
 
             // Assert:
 
@@ -412,7 +412,7 @@ namespace Azure.Core.Tests
 
             MutableJsonDocument mdoc = MutableJsonDocument.Parse(json);
 
-            mdoc.RootElement.GetProperty("Foo").RemoveProperty("B");
+            mdoc.RootElement.GetProperty("Foo").RemoveProperty("B", new JsonSerializerOptions());
 
             // Assert:
 
@@ -659,8 +659,8 @@ namespace Azure.Core.Tests
             MutableJsonDocument mdoc = MutableJsonDocument.Parse("{}");
             MutableJsonDocument child = MutableJsonDocument.Parse("{}");
 
-            mdoc.RootElement.SetProperty("A", child);
-            child.RootElement.SetProperty("B", 2);
+            mdoc.RootElement.SetProperty("A", child, new JsonSerializerOptions());
+            child.RootElement.SetProperty("B", 2, new JsonSerializerOptions());
 
             string expected = """{ "A" : { "B" : 2 } }""";
             ValidateWriteTo(expected, mdoc);
@@ -678,7 +678,7 @@ namespace Azure.Core.Tests
             // a is a reference to the 0th element; a's path is "0"
             MutableJsonElement a = mdoc.RootElement.GetIndexElement(0);
 
-            a.GetProperty("Foo").SetProperty("Bar", 5);
+            a.GetProperty("Foo").SetProperty("Bar", 5, new JsonSerializerOptions());
 
             Assert.AreEqual(5, a.GetProperty("Foo").GetProperty("Bar").GetInt32());
             Assert.AreEqual(5, mdoc.RootElement.GetIndexElement(0).GetProperty("Foo").GetProperty("Bar").GetInt32());

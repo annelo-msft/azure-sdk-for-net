@@ -40,7 +40,7 @@ namespace Azure.Core.Json
         {
             get
             {
-                JsonElement element = GetJsonElement();
+                JsonElement element = GetJsonElement(_root.SerializerOptions);
                 return element.ValueKind;
             }
         }
@@ -82,7 +82,7 @@ namespace Azure.Core.Json
             {
                 if (change.ReplacesJsonElement)
                 {
-                    value = new MutableJsonElement(_root, change.AsJsonElement(), path, change.Index);
+                    value = new MutableJsonElement(_root, change.AsJsonElement(_root.SerializerOptions), path, change.Index);
                     return true;
                 }
             }
@@ -103,7 +103,7 @@ namespace Azure.Core.Json
             {
                 if (change.ReplacesJsonElement)
                 {
-                    return new MutableJsonElement(_root, change.AsJsonElement(), path, change.Index);
+                    return new MutableJsonElement(_root, change.AsJsonElement(_root.SerializerOptions), path, change.Index);
                 }
             }
 
@@ -382,7 +382,8 @@ namespace Azure.Core.Json
         /// </summary>
         /// <param name="name"></param>
         /// <param name="value"></param>
-        public MutableJsonElement SetProperty(string name, object value)
+        /// <param name="options"></param>
+        public MutableJsonElement SetProperty(string name, object value, JsonSerializerOptions options)
         {
             if (TryGetProperty(name, out MutableJsonElement element))
             {
@@ -400,10 +401,10 @@ namespace Azure.Core.Json
 #endif
 
             // If it's not already there, we'll add a change to this element's JsonElement instead.
-            Dictionary<string, object> dict = JsonSerializer.Deserialize<Dictionary<string, object>>(GetRawBytes())!;
+            Dictionary<string, object> dict = JsonSerializer.Deserialize<Dictionary<string, object>>(GetRawBytes(options), options)!;
             dict[name] = value;
 
-            byte[] bytes = JsonSerializer.SerializeToUtf8Bytes(dict);
+            byte[] bytes = JsonSerializer.SerializeToUtf8Bytes(dict, options);
             JsonElement newElement = JsonDocument.Parse(bytes).RootElement;
 
             int index = Changes.AddChange(_path, newElement, true);
@@ -420,8 +421,9 @@ namespace Azure.Core.Json
         /// Remove the property with the specified name from the current MutableJsonElement.
         /// </summary>
         /// <param name="name"></param>
+        /// <param name="options"></param>
         /// <exception cref="InvalidOperationException"></exception>
-        public void RemoveProperty(string name)
+        public void RemoveProperty(string name, JsonSerializerOptions options)
         {
             EnsureValid();
 
@@ -432,10 +434,10 @@ namespace Azure.Core.Json
                 throw new InvalidOperationException($"Object does not have property: '{name}'.");
             }
 
-            Dictionary<string, object> dict = JsonSerializer.Deserialize<Dictionary<string, object>>(GetRawBytes())!;
+            Dictionary<string, object> dict = JsonSerializer.Deserialize<Dictionary<string, object>>(GetRawBytes(options), options)!;
             dict.Remove(name);
 
-            byte[] bytes = JsonSerializer.SerializeToUtf8Bytes(dict);
+            byte[] bytes = JsonSerializer.SerializeToUtf8Bytes(dict, _root.SerializerOptions);
             JsonElement newElement = JsonDocument.Parse(bytes).RootElement;
 
             Changes.AddChange(_path, newElement, true);
@@ -568,7 +570,7 @@ namespace Azure.Core.Json
             {
                 if (change.ReplacesJsonElement)
                 {
-                    element = change.AsJsonElement();
+                    element = change.AsJsonElement(_root.SerializerOptions);
                 }
             }
 
@@ -588,37 +590,37 @@ namespace Azure.Core.Json
             // Account for changes to descendants of this element as well
             if (Changes.DescendantChanged(_path, _highWaterMark))
             {
-                return Encoding.UTF8.GetString(GetRawBytes());
+                return Encoding.UTF8.GetString(GetRawBytes(_root.SerializerOptions));
             }
 
             return _element.ToString() ?? "null";
         }
 
-        internal JsonElement GetJsonElement()
+        internal JsonElement GetJsonElement(JsonSerializerOptions options)
         {
             EnsureValid();
 
             if (Changes.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
             {
-                return change.AsJsonElement();
+                return change.AsJsonElement(options);
             }
 
             // Account for changes to descendants of this element as well
             if (Changes.DescendantChanged(_path, _highWaterMark))
             {
-                JsonDocument document = JsonDocument.Parse(GetRawBytes());
+                JsonDocument document = JsonDocument.Parse(GetRawBytes(options));
                 return document.RootElement;
             }
 
             return _element;
         }
 
-        private byte[] GetRawBytes()
+        private byte[] GetRawBytes(JsonSerializerOptions options)
         {
             using MemoryStream changedElementStream = new();
             using (Utf8JsonWriter changedElementWriter = new(changedElementStream))
             {
-                WriteTo(changedElementWriter);
+                WriteTo(changedElementWriter, options);
             }
 
             return changedElementStream.ToArray();

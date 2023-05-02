@@ -20,6 +20,7 @@ namespace Azure.Core.Json
         private readonly JsonDocument _originalDocument;
 
         internal ChangeTracker Changes { get; } = new();
+        internal JsonSerializerOptions SerializerOptions { get; private set; }
 
         /// <summary>
         /// Gets the root element of this JSON document.
@@ -32,7 +33,7 @@ namespace Azure.Core.Json
                 {
                     if (change.ReplacesJsonElement)
                     {
-                        return new MutableJsonElement(this, change.AsJsonElement(), string.Empty, change.Index);
+                        return new MutableJsonElement(this, change.AsJsonElement(SerializerOptions), string.Empty, change.Index);
                     }
                 }
 
@@ -64,7 +65,7 @@ namespace Azure.Core.Json
             }
 
             using Utf8JsonWriter writer = new(stream);
-            RootElement.WriteTo(writer);
+            RootElement.WriteTo(writer, SerializerOptions);
         }
 
         /// <summary>
@@ -84,7 +85,7 @@ namespace Azure.Core.Json
                 return;
             }
 
-            RootElement.WriteTo(writer);
+            RootElement.WriteTo(writer, SerializerOptions);
         }
 
         private static void Write(Stream stream, ReadOnlySpan<byte> buffer)
@@ -110,7 +111,7 @@ namespace Azure.Core.Json
         public static MutableJsonDocument Parse(ReadOnlyMemory<byte> utf8Json)
         {
             var doc = JsonDocument.Parse(utf8Json);
-            return new MutableJsonDocument(doc, utf8Json);
+            return new MutableJsonDocument(doc, utf8Json, default);
         }
 
         /// <summary>
@@ -122,7 +123,7 @@ namespace Azure.Core.Json
         public static MutableJsonDocument Parse(BinaryData utf8Json)
         {
             var doc = JsonDocument.Parse(utf8Json);
-            return new MutableJsonDocument(doc, utf8Json.ToMemory());
+            return new MutableJsonDocument(doc, utf8Json.ToMemory(), default);
         }
 
         /// <summary>
@@ -135,7 +136,7 @@ namespace Azure.Core.Json
         {
             byte[] utf8 = Encoding.UTF8.GetBytes(json);
             Memory<byte> jsonMemory = utf8.AsMemory();
-            return new MutableJsonDocument(JsonDocument.Parse(jsonMemory), jsonMemory);
+            return new MutableJsonDocument(JsonDocument.Parse(jsonMemory), jsonMemory, default);
         }
 
         /// <inheritdoc/>
@@ -144,14 +145,15 @@ namespace Azure.Core.Json
             _originalDocument.Dispose();
         }
 
-        internal MutableJsonDocument(JsonDocument document) : this(document, GetBytesFromDocument(document))
+        internal MutableJsonDocument(JsonDocument document, JsonSerializerOptions? options) : this(document, GetBytesFromDocument(document), options)
         {
         }
 
-        internal MutableJsonDocument(JsonDocument document, ReadOnlyMemory<byte> utf8Json)
+        internal MutableJsonDocument(JsonDocument document, ReadOnlyMemory<byte> utf8Json, JsonSerializerOptions? options)
         {
             _original = utf8Json;
             _originalDocument = document;
+            SerializerOptions = options ?? new JsonSerializerOptions();
         }
 
         private static ReadOnlyMemory<byte> GetBytesFromDocument(JsonDocument document)
@@ -170,7 +172,7 @@ namespace Azure.Core.Json
             public override MutableJsonDocument Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
             {
                 JsonDocument document = JsonDocument.ParseValue(ref reader);
-                return new MutableJsonDocument(document);
+                return new MutableJsonDocument(document, options);
             }
 
             public override void Write(Utf8JsonWriter writer, MutableJsonDocument value, JsonSerializerOptions options)

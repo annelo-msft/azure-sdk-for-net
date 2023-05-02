@@ -28,7 +28,7 @@ namespace Azure.Core.Json
                 target.EnsureObject();
 
                 _target = target;
-                _enumerator = target.GetJsonElement().EnumerateObject();
+                _enumerator = target.GetJsonElement(_target._root.SerializerOptions).EnumerateObject();
             }
 
             /// <inheritdoc />
