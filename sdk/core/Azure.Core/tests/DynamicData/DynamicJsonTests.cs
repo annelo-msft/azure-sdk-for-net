@@ -1047,6 +1047,30 @@ namespace Azure.Core.Tests
             Assert.Throws<InvalidCastException>(() => { DateTimeOffset d = (DateTimeOffset)json.Foo; });
         }
 
+        [Test]
+        public void CanCastToComplexType()
+        {
+            ComplexModel model = new ComplexModel()
+            {
+                EnumProperty = TestEnum.Third,
+                UriProperty = new Uri("https://www.example.com"),
+                NullableProperty = null,
+                CharProperty = 'a',
+                DateTimeProperty = DateTime.UtcNow,
+                TimeProperty = DateTime.UtcNow.TimeOfDay
+            };
+
+            dynamic json = BinaryData.FromString("""{"foo":1}""").ToDynamicFromJson();
+            json.Foo = model;
+
+            // Get from parsed JSON
+            Assert.AreEqual(model, (ComplexModel)json.Foo);
+
+            // Get from added value
+            json.Bar = model;
+            Assert.AreEqual(model, (ComplexModel)json.Bar);
+        }
+
         public static IEnumerable<object[]> NumberValues()
         {
             // Valid ranges:
@@ -1131,6 +1155,45 @@ namespace Azure.Core.Tests
             {
                 return Message == obj.Message && Number == obj.Number;
             }
+        }
+
+        internal class ComplexModel : IEquatable<ComplexModel>
+        {
+            public TestEnum EnumProperty { get; set; }
+            public Uri UriProperty { get; set; }
+            public int? NullableProperty { get; set; }
+            public char CharProperty { get; set; }
+            public DateTime DateTimeProperty { get; set; }
+            public TimeSpan TimeProperty { get; set; }
+
+            public override bool Equals(object obj)
+            {
+                ComplexModel other = obj as ComplexModel;
+                if (other == null)
+                {
+                    return false;
+                }
+
+                return Equals(other);
+            }
+
+            public bool Equals(ComplexModel obj)
+            {
+                return
+                    EnumProperty == obj.EnumProperty &&
+                    UriProperty == obj.UriProperty &&
+                    NullableProperty == obj.NullableProperty &&
+                    CharProperty == obj.CharProperty &&
+                    DateTimeProperty == obj.DateTimeProperty &&
+                    TimeProperty == obj.TimeProperty;
+            }
+        }
+
+        internal enum TestEnum
+        {
+            First,
+            Second,
+            Third
         }
         #endregion
     }
