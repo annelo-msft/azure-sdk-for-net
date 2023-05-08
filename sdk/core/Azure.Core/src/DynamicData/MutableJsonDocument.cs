@@ -19,7 +19,8 @@ namespace Azure.Core.Json
         private readonly ReadOnlyMemory<byte> _original;
         private readonly JsonDocument _originalDocument;
 
-        internal JsonSerializerOptions SerializerOptions { get; private set; }
+        private readonly JsonSerializerOptions _serializerOptions;
+        internal JsonSerializerOptions SerializerOptions { get => _serializerOptions; }
 
         private ChangeTracker? _changeTracker;
         internal ChangeTracker Changes
@@ -116,18 +117,19 @@ namespace Azure.Core.Json
         /// </summary>
         /// <param name="utf8Json">A UTF-8 encoded string representing a JSON value.</param>
         /// <returns>A <see cref="MutableJsonDocument"/> representation of the value.</returns>
+        /// <param name="serializerOptions">Serializer options used to serialize and deserialize any changes to the JSON.</param>
         /// <exception cref="JsonException"><paramref name="utf8Json"/> does not represent a valid single JSON value.</exception>
-        public static MutableJsonDocument Parse(ReadOnlyMemory<byte> utf8Json)
+        public static MutableJsonDocument Parse(ReadOnlyMemory<byte> utf8Json, JsonSerializerOptions? serializerOptions = default)
         {
             var doc = JsonDocument.Parse(utf8Json);
-            return new MutableJsonDocument(doc, utf8Json, default);
+            return new MutableJsonDocument(doc, utf8Json, serializerOptions);
         }
 
         /// <summary>
         /// Parses a UTF-8 encoded string representing a single JSON value into a <see cref="MutableJsonDocument"/>.
         /// </summary>
         /// <param name="utf8Json">A UTF-8 encoded string representing a JSON value.</param>
-        /// <param name="serializerOptions"></param>
+        /// <param name="serializerOptions">Serializer options used to serialize and deserialize any changes to the JSON.</param>
         /// <returns>A <see cref="MutableJsonDocument"/> representation of the value.</returns>
         /// <exception cref="JsonException"><paramref name="utf8Json"/> does not represent a valid single JSON value.</exception>
         public static MutableJsonDocument Parse(BinaryData utf8Json, JsonSerializerOptions? serializerOptions = default)
@@ -140,7 +142,7 @@ namespace Azure.Core.Json
         /// Parses test representing a single JSON value into a <see cref="MutableJsonDocument"/>.
         /// </summary>
         /// <param name="json">The JSON string.</param>
-        /// <param name="serializerOptions"></param>
+        /// <param name="serializerOptions">Serializer options used to serialize and deserialize any changes to the JSON.</param>
         /// <returns>A <see cref="MutableJsonDocument"/> representation of the value.</returns>
         /// <exception cref="JsonException"><paramref name="json"/> does not represent a valid single JSON value.</exception>
         public static MutableJsonDocument Parse(string json, JsonSerializerOptions? serializerOptions = default)
@@ -164,7 +166,7 @@ namespace Azure.Core.Json
         {
             _original = utf8Json;
             _originalDocument = document;
-            SerializerOptions = serializerOptions ?? new JsonSerializerOptions();
+            _serializerOptions = serializerOptions ?? new JsonSerializerOptions();
         }
 
         private static ReadOnlyMemory<byte> GetBytesFromDocument(JsonDocument document)

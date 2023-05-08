@@ -7,46 +7,46 @@ namespace Azure.Core.Json
 {
     internal struct MutableJsonChange
     {
+        private readonly JsonSerializerOptions _serializerOptions;
+        private JsonElement? _serializedValue;
+
         public MutableJsonChange(string path, int index, object? value, bool replacesJsonElement, JsonSerializerOptions options)
         {
             Path = path;
             Index = index;
             Value = value;
             ReplacesJsonElement = replacesJsonElement;
-            SerializerOptions = options;
+            _serializerOptions = options;
         }
 
-        public string Path { get; private set; }
+        public string Path { get; }
 
-        public int Index { get; private set; }
+        public int Index { get; }
 
-        public object? Value { get; private set; }
+        public object? Value { get; }
 
         /// <summary>
         /// The change invalidates the existing node's JsonElement
         /// due to changes in JsonValueKind or path structure.
         /// If this is true, Value holds a new JsonElement.
         /// </summary>
-        public bool ReplacesJsonElement { get; private set; }
-
-        private JsonElement? _serializedValue;
-
-        public JsonSerializerOptions SerializerOptions { get; private set; }
+        public bool ReplacesJsonElement { get; }
 
         internal JsonElement AsJsonElement()
         {
+            if (_serializedValue != null)
+            {
+                return _serializedValue.Value;
+            }
+
             if (Value is JsonElement element)
             {
                 _serializedValue = element;
                 return element;
             }
 
-            if (_serializedValue == null)
-            {
-                byte[] bytes = JsonSerializer.SerializeToUtf8Bytes(Value, SerializerOptions);
-                _serializedValue = JsonDocument.Parse(bytes).RootElement;
-            }
-
+            byte[] bytes = JsonSerializer.SerializeToUtf8Bytes(Value, _serializerOptions);
+            _serializedValue = JsonDocument.Parse(bytes).RootElement;
             return _serializedValue.Value;
         }
 
