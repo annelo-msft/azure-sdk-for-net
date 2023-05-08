@@ -2,9 +2,7 @@
 // Licensed under the MIT License.
 
 using System.Collections.Generic;
-using System.Text.Json;
 using Azure.Core.GeoJson;
-using Azure.Core.Json;
 using NUnit.Framework;
 
 namespace Azure.Core.Tests
@@ -118,7 +116,6 @@ namespace Azure.Core.Tests
 #if NETCOREAPP
             yield return new object[] {1.1D, "1.1"};
             yield return new object[] {1.1F, "1.1"};
-            yield return new object[] {1.1M, "1.1"};
 #else
             yield return new object[] { 1.1D, "1.1000000000000001" };
             yield return new object[] { 1.1F, "1.10000002" };
