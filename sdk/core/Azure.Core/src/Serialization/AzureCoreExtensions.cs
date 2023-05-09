@@ -69,6 +69,15 @@ namespace Azure
             return new DynamicData(mdoc.RootElement);
         }
 
+        /// <summary>
+        /// Return the content of the BinaryData as a dynamic type.
+        /// </summary>
+        public static dynamic ToDynamicFromJson(this BinaryData utf8Json, DynamicDataWriteMapping writeMapping)
+        {
+            MutableJsonDocument mdoc = MutableJsonDocument.Parse(utf8Json, DynamicData.DefaultSerializerOptions);
+            return new DynamicData(mdoc.RootElement);
+        }
+
         private static object? GetObject(in this JsonElement element)
         {
             switch (element.ValueKind)

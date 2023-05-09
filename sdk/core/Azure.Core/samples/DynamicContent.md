@@ -30,7 +30,7 @@ JSON members can be set on the dynamic object.
 ```C# Snippet:AzureCoreSetDynamicJsonProperty
 Response response = client.GetWidget();
 dynamic widget = response.Content.ToDynamicFromJson();
-widget.Name = "New Name";
+widget.name = "New Name";
 client.SetWidget(RequestContent.Create(widget));
 ```
 
@@ -159,7 +159,7 @@ To make this common case easier to implement, Dynamic JSON is mutable.  This all
 ```C# Snippet:AzureCoreRoundTripDynamicJson
 Response response = client.GetWidget();
 dynamic widget = response.Content.ToDynamicFromJson();
-widget.Name = "New Name";
+widget.name = "New Name";
 client.SetWidget(RequestContent.Create(widget));
 ```
 

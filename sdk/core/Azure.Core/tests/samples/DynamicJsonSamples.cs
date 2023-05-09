@@ -2,7 +2,6 @@
 // Licensed under the MIT License.
 
 using System;
-using Azure.Core.Dynamic;
 using Azure.Core.TestFramework;
 using NUnit.Framework;
 
@@ -45,7 +44,7 @@ namespace Azure.Core.Samples
             #region Snippet:AzureCoreSetDynamicJsonProperty
             Response response = client.GetWidget();
             dynamic widget = response.Content.ToDynamicFromJson();
-            widget.Name = "New Name";
+            widget.name = "New Name";
             client.SetWidget(RequestContent.Create(widget));
             #endregion
 
@@ -210,7 +209,7 @@ namespace Azure.Core.Samples
             #region Snippet:AzureCoreRoundTripDynamicJson
             Response response = client.GetWidget();
             dynamic widget = response.Content.ToDynamicFromJson();
-            widget.Name = "New Name";
+            widget.name = "New Name";
             client.SetWidget(RequestContent.Create(widget));
             #endregion
         }

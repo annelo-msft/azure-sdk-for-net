@@ -115,28 +115,14 @@ namespace Azure.Core.Dynamic
         {
             Argument.AssertNotNullOrEmpty(name, nameof(name));
 
-            if (!char.IsUpper(name[0]))
-            {
-                // Lookup name is camelCase, so set unchanged.
-                _element = _element.SetProperty(name, value);
-                return null;
-            }
-
-            // Lookup name is PascalCase, so check for the property as PascalCase then camelCase.
             if (_element.TryGetProperty(name, out MutableJsonElement element))
             {
                 element.Set(value);
                 return null;
             }
 
-            if (_element.TryGetProperty(GetAsCamelCase(name), out element))
-            {
-                element.Set(value);
-                return null;
-            }
-
-            // It's a new property, so set with a camelCase member name.
-            _element = _element.SetProperty(GetAsCamelCase(name), value);
+            // It's a new property, so set with no mapping
+            _element = _element.SetProperty(name, value);
 
             // Binding machinery expects the call site signature to return an object
             return null;
