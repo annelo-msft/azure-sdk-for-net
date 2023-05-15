@@ -10,7 +10,7 @@ namespace Azure.Core.Dynamic
     /// <summary>
     /// Options for setting DynamicData properties.
     /// </summary>
-    public enum DynamicDataSetOptions
+    public enum DynamicWritePropertyNameHandling
     {
         /// <summary>
         /// DynamicData instance is read-only.
@@ -20,11 +20,11 @@ namespace Azure.Core.Dynamic
         /// <summary>
         /// Member names written to the data buffer will exactly match the C# dynamic property names.
         /// </summary>
-        ExactNames,
+        Strict,
 
         /// <summary>
         /// Member names written to the data buffer will be converted to camelCase from the C# dynamic property names.
         /// </summary>
-        CamelCaseNames
+        WriteCamelCase
     }
 }
