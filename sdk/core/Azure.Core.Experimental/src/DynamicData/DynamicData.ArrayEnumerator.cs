@@ -17,9 +17,9 @@ namespace Azure.Core.Dynamic
         internal struct ArrayEnumerator : IEnumerable<DynamicData>, IEnumerator<DynamicData>
         {
             private MutableJsonElement.ArrayEnumerator _enumerator;
-            private readonly DynamicWritePropertyNameHandling _setOptions;
+            private readonly DynamicPropertyNameWriteHandling _setOptions;
 
-            internal ArrayEnumerator(MutableJsonElement.ArrayEnumerator enumerator, DynamicWritePropertyNameHandling setOptions)
+            internal ArrayEnumerator(MutableJsonElement.ArrayEnumerator enumerator, DynamicPropertyNameWriteHandling setOptions)
             {
                 _enumerator = enumerator;
                 _setOptions = setOptions;

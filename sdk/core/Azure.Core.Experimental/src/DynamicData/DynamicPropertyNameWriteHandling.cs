@@ -10,7 +10,7 @@ namespace Azure.Core.Dynamic
     /// <summary>
     /// Options for setting DynamicData properties.
     /// </summary>
-    public enum DynamicWritePropertyNameHandling
+    public enum DynamicPropertyNameWriteHandling
     {
         /// <summary>
         /// DynamicData instance is read-only.

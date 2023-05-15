@@ -31,10 +31,10 @@ namespace Azure.Core.Dynamic
         private static readonly MethodInfo SetViaIndexerMethod = typeof(DynamicData).GetMethod(nameof(SetViaIndexer), BindingFlags.NonPublic | BindingFlags.Instance)!;
 
         private MutableJsonElement _element;
-        private readonly DynamicWritePropertyNameHandling _setOptions;
+        private readonly DynamicPropertyNameWriteHandling _setOptions;
         private readonly JsonSerializerOptions _serializerOptions;
 
-        internal DynamicData(MutableJsonElement element, DynamicWritePropertyNameHandling setOptions)
+        internal DynamicData(MutableJsonElement element, DynamicPropertyNameWriteHandling setOptions)
         {
             _element = element;
             _setOptions = setOptions;
@@ -115,7 +115,7 @@ namespace Azure.Core.Dynamic
         {
             Argument.AssertNotNullOrEmpty(name, nameof(name));
 
-            if (_setOptions == DynamicWritePropertyNameHandling.None)
+            if (_setOptions == DynamicPropertyNameWriteHandling.None)
             {
                 throw new InvalidOperationException("This DynamicData instance is read-only.  In order to make its properties settable, please specify a value for DynamicDataSetOptions that is not `None`.");
             }
@@ -323,7 +323,7 @@ namespace Azure.Core.Dynamic
             public override DynamicData Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
             {
                 JsonDocument document = JsonDocument.ParseValue(ref reader);
-                return new DynamicData(new MutableJsonDocument(document, options).RootElement, DynamicWritePropertyNameHandling.None);
+                return new DynamicData(new MutableJsonDocument(document, options).RootElement, DynamicPropertyNameWriteHandling.None);
             }
 
             public override void Write(Utf8JsonWriter writer, DynamicData value, JsonSerializerOptions options)

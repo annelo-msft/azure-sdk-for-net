@@ -3,7 +3,7 @@ namespace Azure
     public static partial class BinaryDataExtensions
     {
         public static dynamic ToDynamicFromJson(this System.BinaryData utf8Json) { throw null; }
-        public static dynamic ToDynamicFromJson(this System.BinaryData utf8Json, Azure.Core.Dynamic.DynamicWritePropertyNameHandling setOptions) { throw null; }
+        public static dynamic ToDynamicFromJson(this System.BinaryData utf8Json, Azure.Core.Dynamic.DynamicPropertyNameWriteHandling setOptions) { throw null; }
     }
     [System.Runtime.InteropServices.StructLayoutAttribute(System.Runtime.InteropServices.LayoutKind.Sequential)]
     public readonly partial struct Value
@@ -143,7 +143,7 @@ namespace Azure.Core.Dynamic
         System.Dynamic.DynamicMetaObject System.Dynamic.IDynamicMetaObjectProvider.GetMetaObject(System.Linq.Expressions.Expression parameter) { throw null; }
         public override string ToString() { throw null; }
     }
-    public enum DynamicWritePropertyNameHandling
+    public enum DynamicPropertyNameWriteHandling
     {
         None = 0,
         Strict = 1,
