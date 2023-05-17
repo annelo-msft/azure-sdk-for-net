@@ -72,16 +72,6 @@ namespace Azure.Core.Dynamic
             return null;
         }
 
-        private static string GetAsCamelCase(string value)
-        {
-            if (value.Length < 2)
-            {
-                return value.ToLowerInvariant();
-            }
-
-            return $"{char.ToLowerInvariant(value[0])}{value.Substring(1)}";
-        }
-
         private object? GetViaIndexer(object index)
         {
             switch (index)
