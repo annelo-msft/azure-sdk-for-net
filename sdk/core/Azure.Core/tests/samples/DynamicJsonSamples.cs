@@ -229,6 +229,27 @@ namespace Azure.Core.Samples
             #endregion
         }
 
+        [Test]
+        public void DisposeDynamicJson()
+        {
+            WidgetsClient client = GetMockClient();
+            dynamic details = null;
+
+            #region Snippet:AzureCoreDisposeDynamicJson
+            Response response = client.GetLargeWidget();
+            using (dynamic widget = response.Content.ToDynamicFromJson(DynamicCaseMapping.PascalToCamel))
+            {
+#if !SNIPPET
+                details = widget.Details;
+#endif
+                widget.Name = "New Name";
+                client.SetWidget(RequestContent.Create(widget));
+            }
+            #endregion
+
+            Assert.Throws<ObjectDisposedException>(() => { _ = details.Color; });
+        }
+
         private WidgetsClient GetMockClient()
         {
             string initial = """
