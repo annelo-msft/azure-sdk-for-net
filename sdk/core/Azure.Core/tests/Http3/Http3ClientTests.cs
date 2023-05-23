@@ -13,7 +13,7 @@ namespace Azure.Core.Tests
         [Test]
         public void CanSendRequest()
         {
-            Uri endpoint = new Uri("https://localhost:7033/");
+            Uri endpoint = new Uri("https://localhost:5001/");
             WidgetHttp3Client client = new WidgetHttp3Client(endpoint, new MockCredential());
             var widget = new
             {

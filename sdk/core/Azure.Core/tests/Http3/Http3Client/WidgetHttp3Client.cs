@@ -169,7 +169,7 @@ namespace Azure.Core.Samples
             var message = _pipeline.CreateMessage(context, ResponseClassifier200);
             var request = message.Request;
             request.Method = RequestMethod.Put;
-            //request.Version = RequestVersion.Http30;
+            request.Version = RequestVersion.Http30;
             var uri = new RawRequestUriBuilder();
             uri.Reset(_endpoint);
             uri.AppendPath("/widgets", false);
