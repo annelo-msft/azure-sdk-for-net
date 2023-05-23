@@ -6,9 +6,9 @@
 #nullable disable
 
 using System;
+using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
-using Azure;
-using Azure.Core;
 using Azure.Core.Pipeline;
 
 namespace Azure.Core.Samples
@@ -161,13 +161,19 @@ namespace Azure.Core.Samples
 
         internal HttpMessage CreateSetRequest(RequestContent content, RequestContext context)
         {
+            MemoryStream stream = new MemoryStream();
+            content.WriteTo(stream, CancellationToken.None);
+            stream.Position = 0;
+            dynamic value = BinaryData.FromStream(stream).ToDynamicFromJson();
+
             var message = _pipeline.CreateMessage(context, ResponseClassifier200);
             var request = message.Request;
             request.Method = RequestMethod.Put;
-            request.Version = RequestVersion.Http30;
+            //request.Version = RequestVersion.Http30;
             var uri = new RawRequestUriBuilder();
             uri.Reset(_endpoint);
             uri.AppendPath("/widgets", false);
+            uri.AppendPath($"/{(int)value.id}", false);
             request.Uri = uri;
             request.Headers.Add("Content-Type", "application/json");
             request.Content = content;
