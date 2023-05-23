@@ -526,6 +526,7 @@ namespace Azure.Core
         public Azure.Core.RequestHeaders Headers { get { throw null; } }
         public virtual Azure.Core.RequestMethod Method { get { throw null; } set { } }
         public virtual Azure.Core.RequestUriBuilder Uri { get { throw null; } set { } }
+        public virtual Azure.Core.RequestVersion Version { get { throw null; } set { } }
         protected internal abstract void AddHeader(string name, string value);
         protected internal abstract bool ContainsHeader(string name);
         public abstract void Dispose();
@@ -616,6 +617,21 @@ namespace Azure.Core
         public void Reset(System.Uri value) { }
         public override string ToString() { throw null; }
         public System.Uri ToUri() { throw null; }
+    }
+    [System.Runtime.InteropServices.StructLayoutAttribute(System.Runtime.InteropServices.LayoutKind.Sequential)]
+    public readonly partial struct RequestVersion : System.IEquatable<Azure.Core.RequestVersion>
+    {
+        private readonly object _dummy;
+        private readonly int _dummyPrimitive;
+        public RequestVersion(System.Version version) { throw null; }
+        public static Azure.Core.RequestVersion Http11 { get { throw null; } }
+        public static Azure.Core.RequestVersion Http30 { get { throw null; } }
+        public System.Version Version { get { throw null; } }
+        public bool Equals(Azure.Core.RequestVersion other) { throw null; }
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Never)]
+        public override bool Equals(object? obj) { throw null; }
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Never)]
+        public override int GetHashCode() { throw null; }
     }
     public sealed partial class ResourceIdentifier : System.IComparable<Azure.Core.ResourceIdentifier>, System.IEquatable<Azure.Core.ResourceIdentifier>
     {

@@ -45,6 +45,10 @@ namespace Azure.Core
         public virtual RequestContent? Content { get; set; }
 
         /// <summary>
+        /// </summary>
+        public virtual RequestVersion Version { get; set; }
+
+        /// <summary>
         /// Adds a header value to the header collection.
         /// </summary>
         /// <param name="name">The header name.</param>
