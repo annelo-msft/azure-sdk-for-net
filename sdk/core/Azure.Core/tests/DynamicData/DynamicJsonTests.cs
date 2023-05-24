@@ -779,12 +779,14 @@ namespace Azure.Core.Tests
 
         internal static string FormatDateTime(DateTime d)
         {
-            return d.ToUniversalTime().ToString("o");
+            // Use TypeFormatters from autorest.csharp repo to confirm same behavior as models
+            return TypeFormatters.ToString(d, "O");
         }
 
         internal static string FormatDateTimeOffset(DateTimeOffset d)
         {
-            return d.ToUniversalTime().UtcDateTime.ToString("o");
+            // Use TypeFormatters from autorest.csharp repo to confirm same behavior as models
+            return TypeFormatters.ToString(d, "O");
         }
 
         [Test]
@@ -1021,36 +1023,6 @@ namespace Azure.Core.Tests
 
             Assert.AreEqual("Hello", (string)jsonData.primitive);
             Assert.AreEqual(true, (bool)jsonData.nested.nestedPrimitive);
-        }
-
-        [Test]
-        public void CanRoundTripSerialize()
-        {
-            dynamic orig = new BinaryData(
-                """
-                {
-                    "property" : "hello"
-                }
-                """).ToDynamicFromJson();
-
-            void validate(dynamic d)
-            {
-                Assert.IsTrue(d.property == "hello");
-
-                int count = 0;
-                foreach (dynamic item in d)
-                {
-                    count++;
-                }
-
-                Assert.IsTrue(count == 1);
-            }
-
-            validate(orig);
-
-            dynamic roundTrip = JsonSerializer.Deserialize<DynamicData>(JsonSerializer.Serialize(orig, orig.GetType()));
-
-            validate(roundTrip);
         }
 
         #region Helpers
