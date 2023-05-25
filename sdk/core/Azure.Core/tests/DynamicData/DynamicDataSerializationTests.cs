@@ -122,6 +122,33 @@ namespace Azure.Core.Tests
             Assert.AreEqual(ToUnixTime(model.DateTimeOffsetProperty), (long)value.Bar.DateTimeOffsetProperty);
         }
 
+        [Test]
+        public void DynamicSerializeBinaryDataModel()
+        {
+            string json = """{ "foo": null }""";
+            dynamic value = BinaryData.FromString(json).ToDynamicFromJson();
+
+            BinaryData b = BinaryData.FromString("b");
+
+            BinaryDataModel model = new BinaryDataModel()
+            {
+                StringProperty = "a",
+                BinaryDataProperty = b
+            };
+
+            // Existing property
+            value.Foo = model;
+
+            // Added property
+            value.Bar = model;
+
+            Assert.AreEqual("a", (string)value.Foo.StringProperty);
+            CollectionAssert.AreEqual(b.ToArray(), ((BinaryData)value.Foo.BinaryDataProperty).ToArray());
+
+            Assert.AreEqual("a", (string)value.Bar.StringProperty);
+            CollectionAssert.AreEqual(b.ToArray(), ((BinaryData)value.Bar.BinaryDataProperty).ToArray());
+        }
+
         #region Helpers
         internal static long ToUnixTime(DateTime d)
         {
@@ -164,6 +191,12 @@ namespace Azure.Core.Tests
                 return DateTimeProperty == other.DateTimeProperty &&
                        DateTimeOffsetProperty == other.DateTimeOffsetProperty;
             }
+        }
+
+        internal class BinaryDataModel
+        {
+            public string StringProperty { get; set; }
+            public BinaryData BinaryDataProperty { get; set; }
         }
 
         internal class AzureUtf8JsonSerializableModel : IUtf8JsonSerializable
