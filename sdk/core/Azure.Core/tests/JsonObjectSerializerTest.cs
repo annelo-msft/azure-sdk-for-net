@@ -156,6 +156,34 @@ namespace Azure.Core.Tests
             }
         }
 
+        [Test]
+        public void CanSerializeAnObjectWithDateTime()
+        {
+            ModelWithDateTime model = new()
+            {
+                A = "a",
+                Property = DateTimeOffset.UtcNow
+            };
+
+            byte[] bytes = new UTF8Encoding(false).GetBytes(JsonSerializer.Serialize(model));
+            BinaryData expected = BinaryData.FromBytes(bytes);
+
+            JsonObjectSerializer serializer = new();
+            BinaryData objectSerializerSerializedModel = serializer.Serialize(model);
+
+            CollectionAssert.AreEqual(expected.ToArray(), objectSerializerSerializedModel.ToArray());
+
+            // It is different from what we'd get from the IUtf8JsonSerializable.Write() method
+            using MemoryStream iUtf8JsonSerializableSerializedModel = new();
+            using (Utf8JsonWriter writer = new(iUtf8JsonSerializableSerializedModel))
+            {
+                ((IUtf8JsonSerializable)model).Write(writer);
+            }
+            iUtf8JsonSerializableSerializedModel.Position = 0;
+
+            CollectionAssert.AreNotEqual(expected.ToArray(), iUtf8JsonSerializableSerializedModel.ToArray());
+        }
+
         public class Model
         {
 #if NET5_0_OR_GREATER

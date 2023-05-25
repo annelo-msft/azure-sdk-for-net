@@ -161,5 +161,33 @@ namespace Azure.Core.Tests
 
             CollectionAssert.AreEqual(expected.ToArray(), destination.ToArray());
         }
+
+        [Test]
+        public void IUtf8JsonSerializableModelContent()
+        {
+            ModelWithDateTime model = new()
+            {
+                A = "a",
+                Property = DateTimeOffset.UtcNow
+            };
+
+            byte[] expected = new UTF8Encoding(false).GetBytes(JsonSerializer.Serialize(model));
+            MemoryStream requestContentSerializedModel = new();
+
+            RequestContent content = RequestContent.Create(model);
+            content.WriteTo(requestContentSerializedModel, default);
+
+            CollectionAssert.AreEqual(expected, requestContentSerializedModel.ToArray());
+
+            // It is different from what we'd get from the IUtf8JsonSerializable.Write() method
+            using MemoryStream iUtf8JsonSerializableSerializedModel = new();
+            using (Utf8JsonWriter writer = new(iUtf8JsonSerializableSerializedModel))
+            {
+                ((IUtf8JsonSerializable)model).Write(writer);
+            }
+            iUtf8JsonSerializableSerializedModel.Position = 0;
+
+            CollectionAssert.AreNotEqual(expected, iUtf8JsonSerializableSerializedModel.ToArray());
+        }
     }
 }

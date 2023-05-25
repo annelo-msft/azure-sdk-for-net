@@ -2,7 +2,6 @@
 // Licensed under the MIT License.
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using Azure.Core.Dynamic;
@@ -68,6 +67,38 @@ namespace Azure.Core.Tests
         }
 
         [Test]
+        public void DynamicSetsUseJsonSerializer()
+        {
+            // IUtf8JsonSerializable.Write() is not used
+
+            string json = """{ "foo": null }""";
+            dynamic value = BinaryData.FromString(json).ToDynamicFromJson();
+
+            AzureUtf8JsonSerializableModel model = new AzureUtf8JsonSerializableModel();
+            model.Property = "hello";
+
+            // Existing property
+            value.Foo = model;
+
+            // Added property
+            value.Bar = model;
+
+            Assert.AreEqual("hello", (string)value.Foo.Property);
+            Assert.AreEqual("hello", (string)value.Bar.Property);
+
+            // ... if it was, the value would be different.
+            using MemoryStream stream = new();
+            using (Utf8JsonWriter writer = new(stream))
+            {
+                ((IUtf8JsonSerializable)model).Write(writer);
+            }
+            stream.Position = 0;
+            dynamic azureModelValue = BinaryData.FromStream(stream).ToDynamicFromJson();
+
+            Assert.AreEqual("azurehello", (string)azureModelValue.azureProperty);
+        }
+
+        [Test]
         public void DynamicSerializerOptionsOverrideIUtf8JsonSerializableWrite()
         {
             string json = """{ "foo": null }""";
@@ -83,17 +114,25 @@ namespace Azure.Core.Tests
             // Added property
             value.Bar = model;
 
-            string expectedDateTimeString = DynamicJsonTests.FormatDateTime(model.DateTimeProperty);
-            string expectedDateTimeOffsetString = DynamicJsonTests.FormatDateTimeOffset(model.DateTimeOffsetProperty);
+            // Unix time is used instead of formatting in IUtf8JsonSerializable.Write()
+            Assert.AreEqual(ToUnixTime(model.DateTimeProperty), (long)value.Foo.DateTimeProperty);
+            Assert.AreEqual(ToUnixTime(model.DateTimeOffsetProperty), (long)value.Foo.DateTimeOffsetProperty);
 
-            Assert.AreEqual(expectedDateTimeString, (string)value.Foo.DateTimeProperty);
-            Assert.AreEqual(expectedDateTimeOffsetString, (string)value.Foo.DateTimeOffsetProperty);
-
-            Assert.AreEqual(expectedDateTimeString, (string)value.Bar.DateTimeProperty);
-            Assert.AreEqual(expectedDateTimeOffsetString, (string)value.Bar.DateTimeOffsetProperty);
+            Assert.AreEqual(ToUnixTime(model.DateTimeProperty), (long)value.Bar.DateTimeProperty);
+            Assert.AreEqual(ToUnixTime(model.DateTimeOffsetProperty), (long)value.Bar.DateTimeOffsetProperty);
         }
 
         #region Helpers
+        internal static long ToUnixTime(DateTime d)
+        {
+            return ((DateTimeOffset)d).ToUnixTimeSeconds();
+        }
+
+        internal static long ToUnixTime(DateTimeOffset d)
+        {
+            return d.ToUnixTimeSeconds();
+        }
+
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
 
         internal class DateTimeModel : IEquatable<DateTimeModel>
@@ -124,6 +163,19 @@ namespace Azure.Core.Tests
             {
                 return DateTimeProperty == other.DateTimeProperty &&
                        DateTimeOffsetProperty == other.DateTimeOffsetProperty;
+            }
+        }
+
+        internal class AzureUtf8JsonSerializableModel : IUtf8JsonSerializable
+        {
+            public string Property { get; set; }
+
+            void IUtf8JsonSerializable.Write(Utf8JsonWriter writer)
+            {
+                writer.WriteStartObject();
+                writer.WritePropertyName("azureProperty");
+                writer.WriteStringValue($"azure{Property}");
+                writer.WriteEndObject();
             }
         }
 
