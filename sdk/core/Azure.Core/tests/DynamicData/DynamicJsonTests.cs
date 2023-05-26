@@ -939,6 +939,25 @@ namespace Azure.Core.Tests
         }
 
         [Test]
+        public void StrangeNullCase()
+        {
+            BinaryData bd = BinaryData.FromObjectAsJson(new object[] { new { } });
+            dynamic json = bd.ToDynamicFromJson();
+
+            Method(json);
+            //Method(json[0]);
+
+            //Console.WriteLine($"Baz = {json[0].Baz}");
+
+            //var value = json.Baz;
+
+            //JsonElement element = JsonDocument.Parse(bd).RootElement;
+            //element.GetProperty("Baz");
+        }
+
+        private void Method(string value) { }
+
+        [Test]
         public void ArrayItemsCanBeAssigned()
         {
             dynamic json = DynamicJsonTests.GetDynamicJson("[0, 1, 2, 3]");
