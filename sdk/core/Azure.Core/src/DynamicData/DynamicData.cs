@@ -33,6 +33,8 @@ namespace Azure.Core.Dynamic
         private readonly DynamicDataOptions _options;
         private readonly JsonSerializerOptions _serializerOptions;
 
+        private bool _isAbsentProperty;
+
         internal DynamicData(MutableJsonElement element, DynamicDataOptions options)
         {
             _element = element;
@@ -106,9 +108,12 @@ namespace Azure.Core.Dynamic
                 }
             }
 
-            // Mimic Azure SDK model behavior for optional properties.
+            // Mimic Azure SDK model behavior for optional properties by returning null value.
             BinaryData nullData = BinaryData.FromBytes("null"u8.ToArray());
-            return nullData.ToDynamicFromJson(_options);
+            MutableJsonDocument mdoc = MutableJsonDocument.Parse(nullData, DynamicData.GetSerializerOptions(_options));
+            DynamicData dd = new(mdoc.RootElement, _options);
+            dd._isAbsentProperty = true;
+            return dd;
         }
 
         private static string ConvertToCamelCase(string value) => JsonNamingPolicy.CamelCase.ConvertName(value);
@@ -156,12 +161,14 @@ namespace Azure.Core.Dynamic
                 name = ConvertToCamelCase(name);
             }
 
-            // If the property is null, recreate it as an object.
-            if (_element.ValueKind == JsonValueKind.Null)
+            // If the property was representing one that didn't exist in the JSON before,
+            // recreate it as an object.
+            if (_isAbsentProperty)
             {
                 BinaryData objectData = BinaryData.FromBytes("{}"u8.ToArray());
-                MutableJsonDocument objectDoc = MutableJsonDocument.Parse(objectData, GetSerializerOptions(_options));
-                _element.Set(objectDoc);
+                MutableJsonElement objectElement = MutableJsonDocument.Parse(objectData, GetSerializerOptions(_options)).RootElement;
+                _element = objectElement.SetProperty(name, value);
+                return null;
             }
 
             _element = _element.SetProperty(name, value);

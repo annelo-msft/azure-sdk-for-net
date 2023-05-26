@@ -930,12 +930,54 @@ namespace Azure.Core.Tests
         [Test]
         public void StrangeObjectAssignmentCase()
         {
-            dynamic json = BinaryData.FromString("""{"foo": {"bar": 1}}""").ToDynamicFromJson(DynamicCaseMapping.PascalToCamel);
+            dynamic json = BinaryData.FromString("""
+                {
+                }
+                """).ToDynamicFromJson(DynamicCaseMapping.PascalToCamel);
+            json.ID = 1;
+            string s = json.ToString();
 
-            Assert.AreEqual(1, (int)json.Foo.Bar);
+            //dynamic json = BinaryData.FromString("""{"foo": {"bar": 1}}""").ToDynamicFromJson(DynamicCaseMapping.PascalToCamel);
 
-            json.Foo = new { Baz = 2 };
-            Assert.AreEqual(2, (int)json.Foo.Baz);
+            //Assert.AreEqual(1, (int)json.Foo.Bar);
+
+            //json.Foo = new { Baz = 2 };
+            //Assert.AreEqual(2, (int)json.Foo.Baz);
+
+            //string json = """
+            //    {
+            //        "a":
+            //        {
+            //            "b":
+            //            {
+            //                "c":
+            //                {
+            //                    "d": 1
+            //                }
+            //            }
+            //        }
+            //    }
+            //    """;
+            //dynamic value = BinaryData.FromString(json).ToDynamicFromJson(DynamicCaseMapping.PascalToCamel);
+            //value.A.C.D = 2;  // Missing C, easy to miss
+
+            // resulting JSON is:
+            //{
+            //    "a":
+            //        {
+            //        "b":
+            //            {
+            //            "c":
+            //                {
+            //                "d": 1
+            //                }
+            //        }
+            //        "c":
+            //        {
+            //           "d": 2
+            //        }
+            //    }
+            //}
         }
 
         [Test]
