@@ -140,7 +140,9 @@ namespace Azure.Core.Tests.Public
         {
             dynamic data = JsonDataTestHelpers.CreateFromJson("""{ "first": 1, "second": 2 }""");
 
-            Assert.IsNull(data.Length);
+            Assert.IsTrue(data.Length == null);
+
+            Assert.IsFalse(data.Length is null);
         }
 
         [Test]

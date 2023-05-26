@@ -107,7 +107,8 @@ namespace Azure.Core.Dynamic
             }
 
             // Mimic Azure SDK model behavior for optional properties.
-            return null;
+            BinaryData nullData = BinaryData.FromBytes("null"u8.ToArray());
+            return nullData.ToDynamicFromJson(_options);
         }
 
         private static string ConvertToCamelCase(string value) => JsonNamingPolicy.CamelCase.ConvertName(value);
@@ -153,6 +154,14 @@ namespace Azure.Core.Dynamic
             if (_options.CaseMapping == DynamicCaseMapping.PascalToCamel)
             {
                 name = ConvertToCamelCase(name);
+            }
+
+            // If the property is null, recreate it as an object.
+            if (_element.ValueKind == JsonValueKind.Null)
+            {
+                BinaryData objectData = BinaryData.FromBytes("{}"u8.ToArray());
+                MutableJsonDocument objectDoc = MutableJsonDocument.Parse(objectData, GetSerializerOptions(_options));
+                _element.Set(objectDoc);
             }
 
             _element = _element.SetProperty(name, value);

@@ -927,6 +927,34 @@ namespace Azure.Core.Tests
             Assert.AreEqual("{\"a\":{\"type\":\"Point\",\"coordinates\":[1,2]}}", json.ToString());
         }
 
+        [Test]
+        public void StrangeObjectAssignmentCase()
+        {
+            dynamic json = BinaryData.FromString("""{"foo": {"bar": 1}}""").ToDynamicFromJson(DynamicCaseMapping.PascalToCamel);
+
+            Assert.AreEqual(1, (int)json.Foo.Bar);
+
+            json.Foo = new { Baz = 2 };
+            Assert.AreEqual(2, (int)json.Foo.Baz);
+        }
+
+        [Test]
+        public void CanCreateNewObjectsOnPropertySet()
+        {
+            dynamic json = BinaryData.FromString("""{}""").ToDynamicFromJson(DynamicCaseMapping.PascalToCamel);
+            json.Foo.Bar = "new";
+            Assert.AreEqual("new", (string)json.Foo.Bar);
+
+            json.A.B.C = "new";
+            Assert.AreEqual("new", (string)json.A.B.C);
+        }
+
+        [Test]
+        public void CanCreateNewArraysOnSetIndex()
+        {
+            throw new NotImplementedException();
+        }
+
         [TestCaseSource(nameof(PrimitiveValues))]
         public void CanModifyNestedProperties<T>(T value, string expected)
         {
@@ -941,6 +969,7 @@ namespace Azure.Core.Tests
 
             Assert.AreEqual(value, (T)reparsedJson.a.b);
         }
+
         [Test]
         public void DynamicCanConvertToString() => Assert.AreEqual("string", JsonAsType<string>("\"string\""));
 

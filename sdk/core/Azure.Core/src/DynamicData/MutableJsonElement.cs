@@ -68,6 +68,8 @@ namespace Azure.Core.Json
         {
             EnsureValid();
 
+            // TODO: Incorporate changes from changelist.
+
             EnsureObject();
 
             bool hasProperty = _element.TryGetProperty(name, out JsonElement element);
@@ -714,6 +716,27 @@ namespace Azure.Core.Json
             }
 
             return value;
+        }
+
+        private bool TryGetObject(out MutableJsonElement value)
+        {
+            if (Changes.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
+            {
+                if (change.Value is MutableJsonElement mje)
+                {
+                    value = mje;
+                    return value.ValueKind == JsonValueKind.Object;
+                }
+
+                if (change.ReplacesJsonElement)
+                {
+                    value = new MutableJsonElement(_root, change.AsJsonElement(), _path, change.Index);
+                    return value.ValueKind == JsonValueKind.Object;
+                }
+            }
+
+            value = this;
+            return value.ValueKind == JsonValueKind.Object;
         }
 
         /// <summary>

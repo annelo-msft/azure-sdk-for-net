@@ -726,6 +726,24 @@ namespace Azure.Core.Tests
         }
 
         [Test]
+        public void ChangeToElementKindIsEffectiveImmediately()
+        {
+            MutableJsonDocument mdoc = MutableJsonDocument.Parse("""{"foo": null}""");
+
+            MutableJsonElement foo = mdoc.RootElement.GetProperty("foo");
+            foo.Set("hi");
+
+            // Primitive assignments take effect immediately.
+            Assert.AreEqual("hi", foo.GetString());
+            Assert.AreEqual(JsonValueKind.String, foo.ValueKind);
+
+            MutableJsonDocument inner = MutableJsonDocument.Parse("""{"bar": 1}""");
+            foo.Set(inner);
+            Assert.AreEqual(JsonValueKind.Object, foo.ValueKind);
+            Assert.AreEqual(JsonValueKind.Number, foo.GetProperty("bar").ValueKind);
+        }
+
+        [Test]
         public void CanInvalidateElement()
         {
             string json = """
