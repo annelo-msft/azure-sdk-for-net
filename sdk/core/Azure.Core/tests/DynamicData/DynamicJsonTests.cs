@@ -955,6 +955,19 @@ namespace Azure.Core.Tests
             //element.GetProperty("Baz");
         }
 
+        [Test]
+        public void StrangeNullCase2()
+        {
+            BinaryData bd = BinaryData.FromObjectAsJson(new { });
+            dynamic json = bd.ToDynamicFromJson();
+
+            json.Foo = "yes";
+
+            string s = json.ToString();
+
+            json.Bar.Baz = "no";
+        }
+
         private void Method(string value) { }
 
         [Test]
