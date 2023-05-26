@@ -963,9 +963,14 @@ namespace Azure.Core.Tests
 
             json.Foo = "yes";
 
-            string s = json.ToString();
+            json.Bar = new { };
+            json.Bar.Baz = "yes";
 
-            json.Bar.Baz = "no";
+            string s= json.ToString();
+
+            int[][] a = new int[1][];
+            a[0] = new int[1];
+            a[0][0] = 1;
         }
 
         private void Method(string value) { }
