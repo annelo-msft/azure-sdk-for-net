@@ -7,6 +7,7 @@ using System.IO;
 using System.Text.Json;
 using Azure.Core.Dynamic;
 using Azure.Core.GeoJson;
+using Azure.Core.Serialization;
 using NUnit.Framework;
 
 namespace Azure.Core.Tests
@@ -154,6 +155,33 @@ namespace Azure.Core.Tests
             Assert.AreEqual(5, (int)jsonData.Foo[1]);
             Assert.AreEqual(6, (int)jsonData.Foo[2]);
         }
+
+        [Test]
+        public void SampleCase()
+        {
+            // Create the batch payload
+            dynamic batch = BinaryData.FromString("{}").ToDynamicFromJson();
+
+            // We'll serialize our strongly typed model with STJ, but could be JSON.NET
+            ObjectSerializer serializer = new JsonObjectSerializer(new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+
+            // Get the JSON for an individual document
+            Hotel hotel = new("123", "Just like a regular hotel.");
+            BinaryData hotelJson = serializer.Serialize(hotel);
+
+            // Augment the JSON with OData annotations
+            // dynamic doc = hotelJson.ToDynamicFromJson();
+            // doc["@search.action"] = "mergeOrUpload";
+
+            // Add the doc to the batch
+            batch.value = new[] { hotelJson.ToDynamicFromJson() };
+
+            // "serialize" the batch
+            Console.WriteLine(batch.ToString());
+        }
+
+        // Simple Hotel model
+        public record Hotel(string Id, string Name);
 
         [Test]
         public void CanSetArrayValuesToDifferentTypes()
