@@ -10,6 +10,28 @@ namespace Azure.Core.Dynamic
 {
     public partial class DynamicData
     {
+        private class GeneralTypeConverter<T> : JsonConverter<T>
+        {
+            public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+            {
+                switch (typeToConvert)
+                {
+                    //case Type _ when typeToConvert is int:
+                    case Type _ when typeToConvert is double:
+                        double value = reader.GetDouble();
+                        return value;
+                    //case int:
+                    default:
+                        throw new NotSupportedException();
+                }
+            }
+
+            public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         // From: https://github.com/Azure/autorest.csharp/blob/d835b0b7bffae08c1037ccc5824e928eaac55b96/src/assets/Generator.Shared/TypeFormatters.cs#L14
         private const string RoundtripZFormat = "yyyy-MM-ddTHH:mm:ss.fffffffZ";
 
