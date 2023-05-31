@@ -17,9 +17,9 @@ namespace Azure.Core.Dynamic
                 switch (typeToConvert)
                 {
                     //case Type _ when typeToConvert is int:
-                    case Type _ when typeToConvert is double:
+                    case Type _ when typeToConvert == typeof(double):
                         double value = reader.GetDouble();
-                        return value;
+                        return (T)Convert.ChangeType(value, typeof(T));
                     //case int:
                     default:
                         throw new NotSupportedException();
