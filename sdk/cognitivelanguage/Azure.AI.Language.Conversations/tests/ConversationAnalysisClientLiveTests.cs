@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Threading.Tasks;
 using Azure.Core;
+using Azure.Core.Dynamic;
 using Azure.Core.Serialization;
 using Azure.Core.TestFramework;
 using NUnit.Framework;
@@ -16,6 +17,12 @@ namespace Azure.AI.Language.Conversations.Tests
         public ConversationAnalysisClientLiveTests(bool isAsync, ConversationsClientOptions.ServiceVersion serviceVersion)
             : base(isAsync, serviceVersion, null /* RecordedTestMode.Record /* to record */)
         {
+        }
+
+        [OneTimeSetUp]
+        public void Initialize()
+        {
+            DynamicData.UseCamelCaseNamingConvention();
         }
 
         [RecordedTest]
