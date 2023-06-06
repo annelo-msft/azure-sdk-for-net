@@ -10,17 +10,17 @@ namespace Azure.Core.Tests.Public
     {
         public static dynamic CreateEmpty()
         {
-            return BinaryData.FromString("{}").ToDynamicFromJson(PropertyNameLookup.AllowPascalCase);
+            return BinaryData.FromString("{}").ToDynamicFromJson(PropertyNameConversion.CamelCase);
         }
 
         public static dynamic CreateFromJson(string json)
         {
-            return BinaryData.FromString(json).ToDynamicFromJson(PropertyNameLookup.AllowPascalCase);
+            return BinaryData.FromString(json).ToDynamicFromJson(PropertyNameConversion.CamelCase);
         }
 
         public static T JsonAsType<T>(string json)
         {
-            dynamic jsonData = new BinaryData(json).ToDynamicFromJson(PropertyNameLookup.AllowPascalCase);
+            dynamic jsonData = new BinaryData(json).ToDynamicFromJson(PropertyNameConversion.CamelCase);
             return (T)jsonData;
         }
     }

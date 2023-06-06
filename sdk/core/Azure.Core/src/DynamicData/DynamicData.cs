@@ -34,11 +34,18 @@ namespace Azure.Core.Dynamic
         private readonly DynamicDataOptions _options;
         private readonly JsonSerializerOptions _serializerOptions;
 
-        internal DynamicData(MutableJsonElement element, DynamicDataOptions options)
+        /// <summary>
+        /// </summary>
+        public static void UseCamelCaseNamingConvention()
+        {
+            DynamicDataOptions.Default.PropertyNameConversion = PropertyNameConversion.CamelCase;
+        }
+
+        internal DynamicData(MutableJsonElement element, DynamicDataOptions? options)
         {
             _element = element;
-            _options = options;
-            _serializerOptions = GetSerializerOptions(options);
+            _options = options ?? DynamicDataOptions.Default;
+            _serializerOptions = GetSerializerOptions(_options);
         }
 
         internal static JsonSerializerOptions GetSerializerOptions(DynamicDataOptions options)
@@ -51,9 +58,9 @@ namespace Azure.Core.Dynamic
                 }
             };
 
-            // TODO: Split out serialization and deserialization options
-            if ((options.NewPropertyConversion == PropertyNameConversion.CamelCase) ||
-                (options.ExistingPropertyLookup == PropertyNameLookup.AllowPascalCase))
+            // TODO: Split out serialization and deserialization options?
+            // This may no longer be needed if we use one thing to apply
+            if (options.PropertyNameConversion == PropertyNameConversion.CamelCase)
             {
                 serializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
             }
@@ -101,8 +108,8 @@ namespace Azure.Core.Dynamic
 
             // If we're using the PascalToCamel mapping and the strict name lookup
             // failed, do a second lookup with a camelCase name as well.
-            if (_options.ExistingPropertyLookup == PropertyNameLookup.AllowPascalCase &&
-                char.IsUpper(name[0]))
+            if (char.IsUpper(name[0]) &&
+                _options.PropertyNameConversion == PropertyNameConversion.CamelCase)
             {
                 if (_element.TryGetProperty(ConvertToCamelCase(name), out element))
                 {
@@ -173,7 +180,7 @@ namespace Azure.Core.Dynamic
 
             // TODO: reimplement to look up to see if there's a PascalCase property
             // we can use first.
-            if (_options.NewPropertyConversion == PropertyNameConversion.CamelCase)
+            if (_options.PropertyNameConversion == PropertyNameConversion.CamelCase)
             {
                 name = ConvertToCamelCase(name);
             }

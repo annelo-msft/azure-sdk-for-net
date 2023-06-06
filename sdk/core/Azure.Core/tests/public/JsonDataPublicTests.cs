@@ -18,7 +18,7 @@ namespace Azure.Core.Tests.Public
         [Test]
         public void CanCreateFromJson()
         {
-            dynamic jsonData = new BinaryData("\"string\"").ToDynamicFromJson(PropertyNameLookup.AllowPascalCase);
+            dynamic jsonData = new BinaryData("\"string\"").ToDynamicFromJson(PropertyNameConversion.CamelCase);
 
             Assert.AreEqual("string", (string)jsonData);
         }
@@ -50,7 +50,7 @@ namespace Azure.Core.Tests.Public
         [Test]
         public void DynamicCanConvertToIEnumerableDynamic()
         {
-            dynamic jsonData = new BinaryData("[1, null, \"s\"]").ToDynamicFromJson(PropertyNameLookup.AllowPascalCase);
+            dynamic jsonData = new BinaryData("[1, null, \"s\"]").ToDynamicFromJson(PropertyNameConversion.CamelCase);
             int i = 0;
             foreach (var dynamicItem in jsonData)
             {
@@ -78,7 +78,7 @@ namespace Azure.Core.Tests.Public
         [Test]
         public void DynamicCanConvertToIEnumerableInt()
         {
-            dynamic jsonData = new BinaryData("[0, 1, 2, 3]").ToDynamicFromJson(PropertyNameLookup.AllowPascalCase);
+            dynamic jsonData = new BinaryData("[0, 1, 2, 3]").ToDynamicFromJson(PropertyNameConversion.CamelCase);
             int i = 0;
             foreach (int dynamicItem in jsonData)
             {
@@ -92,14 +92,14 @@ namespace Azure.Core.Tests.Public
         [Test]
         public void DynamicArrayHasLength()
         {
-            dynamic jsonData = new BinaryData("[0, 1, 2, 3]").ToDynamicFromJson(PropertyNameLookup.AllowPascalCase);
+            dynamic jsonData = new BinaryData("[0, 1, 2, 3]").ToDynamicFromJson(PropertyNameConversion.CamelCase);
             Assert.AreEqual(4, ((int[])jsonData).Length);
         }
 
         [Test]
         public void DynamicArrayForEach()
         {
-            dynamic jsonData = new BinaryData("[0, 1, 2, 3]").ToDynamicFromJson(PropertyNameLookup.AllowPascalCase);
+            dynamic jsonData = new BinaryData("[0, 1, 2, 3]").ToDynamicFromJson(PropertyNameConversion.CamelCase);
             int expected = 0;
             foreach (int i in jsonData)
             {
@@ -110,7 +110,7 @@ namespace Azure.Core.Tests.Public
         [Test]
         public void CanAccessProperties()
         {
-            dynamic jsonData = new BinaryData("{ \"primitive\":\"Hello\", \"nested\": { \"nestedPrimitive\":true } }").ToDynamicFromJson(PropertyNameLookup.AllowPascalCase);
+            dynamic jsonData = new BinaryData("{ \"primitive\":\"Hello\", \"nested\": { \"nestedPrimitive\":true } }").ToDynamicFromJson(PropertyNameConversion.CamelCase);
 
             Assert.AreEqual("Hello", (string)jsonData.primitive);
             Assert.AreEqual(true, (bool)jsonData.nested.nestedPrimitive);
@@ -119,7 +119,7 @@ namespace Azure.Core.Tests.Public
         [Test]
         public void CanTestPropertyForNull()
         {
-            dynamic jsonData = new BinaryData("{ \"primitive\":\"Hello\", \"nested\": { \"nestedPrimitive\":true } }").ToDynamicFromJson(PropertyNameLookup.AllowPascalCase);
+            dynamic jsonData = new BinaryData("{ \"primitive\":\"Hello\", \"nested\": { \"nestedPrimitive\":true } }").ToDynamicFromJson(PropertyNameConversion.CamelCase);
 
             Assert.IsNull((int?)jsonData.OptionalInt);
             Assert.IsNull((string)jsonData.OptionalString);
@@ -129,7 +129,7 @@ namespace Azure.Core.Tests.Public
         [Test]
         public void CanAddStringToList()
         {
-            dynamic jsonData = new BinaryData(new { value = "foo" }).ToDynamicFromJson(PropertyNameLookup.AllowPascalCase);
+            dynamic jsonData = new BinaryData(new { value = "foo" }).ToDynamicFromJson(PropertyNameConversion.CamelCase);
 
             List<string> list = new();
             list.Add(jsonData.value);
@@ -141,7 +141,7 @@ namespace Azure.Core.Tests.Public
         [Test]
         public void CanAddIntToList()
         {
-            dynamic jsonData = new BinaryData(new { value = 5 }).ToDynamicFromJson(PropertyNameLookup.AllowPascalCase);
+            dynamic jsonData = new BinaryData(new { value = 5 }).ToDynamicFromJson(PropertyNameConversion.CamelCase);
 
             List<int> list = new();
             list.Add(jsonData.value);
@@ -153,7 +153,7 @@ namespace Azure.Core.Tests.Public
         [Test]
         public void CanReadIntsAsFloatingPoints()
         {
-            var json = new BinaryData("5").ToDynamicFromJson(PropertyNameLookup.AllowPascalCase);
+            var json = new BinaryData("5").ToDynamicFromJson(PropertyNameConversion.CamelCase);
             dynamic jsonData = json;
 
             Assert.AreEqual(5, (float)jsonData);
@@ -169,7 +169,7 @@ namespace Azure.Core.Tests.Public
         [Test]
         public void ReadingFloatingPointAsIntThrows()
         {
-            var json = new BinaryData("5.5").ToDynamicFromJson(PropertyNameLookup.AllowPascalCase);
+            var json = new BinaryData("5.5").ToDynamicFromJson(PropertyNameConversion.CamelCase);
             dynamic jsonData = json;
             Assert.Throws<InvalidCastException>(() => _ = (int)json);
             Assert.Throws<InvalidCastException>(() => _ = (int)jsonData);
@@ -180,7 +180,7 @@ namespace Azure.Core.Tests.Public
         [Test]
         public void CanAccessArrayValues()
         {
-            dynamic jsonData = new BinaryData("{ \"primitive\":\"Hello\", \"nested\": { \"nestedPrimitive\":true } , \"array\": [1, 2, 3] }").ToDynamicFromJson(PropertyNameLookup.AllowPascalCase);
+            dynamic jsonData = new BinaryData("{ \"primitive\":\"Hello\", \"nested\": { \"nestedPrimitive\":true } , \"array\": [1, 2, 3] }").ToDynamicFromJson(PropertyNameConversion.CamelCase);
 
             Assert.AreEqual(1, (int)jsonData.array[0]);
             Assert.AreEqual(2, (int)jsonData.array[1]);
@@ -190,7 +190,7 @@ namespace Azure.Core.Tests.Public
         [Test]
         public void CanAccessJsonPropertiesWithDotnetIllegalCharacters()
         {
-            dynamic jsonData = new BinaryData("{ \"$foo\":\"Hello\" }").ToDynamicFromJson(PropertyNameLookup.AllowPascalCase);
+            dynamic jsonData = new BinaryData("{ \"$foo\":\"Hello\" }").ToDynamicFromJson(PropertyNameConversion.CamelCase);
 
             Assert.AreEqual("Hello", (string)jsonData["$foo"]);
         }
@@ -199,7 +199,7 @@ namespace Azure.Core.Tests.Public
         [Ignore("Float behavior is different in JsonDocument depending on runtime version.")]
         public void FloatOverflowThrows()
         {
-            var json = new BinaryData("34028234663852885981170418348451692544000").ToDynamicFromJson(PropertyNameLookup.AllowPascalCase);
+            var json = new BinaryData("34028234663852885981170418348451692544000").ToDynamicFromJson(PropertyNameConversion.CamelCase);
 
             dynamic jsonData = json;
             Assert.AreEqual(34028234663852885981170418348451692544000d, (double)jsonData);
@@ -211,7 +211,7 @@ namespace Azure.Core.Tests.Public
         [Test]
         public void IntOverflowThrows()
         {
-            var json = new BinaryData("3402823466385288598").ToDynamicFromJson(PropertyNameLookup.AllowPascalCase);
+            var json = new BinaryData("3402823466385288598").ToDynamicFromJson(PropertyNameConversion.CamelCase);
             dynamic jsonData = json;
             Assert.Throws<InvalidCastException>(() => _ = (int)json);
             Assert.Throws<InvalidCastException>(() => _ = (int)jsonData);
@@ -227,7 +227,7 @@ namespace Azure.Core.Tests.Public
         [Ignore("Float behavior is different in JsonDocument depending on runtime version.")]
         public void FloatUnderflowThrows()
         {
-            var json = new BinaryData("-34028234663852885981170418348451692544000").ToDynamicFromJson(PropertyNameLookup.AllowPascalCase);
+            var json = new BinaryData("-34028234663852885981170418348451692544000").ToDynamicFromJson(PropertyNameConversion.CamelCase);
             dynamic jsonData = json;
 
             var doc = JsonDocument.Parse("-34028234663852885981170418348451692544000");
@@ -242,7 +242,7 @@ namespace Azure.Core.Tests.Public
         [Test]
         public void IntUnderflowThrows()
         {
-            var json = new BinaryData("-3402823466385288598").ToDynamicFromJson(PropertyNameLookup.AllowPascalCase);
+            var json = new BinaryData("-3402823466385288598").ToDynamicFromJson(PropertyNameConversion.CamelCase);
             dynamic jsonData = json;
             Assert.Throws<InvalidCastException>(() => _ = (int)json);
             Assert.Throws<InvalidCastException>(() => _ = (int)jsonData);
@@ -257,7 +257,7 @@ namespace Azure.Core.Tests.Public
         [Test]
         public void ReadingArrayAsValueThrows()
         {
-            var json = new BinaryData("[1,3]").ToDynamicFromJson(PropertyNameLookup.AllowPascalCase);
+            var json = new BinaryData("[1,3]").ToDynamicFromJson(PropertyNameConversion.CamelCase);
             dynamic jsonData = json;
             Assert.Throws<InvalidCastException>(() => _ = (int)json);
             Assert.Throws<InvalidCastException>(() => _ = (int)jsonData);
@@ -267,7 +267,7 @@ namespace Azure.Core.Tests.Public
         public void RoundtripObjects()
         {
             var model = new SampleModel("Hello World", 5);
-            var roundtripped = (SampleModel)new BinaryData(model).ToDynamicFromJson(PropertyNameLookup.AllowPascalCase);
+            var roundtripped = (SampleModel)new BinaryData(model).ToDynamicFromJson(PropertyNameConversion.CamelCase);
 
             Assert.AreEqual(model, roundtripped);
         }
@@ -279,7 +279,7 @@ namespace Azure.Core.Tests.Public
 
             // "O" is the only format supported by default JsonSerializer:
             // https://learn.microsoft.com/dotnet/standard/datetime/system-text-json-support
-            dynamic nowJson = new BinaryData($"{{ \"value\": \"{now.ToString("O", CultureInfo.InvariantCulture)}\" }}").ToDynamicFromJson(PropertyNameLookup.AllowPascalCase).value;
+            dynamic nowJson = new BinaryData($"{{ \"value\": \"{now.ToString("O", CultureInfo.InvariantCulture)}\" }}").ToDynamicFromJson(PropertyNameConversion.CamelCase).value;
 
             var cast = (DateTimeOffset)nowJson;
 
@@ -289,7 +289,7 @@ namespace Azure.Core.Tests.Public
         [Test]
         public void CanCastToIEnumerableOfT()
         {
-            dynamic data = new BinaryData("{ \"array\": [ 1, 2, 3] }").ToDynamicFromJson(PropertyNameLookup.AllowPascalCase);
+            dynamic data = new BinaryData("{ \"array\": [ 1, 2, 3] }").ToDynamicFromJson(PropertyNameConversion.CamelCase);
 
             var enumerable = (IEnumerable<int>)data.array;
 
@@ -303,7 +303,7 @@ namespace Azure.Core.Tests.Public
         [Test]
         public void EqualsHandlesStringsSpecial()
         {
-            dynamic json = new BinaryData("\"test\"").ToDynamicFromJson(PropertyNameLookup.AllowPascalCase);
+            dynamic json = new BinaryData("\"test\"").ToDynamicFromJson(PropertyNameConversion.CamelCase);
 
             Assert.IsTrue(json.Equals("test"));
             Assert.IsTrue(json == "test");
@@ -326,8 +326,8 @@ namespace Azure.Core.Tests.Public
         [TestCase("1", "{ \"foo\": 1 }", false)]
         public void EqualsPrimitiveValues(string a, string b, bool expected)
         {
-            dynamic aJson = new BinaryData(a).ToDynamicFromJson(PropertyNameLookup.AllowPascalCase);
-            dynamic bJson = new BinaryData(b).ToDynamicFromJson(PropertyNameLookup.AllowPascalCase);
+            dynamic aJson = new BinaryData(a).ToDynamicFromJson(PropertyNameConversion.CamelCase);
+            dynamic bJson = new BinaryData(b).ToDynamicFromJson(PropertyNameConversion.CamelCase);
 
             Assert.AreEqual(expected, aJson.Equals(bJson));
             Assert.AreEqual(expected, aJson == bJson);
@@ -358,11 +358,11 @@ namespace Azure.Core.Tests.Public
         [Test]
         public void EqualsForObjectsAndArrays()
         {
-            dynamic obj1 = new BinaryData(new { foo = "bar" }).ToDynamicFromJson(PropertyNameLookup.AllowPascalCase);
-            dynamic obj2 = new BinaryData(new { foo = "bar" }).ToDynamicFromJson(PropertyNameLookup.AllowPascalCase);
+            dynamic obj1 = new BinaryData(new { foo = "bar" }).ToDynamicFromJson(PropertyNameConversion.CamelCase);
+            dynamic obj2 = new BinaryData(new { foo = "bar" }).ToDynamicFromJson(PropertyNameConversion.CamelCase);
 
-            dynamic arr1 = new BinaryData(new[] { "bar" }).ToDynamicFromJson(PropertyNameLookup.AllowPascalCase);
-            dynamic arr2 = new BinaryData(new[] { "bar" }).ToDynamicFromJson(PropertyNameLookup.AllowPascalCase);
+            dynamic arr1 = new BinaryData(new[] { "bar" }).ToDynamicFromJson(PropertyNameConversion.CamelCase);
+            dynamic arr2 = new BinaryData(new[] { "bar" }).ToDynamicFromJson(PropertyNameConversion.CamelCase);
 
             // For objects and arrays, Equals provides reference equality.
             Assert.AreEqual(obj1, obj1);
@@ -375,8 +375,8 @@ namespace Azure.Core.Tests.Public
         [Test]
         public void OperatorEqualsForBool()
         {
-            dynamic trueJson = new BinaryData("{ \"value\": true }").ToDynamicFromJson(PropertyNameLookup.AllowPascalCase).value;
-            dynamic falseJson = new BinaryData("{ \"value\": false }").ToDynamicFromJson(PropertyNameLookup.AllowPascalCase).value;
+            dynamic trueJson = new BinaryData("{ \"value\": true }").ToDynamicFromJson(PropertyNameConversion.CamelCase).value;
+            dynamic falseJson = new BinaryData("{ \"value\": false }").ToDynamicFromJson(PropertyNameConversion.CamelCase).value;
 
             Assert.IsTrue(trueJson == true);
             Assert.IsTrue(true == trueJson);
@@ -392,8 +392,8 @@ namespace Azure.Core.Tests.Public
         [Test]
         public void OperatorEqualsForInt32()
         {
-            dynamic fiveJson = new BinaryData("{ \"value\": 5 }").ToDynamicFromJson(PropertyNameLookup.AllowPascalCase).value;
-            dynamic sixJson = new BinaryData("{ \"value\": 6 }").ToDynamicFromJson(PropertyNameLookup.AllowPascalCase).value;
+            dynamic fiveJson = new BinaryData("{ \"value\": 5 }").ToDynamicFromJson(PropertyNameConversion.CamelCase).value;
+            dynamic sixJson = new BinaryData("{ \"value\": 6 }").ToDynamicFromJson(PropertyNameConversion.CamelCase).value;
 
             Assert.IsTrue(fiveJson == 5);
             Assert.IsTrue(5 == fiveJson);
@@ -412,8 +412,8 @@ namespace Azure.Core.Tests.Public
             long max = long.MaxValue;
             long min = long.MinValue;
 
-            dynamic maxJson = new BinaryData($"{{ \"value\": {max} }}").ToDynamicFromJson(PropertyNameLookup.AllowPascalCase).value;
-            dynamic minJson = new BinaryData($"{{ \"value\": {min} }}").ToDynamicFromJson(PropertyNameLookup.AllowPascalCase).value;
+            dynamic maxJson = new BinaryData($"{{ \"value\": {max} }}").ToDynamicFromJson(PropertyNameConversion.CamelCase).value;
+            dynamic minJson = new BinaryData($"{{ \"value\": {min} }}").ToDynamicFromJson(PropertyNameConversion.CamelCase).value;
 
             Assert.IsTrue(maxJson == max);
             Assert.IsTrue(max == maxJson);
@@ -431,8 +431,8 @@ namespace Azure.Core.Tests.Public
         {
             float half = 0.5f;
 
-            dynamic halfJson = new BinaryData("{ \"value\": 0.5 }").ToDynamicFromJson(PropertyNameLookup.AllowPascalCase).value;
-            dynamic fourthJson = new BinaryData("{ \"value\": 0.25 }").ToDynamicFromJson(PropertyNameLookup.AllowPascalCase).value;
+            dynamic halfJson = new BinaryData("{ \"value\": 0.5 }").ToDynamicFromJson(PropertyNameConversion.CamelCase).value;
+            dynamic fourthJson = new BinaryData("{ \"value\": 0.25 }").ToDynamicFromJson(PropertyNameConversion.CamelCase).value;
 
             Assert.IsTrue(halfJson == half);
             Assert.IsTrue(half == halfJson);
@@ -449,8 +449,8 @@ namespace Azure.Core.Tests.Public
         {
             double half = 0.5;
 
-            dynamic halfJson = new BinaryData("{ \"value\": 0.5 }").ToDynamicFromJson(PropertyNameLookup.AllowPascalCase).value;
-            dynamic fourthJson = new BinaryData("{ \"value\": 0.25 }").ToDynamicFromJson(PropertyNameLookup.AllowPascalCase).value;
+            dynamic halfJson = new BinaryData("{ \"value\": 0.5 }").ToDynamicFromJson(PropertyNameConversion.CamelCase).value;
+            dynamic fourthJson = new BinaryData("{ \"value\": 0.25 }").ToDynamicFromJson(PropertyNameConversion.CamelCase).value;
 
             Assert.IsTrue(halfJson == half);
             Assert.IsTrue(half == halfJson);
@@ -466,8 +466,8 @@ namespace Azure.Core.Tests.Public
         [Test]
         public void OperatorEqualsForString()
         {
-            dynamic fooJson = new BinaryData("\"foo\"").ToDynamicFromJson(PropertyNameLookup.AllowPascalCase);
-            dynamic barJson = new BinaryData("\"bar\"").ToDynamicFromJson(PropertyNameLookup.AllowPascalCase);
+            dynamic fooJson = new BinaryData("\"foo\"").ToDynamicFromJson(PropertyNameConversion.CamelCase);
+            dynamic barJson = new BinaryData("\"bar\"").ToDynamicFromJson(PropertyNameConversion.CamelCase);
 
             Assert.IsTrue(fooJson == "foo");
             Assert.IsTrue("foo" == fooJson);
@@ -484,7 +484,7 @@ namespace Azure.Core.Tests.Public
         public async Task CanWriteToStream_JsonSerializer()
         {
             // Arrange
-            dynamic json = new BinaryData("{ \"Message\": \"Hi!\", \"Number\": 5 }").ToDynamicFromJson(PropertyNameLookup.AllowPascalCase);
+            dynamic json = new BinaryData("{ \"Message\": \"Hi!\", \"Number\": 5 }").ToDynamicFromJson(PropertyNameConversion.CamelCase);
 
             // Act
             using var stream = new MemoryStream();
@@ -505,7 +505,7 @@ namespace Azure.Core.Tests.Public
         public void CallToInternalMethodFails()
         {
             // Arrange
-            dynamic json = new BinaryData("{ \"Message\": \"Hi!\", \"Number\": 5 }").ToDynamicFromJson(PropertyNameLookup.AllowPascalCase);
+            dynamic json = new BinaryData("{ \"Message\": \"Hi!\", \"Number\": 5 }").ToDynamicFromJson(PropertyNameConversion.CamelCase);
 
             // Act
             using Stream stream = new MemoryStream();

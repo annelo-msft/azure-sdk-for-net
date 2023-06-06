@@ -245,7 +245,7 @@ namespace Azure.Core.Tests.Public
             dynamic data = JsonDataTestHelpers.CreateFromJson("[1, 2, 3]");
 
             data[0] = 4;
-            data[1] = BinaryData.FromString("""{ "foo": 1 }""").ToDynamicFromJson(PropertyNameLookup.AllowPascalCase);
+            data[1] = BinaryData.FromString("""{ "foo": 1 }""").ToDynamicFromJson(PropertyNameConversion.CamelCase);
 
             Assert.AreEqual(3, data.Length);
         }
@@ -263,7 +263,7 @@ namespace Azure.Core.Tests.Public
             dynamic data = JsonDataTestHelpers.CreateFromJson("""{ "value": [1, 2, 3] }""");
 
             data.value[0] = 4;
-            data.value[1] = BinaryData.FromString("""{ "foo": 1 }""").ToDynamicFromJson(PropertyNameLookup.AllowPascalCase);
+            data.value[1] = BinaryData.FromString("""{ "foo": 1 }""").ToDynamicFromJson(PropertyNameConversion.CamelCase);
 
             Assert.AreEqual(3, data.value.Length);
 
@@ -271,12 +271,12 @@ namespace Azure.Core.Tests.Public
 
             Assert.AreEqual(2, data.value.Length);
 
-            data.value = BinaryData.FromString("""[1, 2, 3, 4]""").ToDynamicFromJson(PropertyNameLookup.AllowPascalCase);
+            data.value = BinaryData.FromString("""[1, 2, 3, 4]""").ToDynamicFromJson(PropertyNameConversion.CamelCase);
 
             Assert.AreEqual(4, data.value.Length);
 
             // Switch JsonKind
-            data = BinaryData.FromString("""{ "foo": 1 }""").ToDynamicFromJson(PropertyNameLookup.AllowPascalCase);
+            data = BinaryData.FromString("""{ "foo": 1 }""").ToDynamicFromJson(PropertyNameConversion.CamelCase);
             data.foo = new int[] { 1, 2 };
 
             Assert.AreEqual(2, data.foo.Length);

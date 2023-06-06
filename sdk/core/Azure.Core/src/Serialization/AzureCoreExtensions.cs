@@ -61,25 +61,12 @@ namespace Azure
         }
 
         /// <summary>
-        /// Return the content of the BinaryData as a dynamic type.
-        /// <paramref name="newPropertyConversion">A value that specifies how to convert the names of properties that are newly added to the dynamic object.
-        /// New properties can be added in two ways.  The first is by setting a property on the dynamic object that wasn't present in the JSON content prior to
-        /// the set operation.  In this case, the conversion specified by this parameter will be applied to the property name used in the set operation when setting
-        /// the property in the data content.  The second way is by setting a new or existing property in the JSON content to an instance of a .NET object that has
-        /// properties.  In this case, the conversion specified by this parameter will be applied to all property names in the object graph when serializing the
-        /// value to JSON.</paramref>
-        /// <paramref name="existingPropertyLookup">A value that specifies how to retrieve existing properties by name from the JSON content the returned
-        /// dynamic object represents.  Passing <see cref="PropertyNameLookup.Strict"/> indicates that the property name used to get or set the existing property should be
-        /// used exactly when looking up the JSON value.  Passing <see cref="PropertyNameLookup.AllowPascalCase"/> indicates that a "PascalCase" property name used to
-        /// get or set an existing property may be used to retrieve a "camelCase" property name from the JSON content.</paramref>
-        /// <paramref name="dateTimeHandling"></paramref>
         /// </summary>
-        public static dynamic ToDynamicFromJson(this BinaryData utf8Json, PropertyNameLookup existingPropertyLookup, PropertyNameConversion newPropertyConversion = PropertyNameConversion.None, DynamicDateTimeHandling dateTimeHandling = DynamicDateTimeHandling.Rfc3339)
+        public static dynamic ToDynamicFromJson(this BinaryData utf8Json, PropertyNameConversion propertyNameConversion = PropertyNameConversion.None, DynamicDateTimeHandling dateTimeHandling = DynamicDateTimeHandling.Rfc3339)
         {
             DynamicDataOptions options = new()
             {
-                NewPropertyConversion = newPropertyConversion,
-                ExistingPropertyLookup = existingPropertyLookup,
+                PropertyNameConversion = propertyNameConversion,
                 DateTimeHandling = dateTimeHandling
             };
 

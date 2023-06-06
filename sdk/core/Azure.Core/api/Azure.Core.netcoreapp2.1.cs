@@ -17,7 +17,7 @@ namespace Azure
     }
     public static partial class AzureCoreExtensions
     {
-        public static dynamic ToDynamicFromJson(this System.BinaryData utf8Json, Azure.Core.Dynamic.PropertyNameLookup existingPropertyLookup, Azure.Core.Serialization.PropertyNameConversion newPropertyConversion = Azure.Core.Serialization.PropertyNameConversion.None, Azure.Core.Dynamic.DynamicDateTimeHandling dateTimeHandling = Azure.Core.Dynamic.DynamicDateTimeHandling.Rfc3339) { throw null; }
+        public static dynamic ToDynamicFromJson(this System.BinaryData utf8Json, Azure.Core.Serialization.PropertyNameConversion propertyNameConversion = Azure.Core.Serialization.PropertyNameConversion.None, Azure.Core.Dynamic.DynamicDateTimeHandling dateTimeHandling = Azure.Core.Dynamic.DynamicDateTimeHandling.Rfc3339) { throw null; }
         public static System.Threading.Tasks.ValueTask<T?> ToObjectAsync<T>(this System.BinaryData data, Azure.Core.Serialization.ObjectSerializer serializer, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { throw null; }
         public static object? ToObjectFromJson(this System.BinaryData data) { throw null; }
         public static T? ToObject<T>(this System.BinaryData data, Azure.Core.Serialization.ObjectSerializer serializer, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { throw null; }
@@ -809,16 +809,12 @@ namespace Azure.Core.Dynamic
         public static bool operator !=(Azure.Core.Dynamic.DynamicData? left, object? right) { throw null; }
         System.Dynamic.DynamicMetaObject System.Dynamic.IDynamicMetaObjectProvider.GetMetaObject(System.Linq.Expressions.Expression parameter) { throw null; }
         public override string ToString() { throw null; }
+        public static void UseCamelCaseNamingConvention() { }
     }
     public enum DynamicDateTimeHandling
     {
         Rfc3339 = 0,
         UnixTime = 1,
-    }
-    public enum PropertyNameLookup
-    {
-        Strict = 0,
-        AllowPascalCase = 1,
     }
 }
 namespace Azure.Core.Extensions

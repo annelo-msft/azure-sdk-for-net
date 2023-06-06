@@ -9,6 +9,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Azure.Core.Dynamic;
+using Azure.Core.Serialization;
 using NUnit.Framework;
 
 namespace Azure.Core.Tests
@@ -154,7 +155,7 @@ namespace Azure.Core.Tests
             writer.Flush();
             expected.Position = 0;
 
-            using dynamic source = new BinaryData(json).ToDynamicFromJson(PropertyNameLookup.AllowPascalCase);
+            using dynamic source = new BinaryData(json).ToDynamicFromJson(PropertyNameConversion.CamelCase);
             using RequestContent content = RequestContent.Create(source);
             using MemoryStream destination = new();
 

@@ -42,7 +42,7 @@ If a service method does not return `Response<T>`, JSON content can be accessed 
 
 ```C# Snippet:AzureCoreGetDynamicJsonProperty
 Response response = client.GetWidget();
-dynamic widget = response.Content.ToDynamicFromJson(PropertyNameLookup.AllowPascalCase);
+dynamic widget = response.Content.ToDynamicFromJson();
 string name = widget.name;
 ```
 
