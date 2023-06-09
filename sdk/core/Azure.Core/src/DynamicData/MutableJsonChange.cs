@@ -8,7 +8,6 @@ namespace Azure.Core.Json
     internal struct MutableJsonChange
     {
         private readonly JsonSerializerOptions _serializerOptions;
-        private JsonElement? _serializedValue;
 
         public MutableJsonChange(string path, int index, object? value, bool replacesJsonElement, JsonSerializerOptions options)
         {
@@ -34,14 +33,8 @@ namespace Azure.Core.Json
 
         internal JsonElement AsJsonElement()
         {
-            if (_serializedValue != null)
-            {
-                return _serializedValue.Value;
-            }
-
             if (Value is JsonElement element)
             {
-                _serializedValue = element;
                 return element;
             }
 
@@ -49,8 +42,7 @@ namespace Azure.Core.Json
             // TODO: What if it is an object that changes after assignment?
 
             byte[] bytes = JsonSerializer.SerializeToUtf8Bytes(Value, _serializerOptions);
-            _serializedValue = JsonDocument.Parse(bytes).RootElement;
-            return _serializedValue.Value;
+            return JsonDocument.Parse(bytes).RootElement;
         }
 
         internal string AsString()
