@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using System;
+using System.Buffers;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
@@ -46,7 +47,7 @@ namespace Azure.Core.Dynamic
                     return true;
                 }
 
-                return IsAllowedAnonymousValue(type, value, new HashSet<Type>());
+                return IsAllowedAnonymousValue(type, value, null);
             }
 
             private static bool IsAllowedLeafType(Type type)
@@ -185,7 +186,7 @@ namespace Azure.Core.Dynamic
                 return true;
             }
 
-            private static bool IsAllowedAnonymousValue<T>(Type type, T value, HashSet<Type> ancestorTypes)
+            private static bool IsAllowedAnonymousValue<T>(Type type, T value, Memory<Type> ancestorTypes)
             {
                 if (!IsAnonymousType(type))
                 {
@@ -206,13 +207,17 @@ namespace Azure.Core.Dynamic
                     }
 
                     // Detect cycles: trust but verify
-                    if (ancestorTypes.Contains(property.PropertyType))
+                    if (ContainsType(ancestorTypes.Span, property.PropertyType))
                     {
                         continue;
                     }
 
                     // Recurse
-                    ancestorTypes.Add(type);
+
+                    // Add ancestor to span
+                    int length = ancestorTypes == null ? 0 : ancestorTypes.Length;
+                    ancestorTypes = stackalloc Type[length];
+                    ancestorTypes = AddType(ancestorTypes, type);
                     if (!IsAllowedAnonymousValue(property.PropertyType, propertyValue, ancestorTypes))
                     {
                         return false;
@@ -220,6 +225,31 @@ namespace Azure.Core.Dynamic
                 }
 
                 return true;
+            }
+
+            private static bool ContainsType(Span<Type> types, Type type)
+            {
+                if (types == null)
+                {
+                    return false;
+                }
+
+                for (int i = 0; i < types.Length; i++)
+                {
+                    if (types[i] == type)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            private static Span<Type> AddType(Span<Type> types, Type type)
+            {
+                Span<Type> values = new Span<Type>()
+                val
+                return values;
             }
 
             private static bool IsAnonymousType(Type type)
