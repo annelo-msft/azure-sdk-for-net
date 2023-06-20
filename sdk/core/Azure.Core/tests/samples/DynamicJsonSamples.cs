@@ -299,8 +299,8 @@ namespace Azure.Core.Samples
 
 #if NET6_0_OR_GREATER
             // JsonNode
-            JsonNode node = JsonNode.Parse(response.Content);
-            name = (string)node["name"];
+            JsonNode content = JsonNode.Parse(response.Content);
+            name = (string)content["name"];
 #endif
         }
 
