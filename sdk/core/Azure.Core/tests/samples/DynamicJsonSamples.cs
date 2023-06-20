@@ -8,6 +8,10 @@ using Azure.Core.TestFramework;
 using Azure.Identity;
 using NUnit.Framework;
 
+#if NET6_0_OR_GREATER
+using System.Text.Json.Nodes;
+#endif
+
 namespace Azure.Core.Samples
 {
     public class DynamicJsonSamples
@@ -280,6 +284,24 @@ namespace Azure.Core.Samples
             #endregion
 
             Assert.Throws<ObjectDisposedException>(() => { _ = details.Color; });
+        }
+
+        [Test]
+        public void CompareToJsonNode()
+        {
+            WidgetsClient client = GetMockClient();
+
+            // Dynamic
+            Response response = client.GetWidget();
+            dynamic widget = response.Content.ToDynamicFromJson(JsonPropertyNames.CamelCase);
+            // Retrieves `name` value from JSON `{ "name" : "Widget" }`
+            string name = widget.Name;
+
+#if NET6_0_OR_GREATER
+            // JsonNode
+            JsonNode node = JsonNode.Parse(response.Content);
+            name = (string)node["name"];
+#endif
         }
 
         private WidgetsClient GetMockClient()
