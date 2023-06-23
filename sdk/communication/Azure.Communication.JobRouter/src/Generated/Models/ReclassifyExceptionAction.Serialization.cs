@@ -49,7 +49,7 @@ namespace Azure.Communication.JobRouter
                 return null;
             }
             Optional<string> classificationPolicyId = default;
-            Optional<IDictionary<string, object>> labelsToUpsert = default;
+            Optional<IDictionary<string, Value>> labelsToUpsert = default;
             string kind = default;
             foreach (var property in element.EnumerateObject())
             {
@@ -64,7 +64,7 @@ namespace Azure.Communication.JobRouter
                     {
                         continue;
                     }
-                    Dictionary<string, object> dictionary = new Dictionary<string, object>();
+                    Dictionary<string, Value> dictionary = new Dictionary<string, Value>();
                     foreach (var property0 in property.Value.EnumerateObject())
                     {
                         if (property0.Value.ValueKind == JsonValueKind.Null)
@@ -73,7 +73,7 @@ namespace Azure.Communication.JobRouter
                         }
                         else
                         {
-                            dictionary.Add(property0.Name, property0.Value.GetObject());
+                            dictionary.Add(property0.Name, property0.Value);
                         }
                     }
                     labelsToUpsert = dictionary;

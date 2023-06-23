@@ -18,7 +18,7 @@ namespace Azure.Communication.JobRouter
         /// <param name="kind"> The type discriminator describing a sub-type of ExceptionAction. </param>
         /// <param name="classificationPolicyId"> (optional) The new classification policy that will determine queue, priority and worker selectors. </param>
         /// <param name="labelsToUpsert"> (optional) Dictionary containing the labels to update (or add if not existing) in key-value pairs. </param>
-        internal ReclassifyExceptionAction(string kind, string classificationPolicyId, IDictionary<string, object> labelsToUpsert) : base(kind)
+        internal ReclassifyExceptionAction(string kind, string classificationPolicyId, IDictionary<string, Value> labelsToUpsert) : base(kind)
         {
             ClassificationPolicyId = classificationPolicyId;
             _labelsToUpsert = labelsToUpsert;

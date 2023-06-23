@@ -23,7 +23,7 @@ namespace Azure.Communication.JobRouter
         /// <param name="expedite"> Pushes the job to the front of the queue as long as this selector is active. </param>
         /// <param name="status"> The status of the worker selector. </param>
         /// <param name="expiresAt"> The time at which this worker selector expires in UTC. </param>
-        internal RouterWorkerSelector(string key, LabelOperator labelOperator, object value, double? expiresAfterSeconds, bool? expedite, RouterWorkerSelectorStatus? status, DateTimeOffset? expiresAt)
+        internal RouterWorkerSelector(string key, LabelOperator labelOperator, Value value, double? expiresAfterSeconds, bool? expedite, RouterWorkerSelectorStatus? status, DateTimeOffset? expiresAt)
         {
             Key = key;
             LabelOperator = labelOperator;
