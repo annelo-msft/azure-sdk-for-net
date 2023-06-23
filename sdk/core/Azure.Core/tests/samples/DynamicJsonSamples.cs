@@ -287,6 +287,21 @@ namespace Azure.Core.Samples
         }
 
         [Test]
+        public void IntroSamples()
+        {
+            BinaryData data = BinaryData.FromString("""
+                {
+                    "name": "Annabelle"
+                }
+                """);
+
+            dynamic content = data.ToDynamicFromJson();
+            content.name = "Mirabelle";
+            content.age = 28;
+            Console.WriteLine($"Content: {content}");
+        }
+
+        [Test]
         public void CompareToJsonNode()
         {
             WidgetsClient client = GetMockClient();
