@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using System;
+using System.IO;
 using System.Text.Json;
 
 namespace Azure.Core.Json
@@ -67,17 +68,22 @@ namespace Azure.Core.Json
 
         internal bool IsDescendant(ReadOnlySpan<char> path)
         {
-            if (path.Length == 0)
+            return IsDescendant(Path.AsSpan(), path);
+        }
+
+        internal static bool IsDescendant(ReadOnlySpan<char> descendantPath, ReadOnlySpan<char> ancestorPath)
+        {
+            if (ancestorPath.Length == 0)
             {
-                return Path.Length > 0;
+                return descendantPath.Length > 0;
             }
 
             // Restrict matches (e.g. so we don't think 'a' is a parent of 'abc').
-            Span<char> copy = stackalloc char[path.Length + 1];
-            path.CopyTo(copy);
-            copy[path.Length] = MutableJsonDocument.ChangeTracker.Delimiter;
+            Span<char> copy = stackalloc char[descendantPath.Length + 1];
+            descendantPath.CopyTo(copy);
+            copy[descendantPath.Length] = MutableJsonDocument.ChangeTracker.Delimiter;
 
-            return Path.AsSpan().StartsWith(copy, StringComparison.Ordinal);
+            return ancestorPath.StartsWith(copy, StringComparison.Ordinal);
         }
 
         internal bool IsDirectDescendant(string path)
