@@ -141,7 +141,14 @@ namespace Azure.Core.Json
                 return;
             }
 
-            MutableJsonChange? change = _root.Changes.GetNextMergePatchChange(null, out int maxPathLength);
+            // For an array, if any element has changed, the entire array is replaced.
+            if (_root.RootElement.ValueKind == JsonValueKind.Array)
+            {
+                _root.RootElement.WriteTo(writer);
+                return;
+            }
+
+            MutableJsonChange? change = _root.Changes.GetFirstMergePatchChange(out int maxPathLength);
 
             // patchPath tracks the global path we're on in writing out the PATCH JSON.
             // We only iterate forward through the PATCH JSON.
@@ -159,12 +166,9 @@ namespace Azure.Core.Json
 
             // TODO: this breaks for arrays
 
-            if (_root.RootElement.ValueKind != JsonValueKind.Array)
-            {
-                // Write the start of the PATCH JSON
-                writer.WriteStartObject();
-                Debug.WriteLine("** writer: Writing '{' | start PATCH");
-            }
+            // Write the start of the PATCH JSON
+            writer.WriteStartObject();
+            Debug.WriteLine("** writer: Writing '{' | start PATCH");
 
             while (change != null)
             {
@@ -180,27 +184,9 @@ namespace Azure.Core.Json
                 // for the change we're writing in this loop iteration.
                 OpenAncestorObjects(writer, changePath, currentPath, ref currentPathLength, patchPath, ref patchPathLength, ref patchElement);
 
-                // Now we're at the last segment of the change path and patchElement points to
+                // Now we're at the last segment of the current path and patchElement points to
                 // the node that contains the change we want to write into the PATCH JSON.
-                ReadOnlySpan<char> segment = GetLastSegment(changePath);
-
-                // TODO: Handle root element is array separately - we don't need to
-                // do any of this in that case.
-
-                // If we got an array, we're going to replace it entirely.  We won't
-                // process any further changes to anything below the root element of
-                // the array.
-                // If the current change path is on an array element item, we need to merge this
-                // with other array changes. Create a new change to represent the
-                // whole array.
-                if (patchElement.ValueKind == JsonValueKind.Array &&
-                    !patchPath.Slice(0, patchPathLength).SequenceEqual(currentPath.Slice(0, currentPathLength)))
-                {
-                    Debug.Assert(patchElement.ValueKind == JsonValueKind.Array);
-                    Debug.Assert(change.Value.ChangeKind == MutableJsonChangeKind.PropertyValue);
-
-                    change = new MutableJsonChange(GetString(patchPath, 0, patchPathLength), -1, null, _root.SerializerOptions, change.Value.ChangeKind, null);
-                }
+                ReadOnlySpan<char> segment = GetLastSegment(currentPath);
 
                 Debug.WriteLine($"** currentPath is '{GetString(currentPath, 0, currentPathLength)}'");
                 Debug.WriteLine($"** patchPath is '{GetString(patchPath, 0, patchPathLength)}'");
@@ -231,7 +217,7 @@ namespace Azure.Core.Json
                     }
                 }
 
-                change = _root.Changes.GetNextMergePatchChange(change, out _);
+                change = _root.Changes.GetNextMergePatchChange(currentPath);
             }
 
             // The above loop will have written out the values of all the elements on the
@@ -240,13 +226,11 @@ namespace Azure.Core.Json
             Debug.WriteLine($"** patchPath is '{GetString(patchPath, 0, patchPathLength)}'");
             CloseFinalObjects(writer, patchPath, patchPathLength);
 
-            if (_root.RootElement.ValueKind != JsonValueKind.Array)
-            {
-                // Write the end of the PATCH JSON.
-                writer.WriteEndObject();
-                Debug.WriteLine("** writer: Writing '}' | end PATCH");
-            }
+            // Write the end of the PATCH JSON.
+            writer.WriteEndObject();
+            Debug.WriteLine("** writer: Writing '}' | end PATCH");
         }
+
         private ReadOnlySpan<char> GetFirstSegment(ReadOnlySpan<char> path)
         {
             int idx = path.IndexOf(MutableJsonDocument.ChangeTracker.Delimiter);
