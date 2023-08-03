@@ -256,16 +256,16 @@ namespace Azure.Core.Json
             Debug.WriteLine($"**   patchElement is '{patchElement}'");
 
             // Pop the last segment because it was a leaf node
-            MutableJsonDocument.ChangeTracker.PopPropertyLeaveDelimiter(patchPath, ref patchPathLength);
+            MutableJsonDocument.ChangeTracker.PopProperty(patchPath, ref patchPathLength);
             Debug.WriteLine($"**   UPDATING patchPatch: patchPath is '{GetString(patchPath, 0, patchPathLength)}'");
 
             bool closedObject = false;
-            while (!changePath.StartsWith(patchPath.Slice(0, patchPathLength)))
+            while (!MutableJsonChange.IsDescendant(patchPath.Slice(0, patchPathLength), changePath))
             {
                 writer.WriteEndObject();
                 Debug.WriteLine("** writer: Writing '}' | CloseOpenObjects");
 
-                MutableJsonDocument.ChangeTracker.PopPropertyLeaveDelimiter(patchPath, ref patchPathLength);
+                MutableJsonDocument.ChangeTracker.PopProperty(patchPath, ref patchPathLength);
                 Debug.WriteLine($"**   UPDATING patchPatch: patchPath is '{GetString(patchPath, 0, patchPathLength)}'");
 
                 closedObject = true;

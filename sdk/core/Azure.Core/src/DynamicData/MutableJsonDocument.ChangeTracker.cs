@@ -278,10 +278,10 @@ namespace Azure.Core.Json
                 return path.Substring(0, lastDelimiter);
             }
 
-            internal static void PopPropertyLeaveDelimiter(Span<char> path, ref int pathLength)
+            internal static void PopProperty(Span<char> path, ref int pathLength)
             {
                 int lastDelimiter = path.Slice(0, pathLength).LastIndexOf(Delimiter);
-                pathLength = lastDelimiter == -1 ? 0 : lastDelimiter + 1;
+                pathLength = lastDelimiter == -1 ? 0 : lastDelimiter;
             }
         }
     }

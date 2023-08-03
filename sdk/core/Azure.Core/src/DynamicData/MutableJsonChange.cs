@@ -71,7 +71,7 @@ namespace Azure.Core.Json
             return IsDescendant(ancestorPath, Path.AsSpan());
         }
 
-        internal bool IsDescendant(ReadOnlySpan<char> ancestorPath, ReadOnlySpan<char> descendantPath)
+        internal static bool IsDescendant(ReadOnlySpan<char> ancestorPath, ReadOnlySpan<char> descendantPath)
         {
             if (ancestorPath.Length == 0)
             {
