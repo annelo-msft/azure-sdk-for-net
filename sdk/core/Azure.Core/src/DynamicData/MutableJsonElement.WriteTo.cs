@@ -165,8 +165,6 @@ namespace Azure.Core.Json
             Span<char> currentPath = stackalloc char[maxPathLength];
             int currentPathLength = 0;
 
-            // TODO: this breaks for arrays
-
             // Write the start of the PATCH JSON
             writer.WriteStartObject();
             Debug.WriteLine("** writer: Writing '{' | start PATCH");
@@ -180,7 +178,6 @@ namespace Azure.Core.Json
                 // reset current path for this loop
                 currentPathLength = 0;
 
-                // TODO: correct this one
                 // If the change we're on starts in a different object than we were writing to in
                 // the last iteration, we need to write the end of any open objects.  Do that now.
                 CloseOpenObjects(writer, changePath, patchPath, ref patchPathLength, ref patchElement);
@@ -286,7 +283,7 @@ namespace Azure.Core.Json
             int end;
             do
             {
-                end = path.Slice(start).IndexOf(MutableJsonDocument.ChangeTracker.Delimiter);
+                end = path.Slice(0, pathLength).Slice(start).IndexOf(MutableJsonDocument.ChangeTracker.Delimiter);
                 if (end == -1)
                 {
                     end = length - start;
@@ -342,53 +339,52 @@ namespace Azure.Core.Json
             int length = path.Length;
             int start = 0;
             int end;
-
             do
             {
-                bool isLast = false;
                 end = path.Slice(start).IndexOf(MutableJsonDocument.ChangeTracker.Delimiter);
                 if (end == -1)
                 {
-                    // don't skip the last segment
                     end = length - start;
-                    isLast = true;
                 }
 
                 if (end != 0)
                 {
                     MutableJsonDocument.ChangeTracker.PushProperty(currentPath, ref currentPathLength, path.Slice(start), end);
                     Debug.WriteLine($"**   UPDATING currentPath: currentPath is '{GetString(currentPath, 0, currentPathLength)}'");
-                }
 
-                // if we haven't opened this object yet in the PATCH JSON, open it and set
-                // currentElement to the corresponding element for the object.
-                if (!patchPath.Slice(0, patchPathLength).StartsWith(currentPath.Slice(0, currentPathLength)) &&
-                    currentPath.Slice(0, currentPathLength).StartsWith(patchPath.Slice(0, patchPathLength)))
-                {
-                    MutableJsonDocument.ChangeTracker.PushProperty(patchPath, ref patchPathLength, path.Slice(start), end);
-                    Debug.WriteLine($"**   UPDATING patchPatch: patchPath is '{GetString(patchPath, 0, patchPathLength)}'");
-
-                    if (patchElement.ValueKind != JsonValueKind.Object)
+                    // if we haven't opened this object yet in the PATCH JSON, open it and set
+                    // currentElement to the corresponding element for the object.
+                    if (!patchPath.Slice(0, patchPathLength).StartsWith(currentPath.Slice(0, currentPathLength)) &&
+                        currentPath.Slice(0, currentPathLength).StartsWith(patchPath.Slice(0, patchPathLength)))
                     {
-                        break;
+                        MutableJsonDocument.ChangeTracker.PushProperty(patchPath, ref patchPathLength, path.Slice(start), end);
+                        Debug.WriteLine($"**   UPDATING patchPatch: patchPath is '{GetString(patchPath, 0, patchPathLength)}'");
+
+                        // patchElement tracks patchPatch
+                        if (!patchElement.TryGetProperty(path.Slice(start, end), out patchElement))
+                        {
+                            // element was deleted
+                            break;
+                        }
+
+                        if (patchElement.ValueKind != JsonValueKind.Object)
+                        {
+                            // we're at a leaf node: array, number, etc.
+                            break;
+                        }
+
+                        if (start + end == length)
+                        {
+                            // this is the last segment, we'll write it outside the loop
+                            break;
+                        }
+
+                        writer.WritePropertyName(path.Slice(start, end));
+                        Debug.WriteLine($"** writer: Writing '\"{GetString(path, start, end)}\"' | OpenAncestorObjects");
+
+                        writer.WriteStartObject();
+                        Debug.WriteLine("** writer: Writing '{' | OpenAncestorObjects");
                     }
-
-                    if (!patchElement.TryGetProperty(path.Slice(start, end), out patchElement))
-                    {
-                        // element was deleted
-                        break;
-                    }
-
-                    if (isLast)
-                    {
-                        break;
-                    }
-
-                    writer.WritePropertyName(path.Slice(start, end));
-                    Debug.WriteLine($"** writer: Writing '\"{GetString(path, start, end)}\"' | OpenAncestorObjects");
-
-                    writer.WriteStartObject();
-                    Debug.WriteLine("** writer: Writing '{' | OpenAncestorObjects");
                 }
 
                 start += end + 1;
