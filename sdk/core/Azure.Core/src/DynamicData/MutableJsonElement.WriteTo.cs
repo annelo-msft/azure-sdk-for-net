@@ -259,7 +259,6 @@ namespace Azure.Core.Json
             MutableJsonDocument.ChangeTracker.PopProperty(patchPath, ref patchPathLength);
             Debug.WriteLine($"**   UPDATING patchPatch: patchPath is '{GetString(patchPath, 0, patchPathLength)}'");
 
-            bool closedObject = false;
             while (!MutableJsonChange.IsDescendant(patchPath.Slice(0, patchPathLength), changePath))
             {
                 writer.WriteEndObject();
@@ -267,15 +266,10 @@ namespace Azure.Core.Json
 
                 MutableJsonDocument.ChangeTracker.PopProperty(patchPath, ref patchPathLength);
                 Debug.WriteLine($"**   UPDATING patchPatch: patchPath is '{GetString(patchPath, 0, patchPathLength)}'");
-
-                closedObject = true;
             }
 
-            if (closedObject)
-            {
-                patchElement = GetPropertyFromRoot(patchPath, patchPathLength);
-                Debug.WriteLine($"**   UPDATING patchElement: patchElement is '{patchElement}'");
-            }
+            patchElement = GetPropertyFromRoot(patchPath, patchPathLength);
+            Debug.WriteLine($"**   UPDATING patchElement: patchElement is '{patchElement}'");
         }
 
         private MutableJsonElement GetPropertyFromRoot(ReadOnlySpan<char> path, int pathLength)
