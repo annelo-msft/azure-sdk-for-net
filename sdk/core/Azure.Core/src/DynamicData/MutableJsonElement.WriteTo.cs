@@ -320,7 +320,7 @@ namespace Azure.Core.Json
             int end;
             do
             {
-                end = patchPath.Slice(start, patchPathLength).IndexOf(MutableJsonDocument.ChangeTracker.Delimiter);
+                end = patchPath.Slice(0, patchPathLength).Slice(start).IndexOf(MutableJsonDocument.ChangeTracker.Delimiter);
                 if (end == -1)
                 {
                     // don't close a leaf node
