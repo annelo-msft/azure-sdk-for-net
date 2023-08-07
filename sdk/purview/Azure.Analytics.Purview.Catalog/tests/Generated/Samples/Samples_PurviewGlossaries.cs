@@ -27,7 +27,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = client.GetGlossaries();
+            Response response = client.GetGlossaries(1234, 1234, "<sort>", true, new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result[0].ToString());
@@ -41,7 +41,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = client.GetGlossaries(1234, 1234, "<sort>", true);
+            Response response = client.GetGlossaries(1234, 1234, "<sort>", true, new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result[0].GetProperty("categories")[0].GetProperty("categoryGuid").ToString());
@@ -86,7 +86,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = await client.GetGlossariesAsync();
+            Response response = await client.GetGlossariesAsync(1234, 1234, "<sort>", true, new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result[0].ToString());
@@ -100,7 +100,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = await client.GetGlossariesAsync(1234, 1234, "<sort>", true);
+            Response response = await client.GetGlossariesAsync(1234, 1234, "<sort>", true, new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result[0].GetProperty("categories")[0].GetProperty("categoryGuid").ToString());
@@ -241,6 +241,24 @@ namespace Azure.Analytics.Purview.Catalog.Samples
                         templateName = new[] {
                 new {}
             },
+                        anchor = new
+                        {
+                            displayText = "<displayText>",
+                            glossaryGuid = "<glossaryGuid>",
+                            relationGuid = "<relationGuid>",
+                        },
+                        antonyms = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
                         createTime = 123.45f,
                         createdBy = "<createdBy>",
                         updateTime = 123.45f,
@@ -277,6 +295,13 @@ namespace Azure.Analytics.Purview.Catalog.Samples
                         entityGuid = "<entityGuid>",
                         entityStatus = "ACTIVE",
                         removePropagationsOnEntityDelete = true,
+                        validityPeriods = new[] {
+                            new {
+                                endTime = "<endTime>",
+                                startTime = "<startTime>",
+                                timeZone = "<timeZone>",
+                            }
+                        },
                         source = "<source>",
                         sourceDetails = new {
                             key = new {},
@@ -305,10 +330,177 @@ namespace Azure.Analytics.Purview.Catalog.Samples
                     status = "DRAFT",
                 }
             },
+                        classifies = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
                         examples = new[] {
                 "<String>"
             },
+                        isA = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
+                        preferredTerms = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
+                        preferredToTerms = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
+                        replacedBy = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
+                        replacementTerms = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
+                        seeAlso = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
+                        synonyms = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
+                        translatedTerms = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
+                        translationTerms = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
                         usage = "<usage>",
+                        validValues = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
+                        validValuesFor = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
+                        classifications = new[] {
+                new {
+                    entityGuid = "<entityGuid>",
+                    entityStatus = "ACTIVE",
+                    removePropagationsOnEntityDelete = true,
+                    validityPeriods = new[] {
+                        new {
+                            endTime = "<endTime>",
+                            startTime = "<startTime>",
+                            timeZone = "<timeZone>",
+                        }
+                    },
+                    source = "<source>",
+                    sourceDetails = new {
+                        key = new {},
+                    },
+                    attributes = new {
+                        key = new {},
+                    },
+                    typeName = "<typeName>",
+                    lastModifiedTS = "<lastModifiedTS>",
+                }
+            },
                         longDescription = "<longDescription>",
                         name = "<name>",
                         qualifiedName = "<qualifiedName>",
@@ -345,6 +537,13 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             entityGuid = "<entityGuid>",
             entityStatus = "ACTIVE",
             removePropagationsOnEntityDelete = true,
+            validityPeriods = new[] {
+                new {
+                    endTime = "<endTime>",
+                    startTime = "<startTime>",
+                    timeZone = "<timeZone>",
+                }
+            },
             source = "<source>",
             sourceDetails = new {
                 key = new {},
@@ -505,6 +704,24 @@ namespace Azure.Analytics.Purview.Catalog.Samples
                         templateName = new[] {
                 new {}
             },
+                        anchor = new
+                        {
+                            displayText = "<displayText>",
+                            glossaryGuid = "<glossaryGuid>",
+                            relationGuid = "<relationGuid>",
+                        },
+                        antonyms = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
                         createTime = 123.45f,
                         createdBy = "<createdBy>",
                         updateTime = 123.45f,
@@ -541,6 +758,13 @@ namespace Azure.Analytics.Purview.Catalog.Samples
                         entityGuid = "<entityGuid>",
                         entityStatus = "ACTIVE",
                         removePropagationsOnEntityDelete = true,
+                        validityPeriods = new[] {
+                            new {
+                                endTime = "<endTime>",
+                                startTime = "<startTime>",
+                                timeZone = "<timeZone>",
+                            }
+                        },
                         source = "<source>",
                         sourceDetails = new {
                             key = new {},
@@ -569,10 +793,177 @@ namespace Azure.Analytics.Purview.Catalog.Samples
                     status = "DRAFT",
                 }
             },
+                        classifies = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
                         examples = new[] {
                 "<String>"
             },
+                        isA = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
+                        preferredTerms = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
+                        preferredToTerms = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
+                        replacedBy = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
+                        replacementTerms = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
+                        seeAlso = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
+                        synonyms = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
+                        translatedTerms = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
+                        translationTerms = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
                         usage = "<usage>",
+                        validValues = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
+                        validValuesFor = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
+                        classifications = new[] {
+                new {
+                    entityGuid = "<entityGuid>",
+                    entityStatus = "ACTIVE",
+                    removePropagationsOnEntityDelete = true,
+                    validityPeriods = new[] {
+                        new {
+                            endTime = "<endTime>",
+                            startTime = "<startTime>",
+                            timeZone = "<timeZone>",
+                        }
+                    },
+                    source = "<source>",
+                    sourceDetails = new {
+                        key = new {},
+                    },
+                    attributes = new {
+                        key = new {},
+                    },
+                    typeName = "<typeName>",
+                    lastModifiedTS = "<lastModifiedTS>",
+                }
+            },
                         longDescription = "<longDescription>",
                         name = "<name>",
                         qualifiedName = "<qualifiedName>",
@@ -609,6 +1000,13 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             entityGuid = "<entityGuid>",
             entityStatus = "ACTIVE",
             removePropagationsOnEntityDelete = true,
+            validityPeriods = new[] {
+                new {
+                    endTime = "<endTime>",
+                    startTime = "<startTime>",
+                    timeZone = "<timeZone>",
+                }
+            },
             source = "<source>",
             sourceDetails = new {
                 key = new {},
@@ -1215,7 +1613,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = client.GetGlossaryCategory("<categoryGuid>");
+            Response response = client.GetGlossaryCategory("<categoryGuid>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.ToString());
@@ -1229,7 +1627,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = client.GetGlossaryCategory("<categoryGuid>");
+            Response response = client.GetGlossaryCategory("<categoryGuid>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.GetProperty("anchor").GetProperty("displayText").ToString());
@@ -1280,7 +1678,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = await client.GetGlossaryCategoryAsync("<categoryGuid>");
+            Response response = await client.GetGlossaryCategoryAsync("<categoryGuid>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.ToString());
@@ -1294,7 +1692,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = await client.GetGlossaryCategoryAsync("<categoryGuid>");
+            Response response = await client.GetGlossaryCategoryAsync("<categoryGuid>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.GetProperty("anchor").GetProperty("displayText").ToString());
@@ -1813,7 +2211,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = client.GetRelatedCategories("<categoryGuid>");
+            Response response = client.GetRelatedCategories("<categoryGuid>", 1234, 1234, "<sort>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.GetProperty("<test>")[0].ToString());
@@ -1827,7 +2225,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = client.GetRelatedCategories("<categoryGuid>", 1234, 1234, "<sort>");
+            Response response = client.GetRelatedCategories("<categoryGuid>", 1234, 1234, "<sort>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.GetProperty("<test>")[0].GetProperty("categoryGuid").ToString());
@@ -1845,7 +2243,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = await client.GetRelatedCategoriesAsync("<categoryGuid>");
+            Response response = await client.GetRelatedCategoriesAsync("<categoryGuid>", 1234, 1234, "<sort>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.GetProperty("<test>")[0].ToString());
@@ -1859,7 +2257,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = await client.GetRelatedCategoriesAsync("<categoryGuid>", 1234, 1234, "<sort>");
+            Response response = await client.GetRelatedCategoriesAsync("<categoryGuid>", 1234, 1234, "<sort>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.GetProperty("<test>")[0].GetProperty("categoryGuid").ToString());
@@ -1877,7 +2275,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = client.GetCategoryTerms("<categoryGuid>");
+            Response response = client.GetCategoryTerms("<categoryGuid>", 1234, 1234, "<sort>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result[0].ToString());
@@ -1891,7 +2289,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = client.GetCategoryTerms("<categoryGuid>", 1234, 1234, "<sort>");
+            Response response = client.GetCategoryTerms("<categoryGuid>", 1234, 1234, "<sort>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result[0].GetProperty("description").ToString());
@@ -1912,7 +2310,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = await client.GetCategoryTermsAsync("<categoryGuid>");
+            Response response = await client.GetCategoryTermsAsync("<categoryGuid>", 1234, 1234, "<sort>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result[0].ToString());
@@ -1926,7 +2324,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = await client.GetCategoryTermsAsync("<categoryGuid>", 1234, 1234, "<sort>");
+            Response response = await client.GetCategoryTermsAsync("<categoryGuid>", 1234, 1234, "<sort>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result[0].GetProperty("description").ToString());
@@ -2211,6 +2609,13 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             entityGuid = "<entityGuid>",
             entityStatus = "ACTIVE",
             removePropagationsOnEntityDelete = true,
+            validityPeriods = new[] {
+                new {
+                    endTime = "<endTime>",
+                    startTime = "<startTime>",
+                    timeZone = "<timeZone>",
+                }
+            },
             source = "<source>",
             sourceDetails = new {
                 key = new {},
@@ -2661,6 +3066,13 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             entityGuid = "<entityGuid>",
             entityStatus = "ACTIVE",
             removePropagationsOnEntityDelete = true,
+            validityPeriods = new[] {
+                new {
+                    endTime = "<endTime>",
+                    startTime = "<startTime>",
+                    timeZone = "<timeZone>",
+                }
+            },
             source = "<source>",
             sourceDetails = new {
                 key = new {},
@@ -2847,7 +3259,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = client.GetGlossaryTerm("<termGuid>");
+            Response response = client.GetGlossaryTerm("<termGuid>", true, new string[] { "<excludeRelationshipTypeList>" }, new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.ToString());
@@ -2861,7 +3273,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = client.GetGlossaryTerm("<termGuid>", true, new string[] { "<excludeRelationshipTypeList>" });
+            Response response = client.GetGlossaryTerm("<termGuid>", true, new string[] { "<excludeRelationshipTypeList>" }, new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.GetProperty("abbreviation").ToString());
@@ -3028,7 +3440,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = await client.GetGlossaryTermAsync("<termGuid>");
+            Response response = await client.GetGlossaryTermAsync("<termGuid>", true, new string[] { "<excludeRelationshipTypeList>" }, new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.ToString());
@@ -3042,7 +3454,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = await client.GetGlossaryTermAsync("<termGuid>", true, new string[] { "<excludeRelationshipTypeList>" });
+            Response response = await client.GetGlossaryTermAsync("<termGuid>", true, new string[] { "<excludeRelationshipTypeList>" }, new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.GetProperty("abbreviation").ToString());
@@ -3473,6 +3885,13 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             entityGuid = "<entityGuid>",
             entityStatus = "ACTIVE",
             removePropagationsOnEntityDelete = true,
+            validityPeriods = new[] {
+                new {
+                    endTime = "<endTime>",
+                    startTime = "<startTime>",
+                    timeZone = "<timeZone>",
+                }
+            },
             source = "<source>",
             sourceDetails = new {
                 key = new {},
@@ -3923,6 +4342,13 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             entityGuid = "<entityGuid>",
             entityStatus = "ACTIVE",
             removePropagationsOnEntityDelete = true,
+            validityPeriods = new[] {
+                new {
+                    endTime = "<endTime>",
+                    startTime = "<startTime>",
+                    timeZone = "<timeZone>",
+                }
+            },
             source = "<source>",
             sourceDetails = new {
                 key = new {},
@@ -4801,6 +5227,13 @@ namespace Azure.Analytics.Purview.Catalog.Samples
                 entityGuid = "<entityGuid>",
                 entityStatus = "ACTIVE",
                 removePropagationsOnEntityDelete = true,
+                validityPeriods = new[] {
+                    new {
+                        endTime = "<endTime>",
+                        startTime = "<startTime>",
+                        timeZone = "<timeZone>",
+                    }
+                },
                 source = "<source>",
                 sourceDetails = new {
                     key = new {},
@@ -5250,6 +5683,13 @@ namespace Azure.Analytics.Purview.Catalog.Samples
                 entityGuid = "<entityGuid>",
                 entityStatus = "ACTIVE",
                 removePropagationsOnEntityDelete = true,
+                validityPeriods = new[] {
+                    new {
+                        endTime = "<endTime>",
+                        startTime = "<startTime>",
+                        timeZone = "<timeZone>",
+                    }
+                },
                 source = "<source>",
                 sourceDetails = new {
                     key = new {},
@@ -5437,7 +5877,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = client.GetEntitiesAssignedWithTerm("<termGuid>");
+            Response response = client.GetEntitiesAssignedWithTerm("<termGuid>", 1234, 1234, "<sort>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result[0].ToString());
@@ -5451,7 +5891,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = client.GetEntitiesAssignedWithTerm("<termGuid>", 1234, 1234, "<sort>");
+            Response response = client.GetEntitiesAssignedWithTerm("<termGuid>", 1234, 1234, "<sort>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result[0].GetProperty("displayText").ToString());
@@ -5475,7 +5915,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = await client.GetEntitiesAssignedWithTermAsync("<termGuid>");
+            Response response = await client.GetEntitiesAssignedWithTermAsync("<termGuid>", 1234, 1234, "<sort>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result[0].ToString());
@@ -5489,7 +5929,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = await client.GetEntitiesAssignedWithTermAsync("<termGuid>", 1234, 1234, "<sort>");
+            Response response = await client.GetEntitiesAssignedWithTermAsync("<termGuid>", 1234, 1234, "<sort>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result[0].GetProperty("displayText").ToString());
@@ -5897,7 +6337,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = client.GetRelatedTerms("<termGuid>");
+            Response response = client.GetRelatedTerms("<termGuid>", 1234, 1234, "<sort>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.GetProperty("<test>")[0].ToString());
@@ -5911,7 +6351,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = client.GetRelatedTerms("<termGuid>", 1234, 1234, "<sort>");
+            Response response = client.GetRelatedTerms("<termGuid>", 1234, 1234, "<sort>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.GetProperty("<test>")[0].GetProperty("description").ToString());
@@ -5932,7 +6372,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = await client.GetRelatedTermsAsync("<termGuid>");
+            Response response = await client.GetRelatedTermsAsync("<termGuid>", 1234, 1234, "<sort>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.GetProperty("<test>")[0].ToString());
@@ -5946,7 +6386,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = await client.GetRelatedTermsAsync("<termGuid>", 1234, 1234, "<sort>");
+            Response response = await client.GetRelatedTermsAsync("<termGuid>", 1234, 1234, "<sort>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.GetProperty("<test>")[0].GetProperty("description").ToString());
@@ -5967,7 +6407,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = client.GetGlossary("<glossaryGuid>");
+            Response response = client.GetGlossary("<glossaryGuid>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.ToString());
@@ -5981,7 +6421,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = client.GetGlossary("<glossaryGuid>");
+            Response response = client.GetGlossary("<glossaryGuid>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.GetProperty("categories")[0].GetProperty("categoryGuid").ToString());
@@ -6026,7 +6466,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = await client.GetGlossaryAsync("<glossaryGuid>");
+            Response response = await client.GetGlossaryAsync("<glossaryGuid>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.ToString());
@@ -6040,7 +6480,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = await client.GetGlossaryAsync("<glossaryGuid>");
+            Response response = await client.GetGlossaryAsync("<glossaryGuid>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.GetProperty("categories")[0].GetProperty("categoryGuid").ToString());
@@ -6181,6 +6621,24 @@ namespace Azure.Analytics.Purview.Catalog.Samples
                         templateName = new[] {
                 new {}
             },
+                        anchor = new
+                        {
+                            displayText = "<displayText>",
+                            glossaryGuid = "<glossaryGuid>",
+                            relationGuid = "<relationGuid>",
+                        },
+                        antonyms = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
                         createTime = 123.45f,
                         createdBy = "<createdBy>",
                         updateTime = 123.45f,
@@ -6217,6 +6675,13 @@ namespace Azure.Analytics.Purview.Catalog.Samples
                         entityGuid = "<entityGuid>",
                         entityStatus = "ACTIVE",
                         removePropagationsOnEntityDelete = true,
+                        validityPeriods = new[] {
+                            new {
+                                endTime = "<endTime>",
+                                startTime = "<startTime>",
+                                timeZone = "<timeZone>",
+                            }
+                        },
                         source = "<source>",
                         sourceDetails = new {
                             key = new {},
@@ -6245,10 +6710,177 @@ namespace Azure.Analytics.Purview.Catalog.Samples
                     status = "DRAFT",
                 }
             },
+                        classifies = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
                         examples = new[] {
                 "<String>"
             },
+                        isA = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
+                        preferredTerms = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
+                        preferredToTerms = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
+                        replacedBy = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
+                        replacementTerms = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
+                        seeAlso = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
+                        synonyms = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
+                        translatedTerms = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
+                        translationTerms = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
                         usage = "<usage>",
+                        validValues = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
+                        validValuesFor = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
+                        classifications = new[] {
+                new {
+                    entityGuid = "<entityGuid>",
+                    entityStatus = "ACTIVE",
+                    removePropagationsOnEntityDelete = true,
+                    validityPeriods = new[] {
+                        new {
+                            endTime = "<endTime>",
+                            startTime = "<startTime>",
+                            timeZone = "<timeZone>",
+                        }
+                    },
+                    source = "<source>",
+                    sourceDetails = new {
+                        key = new {},
+                    },
+                    attributes = new {
+                        key = new {},
+                    },
+                    typeName = "<typeName>",
+                    lastModifiedTS = "<lastModifiedTS>",
+                }
+            },
                         longDescription = "<longDescription>",
                         name = "<name>",
                         qualifiedName = "<qualifiedName>",
@@ -6285,6 +6917,13 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             entityGuid = "<entityGuid>",
             entityStatus = "ACTIVE",
             removePropagationsOnEntityDelete = true,
+            validityPeriods = new[] {
+                new {
+                    endTime = "<endTime>",
+                    startTime = "<startTime>",
+                    timeZone = "<timeZone>",
+                }
+            },
             source = "<source>",
             sourceDetails = new {
                 key = new {},
@@ -6445,6 +7084,24 @@ namespace Azure.Analytics.Purview.Catalog.Samples
                         templateName = new[] {
                 new {}
             },
+                        anchor = new
+                        {
+                            displayText = "<displayText>",
+                            glossaryGuid = "<glossaryGuid>",
+                            relationGuid = "<relationGuid>",
+                        },
+                        antonyms = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
                         createTime = 123.45f,
                         createdBy = "<createdBy>",
                         updateTime = 123.45f,
@@ -6481,6 +7138,13 @@ namespace Azure.Analytics.Purview.Catalog.Samples
                         entityGuid = "<entityGuid>",
                         entityStatus = "ACTIVE",
                         removePropagationsOnEntityDelete = true,
+                        validityPeriods = new[] {
+                            new {
+                                endTime = "<endTime>",
+                                startTime = "<startTime>",
+                                timeZone = "<timeZone>",
+                            }
+                        },
                         source = "<source>",
                         sourceDetails = new {
                             key = new {},
@@ -6509,10 +7173,177 @@ namespace Azure.Analytics.Purview.Catalog.Samples
                     status = "DRAFT",
                 }
             },
+                        classifies = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
                         examples = new[] {
                 "<String>"
             },
+                        isA = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
+                        preferredTerms = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
+                        preferredToTerms = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
+                        replacedBy = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
+                        replacementTerms = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
+                        seeAlso = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
+                        synonyms = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
+                        translatedTerms = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
+                        translationTerms = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
                         usage = "<usage>",
+                        validValues = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
+                        validValuesFor = new[] {
+                new {
+                    description = "<description>",
+                    displayText = "<displayText>",
+                    expression = "<expression>",
+                    relationGuid = "<relationGuid>",
+                    source = "<source>",
+                    status = "DRAFT",
+                    steward = "<steward>",
+                    termGuid = "<termGuid>",
+                }
+            },
+                        classifications = new[] {
+                new {
+                    entityGuid = "<entityGuid>",
+                    entityStatus = "ACTIVE",
+                    removePropagationsOnEntityDelete = true,
+                    validityPeriods = new[] {
+                        new {
+                            endTime = "<endTime>",
+                            startTime = "<startTime>",
+                            timeZone = "<timeZone>",
+                        }
+                    },
+                    source = "<source>",
+                    sourceDetails = new {
+                        key = new {},
+                    },
+                    attributes = new {
+                        key = new {},
+                    },
+                    typeName = "<typeName>",
+                    lastModifiedTS = "<lastModifiedTS>",
+                }
+            },
                         longDescription = "<longDescription>",
                         name = "<name>",
                         qualifiedName = "<qualifiedName>",
@@ -6549,6 +7380,13 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             entityGuid = "<entityGuid>",
             entityStatus = "ACTIVE",
             removePropagationsOnEntityDelete = true,
+            validityPeriods = new[] {
+                new {
+                    endTime = "<endTime>",
+                    startTime = "<startTime>",
+                    timeZone = "<timeZone>",
+                }
+            },
             source = "<source>",
             sourceDetails = new {
                 key = new {},
@@ -6661,7 +7499,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = client.GetGlossaryCategories("<glossaryGuid>");
+            Response response = client.GetGlossaryCategories("<glossaryGuid>", 1234, 1234, "<sort>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result[0].ToString());
@@ -6675,7 +7513,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = client.GetGlossaryCategories("<glossaryGuid>", 1234, 1234, "<sort>");
+            Response response = client.GetGlossaryCategories("<glossaryGuid>", 1234, 1234, "<sort>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result[0].GetProperty("anchor").GetProperty("displayText").ToString());
@@ -6726,7 +7564,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = await client.GetGlossaryCategoriesAsync("<glossaryGuid>");
+            Response response = await client.GetGlossaryCategoriesAsync("<glossaryGuid>", 1234, 1234, "<sort>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result[0].ToString());
@@ -6740,7 +7578,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = await client.GetGlossaryCategoriesAsync("<glossaryGuid>", 1234, 1234, "<sort>");
+            Response response = await client.GetGlossaryCategoriesAsync("<glossaryGuid>", 1234, 1234, "<sort>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result[0].GetProperty("anchor").GetProperty("displayText").ToString());
@@ -6791,7 +7629,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = client.GetGlossaryCategoriesHeaders("<glossaryGuid>");
+            Response response = client.GetGlossaryCategoriesHeaders("<glossaryGuid>", 1234, 1234, "<sort>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result[0].ToString());
@@ -6805,7 +7643,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = client.GetGlossaryCategoriesHeaders("<glossaryGuid>", 1234, 1234, "<sort>");
+            Response response = client.GetGlossaryCategoriesHeaders("<glossaryGuid>", 1234, 1234, "<sort>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result[0].GetProperty("categoryGuid").ToString());
@@ -6823,7 +7661,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = await client.GetGlossaryCategoriesHeadersAsync("<glossaryGuid>");
+            Response response = await client.GetGlossaryCategoriesHeadersAsync("<glossaryGuid>", 1234, 1234, "<sort>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result[0].ToString());
@@ -6837,7 +7675,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = await client.GetGlossaryCategoriesHeadersAsync("<glossaryGuid>", 1234, 1234, "<sort>");
+            Response response = await client.GetGlossaryCategoriesHeadersAsync("<glossaryGuid>", 1234, 1234, "<sort>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result[0].GetProperty("categoryGuid").ToString());
@@ -6855,7 +7693,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = client.GetDetailedGlossary("<glossaryGuid>");
+            Response response = client.GetDetailedGlossary("<glossaryGuid>", true, new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.ToString());
@@ -6869,7 +7707,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = client.GetDetailedGlossary("<glossaryGuid>", true);
+            Response response = client.GetDetailedGlossary("<glossaryGuid>", true, new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.GetProperty("categoryInfo").GetProperty("<test>").GetProperty("anchor").GetProperty("displayText").ToString());
@@ -7106,7 +7944,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = await client.GetDetailedGlossaryAsync("<glossaryGuid>");
+            Response response = await client.GetDetailedGlossaryAsync("<glossaryGuid>", true, new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.ToString());
@@ -7120,7 +7958,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = await client.GetDetailedGlossaryAsync("<glossaryGuid>", true);
+            Response response = await client.GetDetailedGlossaryAsync("<glossaryGuid>", true, new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.GetProperty("categoryInfo").GetProperty("<test>").GetProperty("anchor").GetProperty("displayText").ToString());
@@ -7495,7 +8333,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = client.GetGlossaryTerms("<glossaryGuid>");
+            Response response = client.GetGlossaryTerms("<glossaryGuid>", true, 1234, 1234, "<sort>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result[0].ToString());
@@ -7509,7 +8347,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = client.GetGlossaryTerms("<glossaryGuid>", true, 1234, 1234, "<sort>");
+            Response response = client.GetGlossaryTerms("<glossaryGuid>", true, 1234, 1234, "<sort>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result[0].GetProperty("abbreviation").ToString());
@@ -7676,7 +8514,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = await client.GetGlossaryTermsAsync("<glossaryGuid>");
+            Response response = await client.GetGlossaryTermsAsync("<glossaryGuid>", true, 1234, 1234, "<sort>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result[0].ToString());
@@ -7690,7 +8528,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = await client.GetGlossaryTermsAsync("<glossaryGuid>", true, 1234, 1234, "<sort>");
+            Response response = await client.GetGlossaryTermsAsync("<glossaryGuid>", true, 1234, 1234, "<sort>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result[0].GetProperty("abbreviation").ToString());
@@ -7857,7 +8695,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = client.GetGlossaryTermHeaders("<glossaryGuid>");
+            Response response = client.GetGlossaryTermHeaders("<glossaryGuid>", 1234, 1234, "<sort>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result[0].ToString());
@@ -7871,7 +8709,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = client.GetGlossaryTermHeaders("<glossaryGuid>", 1234, 1234, "<sort>");
+            Response response = client.GetGlossaryTermHeaders("<glossaryGuid>", 1234, 1234, "<sort>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result[0].GetProperty("description").ToString());
@@ -7892,7 +8730,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = await client.GetGlossaryTermHeadersAsync("<glossaryGuid>");
+            Response response = await client.GetGlossaryTermHeadersAsync("<glossaryGuid>", 1234, 1234, "<sort>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result[0].ToString());
@@ -7906,7 +8744,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = await client.GetGlossaryTermHeadersAsync("<glossaryGuid>", 1234, 1234, "<sort>");
+            Response response = await client.GetGlossaryTermHeadersAsync("<glossaryGuid>", 1234, 1234, "<sort>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result[0].GetProperty("description").ToString());
@@ -7927,7 +8765,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = client.GetImportCsvOperationStatus("<operationGuid>");
+            Response response = client.GetImportCsvOperationStatus("<operationGuid>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.ToString());
@@ -7941,7 +8779,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = client.GetImportCsvOperationStatus("<operationGuid>");
+            Response response = client.GetImportCsvOperationStatus("<operationGuid>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.GetProperty("id").ToString());
@@ -7962,7 +8800,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = await client.GetImportCsvOperationStatusAsync("<operationGuid>");
+            Response response = await client.GetImportCsvOperationStatusAsync("<operationGuid>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.ToString());
@@ -7976,7 +8814,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = await client.GetImportCsvOperationStatusAsync("<operationGuid>");
+            Response response = await client.GetImportCsvOperationStatusAsync("<operationGuid>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.GetProperty("id").ToString());
@@ -8069,7 +8907,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = client.GetTermsByGlossaryName("<glossaryName>");
+            Response response = client.GetTermsByGlossaryName("<glossaryName>", 1234, 1234, true, new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result[0].ToString());
@@ -8083,7 +8921,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = client.GetTermsByGlossaryName("<glossaryName>", 1234, 1234, true);
+            Response response = client.GetTermsByGlossaryName("<glossaryName>", 1234, 1234, true, new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result[0].GetProperty("abbreviation").ToString());
@@ -8250,7 +9088,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = await client.GetTermsByGlossaryNameAsync("<glossaryName>");
+            Response response = await client.GetTermsByGlossaryNameAsync("<glossaryName>", 1234, 1234, true, new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result[0].ToString());
@@ -8264,7 +9102,7 @@ namespace Azure.Analytics.Purview.Catalog.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewCatalogClient(endpoint, credential).GetPurviewGlossariesClient();
 
-            Response response = await client.GetTermsByGlossaryNameAsync("<glossaryName>", 1234, 1234, true);
+            Response response = await client.GetTermsByGlossaryNameAsync("<glossaryName>", 1234, 1234, true, new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result[0].GetProperty("abbreviation").ToString());

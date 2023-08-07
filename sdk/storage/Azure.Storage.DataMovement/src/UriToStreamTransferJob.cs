@@ -3,9 +3,9 @@
 
 using System.Buffers;
 using System.Collections.Generic;
-using Azure.Storage.DataMovement.Models;
 using System.Threading.Tasks;
 using System;
+using Azure.Core.Pipeline;
 
 namespace Azure.Storage.DataMovement
 {
@@ -16,13 +16,14 @@ namespace Azure.Storage.DataMovement
         /// </summary>
         internal UriToStreamTransferJob(
             DataTransfer dataTransfer,
-            StorageResourceSingle sourceResource,
-            StorageResourceSingle destinationResource,
-            TransferOptions transferOptions,
+            StorageResourceItem sourceResource,
+            StorageResourceItem destinationResource,
+            DataTransferOptions transferOptions,
             QueueChunkTaskInternal queueChunkTask,
             TransferCheckpointer checkpointer,
-            ErrorHandlingOptions errorHandling,
-            ArrayPool<byte> arrayPool)
+            DataTransferErrorMode errorHandling,
+            ArrayPool<byte> arrayPool,
+            ClientDiagnostics clientDiagnostics)
             : base(dataTransfer,
                   sourceResource,
                   destinationResource,
@@ -30,7 +31,8 @@ namespace Azure.Storage.DataMovement
                   queueChunkTask,
                   checkpointer,
                   errorHandling,
-                  arrayPool)
+                  arrayPool,
+                  clientDiagnostics)
         {
         }
 
@@ -41,11 +43,12 @@ namespace Azure.Storage.DataMovement
             DataTransfer dataTransfer,
             StorageResourceContainer sourceResource,
             StorageResourceContainer destinationResource,
-            TransferOptions transferOptions,
+            DataTransferOptions transferOptions,
             QueueChunkTaskInternal queueChunkTask,
             TransferCheckpointer checkpointer,
-            ErrorHandlingOptions errorHandling,
-            ArrayPool<byte> arrayPool)
+            DataTransferErrorMode errorHandling,
+            ArrayPool<byte> arrayPool,
+            ClientDiagnostics clientDiagnostics)
             : base(dataTransfer,
                   sourceResource,
                   destinationResource,
@@ -53,7 +56,8 @@ namespace Azure.Storage.DataMovement
                   queueChunkTask,
                   checkpointer,
                   errorHandling,
-                  arrayPool)
+                  arrayPool,
+                  clientDiagnostics)
         {
         }
 
@@ -63,7 +67,7 @@ namespace Azure.Storage.DataMovement
         /// <returns>An IEnumerable that contains the job parts</returns>
         public override async IAsyncEnumerable<JobPartInternal> ProcessJobToJobPartAsync()
         {
-            await OnJobStatusChangedAsync(StorageTransferStatus.InProgress).ConfigureAwait(false);
+            await OnJobStatusChangedAsync(DataTransferStatus.InProgress).ConfigureAwait(false);
             int partNumber = 0;
 
             if (_jobParts.Count == 0)
@@ -102,9 +106,9 @@ namespace Azure.Storage.DataMovement
                 bool isFinalPartFound = false;
                 foreach (JobPartInternal part in _jobParts)
                 {
-                    if (part.JobPartStatus != StorageTransferStatus.Completed)
+                    if (part.JobPartStatus != DataTransferStatus.Completed)
                     {
-                        part.JobPartStatus = StorageTransferStatus.Queued;
+                        part.JobPartStatus = DataTransferStatus.Queued;
                         yield return part;
 
                         if (part.IsFinalPart)
@@ -186,8 +190,8 @@ namespace Azure.Storage.DataMovement
                             part = await UriToStreamJobPart.CreateJobPartAsync(
                                 job: this,
                                 partNumber: partNumber,
-                                sourceResource: (StorageResourceSingle)lastResource,
-                                destinationResource: _destinationResourceContainer.GetChildStorageResource(sourceName),
+                                sourceResource: (StorageResourceItem)lastResource,
+                                destinationResource: _destinationResourceContainer.GetStorageResourceReference(sourceName),
                                 isFinalPart: false).ConfigureAwait(false);
                             AppendJobPart(part);
                         }
@@ -218,8 +222,8 @@ namespace Azure.Storage.DataMovement
                     lastPart = await UriToStreamJobPart.CreateJobPartAsync(
                             job: this,
                             partNumber: partNumber,
-                            sourceResource: (StorageResourceSingle) lastResource,
-                            destinationResource: _destinationResourceContainer.GetChildStorageResource(lastSourceName),
+                            sourceResource: (StorageResourceItem) lastResource,
+                            destinationResource: _destinationResourceContainer.GetStorageResourceReference(lastSourceName),
                             isFinalPart: true).ConfigureAwait(false);
                     AppendJobPart(lastPart);
                 }

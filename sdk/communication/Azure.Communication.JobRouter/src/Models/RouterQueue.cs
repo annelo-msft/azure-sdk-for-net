@@ -10,13 +10,13 @@ namespace Azure.Communication.JobRouter.Models
     public partial class RouterQueue
     {
         [CodeGenMember("Labels")]
-        internal IDictionary<string, Value> _labels
+        internal IDictionary<string, object> _labels
         {
             get
             {
                 return Labels != null && Labels.Count != 0
-                    ? Labels?.ToDictionary(x => x.Key, x => x.Value)
-                    : new ChangeTrackingDictionary<string, Value>();
+                    ? Labels?.ToDictionary(x => x.Key, x => x.Value?.Value)
+                    : new ChangeTrackingDictionary<string, object>();
             }
             set
             {
@@ -24,7 +24,7 @@ namespace Azure.Communication.JobRouter.Models
                 {
                     foreach (var label in value)
                     {
-                        Labels[label.Key] = new Value(label.Value);
+                        Labels[label.Key] = new LabelValue(label.Value);
                     }
                 }
             }
@@ -33,11 +33,21 @@ namespace Azure.Communication.JobRouter.Models
         /// <summary>
         /// A set of key/value pairs that are identifying attributes used by the rules engines to make decisions.
         /// </summary>
-        public IDictionary<string, Value> Labels { get; } = new Dictionary<string, Value>();
+        public IDictionary<string, LabelValue> Labels { get; } = new Dictionary<string, LabelValue>();
+
+        /// <summary> The name of this queue. </summary>
+        public string Name { get; internal set; }
+
+        /// <summary> The ID of the distribution policy that will determine how a job is distributed to workers. </summary>
+        public string DistributionPolicyId { get; internal set; }
+
+        /// <summary> (Optional) The ID of the exception policy that determines various job escalation rules. </summary>
+        public string ExceptionPolicyId { get; internal set; }
 
         /// <summary> Initializes a new instance of JobQueue. </summary>
         internal RouterQueue()
         {
+            _labels = new ChangeTrackingDictionary<string, object>();
         }
     }
 }

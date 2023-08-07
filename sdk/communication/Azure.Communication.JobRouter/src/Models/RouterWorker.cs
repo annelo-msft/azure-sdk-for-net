@@ -11,15 +11,26 @@ namespace Azure.Communication.JobRouter.Models
     [CodeGenModel("RouterWorker")]
     public partial class RouterWorker
     {
+        /// <summary> Initializes a new instance of RouterWorker. </summary>
+        internal RouterWorker()
+        {
+            _queueAssignments = new ChangeTrackingDictionary<string, object>();
+            _labels = new ChangeTrackingDictionary<string, object>();
+            _tags = new ChangeTrackingDictionary<string, object>();
+            _channelConfigurations = new ChangeTrackingDictionary<string, ChannelConfiguration>();
+            Offers = new ChangeTrackingList<RouterJobOffer>();
+            AssignedJobs = new ChangeTrackingList<RouterWorkerAssignment>();
+        }
+
         /// <summary>
         /// A set of key/value pairs that are identifying attributes used by the rules engines to make decisions.
         /// </summary>
-        public IDictionary<string, Value> Labels { get; } = new Dictionary<string, Value>();
+        public IDictionary<string, LabelValue> Labels { get; } = new Dictionary<string, LabelValue>();
 
         /// <summary>
         /// A set of non-identifying attributes attached to this worker.
         /// </summary>
-        public IDictionary<string, Value> Tags { get; } = new Dictionary<string, Value>();
+        public IDictionary<string, LabelValue> Tags { get; } = new Dictionary<string, LabelValue>();
 
         /// <summary> The channel(s) this worker can handle and their impact on the workers capacity. </summary>
         public IDictionary<string, ChannelConfiguration> ChannelConfigurations { get; } = new Dictionary<string, ChannelConfiguration>();
@@ -27,14 +38,20 @@ namespace Azure.Communication.JobRouter.Models
         /// <summary> The queue(s) that this worker can receive work from. </summary>
         public IDictionary<string, RouterQueueAssignment> QueueAssignments { get; } = new Dictionary<string, RouterQueueAssignment>();
 
+        /// <summary> The total capacity score this worker has to manage multiple concurrent jobs. </summary>
+        public int? TotalCapacity { get; internal set; }
+
+        /// <summary> A flag indicating this worker is open to receive offers or not. </summary>
+        public bool? AvailableForOffers { get; internal set; }
+
         [CodeGenMember("Labels")]
-        internal IDictionary<string, Value> _labels
+        internal IDictionary<string, object> _labels
         {
             get
             {
                 return Labels != null && Labels.Count != 0
-                    ? Labels?.ToDictionary(x => x.Key, x => x.Value)
-                    : new ChangeTrackingDictionary<string, Value>();
+                    ? Labels?.ToDictionary(x => x.Key, x => x.Value?.Value)
+                    : new ChangeTrackingDictionary<string, object>();
             }
             set
             {
@@ -42,20 +59,20 @@ namespace Azure.Communication.JobRouter.Models
                 {
                     foreach (var label in value)
                     {
-                        Labels[label.Key] = new Value(label.Value);
+                        Labels[label.Key] = new LabelValue(label.Value);
                     }
                 }
             }
         }
 
         [CodeGenMember("Tags")]
-        internal IDictionary<string, Value> _tags
+        internal IDictionary<string, object> _tags
         {
             get
             {
                 return Tags != null && Tags.Count != 0
-                    ? Tags?.ToDictionary(x => x.Key, x => x.Value)
-                    : new ChangeTrackingDictionary<string, Value>();
+                    ? Tags?.ToDictionary(x => x.Key, x => x.Value?.Value)
+                    : new ChangeTrackingDictionary<string, object>();
             }
             set
             {
@@ -63,7 +80,7 @@ namespace Azure.Communication.JobRouter.Models
                 {
                     foreach (var tag in value)
                     {
-                        Tags[tag.Key] = new Value(tag.Value);
+                        Tags[tag.Key] = new LabelValue(tag.Value);
                     }
                 }
             }

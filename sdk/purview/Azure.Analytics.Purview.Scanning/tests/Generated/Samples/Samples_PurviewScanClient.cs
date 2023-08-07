@@ -27,7 +27,7 @@ namespace Azure.Analytics.Purview.Scanning.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewScanClient(endpoint, "<dataSourceName>", "<scanName>", credential);
 
-            Response response = client.GetFilter();
+            Response response = client.GetFilter(new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.ToString());
@@ -41,7 +41,7 @@ namespace Azure.Analytics.Purview.Scanning.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewScanClient(endpoint, "<dataSourceName>", "<scanName>", credential);
 
-            Response response = client.GetFilter();
+            Response response = client.GetFilter(new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.GetProperty("properties").GetProperty("excludeUriPrefixes")[0].ToString());
@@ -58,7 +58,7 @@ namespace Azure.Analytics.Purview.Scanning.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewScanClient(endpoint, "<dataSourceName>", "<scanName>", credential);
 
-            Response response = await client.GetFilterAsync();
+            Response response = await client.GetFilterAsync(new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.ToString());
@@ -72,7 +72,7 @@ namespace Azure.Analytics.Purview.Scanning.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewScanClient(endpoint, "<dataSourceName>", "<scanName>", credential);
 
-            Response response = await client.GetFilterAsync();
+            Response response = await client.GetFilterAsync(new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.GetProperty("properties").GetProperty("excludeUriPrefixes")[0].ToString());
@@ -233,126 +233,551 @@ namespace Azure.Analytics.Purview.Scanning.Samples
                         {
                             scanRulesetName = "<scanRulesetName>",
                             scanRulesetType = "Custom",
+                            resourceNameFilter = new
+                            {
+                                excludePrefixes = new[] {
+                        "<String>"
+                    },
+                                includePrefixes = new[] {
+                        "<String>"
+                    },
+                                resources = new[] {
+                        "<String>"
+                    },
+                            },
+                            credential = new
+                            {
+                                referenceName = "<referenceName>",
+                                credentialType = "AccountKey",
+                            },
                         },
                         AzureResourceGroup = new
                         {
                             scanRulesetName = "<scanRulesetName>",
                             scanRulesetType = "Custom",
+                            resourceNameFilter = new
+                            {
+                                excludePrefixes = new[] {
+                        "<String>"
+                    },
+                                includePrefixes = new[] {
+                        "<String>"
+                    },
+                                resources = new[] {
+                        "<String>"
+                    },
+                            },
+                            credential = new
+                            {
+                                referenceName = "<referenceName>",
+                                credentialType = "AccountKey",
+                            },
                         },
                         AzureSynapseWorkspace = new
                         {
                             scanRulesetName = "<scanRulesetName>",
                             scanRulesetType = "Custom",
+                            resourceNameFilter = new
+                            {
+                                excludePrefixes = new[] {
+                        "<String>"
+                    },
+                                includePrefixes = new[] {
+                        "<String>"
+                    },
+                                resources = new[] {
+                        "<String>"
+                    },
+                            },
+                            credential = new
+                            {
+                                referenceName = "<referenceName>",
+                                credentialType = "AccountKey",
+                            },
                         },
                         AzureSynapse = new
                         {
                             scanRulesetName = "<scanRulesetName>",
                             scanRulesetType = "Custom",
+                            resourceNameFilter = new
+                            {
+                                excludePrefixes = new[] {
+                        "<String>"
+                    },
+                                includePrefixes = new[] {
+                        "<String>"
+                    },
+                                resources = new[] {
+                        "<String>"
+                    },
+                            },
+                            credential = new
+                            {
+                                referenceName = "<referenceName>",
+                                credentialType = "AccountKey",
+                            },
                         },
                         AdlsGen1 = new
                         {
                             scanRulesetName = "<scanRulesetName>",
                             scanRulesetType = "Custom",
+                            resourceNameFilter = new
+                            {
+                                excludePrefixes = new[] {
+                        "<String>"
+                    },
+                                includePrefixes = new[] {
+                        "<String>"
+                    },
+                                resources = new[] {
+                        "<String>"
+                    },
+                            },
+                            credential = new
+                            {
+                                referenceName = "<referenceName>",
+                                credentialType = "AccountKey",
+                            },
                         },
                         AdlsGen2 = new
                         {
                             scanRulesetName = "<scanRulesetName>",
                             scanRulesetType = "Custom",
+                            resourceNameFilter = new
+                            {
+                                excludePrefixes = new[] {
+                        "<String>"
+                    },
+                                includePrefixes = new[] {
+                        "<String>"
+                    },
+                                resources = new[] {
+                        "<String>"
+                    },
+                            },
+                            credential = new
+                            {
+                                referenceName = "<referenceName>",
+                                credentialType = "AccountKey",
+                            },
                         },
                         AmazonAccount = new
                         {
                             scanRulesetName = "<scanRulesetName>",
                             scanRulesetType = "Custom",
+                            resourceNameFilter = new
+                            {
+                                excludePrefixes = new[] {
+                        "<String>"
+                    },
+                                includePrefixes = new[] {
+                        "<String>"
+                    },
+                                resources = new[] {
+                        "<String>"
+                    },
+                            },
+                            credential = new
+                            {
+                                referenceName = "<referenceName>",
+                                credentialType = "AccountKey",
+                            },
                         },
                         AmazonS3 = new
                         {
                             scanRulesetName = "<scanRulesetName>",
                             scanRulesetType = "Custom",
+                            resourceNameFilter = new
+                            {
+                                excludePrefixes = new[] {
+                        "<String>"
+                    },
+                                includePrefixes = new[] {
+                        "<String>"
+                    },
+                                resources = new[] {
+                        "<String>"
+                    },
+                            },
+                            credential = new
+                            {
+                                referenceName = "<referenceName>",
+                                credentialType = "AccountKey",
+                            },
                         },
                         AmazonSql = new
                         {
                             scanRulesetName = "<scanRulesetName>",
                             scanRulesetType = "Custom",
+                            resourceNameFilter = new
+                            {
+                                excludePrefixes = new[] {
+                        "<String>"
+                    },
+                                includePrefixes = new[] {
+                        "<String>"
+                    },
+                                resources = new[] {
+                        "<String>"
+                    },
+                            },
+                            credential = new
+                            {
+                                referenceName = "<referenceName>",
+                                credentialType = "AccountKey",
+                            },
                         },
                         AzureCosmosDb = new
                         {
                             scanRulesetName = "<scanRulesetName>",
                             scanRulesetType = "Custom",
+                            resourceNameFilter = new
+                            {
+                                excludePrefixes = new[] {
+                        "<String>"
+                    },
+                                includePrefixes = new[] {
+                        "<String>"
+                    },
+                                resources = new[] {
+                        "<String>"
+                    },
+                            },
+                            credential = new
+                            {
+                                referenceName = "<referenceName>",
+                                credentialType = "AccountKey",
+                            },
                         },
                         AzureDataExplorer = new
                         {
                             scanRulesetName = "<scanRulesetName>",
                             scanRulesetType = "Custom",
+                            resourceNameFilter = new
+                            {
+                                excludePrefixes = new[] {
+                        "<String>"
+                    },
+                                includePrefixes = new[] {
+                        "<String>"
+                    },
+                                resources = new[] {
+                        "<String>"
+                    },
+                            },
+                            credential = new
+                            {
+                                referenceName = "<referenceName>",
+                                credentialType = "AccountKey",
+                            },
                         },
                         AzureFileService = new
                         {
                             scanRulesetName = "<scanRulesetName>",
                             scanRulesetType = "Custom",
+                            resourceNameFilter = new
+                            {
+                                excludePrefixes = new[] {
+                        "<String>"
+                    },
+                                includePrefixes = new[] {
+                        "<String>"
+                    },
+                                resources = new[] {
+                        "<String>"
+                    },
+                            },
+                            credential = new
+                            {
+                                referenceName = "<referenceName>",
+                                credentialType = "AccountKey",
+                            },
                         },
                         AzureSqlDatabase = new
                         {
                             scanRulesetName = "<scanRulesetName>",
                             scanRulesetType = "Custom",
+                            resourceNameFilter = new
+                            {
+                                excludePrefixes = new[] {
+                        "<String>"
+                    },
+                                includePrefixes = new[] {
+                        "<String>"
+                    },
+                                resources = new[] {
+                        "<String>"
+                    },
+                            },
+                            credential = new
+                            {
+                                referenceName = "<referenceName>",
+                                credentialType = "AccountKey",
+                            },
                         },
                         AmazonPostgreSql = new
                         {
                             scanRulesetName = "<scanRulesetName>",
                             scanRulesetType = "Custom",
+                            resourceNameFilter = new
+                            {
+                                excludePrefixes = new[] {
+                        "<String>"
+                    },
+                                includePrefixes = new[] {
+                        "<String>"
+                    },
+                                resources = new[] {
+                        "<String>"
+                    },
+                            },
+                            credential = new
+                            {
+                                referenceName = "<referenceName>",
+                                credentialType = "AccountKey",
+                            },
                         },
                         AzurePostgreSql = new
                         {
                             scanRulesetName = "<scanRulesetName>",
                             scanRulesetType = "Custom",
+                            resourceNameFilter = new
+                            {
+                                excludePrefixes = new[] {
+                        "<String>"
+                    },
+                                includePrefixes = new[] {
+                        "<String>"
+                    },
+                                resources = new[] {
+                        "<String>"
+                    },
+                            },
+                            credential = new
+                            {
+                                referenceName = "<referenceName>",
+                                credentialType = "AccountKey",
+                            },
                         },
                         SqlServerDatabase = new
                         {
                             scanRulesetName = "<scanRulesetName>",
                             scanRulesetType = "Custom",
+                            resourceNameFilter = new
+                            {
+                                excludePrefixes = new[] {
+                        "<String>"
+                    },
+                                includePrefixes = new[] {
+                        "<String>"
+                    },
+                                resources = new[] {
+                        "<String>"
+                    },
+                            },
+                            credential = new
+                            {
+                                referenceName = "<referenceName>",
+                                credentialType = "AccountKey",
+                            },
                         },
                         AzureSqlDatabaseManagedInstance = new
                         {
                             scanRulesetName = "<scanRulesetName>",
                             scanRulesetType = "Custom",
+                            resourceNameFilter = new
+                            {
+                                excludePrefixes = new[] {
+                        "<String>"
+                    },
+                                includePrefixes = new[] {
+                        "<String>"
+                    },
+                                resources = new[] {
+                        "<String>"
+                    },
+                            },
+                            credential = new
+                            {
+                                referenceName = "<referenceName>",
+                                credentialType = "AccountKey",
+                            },
                         },
                         AzureSqlDataWarehouse = new
                         {
                             scanRulesetName = "<scanRulesetName>",
                             scanRulesetType = "Custom",
+                            resourceNameFilter = new
+                            {
+                                excludePrefixes = new[] {
+                        "<String>"
+                    },
+                                includePrefixes = new[] {
+                        "<String>"
+                    },
+                                resources = new[] {
+                        "<String>"
+                    },
+                            },
+                            credential = new
+                            {
+                                referenceName = "<referenceName>",
+                                credentialType = "AccountKey",
+                            },
                         },
                         AzureMySql = new
                         {
                             scanRulesetName = "<scanRulesetName>",
                             scanRulesetType = "Custom",
+                            resourceNameFilter = new
+                            {
+                                excludePrefixes = new[] {
+                        "<String>"
+                    },
+                                includePrefixes = new[] {
+                        "<String>"
+                    },
+                                resources = new[] {
+                        "<String>"
+                    },
+                            },
+                            credential = new
+                            {
+                                referenceName = "<referenceName>",
+                                credentialType = "AccountKey",
+                            },
                         },
                         AzureStorage = new
                         {
                             scanRulesetName = "<scanRulesetName>",
                             scanRulesetType = "Custom",
+                            resourceNameFilter = new
+                            {
+                                excludePrefixes = new[] {
+                        "<String>"
+                    },
+                                includePrefixes = new[] {
+                        "<String>"
+                    },
+                                resources = new[] {
+                        "<String>"
+                    },
+                            },
+                            credential = new
+                            {
+                                referenceName = "<referenceName>",
+                                credentialType = "AccountKey",
+                            },
                         },
                         Teradata = new
                         {
                             scanRulesetName = "<scanRulesetName>",
                             scanRulesetType = "Custom",
+                            resourceNameFilter = new
+                            {
+                                excludePrefixes = new[] {
+                        "<String>"
+                    },
+                                includePrefixes = new[] {
+                        "<String>"
+                    },
+                                resources = new[] {
+                        "<String>"
+                    },
+                            },
+                            credential = new
+                            {
+                                referenceName = "<referenceName>",
+                                credentialType = "AccountKey",
+                            },
                         },
                         Oracle = new
                         {
                             scanRulesetName = "<scanRulesetName>",
                             scanRulesetType = "Custom",
+                            resourceNameFilter = new
+                            {
+                                excludePrefixes = new[] {
+                        "<String>"
+                    },
+                                includePrefixes = new[] {
+                        "<String>"
+                    },
+                                resources = new[] {
+                        "<String>"
+                    },
+                            },
+                            credential = new
+                            {
+                                referenceName = "<referenceName>",
+                                credentialType = "AccountKey",
+                            },
                         },
                         SapS4Hana = new
                         {
                             scanRulesetName = "<scanRulesetName>",
                             scanRulesetType = "Custom",
+                            resourceNameFilter = new
+                            {
+                                excludePrefixes = new[] {
+                        "<String>"
+                    },
+                                includePrefixes = new[] {
+                        "<String>"
+                    },
+                                resources = new[] {
+                        "<String>"
+                    },
+                            },
+                            credential = new
+                            {
+                                referenceName = "<referenceName>",
+                                credentialType = "AccountKey",
+                            },
                         },
                         SapEcc = new
                         {
                             scanRulesetName = "<scanRulesetName>",
                             scanRulesetType = "Custom",
+                            resourceNameFilter = new
+                            {
+                                excludePrefixes = new[] {
+                        "<String>"
+                    },
+                                includePrefixes = new[] {
+                        "<String>"
+                    },
+                                resources = new[] {
+                        "<String>"
+                    },
+                            },
+                            credential = new
+                            {
+                                referenceName = "<referenceName>",
+                                credentialType = "AccountKey",
+                            },
                         },
                         PowerBI = new
                         {
                             scanRulesetName = "<scanRulesetName>",
                             scanRulesetType = "Custom",
+                            resourceNameFilter = new
+                            {
+                                excludePrefixes = new[] {
+                        "<String>"
+                    },
+                                includePrefixes = new[] {
+                        "<String>"
+                    },
+                                resources = new[] {
+                        "<String>"
+                    },
+                            },
+                            credential = new
+                            {
+                                referenceName = "<referenceName>",
+                                credentialType = "AccountKey",
+                            },
                         },
                     },
                     credential = new
@@ -468,126 +893,551 @@ namespace Azure.Analytics.Purview.Scanning.Samples
                         {
                             scanRulesetName = "<scanRulesetName>",
                             scanRulesetType = "Custom",
+                            resourceNameFilter = new
+                            {
+                                excludePrefixes = new[] {
+                        "<String>"
+                    },
+                                includePrefixes = new[] {
+                        "<String>"
+                    },
+                                resources = new[] {
+                        "<String>"
+                    },
+                            },
+                            credential = new
+                            {
+                                referenceName = "<referenceName>",
+                                credentialType = "AccountKey",
+                            },
                         },
                         AzureResourceGroup = new
                         {
                             scanRulesetName = "<scanRulesetName>",
                             scanRulesetType = "Custom",
+                            resourceNameFilter = new
+                            {
+                                excludePrefixes = new[] {
+                        "<String>"
+                    },
+                                includePrefixes = new[] {
+                        "<String>"
+                    },
+                                resources = new[] {
+                        "<String>"
+                    },
+                            },
+                            credential = new
+                            {
+                                referenceName = "<referenceName>",
+                                credentialType = "AccountKey",
+                            },
                         },
                         AzureSynapseWorkspace = new
                         {
                             scanRulesetName = "<scanRulesetName>",
                             scanRulesetType = "Custom",
+                            resourceNameFilter = new
+                            {
+                                excludePrefixes = new[] {
+                        "<String>"
+                    },
+                                includePrefixes = new[] {
+                        "<String>"
+                    },
+                                resources = new[] {
+                        "<String>"
+                    },
+                            },
+                            credential = new
+                            {
+                                referenceName = "<referenceName>",
+                                credentialType = "AccountKey",
+                            },
                         },
                         AzureSynapse = new
                         {
                             scanRulesetName = "<scanRulesetName>",
                             scanRulesetType = "Custom",
+                            resourceNameFilter = new
+                            {
+                                excludePrefixes = new[] {
+                        "<String>"
+                    },
+                                includePrefixes = new[] {
+                        "<String>"
+                    },
+                                resources = new[] {
+                        "<String>"
+                    },
+                            },
+                            credential = new
+                            {
+                                referenceName = "<referenceName>",
+                                credentialType = "AccountKey",
+                            },
                         },
                         AdlsGen1 = new
                         {
                             scanRulesetName = "<scanRulesetName>",
                             scanRulesetType = "Custom",
+                            resourceNameFilter = new
+                            {
+                                excludePrefixes = new[] {
+                        "<String>"
+                    },
+                                includePrefixes = new[] {
+                        "<String>"
+                    },
+                                resources = new[] {
+                        "<String>"
+                    },
+                            },
+                            credential = new
+                            {
+                                referenceName = "<referenceName>",
+                                credentialType = "AccountKey",
+                            },
                         },
                         AdlsGen2 = new
                         {
                             scanRulesetName = "<scanRulesetName>",
                             scanRulesetType = "Custom",
+                            resourceNameFilter = new
+                            {
+                                excludePrefixes = new[] {
+                        "<String>"
+                    },
+                                includePrefixes = new[] {
+                        "<String>"
+                    },
+                                resources = new[] {
+                        "<String>"
+                    },
+                            },
+                            credential = new
+                            {
+                                referenceName = "<referenceName>",
+                                credentialType = "AccountKey",
+                            },
                         },
                         AmazonAccount = new
                         {
                             scanRulesetName = "<scanRulesetName>",
                             scanRulesetType = "Custom",
+                            resourceNameFilter = new
+                            {
+                                excludePrefixes = new[] {
+                        "<String>"
+                    },
+                                includePrefixes = new[] {
+                        "<String>"
+                    },
+                                resources = new[] {
+                        "<String>"
+                    },
+                            },
+                            credential = new
+                            {
+                                referenceName = "<referenceName>",
+                                credentialType = "AccountKey",
+                            },
                         },
                         AmazonS3 = new
                         {
                             scanRulesetName = "<scanRulesetName>",
                             scanRulesetType = "Custom",
+                            resourceNameFilter = new
+                            {
+                                excludePrefixes = new[] {
+                        "<String>"
+                    },
+                                includePrefixes = new[] {
+                        "<String>"
+                    },
+                                resources = new[] {
+                        "<String>"
+                    },
+                            },
+                            credential = new
+                            {
+                                referenceName = "<referenceName>",
+                                credentialType = "AccountKey",
+                            },
                         },
                         AmazonSql = new
                         {
                             scanRulesetName = "<scanRulesetName>",
                             scanRulesetType = "Custom",
+                            resourceNameFilter = new
+                            {
+                                excludePrefixes = new[] {
+                        "<String>"
+                    },
+                                includePrefixes = new[] {
+                        "<String>"
+                    },
+                                resources = new[] {
+                        "<String>"
+                    },
+                            },
+                            credential = new
+                            {
+                                referenceName = "<referenceName>",
+                                credentialType = "AccountKey",
+                            },
                         },
                         AzureCosmosDb = new
                         {
                             scanRulesetName = "<scanRulesetName>",
                             scanRulesetType = "Custom",
+                            resourceNameFilter = new
+                            {
+                                excludePrefixes = new[] {
+                        "<String>"
+                    },
+                                includePrefixes = new[] {
+                        "<String>"
+                    },
+                                resources = new[] {
+                        "<String>"
+                    },
+                            },
+                            credential = new
+                            {
+                                referenceName = "<referenceName>",
+                                credentialType = "AccountKey",
+                            },
                         },
                         AzureDataExplorer = new
                         {
                             scanRulesetName = "<scanRulesetName>",
                             scanRulesetType = "Custom",
+                            resourceNameFilter = new
+                            {
+                                excludePrefixes = new[] {
+                        "<String>"
+                    },
+                                includePrefixes = new[] {
+                        "<String>"
+                    },
+                                resources = new[] {
+                        "<String>"
+                    },
+                            },
+                            credential = new
+                            {
+                                referenceName = "<referenceName>",
+                                credentialType = "AccountKey",
+                            },
                         },
                         AzureFileService = new
                         {
                             scanRulesetName = "<scanRulesetName>",
                             scanRulesetType = "Custom",
+                            resourceNameFilter = new
+                            {
+                                excludePrefixes = new[] {
+                        "<String>"
+                    },
+                                includePrefixes = new[] {
+                        "<String>"
+                    },
+                                resources = new[] {
+                        "<String>"
+                    },
+                            },
+                            credential = new
+                            {
+                                referenceName = "<referenceName>",
+                                credentialType = "AccountKey",
+                            },
                         },
                         AzureSqlDatabase = new
                         {
                             scanRulesetName = "<scanRulesetName>",
                             scanRulesetType = "Custom",
+                            resourceNameFilter = new
+                            {
+                                excludePrefixes = new[] {
+                        "<String>"
+                    },
+                                includePrefixes = new[] {
+                        "<String>"
+                    },
+                                resources = new[] {
+                        "<String>"
+                    },
+                            },
+                            credential = new
+                            {
+                                referenceName = "<referenceName>",
+                                credentialType = "AccountKey",
+                            },
                         },
                         AmazonPostgreSql = new
                         {
                             scanRulesetName = "<scanRulesetName>",
                             scanRulesetType = "Custom",
+                            resourceNameFilter = new
+                            {
+                                excludePrefixes = new[] {
+                        "<String>"
+                    },
+                                includePrefixes = new[] {
+                        "<String>"
+                    },
+                                resources = new[] {
+                        "<String>"
+                    },
+                            },
+                            credential = new
+                            {
+                                referenceName = "<referenceName>",
+                                credentialType = "AccountKey",
+                            },
                         },
                         AzurePostgreSql = new
                         {
                             scanRulesetName = "<scanRulesetName>",
                             scanRulesetType = "Custom",
+                            resourceNameFilter = new
+                            {
+                                excludePrefixes = new[] {
+                        "<String>"
+                    },
+                                includePrefixes = new[] {
+                        "<String>"
+                    },
+                                resources = new[] {
+                        "<String>"
+                    },
+                            },
+                            credential = new
+                            {
+                                referenceName = "<referenceName>",
+                                credentialType = "AccountKey",
+                            },
                         },
                         SqlServerDatabase = new
                         {
                             scanRulesetName = "<scanRulesetName>",
                             scanRulesetType = "Custom",
+                            resourceNameFilter = new
+                            {
+                                excludePrefixes = new[] {
+                        "<String>"
+                    },
+                                includePrefixes = new[] {
+                        "<String>"
+                    },
+                                resources = new[] {
+                        "<String>"
+                    },
+                            },
+                            credential = new
+                            {
+                                referenceName = "<referenceName>",
+                                credentialType = "AccountKey",
+                            },
                         },
                         AzureSqlDatabaseManagedInstance = new
                         {
                             scanRulesetName = "<scanRulesetName>",
                             scanRulesetType = "Custom",
+                            resourceNameFilter = new
+                            {
+                                excludePrefixes = new[] {
+                        "<String>"
+                    },
+                                includePrefixes = new[] {
+                        "<String>"
+                    },
+                                resources = new[] {
+                        "<String>"
+                    },
+                            },
+                            credential = new
+                            {
+                                referenceName = "<referenceName>",
+                                credentialType = "AccountKey",
+                            },
                         },
                         AzureSqlDataWarehouse = new
                         {
                             scanRulesetName = "<scanRulesetName>",
                             scanRulesetType = "Custom",
+                            resourceNameFilter = new
+                            {
+                                excludePrefixes = new[] {
+                        "<String>"
+                    },
+                                includePrefixes = new[] {
+                        "<String>"
+                    },
+                                resources = new[] {
+                        "<String>"
+                    },
+                            },
+                            credential = new
+                            {
+                                referenceName = "<referenceName>",
+                                credentialType = "AccountKey",
+                            },
                         },
                         AzureMySql = new
                         {
                             scanRulesetName = "<scanRulesetName>",
                             scanRulesetType = "Custom",
+                            resourceNameFilter = new
+                            {
+                                excludePrefixes = new[] {
+                        "<String>"
+                    },
+                                includePrefixes = new[] {
+                        "<String>"
+                    },
+                                resources = new[] {
+                        "<String>"
+                    },
+                            },
+                            credential = new
+                            {
+                                referenceName = "<referenceName>",
+                                credentialType = "AccountKey",
+                            },
                         },
                         AzureStorage = new
                         {
                             scanRulesetName = "<scanRulesetName>",
                             scanRulesetType = "Custom",
+                            resourceNameFilter = new
+                            {
+                                excludePrefixes = new[] {
+                        "<String>"
+                    },
+                                includePrefixes = new[] {
+                        "<String>"
+                    },
+                                resources = new[] {
+                        "<String>"
+                    },
+                            },
+                            credential = new
+                            {
+                                referenceName = "<referenceName>",
+                                credentialType = "AccountKey",
+                            },
                         },
                         Teradata = new
                         {
                             scanRulesetName = "<scanRulesetName>",
                             scanRulesetType = "Custom",
+                            resourceNameFilter = new
+                            {
+                                excludePrefixes = new[] {
+                        "<String>"
+                    },
+                                includePrefixes = new[] {
+                        "<String>"
+                    },
+                                resources = new[] {
+                        "<String>"
+                    },
+                            },
+                            credential = new
+                            {
+                                referenceName = "<referenceName>",
+                                credentialType = "AccountKey",
+                            },
                         },
                         Oracle = new
                         {
                             scanRulesetName = "<scanRulesetName>",
                             scanRulesetType = "Custom",
+                            resourceNameFilter = new
+                            {
+                                excludePrefixes = new[] {
+                        "<String>"
+                    },
+                                includePrefixes = new[] {
+                        "<String>"
+                    },
+                                resources = new[] {
+                        "<String>"
+                    },
+                            },
+                            credential = new
+                            {
+                                referenceName = "<referenceName>",
+                                credentialType = "AccountKey",
+                            },
                         },
                         SapS4Hana = new
                         {
                             scanRulesetName = "<scanRulesetName>",
                             scanRulesetType = "Custom",
+                            resourceNameFilter = new
+                            {
+                                excludePrefixes = new[] {
+                        "<String>"
+                    },
+                                includePrefixes = new[] {
+                        "<String>"
+                    },
+                                resources = new[] {
+                        "<String>"
+                    },
+                            },
+                            credential = new
+                            {
+                                referenceName = "<referenceName>",
+                                credentialType = "AccountKey",
+                            },
                         },
                         SapEcc = new
                         {
                             scanRulesetName = "<scanRulesetName>",
                             scanRulesetType = "Custom",
+                            resourceNameFilter = new
+                            {
+                                excludePrefixes = new[] {
+                        "<String>"
+                    },
+                                includePrefixes = new[] {
+                        "<String>"
+                    },
+                                resources = new[] {
+                        "<String>"
+                    },
+                            },
+                            credential = new
+                            {
+                                referenceName = "<referenceName>",
+                                credentialType = "AccountKey",
+                            },
                         },
                         PowerBI = new
                         {
                             scanRulesetName = "<scanRulesetName>",
                             scanRulesetType = "Custom",
+                            resourceNameFilter = new
+                            {
+                                excludePrefixes = new[] {
+                        "<String>"
+                    },
+                                includePrefixes = new[] {
+                        "<String>"
+                    },
+                                resources = new[] {
+                        "<String>"
+                    },
+                            },
+                            credential = new
+                            {
+                                referenceName = "<referenceName>",
+                                credentialType = "AccountKey",
+                            },
                         },
                     },
                     credential = new
@@ -651,7 +1501,7 @@ namespace Azure.Analytics.Purview.Scanning.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewScanClient(endpoint, "<dataSourceName>", "<scanName>", credential);
 
-            Response response = client.GetProperties();
+            Response response = client.GetProperties(new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.GetProperty("kind").ToString());
@@ -666,7 +1516,7 @@ namespace Azure.Analytics.Purview.Scanning.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewScanClient(endpoint, "<dataSourceName>", "<scanName>", credential);
 
-            Response response = client.GetProperties();
+            Response response = client.GetProperties(new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.GetProperty("kind").ToString());
@@ -707,7 +1557,7 @@ namespace Azure.Analytics.Purview.Scanning.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewScanClient(endpoint, "<dataSourceName>", "<scanName>", credential);
 
-            Response response = await client.GetPropertiesAsync();
+            Response response = await client.GetPropertiesAsync(new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.GetProperty("kind").ToString());
@@ -722,7 +1572,7 @@ namespace Azure.Analytics.Purview.Scanning.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewScanClient(endpoint, "<dataSourceName>", "<scanName>", credential);
 
-            Response response = await client.GetPropertiesAsync();
+            Response response = await client.GetPropertiesAsync(new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.GetProperty("kind").ToString());
@@ -763,7 +1613,7 @@ namespace Azure.Analytics.Purview.Scanning.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewScanClient(endpoint, "<dataSourceName>", "<scanName>", credential);
 
-            Response response = client.Delete();
+            Response response = client.Delete(new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.GetProperty("kind").ToString());
@@ -778,7 +1628,7 @@ namespace Azure.Analytics.Purview.Scanning.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewScanClient(endpoint, "<dataSourceName>", "<scanName>", credential);
 
-            Response response = client.Delete();
+            Response response = client.Delete(new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.GetProperty("kind").ToString());
@@ -819,7 +1669,7 @@ namespace Azure.Analytics.Purview.Scanning.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewScanClient(endpoint, "<dataSourceName>", "<scanName>", credential);
 
-            Response response = await client.DeleteAsync();
+            Response response = await client.DeleteAsync(new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.GetProperty("kind").ToString());
@@ -834,7 +1684,7 @@ namespace Azure.Analytics.Purview.Scanning.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewScanClient(endpoint, "<dataSourceName>", "<scanName>", credential);
 
-            Response response = await client.DeleteAsync();
+            Response response = await client.DeleteAsync(new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.GetProperty("kind").ToString());
@@ -875,7 +1725,7 @@ namespace Azure.Analytics.Purview.Scanning.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewScanClient(endpoint, "<dataSourceName>", "<scanName>", credential);
 
-            Response response = client.RunScan("<runId>");
+            Response response = client.RunScan("<runId>", "<scanLevel>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.ToString());
@@ -889,7 +1739,7 @@ namespace Azure.Analytics.Purview.Scanning.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewScanClient(endpoint, "<dataSourceName>", "<scanName>", credential);
 
-            Response response = client.RunScan("<runId>", "<scanLevel>");
+            Response response = client.RunScan("<runId>", "<scanLevel>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.GetProperty("scanResultId").ToString());
@@ -912,7 +1762,7 @@ namespace Azure.Analytics.Purview.Scanning.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewScanClient(endpoint, "<dataSourceName>", "<scanName>", credential);
 
-            Response response = await client.RunScanAsync("<runId>");
+            Response response = await client.RunScanAsync("<runId>", "<scanLevel>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.ToString());
@@ -926,7 +1776,7 @@ namespace Azure.Analytics.Purview.Scanning.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewScanClient(endpoint, "<dataSourceName>", "<scanName>", credential);
 
-            Response response = await client.RunScanAsync("<runId>", "<scanLevel>");
+            Response response = await client.RunScanAsync("<runId>", "<scanLevel>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.GetProperty("scanResultId").ToString());
@@ -949,7 +1799,7 @@ namespace Azure.Analytics.Purview.Scanning.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewScanClient(endpoint, "<dataSourceName>", "<scanName>", credential);
 
-            Response response = client.CancelScan("<runId>");
+            Response response = client.CancelScan("<runId>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.ToString());
@@ -963,7 +1813,7 @@ namespace Azure.Analytics.Purview.Scanning.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewScanClient(endpoint, "<dataSourceName>", "<scanName>", credential);
 
-            Response response = client.CancelScan("<runId>");
+            Response response = client.CancelScan("<runId>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.GetProperty("scanResultId").ToString());
@@ -986,7 +1836,7 @@ namespace Azure.Analytics.Purview.Scanning.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewScanClient(endpoint, "<dataSourceName>", "<scanName>", credential);
 
-            Response response = await client.CancelScanAsync("<runId>");
+            Response response = await client.CancelScanAsync("<runId>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.ToString());
@@ -1000,7 +1850,7 @@ namespace Azure.Analytics.Purview.Scanning.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewScanClient(endpoint, "<dataSourceName>", "<scanName>", credential);
 
-            Response response = await client.CancelScanAsync("<runId>");
+            Response response = await client.CancelScanAsync("<runId>", new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.GetProperty("scanResultId").ToString());
@@ -1023,7 +1873,7 @@ namespace Azure.Analytics.Purview.Scanning.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewScanClient(endpoint, "<dataSourceName>", "<scanName>", credential);
 
-            Response response = client.GetTrigger();
+            Response response = client.GetTrigger(new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.ToString());
@@ -1037,7 +1887,7 @@ namespace Azure.Analytics.Purview.Scanning.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewScanClient(endpoint, "<dataSourceName>", "<scanName>", credential);
 
-            Response response = client.GetTrigger();
+            Response response = client.GetTrigger(new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.GetProperty("properties").GetProperty("recurrence").GetProperty("frequency").ToString());
@@ -1071,7 +1921,7 @@ namespace Azure.Analytics.Purview.Scanning.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewScanClient(endpoint, "<dataSourceName>", "<scanName>", credential);
 
-            Response response = await client.GetTriggerAsync();
+            Response response = await client.GetTriggerAsync(new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.ToString());
@@ -1085,7 +1935,7 @@ namespace Azure.Analytics.Purview.Scanning.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewScanClient(endpoint, "<dataSourceName>", "<scanName>", credential);
 
-            Response response = await client.GetTriggerAsync();
+            Response response = await client.GetTriggerAsync(new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.GetProperty("properties").GetProperty("recurrence").GetProperty("frequency").ToString());
@@ -1311,7 +2161,7 @@ namespace Azure.Analytics.Purview.Scanning.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewScanClient(endpoint, "<dataSourceName>", "<scanName>", credential);
 
-            Response response = client.DeleteTrigger();
+            Response response = client.DeleteTrigger(new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.ToString());
@@ -1325,7 +2175,7 @@ namespace Azure.Analytics.Purview.Scanning.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewScanClient(endpoint, "<dataSourceName>", "<scanName>", credential);
 
-            Response response = client.DeleteTrigger();
+            Response response = client.DeleteTrigger(new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.GetProperty("properties").GetProperty("recurrence").GetProperty("frequency").ToString());
@@ -1359,7 +2209,7 @@ namespace Azure.Analytics.Purview.Scanning.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewScanClient(endpoint, "<dataSourceName>", "<scanName>", credential);
 
-            Response response = await client.DeleteTriggerAsync();
+            Response response = await client.DeleteTriggerAsync(new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.ToString());
@@ -1373,7 +2223,7 @@ namespace Azure.Analytics.Purview.Scanning.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewScanClient(endpoint, "<dataSourceName>", "<scanName>", credential);
 
-            Response response = await client.DeleteTriggerAsync();
+            Response response = await client.DeleteTriggerAsync(new RequestContext());
 
             JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
             Console.WriteLine(result.GetProperty("properties").GetProperty("recurrence").GetProperty("frequency").ToString());
@@ -1407,7 +2257,7 @@ namespace Azure.Analytics.Purview.Scanning.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewScanClient(endpoint, "<dataSourceName>", "<scanName>", credential);
 
-            foreach (var item in client.GetRuns())
+            foreach (var item in client.GetRuns(new RequestContext()))
             {
                 JsonElement result = JsonDocument.Parse(item.ToStream()).RootElement;
                 Console.WriteLine(result.ToString());
@@ -1422,7 +2272,7 @@ namespace Azure.Analytics.Purview.Scanning.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewScanClient(endpoint, "<dataSourceName>", "<scanName>", credential);
 
-            foreach (var item in client.GetRuns())
+            foreach (var item in client.GetRuns(new RequestContext()))
             {
                 JsonElement result = JsonDocument.Parse(item.ToStream()).RootElement;
                 Console.WriteLine(result.GetProperty("parentId").ToString());
@@ -1461,7 +2311,7 @@ namespace Azure.Analytics.Purview.Scanning.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewScanClient(endpoint, "<dataSourceName>", "<scanName>", credential);
 
-            await foreach (var item in client.GetRunsAsync())
+            await foreach (var item in client.GetRunsAsync(new RequestContext()))
             {
                 JsonElement result = JsonDocument.Parse(item.ToStream()).RootElement;
                 Console.WriteLine(result.ToString());
@@ -1476,7 +2326,7 @@ namespace Azure.Analytics.Purview.Scanning.Samples
             var endpoint = new Uri("<https://my-service.azure.com>");
             var client = new PurviewScanClient(endpoint, "<dataSourceName>", "<scanName>", credential);
 
-            await foreach (var item in client.GetRunsAsync())
+            await foreach (var item in client.GetRunsAsync(new RequestContext()))
             {
                 JsonElement result = JsonDocument.Parse(item.ToStream()).RootElement;
                 Console.WriteLine(result.GetProperty("parentId").ToString());

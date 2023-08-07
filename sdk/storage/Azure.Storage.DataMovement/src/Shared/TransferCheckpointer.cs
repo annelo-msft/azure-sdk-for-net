@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Azure.Storage.DataMovement.Models.JobPlan;
 
 namespace Azure.Storage.DataMovement
 {
@@ -129,14 +128,14 @@ namespace Azure.Storage.DataMovement
         /// Sets the Job Transfer Status in the Job Part Plan files.
         /// </summary>
         /// <param name="transferId">The transfer ID.</param>
-        /// <param name="status">The <see cref="StorageTransferStatus"/> of the job.</param>
+        /// <param name="status">The <see cref="DataTransferStatus"/> of the job.</param>
         /// <param name="cancellationToken">
         /// Optional <see cref="CancellationToken"/> to propagate
         /// notifications that the operation should be canceled.
         /// </param>
         public abstract Task SetJobTransferStatusAsync(
             string transferId,
-            StorageTransferStatus status,
+            DataTransferStatus status,
             CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -144,7 +143,7 @@ namespace Azure.Storage.DataMovement
         /// </summary>
         /// <param name="transferId">The transfer ID.</param>
         /// <param name="partNumber">The job part number.</param>
-        /// <param name="status">The <see cref="StorageTransferStatus"/> of the job part.</param>
+        /// <param name="status">The <see cref="DataTransferStatus"/> of the job part.</param>
         /// <param name="cancellationToken">
         /// Optional <see cref="CancellationToken"/> to propagate
         /// notifications that the operation should be canceled.
@@ -152,7 +151,7 @@ namespace Azure.Storage.DataMovement
         public abstract Task SetJobPartTransferStatusAsync(
             string transferId,
             int partNumber,
-            StorageTransferStatus status,
+            DataTransferStatus status,
             CancellationToken cancellationToken = default);
 
         /// <summary>
