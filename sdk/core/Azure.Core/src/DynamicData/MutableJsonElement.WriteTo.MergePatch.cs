@@ -24,7 +24,7 @@ namespace Azure.Core.Json
             }
 
             ReadOnlySpan<char> elementRootPath = _path.AsSpan();
-            MutableJsonChange? change = Changes.GetFirstMergePatchChange(elementRootPath, out int maxPathLength);
+            int maxPathLength = Changes.GetMaxPathLength(elementRootPath);
 
             // patchPath tracks the global path we're on in writing out the PATCH JSON.
             // We only iterate forward through the PATCH JSON.
@@ -46,9 +46,9 @@ namespace Azure.Core.Json
             writer.WriteStartObject();
 
             // Write the changes in the PATCH
-            while (change != null)
+            foreach (MutableJsonChange change in Changes.GetMergePatchChanges(elementRootPath))
             {
-                ReadOnlySpan<char> changePath = change.Value.Path.AsSpan();
+                ReadOnlySpan<char> changePath = change.Path.AsSpan();
 
                 // Reset current path for this loop iteration
                 currentPathLength = elementRootPath.Length;
@@ -65,13 +65,11 @@ namespace Azure.Core.Json
                 // node that contains the change we want to write into the PATCH JSON. Write it out.
                 ReadOnlySpan<char> segment = GetLastSegment(currentPath.Slice(0, currentPathLength));
                 writer.WritePropertyName(segment);
-                WritePatchValue(writer, change.Value, patchPath.Slice(0, patchPathLength), patchElement);
+                WritePatchValue(writer, change, patchPath.Slice(0, patchPathLength), patchElement);
 
                 // Pop the last segment for our object tracking, because it was a leaf node.
                 MutableJsonDocument.ChangeTracker.PopProperty(patchPath, ref patchPathLength);
                 patchElement = GetPropertyFromRoot(patchPath.Slice(0, patchPathLength));
-
-                change = Changes.GetNextMergePatchChange(elementRootPath, currentPath.Slice(0, currentPathLength));
             }
 
             // The above loop will have written out the values of all the elements on the

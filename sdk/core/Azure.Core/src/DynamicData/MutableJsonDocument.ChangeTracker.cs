@@ -141,13 +141,66 @@ namespace Azure.Core.Json
                 }
             }
 
-            internal MutableJsonChange? GetFirstMergePatchChange(ReadOnlySpan<char> rootPath, out int maxPathLength)
+            internal MergePatchEnumerator GetMergePatchChanges(ReadOnlySpan<char> root) =>
+                new MergePatchEnumerator(this, root);
+
+            internal ref struct MergePatchEnumerator
+            {
+                private ChangeTracker _changes;
+                private MutableJsonChange? _current;
+                private ReadOnlySpan<char> _rootPath;
+                private bool _first = true;
+
+                public MergePatchEnumerator(ChangeTracker changes, ReadOnlySpan<char> rootPath)
+                {
+                    _changes = changes;
+                    _rootPath = rootPath;
+                }
+
+                public MergePatchEnumerator GetEnumerator() => this;
+
+                public bool MoveNext()
+                {
+                    if (_first)
+                    {
+                        _current = _changes.GetFirstMergePatchChange(_rootPath);
+                        _first = false;
+                        return _current.HasValue;
+                    }
+
+                    _current = _changes.GetNextMergePatchChange(_rootPath, _current!.Value.Path.AsSpan());
+                    return _current.HasValue;
+                }
+
+                public readonly MutableJsonChange Current => _current!.Value;
+            }
+
+            public int GetMaxPathLength(ReadOnlySpan<char> root)
+            {
+                int maxPathLength = -1;
+
+                if (_changes == null)
+                {
+                    return maxPathLength;
+                }
+
+                for (int i = _changes.Count - 1; i >= 0; i--)
+                {
+                    MutableJsonChange c = _changes[i];
+
+                    if (c.Path.AsSpan().StartsWith(root) &&
+                        c.Path.Length > maxPathLength)
+                    {
+                        maxPathLength = c.Path.Length;
+                    }
+                }
+
+                return maxPathLength;
+            }
+
+            private MutableJsonChange? GetFirstMergePatchChange(ReadOnlySpan<char> rootPath)
             {
                 // This method gets the first change from the list in sorted order by path
-                // It also returns the max path length of changes on the list.
-
-                maxPathLength = -1;
-
                 if (_changes == null)
                 {
                     return null;
@@ -164,24 +217,21 @@ namespace Azure.Core.Json
                     {
                         min = c;
                     }
-
-                    if (c.Path.Length > maxPathLength)
-                    {
-                        maxPathLength = c.Path.Length;
-                    }
                 }
 
                 return min;
             }
 
-            internal MutableJsonChange? GetNextMergePatchChange(ReadOnlySpan<char> rootPath, ReadOnlySpan<char> lastChangePath)
+            private MutableJsonChange? GetNextMergePatchChange(ReadOnlySpan<char> rootPath, ReadOnlySpan<char> lastChangePath)
             {
                 // This method gets changes from the list in sorted order by path.
-
                 if (_changes == null)
                 {
                     return null;
                 }
+
+                //Debug.WriteLine($"** rootPath: '{MutableJsonElement.GetString(rootPath, 0, rootPath.Length)}'");
+                //Debug.WriteLine($"** lastChangePath: '{MutableJsonElement.GetString(lastChangePath, 0, lastChangePath.Length)}'");
 
                 MutableJsonChange? min = null;
 

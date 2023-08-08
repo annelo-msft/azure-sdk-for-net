@@ -49,15 +49,11 @@ namespace Azure.Core.Tests
             changeTracker.AddChange("a", 2);
 
             List<MutableJsonChange> changes = new();
+            MutableJsonDocument.ChangeTracker.MergePatchEnumerator enumerator = changeTracker.GetMergePatchChanges(ReadOnlySpan<char>.Empty);
 
-            MutableJsonChange? change = changeTracker.GetFirstMergePatchChange(ReadOnlySpan<char>.Empty, out int length);
-
-            Assert.AreEqual(3, length);
-
-            while (change != null)
+            foreach (MutableJsonChange change in enumerator)
             {
-                changes.Add(change.Value);
-                change = changeTracker.GetNextMergePatchChange(ReadOnlySpan<char>.Empty, change.Value.Path.AsSpan());
+                changes.Add(change);
             }
 
             // Note, descendants are ignored
