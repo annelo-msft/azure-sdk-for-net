@@ -15,8 +15,6 @@ namespace Azure.Core.Json
 {
     internal readonly struct MutableJsonDictionary<T> : IDictionary<string, T>
     {
-        // TODO: add tess for type
-
         private readonly MutableJsonElement _element;
 
         public MutableJsonDictionary(MutableJsonElement element)
@@ -34,6 +32,7 @@ namespace Azure.Core.Json
             T? value;
 
             // TODO: support IModelJsonSerializable
+
             // TODO: we can optimize for common types like string, int, etc - don't need to
             // to use a deserializer in all cases
 
@@ -55,7 +54,12 @@ namespace Azure.Core.Json
         {
             get
             {
-                return ConvertTo(_element.GetProperty(key));
+                if (!_element.TryGetProperty(key, out MutableJsonElement value))
+                {
+                    throw new KeyNotFoundException($"The given key '{key}' was not present in the dictionary.");
+                }
+
+                return ConvertTo(value);
             }
 
             set => _element.SetProperty(key, value);
@@ -87,11 +91,23 @@ namespace Azure.Core.Json
 
         public void Clear() => _element.Set(MutableJsonDocument.EmptyJson);
 
-        public bool Contains(KeyValuePair<string, T> item) => _element.TryGetProperty(item.Key, out _);
+        public bool Contains(KeyValuePair<string, T> item)
+        {
+            if (!_element.TryGetProperty(item.Key, out MutableJsonElement element))
+            {
+                return false;
+            }
+
+            if (item.Value == null)
+            {
+                return element.ValueKind == JsonValueKind.Null;
+            }
+
+            return item.Value.Equals(ConvertTo(element));
+        }
 
         public bool ContainsKey(string key) => _element.TryGetProperty(key, out _);
 
-        // TODO: Add test case
         public void CopyTo(KeyValuePair<string, T>[] array, int arrayIndex)
         {
             Argument.AssertNotNull(array, nameof(array));
@@ -117,7 +133,6 @@ namespace Azure.Core.Json
             }
         }
 
-        // TODO: Add test case
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         public bool Remove(string key)
