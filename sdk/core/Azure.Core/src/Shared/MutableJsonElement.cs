@@ -123,6 +123,11 @@ namespace Azure.Core.Json
                     return true;
                 }
 
+                if (Changes.AncestorChanged(path, _highWaterMark))
+                {
+                    // TODO: This is a real bug!
+                }
+
                 bool hasProperty = _element.TryGetProperty(name, out JsonElement element);
                 if (!hasProperty)
                 {
