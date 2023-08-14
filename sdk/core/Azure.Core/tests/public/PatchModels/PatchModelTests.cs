@@ -12,6 +12,7 @@ namespace Azure.Core.Tests.Public
 {
     public class PatchModelTests
     {
+        #region Simple Patch Model
         [Test]
         public void CanPatchIntProperty()
         {
@@ -59,8 +60,12 @@ namespace Azure.Core.Tests.Public
             model.Name = "xyz";
             model.Count = 2;
 
+            ValidateSerialize("""{ "name":"xyz", "count":2}""", model);
             ValidatePatch("""{"count":2, "name":"xyz"}""", model);
         }
+        #endregion
+
+        #region Nested Patch Model
 
         [Test]
         public void CanPatchNestedModel()
@@ -150,6 +155,48 @@ namespace Azure.Core.Tests.Public
             ValidateSerialize("""{"id": "123", "child": {"a": "a2", "b": null}}""", model);
             ValidatePatch("""{"child": {"a": "a2", "b": null}}""", model);
         }
+        #endregion
+
+        #region Collection Patch Model
+        [Test]
+        public void CanPatchDictionaryProperty()
+        {
+            CollectionPatchModel model = new();
+
+            model.EnvironmentVariables["A"] = "aa";
+            model.EnvironmentVariables["B"] = "bb";
+
+            ValidatePatch("""{"environmentVariables": { "B": "bb", "A": "aa"}}""", model);
+        }
+
+        [Test]
+        public void CanRoundTripCollectionModel()
+        {
+            BinaryData json = BinaryData.FromString("""
+                {
+                    "id": "123",
+                    "environmentVariables": {
+                        "A": "a1",
+                        "B": "b1"
+                    }
+                }
+                """);
+
+            CollectionPatchModel model = ModelSerializer.Deserialize<CollectionPatchModel>(json);
+
+            model.EnvironmentVariables["A"] = "a2";
+
+            ValidatePatch("""{"environmentVariables": {"A": "a2"}}""", model);
+
+            model.EnvironmentVariables["B"] = "b2";
+
+            ValidatePatch("""{"environmentVariables": {"A": "a2", "B": "b2"}}""", model);
+
+            model.EnvironmentVariables["B"] = "b3";
+
+            ValidatePatch("""{"environmentVariables": {"A": "a2", "B": "b3"}}""", model);
+        }
+        #endregion
 
         #region Helpers
         private static void ValidateSerialize<T>(string expected, IModelJsonSerializable<T> model)

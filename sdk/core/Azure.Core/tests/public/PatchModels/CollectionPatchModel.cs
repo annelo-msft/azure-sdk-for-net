@@ -35,6 +35,46 @@ namespace Azure.Core.Tests.PatchModels
             _element = element;
         }
 
+        /// <summary>
+        /// Optional string property corresponding to JSON """{"id": "abc"}""".
+        /// </summary>
+        public string Id
+        {
+            get
+            {
+                if (_element.TryGetProperty("id", out MutableJsonElement value))
+                {
+                    return value.GetString();
+                }
+                return null;
+            }
+            set => _element.SetProperty("id", value);
+        }
+
+        private IDictionary<string, string> _environmentVariables;
+        /// <summary> Environment variables which are defined as a set of &lt;name,value&gt; pairs. </summary>
+        public IDictionary<string, string> EnvironmentVariables
+        {
+            get
+            {
+                if (_environmentVariables == null)
+                {
+                    if (!_element.TryGetProperty("environmentVariables", out MutableJsonElement element))
+                    {
+                        _element.SetProperty("environmentVariables", new { });
+                        element = _element.GetProperty("environmentVariables");
+                    }
+
+                    _environmentVariables = new MutableJsonDictionary<string>(element);
+                }
+
+                return _environmentVariables;
+            }
+
+            // Dictionary property cannot be set because it must be a special
+            // dictionary type that is backed by MutableJsonDocument.
+        }
+
 #pragma warning restore AZC0020 // Avoid using banned types in libraries
     }
 }

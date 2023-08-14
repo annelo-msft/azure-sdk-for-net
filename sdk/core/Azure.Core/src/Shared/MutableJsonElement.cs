@@ -801,7 +801,7 @@ namespace Azure.Core.Json
         /// </summary>
         /// <param name="name"></param>
         /// <param name="value">The value to assign to the element.</param>
-        public MutableJsonElement SetProperty(string name, object value)
+        public MutableJsonElement SetProperty(string name, object? value)
         {
             if (TryGetProperty(name, out MutableJsonElement element))
             {
@@ -819,9 +819,91 @@ namespace Azure.Core.Json
 #endif
 
             // It is a new property.
-            string path = MutableJsonDocument.ChangeTracker.PushProperty(_path, name);
-            Changes.AddChange(path, GetSerializedValue(value), MutableJsonChangeKind.PropertyAddition, name);
+            AddNewProperty(name, value);
             return this;
+        }
+
+        private void AddNewProperty(string name, object? value)
+        {
+            string path = MutableJsonDocument.ChangeTracker.PushProperty(_path, name);
+            switch (value)
+            {
+                case bool b:
+                    AddChange(path, name, b);
+                    break;
+                case string s:
+                    AddChange(path, name, s);
+                    break;
+                case byte b:
+                    AddChange(path, name, b);
+                    break;
+                case sbyte sb:
+                    AddChange(path, name, sb);
+                    break;
+                case short sh:
+                    AddChange(path, name, sh);
+                    break;
+                case ushort us:
+                    AddChange(path, name, us);
+                    break;
+                case int i:
+                    AddChange(path, name, i);
+                    break;
+                case uint u:
+                    AddChange(path, name, u);
+                    break;
+                case long l:
+                    AddChange(path, name, l);
+                    break;
+                case ulong ul:
+                    AddChange(path, name, ul);
+                    break;
+                case float f:
+                    AddChange(path, name, f);
+                    break;
+                case double d:
+                    AddChange(path, name, d);
+                    break;
+                case decimal d:
+                    AddChange(path, name, d);
+                    break;
+                case DateTime d:
+                    AddChange(path, name, d);
+                    break;
+                case DateTimeOffset d:
+                    AddChange(path, name, d);
+                    break;
+                case Guid g:
+                    AddChange(path, name, g);
+                    break;
+                case null:
+                    Changes.AddChange(path, null, MutableJsonChangeKind.PropertyAddition, name);
+                    break;
+                case JsonElement e:
+                    AddChange(path, name, e);
+                    break;
+                case JsonDocument d:
+                    AddChange(path, name, d.RootElement);
+                    break;
+                case MutableJsonElement e:
+                    e.EnsureValid();
+                    AddChange(path, name, e);
+                    break;
+                case MutableJsonDocument d:
+                    d.RootElement.EnsureValid();
+                    AddChange(path, name, d.RootElement);
+                    break;
+                default:
+                    // If it's not a special type, we'll serialize it on assignment.
+                    byte[] bytes = JsonSerializer.SerializeToUtf8Bytes(value, _root.SerializerOptions);
+                    AddChange(path, name, JsonDocument.Parse(bytes).RootElement);
+                    break;
+            }
+        }
+
+        private void AddChange<T>(string path, string name, T value)
+        {
+            Changes.AddChange(path, value, MutableJsonChangeKind.PropertyAddition, name);
         }
 
         /// <summary>
@@ -1024,7 +1106,7 @@ namespace Azure.Core.Json
         /// Sets the value of this element to the passed-in value.
         /// </summary>
         /// <param name="value">The value to assign to the element.</param>
-        public void Set(object value)
+        public void Set(object? value)
         {
             EnsureValid();
 
@@ -1081,37 +1163,26 @@ namespace Azure.Core.Json
                 case null:
                     Changes.AddChange(_path, null);
                     break;
+                case JsonElement e:
+                    Changes.AddChange(_path, e);
+                    break;
+                case JsonDocument d:
+                    Changes.AddChange(_path, d.RootElement);
+                    break;
+                case MutableJsonElement e:
+                    e.EnsureValid();
+                    Changes.AddChange(_path, e);
+                    break;
+                case MutableJsonDocument d:
+                    d.RootElement.EnsureValid();
+                    Changes.AddChange(_path, d.RootElement);
+                    break;
                 default:
-                    Changes.AddChange(_path, GetSerializedValue(value));
+                    // If it's not a special type, we'll serialize it on assignment.
+                    byte[] bytes = JsonSerializer.SerializeToUtf8Bytes(value, _root.SerializerOptions);
+                    Changes.AddChange(_path, JsonDocument.Parse(bytes).RootElement);
                     break;
             }
-        }
-
-        private object GetSerializedValue(object value)
-        {
-            if (value is JsonDocument doc)
-            {
-                return doc.RootElement;
-            }
-
-            if (value is JsonElement element)
-            {
-                return element;
-            }
-
-            if (value is MutableJsonDocument mjd)
-            {
-                mjd.RootElement.EnsureValid();
-            }
-
-            if (value is MutableJsonElement mje)
-            {
-                mje.EnsureValid();
-            }
-
-            // If it's not a special type, we'll serialize it on assignment.
-            byte[] bytes = JsonSerializer.SerializeToUtf8Bytes(value, _root.SerializerOptions);
-            return JsonDocument.Parse(bytes).RootElement;
         }
 
         /// <inheritdoc/>
