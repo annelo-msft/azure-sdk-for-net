@@ -3,9 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text.Json;
 using Azure.Core.Json;
-using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 
 namespace Azure.Core.Tests
@@ -23,7 +21,7 @@ namespace Azure.Core.Tests
                 """;
 
             MutableJsonElement element = MutableJsonDocument.Parse(json).RootElement;
-            MutableJsonDictionary<string> dict = new(element);
+            IDictionary<string, string> dict = new MutableJsonDictionary<string>(element);
 
             Assert.IsTrue(dict.Contains(new KeyValuePair<string, string>("a", "aa")));
             Assert.IsFalse(dict.Contains(new KeyValuePair<string, string>("a", "cc")));
@@ -42,7 +40,7 @@ namespace Azure.Core.Tests
                 """;
 
             MutableJsonElement element = MutableJsonDocument.Parse(json).RootElement;
-            MutableJsonDictionary<string> dict = new(element);
+            IDictionary<string, string> dict = new MutableJsonDictionary<string>(element);
 
             Assert.Throws<ArgumentException>(() => dict.Add("a", "new"));
 
@@ -50,6 +48,29 @@ namespace Azure.Core.Tests
 
             Assert.IsTrue(dict.Contains(new KeyValuePair<string, string>("a", "aa")));
             Assert.IsTrue(dict.Contains(new KeyValuePair<string, string>("b", "bb")));
+        }
+
+        [Test]
+        public void CanClear()
+        {
+            string json = """
+                {
+                  "a": "aa",
+                  "b": "bb"
+                }
+                """;
+
+            MutableJsonElement element = MutableJsonDocument.Parse(json).RootElement;
+            IDictionary<string, string> dict = new MutableJsonDictionary<string>(element);
+
+            Assert.AreEqual(dict.Count, 2);
+
+            dict.Clear();
+
+            Assert.AreEqual(dict.Count, 0);
+
+            Assert.IsFalse(dict.TryGetValue("a", out _));
+            Assert.IsFalse(dict.TryGetValue("b", out _));
         }
 
         [Test]
@@ -63,7 +84,7 @@ namespace Azure.Core.Tests
                 """;
 
             MutableJsonElement element = MutableJsonDocument.Parse(json).RootElement;
-            MutableJsonDictionary<string> dict = new(element);
+            IDictionary<string, string> dict = new MutableJsonDictionary<string>(element);
 
             KeyValuePair<string, string>[] array = new KeyValuePair<string, string>[dict.Count];
             dict.CopyTo(array, 0);
@@ -101,7 +122,7 @@ namespace Azure.Core.Tests
                 """;
 
             MutableJsonElement element = MutableJsonDocument.Parse(json).RootElement;
-            MutableJsonDictionary<string> dict = new(element);
+            IDictionary<string, string> dict = new MutableJsonDictionary<string>(element);
 
             KeyValuePair<string, string>[] array = new KeyValuePair<string, string>[6];
             dict.CopyTo(array, 2);
@@ -124,7 +145,7 @@ namespace Azure.Core.Tests
                 """;
 
             MutableJsonElement element = MutableJsonDocument.Parse(json).RootElement;
-            MutableJsonDictionary<string> dict = new(element);
+            IDictionary<string, string> dict = new MutableJsonDictionary<string>(element);
 
             Assert.AreEqual(2, dict.Count);
 
@@ -203,7 +224,7 @@ namespace Azure.Core.Tests
                 """;
 
             MutableJsonElement element = MutableJsonDocument.Parse(json).RootElement;
-            MutableJsonDictionary<string> dict = new(element);
+            IDictionary<string, string> dict = new MutableJsonDictionary<string>(element);
 
             Assert.AreEqual(2, dict.Count);
 

@@ -73,9 +73,11 @@ namespace Azure.Core.Json
 
         public int Count => _element.EnumerateObject().Count();
 
-        public bool IsReadOnly => false;
+        ICollection<string> IDictionary<string, T>.Keys => throw new NotImplementedException();
 
-        public void Add(string key, T value)
+        ICollection<T> IDictionary<string, T>.Values => throw new NotImplementedException();
+
+        private void Add(string key, T value)
         {
             Argument.AssertNotNull(key, nameof(key));
 
@@ -87,11 +89,11 @@ namespace Azure.Core.Json
             _element.SetProperty(key, value);
         }
 
-        public void Add(KeyValuePair<string, T> item) => Add(item.Key, item.Value);
+        private void Add(KeyValuePair<string, T> item) => Add(item.Key, item.Value);
 
-        public void Clear() => _element.Set(MutableJsonDocument.EmptyJson);
+        private void Clear() => _element.Set(JsonDocument.Parse(MutableJsonDocument.EmptyJson));
 
-        public bool Contains(KeyValuePair<string, T> item)
+        private bool Contains(KeyValuePair<string, T> item)
         {
             if (!_element.TryGetProperty(item.Key, out MutableJsonElement element))
             {
@@ -106,9 +108,9 @@ namespace Azure.Core.Json
             return item.Value.Equals(ConvertTo(element));
         }
 
-        public bool ContainsKey(string key) => _element.TryGetProperty(key, out _);
+        private bool ContainsKey(string key) => _element.TryGetProperty(key, out _);
 
-        public void CopyTo(KeyValuePair<string, T>[] array, int arrayIndex)
+        private void CopyTo(KeyValuePair<string, T>[] array, int arrayIndex)
         {
             Argument.AssertNotNull(array, nameof(array));
             Argument.AssertInRange(arrayIndex, 0, int.MaxValue, nameof(arrayIndex));
@@ -125,7 +127,7 @@ namespace Azure.Core.Json
             }
         }
 
-        public IEnumerator<KeyValuePair<string, T>> GetEnumerator()
+        private IEnumerator<KeyValuePair<string, T>> GetEnumerator()
         {
             foreach ((string Name, MutableJsonElement Value) in _element.EnumerateObject())
             {
@@ -133,15 +135,13 @@ namespace Azure.Core.Json
             }
         }
 
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-        public bool Remove(string key)
+        private bool Remove(string key)
         {
             _element.RemoveProperty(key);
             return true;
         }
 
-        public bool Remove(KeyValuePair<string, T> item)
+        private bool Remove(KeyValuePair<string, T> item)
         {
             _element.RemoveProperty(item.Key);
             return true;
@@ -162,5 +162,27 @@ namespace Azure.Core.Json
             value = default!;
             return false;
         }
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        void IDictionary<string, T>.Add(string key, T value) => Add(key, value);
+
+        bool IDictionary<string, T>.ContainsKey(string key) => ContainsKey(key);
+
+        bool IDictionary<string, T>.Remove(string key) => Remove(key);
+
+        void ICollection<KeyValuePair<string, T>>.Add(KeyValuePair<string, T> item) => Add(item);
+
+        void ICollection<KeyValuePair<string, T>>.Clear() => Clear();
+
+        bool ICollection<KeyValuePair<string, T>>.Contains(KeyValuePair<string, T> item) => Contains(item);
+
+        void ICollection<KeyValuePair<string, T>>.CopyTo(KeyValuePair<string, T>[] array, int arrayIndex) => CopyTo(array, arrayIndex);
+
+        bool ICollection<KeyValuePair<string, T>>.IsReadOnly => false;
+
+        bool ICollection<KeyValuePair<string, T>>.Remove(KeyValuePair<string, T> item) => Remove(item);
+
+        IEnumerator<KeyValuePair<string, T>> IEnumerable<KeyValuePair<string, T>>.GetEnumerator() => GetEnumerator();
     }
 }
