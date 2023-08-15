@@ -9,8 +9,10 @@ namespace Azure.Core.Tests.PatchModels
     /// <summary>
     /// This model illustrates optional read/write "primitive" properties.
     /// </summary>
-    public partial class SimplePatchModel
+    public partial class SimplePatchModel : PatchModel<SimplePatchModel>
     {
+        private static Func<MutableJsonElement, SimplePatchModel> _constructor = e => new SimplePatchModel(e);
+
 #pragma warning disable AZC0020 // Avoid using banned types in libraries
         private readonly MutableJsonElement _element;
 
