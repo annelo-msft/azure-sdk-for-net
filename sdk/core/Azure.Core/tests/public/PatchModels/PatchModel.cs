@@ -1,8 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using System;
 using Azure.Core.Json;
+using Azure.Core.Serialization;
 
 namespace Azure.Core.Tests.PatchModels
 {
@@ -13,14 +13,13 @@ namespace Azure.Core.Tests.PatchModels
     {
 #pragma warning disable AZC0020 // Avoid using banned types in libraries
         private readonly MutableJsonElement _element;
-        private readonly Func<MutableJsonElement, T> _constructor;
 
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public PatchModel(Func<MutableJsonElement, T> factory)
+        public PatchModel(MutableJsonElement element)
         {
-            _constructor = factory;
+            _element = element;
         }
 #pragma warning restore AZC0020 // Avoid using banned types in libraries
     }

@@ -11,27 +11,21 @@ namespace Azure.Core.Tests.PatchModels
     /// </summary>
     public partial class SimplePatchModel : PatchModel<SimplePatchModel>
     {
-        private static Func<MutableJsonElement, SimplePatchModel> _constructor = e => new SimplePatchModel(e);
-
 #pragma warning disable AZC0020 // Avoid using banned types in libraries
         private readonly MutableJsonElement _element;
 
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public SimplePatchModel()
+        public SimplePatchModel() : base(MutableJsonDocument.Parse(MutableJsonDocument.EmptyJson).RootElement)
         {
-            _element = MutableJsonDocument.Parse(MutableJsonDocument.EmptyJson).RootElement;
         }
 
         /// <summary>
         /// Serialization constructor.
         /// </summary>
         /// <param name="element"></param>
-        internal SimplePatchModel(MutableJsonElement element)
-        {
-            _element = element;
-        }
+        internal SimplePatchModel(MutableJsonElement element) : base(element) { }
 
         /// <summary>
         /// Optional string property corresponding to JSON """{"name": "abc"}""".

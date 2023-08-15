@@ -3,27 +3,20 @@
 
 using System;
 using System.Text.Json;
-using Azure.Core.Json;
 using Azure.Core.Serialization;
 
 namespace Azure.Core.Tests.PatchModels
 {
     internal abstract partial class PatchModel<T> : IModelJsonSerializable<T> where T : class
     {
-        T IModelJsonSerializable<T>.Deserialize(ref Utf8JsonReader reader, ModelSerializerOptions options)
+        public abstract T Deserialize(ref Utf8JsonReader reader, ModelSerializerOptions options);
+        public abstract T Deserialize(BinaryData data, ModelSerializerOptions options);
+
+        BinaryData IModelSerializable<T>.Serialize(ModelSerializerOptions options)
         {
             ValidateFormat(this, options.Format);
 
-            MutableJsonDocument mdoc = MutableJsonDocument.Parse(ref reader);
-            return _constructor(mdoc.RootElement);
-        }
-
-        T IModelSerializable<T>.Deserialize(BinaryData data, ModelSerializerOptions options)
-        {
-            ValidateFormat(this, options.Format);
-
-            MutableJsonDocument mdoc = MutableJsonDocument.Parse(data);
-            return _constructor(mdoc.RootElement);
+            return ModelSerializer.SerializeCore(this, options);
         }
 
         void IModelJsonSerializable<T>.Serialize(Utf8JsonWriter writer, ModelSerializerOptions options)
@@ -45,24 +38,10 @@ namespace Azure.Core.Tests.PatchModels
             }
         }
 
-        BinaryData IModelSerializable<T>.Serialize(ModelSerializerOptions options)
-        {
-            ValidateFormat(this, options.Format);
-
-            return ModelSerializer.SerializeCore(this, options);
-        }
-
-        public static explicit operator T(Response response)
-        {
-            Argument.AssertNotNull(response, nameof(response));
-
-            return Deserialize(response.Content, ModelSerializerOptions.DefaultWireOptions);
-        }
-
         // TODO: Move this into the public interface as a separate PR
-        public static void ValidateFormat<U>(IModelSerializable<U> model, ModelSerializerFormat format)
+        public static void ValidateFormat<TModel>(IModelSerializable<TModel> model, ModelSerializerFormat format)
         {
-            bool isValidPatchFormat = model is IModelJsonSerializable<U> && format == "P";
+            bool isValidPatchFormat = model is IModelJsonSerializable<TModel> && format == "P";
             if (!isValidPatchFormat)
             {
                 ModelSerializerHelper.ValidateFormat(model, format);
