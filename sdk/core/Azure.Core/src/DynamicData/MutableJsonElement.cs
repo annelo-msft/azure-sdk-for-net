@@ -118,7 +118,7 @@ namespace Azure.Core.Json
                         return false;
                     }
 
-                    value = new MutableJsonElement(_root, change.GetSerializedValue(), GetString(path, 0, pathLength), change.Index);
+                    value = new MutableJsonElement(_root, MutableJsonChange.ConvertToJsonElement(change, _root.SerializerOptions), GetString(path, 0, pathLength), change.Index);
                     return true;
                 }
 
@@ -158,7 +158,7 @@ namespace Azure.Core.Json
 
             if (Changes.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
             {
-                return change.GetSerializedValue().GetArrayLength();
+                return change.GetArrayLength();
             }
 
             return _element.GetArrayLength();
@@ -173,7 +173,7 @@ namespace Azure.Core.Json
             string path = MutableJsonDocument.ChangeTracker.PushIndex(_path, index);
             if (Changes.TryGetChange(path, _highWaterMark, out MutableJsonChange change))
             {
-                return new MutableJsonElement(_root, change.GetSerializedValue(), path, change.Index);
+                return new MutableJsonElement(_root, MutableJsonChange.ConvertToJsonElement(change, _root.SerializerOptions), path, change.Index);
             }
 
             return new MutableJsonElement(_root, _element[index], path, _highWaterMark);
@@ -193,6 +193,12 @@ namespace Azure.Core.Json
 
             if (Changes.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
             {
+                if (change.ValueKind != JsonValueKind.Number)
+                {
+                    // TODO
+                    throw new InvalidOperationException();
+                }
+
                 switch (change.Value)
                 {
                     case double d:
@@ -204,7 +210,16 @@ namespace Azure.Core.Json
                         value = default;
                         return false;
                     default:
-                        return change.GetSerializedValue().TryGetDouble(out value);
+                        try
+                        {
+                            value = (double)change.Value;
+                            return true;
+                        }
+                        catch (InvalidCastException)
+                        {
+                            // TODO
+                            throw new InvalidOperationException();
+                        }
                 }
             }
 
@@ -396,11 +411,6 @@ namespace Azure.Core.Json
                     case null:
                         return null;
                     default:
-                        JsonElement el = change.GetSerializedValue();
-                        if (el.ValueKind == JsonValueKind.String)
-                        {
-                            return el.GetString();
-                        }
                         throw new InvalidOperationException($"Element at '{_path}' is not a string.");
                 }
             }
@@ -1264,7 +1274,7 @@ namespace Azure.Core.Json
 
             if (Changes.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
             {
-                return change.GetSerializedValue();
+                return MutableJsonChange.ConvertToJsonElement(change, _root.SerializerOptions);
             }
 
             // Account for changes to descendants of this element as well
