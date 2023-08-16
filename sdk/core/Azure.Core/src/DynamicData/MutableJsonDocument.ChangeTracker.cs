@@ -18,7 +18,7 @@ namespace Azure.Core.Json
             }
 
             private List<MutableJsonChange>? _changes;
-            private JsonSerializerOptions _options;
+            private readonly JsonSerializerOptions _options;
 
             internal const char Delimiter = (char)1;
 
