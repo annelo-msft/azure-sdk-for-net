@@ -3,6 +3,7 @@
 
 using System;
 using System.Text.Json;
+using System.Xml.Linq;
 
 namespace Azure.Core.Json
 {
@@ -46,7 +47,28 @@ namespace Azure.Core.Json
 
         public MutableJsonChangeKind ChangeKind { get; }
 
-        public JsonValueKind ValueKind => GetSerializedValue().ValueKind;
+        public readonly JsonValueKind ValueKind => Value switch
+        {
+            bool b => b ? JsonValueKind.True : JsonValueKind.False,
+            string => JsonValueKind.String,
+            DateTime => JsonValueKind.String,
+            DateTimeOffset => JsonValueKind.String,
+            Guid => JsonValueKind.String,
+            byte => JsonValueKind.Number,
+            sbyte => JsonValueKind.Number,
+            short => JsonValueKind.Number,
+            ushort => JsonValueKind.Number,
+            int => JsonValueKind.Number,
+            uint => JsonValueKind.Number,
+            long => JsonValueKind.Number,
+            ulong => JsonValueKind.Number,
+            float => JsonValueKind.Number,
+            double => JsonValueKind.Number,
+            decimal => JsonValueKind.Number,
+            null => JsonValueKind.Null,
+            JsonElement e => e.ValueKind,
+            _ => throw new InvalidCastException() // TODO: fix exception
+        };
 
         internal JsonElement GetSerializedValue()
         {
@@ -120,7 +142,12 @@ namespace Azure.Core.Json
 
         internal string AsString()
         {
-            return GetSerializedValue().ToString() ?? "null";
+            if (Value is null)
+            {
+                return "null";
+            }
+
+            return Value.ToString()!;
         }
 
         public override string ToString()
