@@ -10,8 +10,10 @@ ReadOnlyMemory<byte> utf8Json = """
 
 MutableJsonDocument mdoc = MutableJsonDocument.Parse(utf8Json);
 
+mdoc.RootElement.GetProperty("id").Set("xyz");
+
 using Stream stream = new MemoryStream();
 using Utf8JsonWriter writer = new(stream);
 mdoc.WriteTo(writer);
 
-Console.WriteLine($"** id={mdoc.RootElement.GetProperty("id").GetString()}");
+//Console.WriteLine($"** id={mdoc.RootElement.GetProperty("id").GetString()}");
