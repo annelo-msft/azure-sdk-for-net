@@ -123,9 +123,21 @@ namespace Azure.Core.Perf.Serializations
 
         [Benchmark]
         [BenchmarkCategory("Internal")]
-        public T Deserialize_Internal()
+        public T Deserialize_Internal_JsonElement()
         {
             return Deserialize(_jsonDocument.RootElement);
+        }
+
+        protected virtual T Deserialize(BinaryData data)
+        {
+            return Deserialize(JsonDocument.Parse(data).RootElement);
+        }
+
+        [Benchmark]
+        [BenchmarkCategory("Internal")]
+        public T Deserialize_Internal_BinaryData()
+        {
+            return Deserialize(_data);
         }
 
         [Benchmark]
@@ -188,6 +200,22 @@ namespace Azure.Core.Perf.Serializations
         public void JsonDocumentFromBinaryData()
         {
             using var doc = JsonDocument.Parse(_data);
+        }
+
+        protected virtual void ModifyValues(T model) { }
+
+        [Benchmark]
+        [BenchmarkCategory("Usage")]
+        public void EndToEndUseCase()
+        {
+            // Instantiate an input model
+            T model = ModelSerializer.Deserialize<T>(_data);
+
+            // Set properties on it
+            ModifyValues(model);
+
+            // Send it over the wire - serialize
+            RequestContent content = CastToRequestContent();
         }
     }
 }
