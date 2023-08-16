@@ -8,13 +8,13 @@ using System.Text.Json;
 
 namespace Azure.Core.Json
 {
-    internal partial struct MutableJsonElement
+    public partial struct MutableJsonElement
     {
         /// <summary>
         /// An enumerable and enumerator for the contents of a mutable JSON array.
         /// </summary>
         [DebuggerDisplay("{Current,nq}")]
-        public struct ArrayEnumerator : IEnumerable<MutableJsonElement>, IEnumerator<MutableJsonElement>
+        internal struct ArrayEnumerator : IEnumerable<MutableJsonElement>, IEnumerator<MutableJsonElement>
         {
             private readonly MutableJsonElement _element;
             private readonly int _length;

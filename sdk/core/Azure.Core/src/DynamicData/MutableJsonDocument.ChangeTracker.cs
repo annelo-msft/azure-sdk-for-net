@@ -8,7 +8,7 @@ using System.Text.Json;
 
 namespace Azure.Core.Json
 {
-    internal partial class MutableJsonDocument
+    public partial class MutableJsonDocument
     {
         internal class ChangeTracker
         {

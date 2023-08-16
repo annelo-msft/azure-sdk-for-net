@@ -9,6 +9,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 namespace Azure.Core.Json
 {
     /// <summary>
@@ -16,7 +17,7 @@ namespace Azure.Core.Json
     /// </summary>
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     [JsonConverter(typeof(MutableJsonElementConverter))]
-    internal readonly partial struct MutableJsonElement
+    public readonly partial struct MutableJsonElement
     {
         internal const int MaxStackLimit = 1024;
 
@@ -773,7 +774,7 @@ namespace Azure.Core.Json
         /// <summary>
         /// Gets an enumerator to enumerate the values in the JSON array represented by this MutableJsonElement.
         /// </summary>
-        public ArrayEnumerator EnumerateArray()
+        internal ArrayEnumerator EnumerateArray()
         {
             EnsureValid();
 
@@ -785,7 +786,7 @@ namespace Azure.Core.Json
         /// <summary>
         /// Gets an enumerator to enumerate the properties in the JSON object represented by this JsonElement.
         /// </summary>
-        public ObjectEnumerator EnumerateObject()
+        internal ObjectEnumerator EnumerateObject()
         {
             EnsureValid();
 
@@ -1218,4 +1219,5 @@ namespace Azure.Core.Json
             }
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }
