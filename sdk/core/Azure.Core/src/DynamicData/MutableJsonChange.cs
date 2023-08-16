@@ -2,7 +2,6 @@
 // Licensed under the MIT License.
 
 using System;
-using System.Buffers;
 using System.Text.Json;
 
 namespace Azure.Core.Json
@@ -57,7 +56,11 @@ namespace Azure.Core.Json
             }
 
             byte[] bytes = JsonSerializer.SerializeToUtf8Bytes(Value, _serializerOptions);
-            _serializedValue = JsonDocument.Parse(bytes).RootElement;
+
+            // Don't drain the ArrayPool
+            using JsonDocument doc = JsonDocument.Parse(bytes);
+            _serializedValue = doc.RootElement.Clone();
+
             return _serializedValue.Value;
         }
 
