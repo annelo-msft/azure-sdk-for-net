@@ -4,8 +4,6 @@
 using System;
 using System.Text.Json;
 
-#nullable enable
-
 namespace Azure.Core.Json
 {
     internal struct MutableJsonChange
@@ -35,6 +33,7 @@ namespace Azure.Core.Json
 
         public readonly JsonValueKind ValueKind => Value switch
         {
+            null => JsonValueKind.Null,
             bool b => b ? JsonValueKind.True : JsonValueKind.False,
             string => JsonValueKind.String,
             DateTime => JsonValueKind.String,
@@ -51,23 +50,35 @@ namespace Azure.Core.Json
             float => JsonValueKind.Number,
             double => JsonValueKind.Number,
             decimal => JsonValueKind.Number,
-            null => JsonValueKind.Null,
             JsonElement e => e.ValueKind,
-            _ => throw new InvalidCastException() // TODO: fix exception
+            _ => throw new InvalidOperationException($"Unrecognized change type '{Value.GetType()}'.")
         };
 
-        private void EnsureArray()
+        internal readonly void EnsureString()
         {
-            if (Value is JsonElement e && e.ValueKind == JsonValueKind.Array)
+            if (ValueKind != JsonValueKind.String)
             {
-                return;
+                throw new InvalidOperationException($"Expected a 'String' kind but was '{ValueKind}'.");
             }
-
-            // TODO: improve exception
-            throw new InvalidOperationException($"Expected an 'Array' type for item.");
         }
 
-        internal int GetArrayLength()
+        internal readonly void EnsureNumber()
+        {
+            if (ValueKind != JsonValueKind.Number)
+            {
+                throw new InvalidOperationException($"Expected a 'Number' kind but was '{ValueKind}'.");
+            }
+        }
+
+        internal readonly void EnsureArray()
+        {
+            if (ValueKind != JsonValueKind.Array)
+            {
+                throw new InvalidOperationException($"Expected an 'Array' kind but was '{ValueKind}'.");
+            }
+        }
+
+        internal readonly int GetArrayLength()
         {
             EnsureArray();
 
@@ -76,25 +87,7 @@ namespace Azure.Core.Json
                 return e.GetArrayLength();
             }
 
-            //TODO
-            throw new InvalidOperationException();
-        }
-
-        internal static JsonElement ConvertToJsonElement(MutableJsonChange change, JsonSerializerOptions options)
-        {
-            byte[] bytes = JsonSerializer.SerializeToUtf8Bytes(change.Value, options);
-
-            // Most JsonDocument.Parse calls return a that is backed by one or more ArrayPool
-            // arrays.  Those arrays are not returned until the instance is disposed.
-            // This is a workaround that allows us to dispose the JsonDocument so that we
-            // don't leak ArrayPool arrays.
-#if NET6_0_OR_GREATER
-            Utf8JsonReader reader = new(bytes);
-            return JsonElement.ParseValue(ref reader);
-#else
-            using JsonDocument doc = JsonDocument.Parse(bytes);
-            return doc.RootElement.Clone();
-#endif
+            throw new InvalidOperationException($"Expected an 'Array' kind but was '{ValueKind}'.");
         }
 
         internal bool IsDescendant(string path)

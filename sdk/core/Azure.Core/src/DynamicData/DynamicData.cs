@@ -166,28 +166,8 @@ namespace Azure.Core.Serialization
             _ => false
         };
 
-#pragma warning disable AZC0014 // Avoid using banned types in public API
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-        public static JsonElement SerializeToJsonElement(object value, JsonSerializerOptions? options = default)
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
-#pragma warning restore AZC0014 // Avoid using banned types in public API
-        {
-            byte[] bytes = JsonSerializer.SerializeToUtf8Bytes(value, options);
-
-            // Most JsonDocument.Parse calls return a that is backed by one or more ArrayPool
-            // arrays.  Those arrays are not returned until the instance is disposed.
-            // This is a workaround that allows us to dispose the JsonDocument so that we
-            // don't leak ArrayPool arrays.
-#if NET6_0_OR_GREATER
-            Utf8JsonReader reader = new(bytes);
-            return JsonElement.ParseValue(ref reader);
-#else
-            using JsonDocument doc = JsonDocument.Parse(bytes);
-            return doc.RootElement.Clone();
-#endif
-        }
-
-        private JsonElement ConvertType(object value) => SerializeToJsonElement(value, _serializerOptions);
+        private JsonElement ConvertType(object value) =>
+            MutableJsonElement.SerializeToJsonElement(value, _serializerOptions);
 
         private object? SetViaIndexer(object index, object value)
         {

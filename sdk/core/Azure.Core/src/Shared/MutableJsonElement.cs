@@ -9,8 +9,6 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Azure.Core.Json
 {
     /// <summary>
@@ -119,7 +117,7 @@ namespace Azure.Core.Json
                         return false;
                     }
 
-                    value = new MutableJsonElement(_root, MutableJsonChange.ConvertToJsonElement(change, _root.SerializerOptions), GetString(path, 0, pathLength), change.Index);
+                    value = new MutableJsonElement(_root, SerializeToJsonElement(change.Value), GetString(path, 0, pathLength), change.Index);
                     return true;
                 }
 
@@ -174,7 +172,7 @@ namespace Azure.Core.Json
             string path = MutableJsonDocument.ChangeTracker.PushIndex(_path, index);
             if (Changes.TryGetChange(path, _highWaterMark, out MutableJsonChange change))
             {
-                return new MutableJsonElement(_root, MutableJsonChange.ConvertToJsonElement(change, _root.SerializerOptions), path, change.Index);
+                return new MutableJsonElement(_root, SerializeToJsonElement(change.Value), path, change.Index);
             }
 
             return new MutableJsonElement(_root, _element[index], path, _highWaterMark);
@@ -194,11 +192,7 @@ namespace Azure.Core.Json
 
             if (Changes.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
             {
-                if (change.ValueKind != JsonValueKind.Number)
-                {
-                    // TODO
-                    throw new InvalidOperationException();
-                }
+                change.EnsureNumber();
 
                 switch (change.Value)
                 {
@@ -211,16 +205,8 @@ namespace Azure.Core.Json
                         value = default;
                         return false;
                     default:
-                        try
-                        {
-                            value = (double)change.Value;
-                            return true;
-                        }
-                        catch (InvalidCastException)
-                        {
-                            // TODO
-                            throw new InvalidOperationException("Changed element is not a double");
-                        }
+                        value = checked((double)change.Value);
+                        return true;
                 }
             }
 
@@ -262,11 +248,7 @@ namespace Azure.Core.Json
 
             if (Changes.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
             {
-                if (change.ValueKind != JsonValueKind.Number)
-                {
-                    // TODO
-                    throw new InvalidOperationException();
-                }
+                change.EnsureNumber();
 
                 switch (change.Value)
                 {
@@ -279,16 +261,8 @@ namespace Azure.Core.Json
                         value = default;
                         return false;
                     default:
-                        try
-                        {
-                            value = (int)change.Value;
-                            return true;
-                        }
-                        catch (InvalidCastException)
-                        {
-                            // TODO
-                            throw new InvalidOperationException("Changed element is not an int");
-                        }
+                        value = checked((int)change.Value);
+                        return true;
                 }
             }
 
@@ -325,11 +299,7 @@ namespace Azure.Core.Json
 
             if (Changes.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
             {
-                if (change.ValueKind != JsonValueKind.Number)
-                {
-                    // TODO
-                    throw new InvalidOperationException();
-                }
+                change.EnsureNumber();
 
                 switch (change.Value)
                 {
@@ -342,16 +312,8 @@ namespace Azure.Core.Json
                         value = default;
                         return false;
                     default:
-                        try
-                        {
-                            value = (long)change.Value;
-                            return true;
-                        }
-                        catch (InvalidCastException)
-                        {
-                            // TODO
-                            throw new InvalidOperationException("Changed element is not a long");
-                        }
+                        value = checked((long)change.Value);
+                        return true;
                 }
             }
 
@@ -388,11 +350,7 @@ namespace Azure.Core.Json
 
             if (Changes.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
             {
-                if (change.ValueKind != JsonValueKind.Number)
-                {
-                    // TODO
-                    throw new InvalidOperationException();
-                }
+                change.EnsureNumber();
 
                 switch (change.Value)
                 {
@@ -405,16 +363,8 @@ namespace Azure.Core.Json
                         value = default;
                         return false;
                     default:
-                        try
-                        {
-                            value = (float)change.Value;
-                            return true;
-                        }
-                        catch (InvalidCastException)
-                        {
-                            // TODO
-                            throw new InvalidOperationException("Changed element is not a float");
-                        }
+                        value = checked((float)change.Value);
+                        return true;
                 }
             }
 
@@ -448,6 +398,8 @@ namespace Azure.Core.Json
 
             if (Changes.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
             {
+                change.EnsureString();
+
                 switch (change.Value)
                 {
                     case string s:
@@ -492,11 +444,7 @@ namespace Azure.Core.Json
 
             if (Changes.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
             {
-                if (change.ValueKind != JsonValueKind.Number)
-                {
-                    // TODO
-                    throw new InvalidOperationException();
-                }
+                change.EnsureNumber();
 
                 switch (change.Value)
                 {
@@ -509,16 +457,8 @@ namespace Azure.Core.Json
                         value = default;
                         return false;
                     default:
-                        try
-                        {
-                            value = (byte)change.Value;
-                            return true;
-                        }
-                        catch (InvalidCastException)
-                        {
-                            // TODO
-                            throw new InvalidOperationException("Changed element is not a byte");
-                        }
+                        value = checked((byte)change.Value);
+                        return true;
                 }
             }
 
@@ -541,11 +481,7 @@ namespace Azure.Core.Json
 
             if (Changes.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
             {
-                if (change.ValueKind != JsonValueKind.String)
-                {
-                    // TODO
-                    throw new InvalidOperationException();
-                }
+                change.EnsureString();
 
                 switch (change.Value)
                 {
@@ -554,7 +490,7 @@ namespace Azure.Core.Json
                         return true;
                     case DateTimeOffset:
                     case string:
-                        MutableJsonChange.ConvertToJsonElement(change, _root.SerializerOptions).TryGetDateTime(out value);
+                        SerializeToJsonElement(change.Value).TryGetDateTime(out value);
                         return true;
                     case JsonElement element:
                         return element.TryGetDateTime(out value);
@@ -562,8 +498,7 @@ namespace Azure.Core.Json
                         value = default;
                         return false;
                     default:
-                        // TODO
-                        throw new InvalidOperationException("Changed element is not a DateTime");
+                        throw new InvalidOperationException($"Element {change.Value} cannot be converted to DateTime.");
                 }
             }
 
@@ -586,11 +521,7 @@ namespace Azure.Core.Json
 
             if (Changes.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
             {
-                if (change.ValueKind != JsonValueKind.String)
-                {
-                    // TODO
-                    throw new InvalidOperationException();
-                }
+                change.EnsureString();
 
                 switch (change.Value)
                 {
@@ -599,7 +530,7 @@ namespace Azure.Core.Json
                         return true;
                     case DateTime:
                     case string:
-                        MutableJsonChange.ConvertToJsonElement(change, _root.SerializerOptions).TryGetDateTimeOffset(out value);
+                        SerializeToJsonElement(change.Value).TryGetDateTimeOffset(out value);
                         return true;
                     case JsonElement element:
                         return element.TryGetDateTimeOffset(out value);
@@ -607,8 +538,7 @@ namespace Azure.Core.Json
                         value = default;
                         return false;
                     default:
-                        // TODO
-                        throw new InvalidOperationException("Changed element is not a DateTime");
+                        throw new InvalidOperationException($"Element {change.Value} cannot be converted to DateTimeOffset.");
                 }
             }
 
@@ -631,11 +561,7 @@ namespace Azure.Core.Json
 
             if (Changes.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
             {
-                if (change.ValueKind != JsonValueKind.Number)
-                {
-                    // TODO
-                    throw new InvalidOperationException();
-                }
+                change.EnsureNumber();
 
                 switch (change.Value)
                 {
@@ -648,16 +574,8 @@ namespace Azure.Core.Json
                         value = default;
                         return false;
                     default:
-                        try
-                        {
-                            value = (decimal)change.Value;
-                            return true;
-                        }
-                        catch (InvalidCastException)
-                        {
-                            // TODO
-                            throw new InvalidOperationException("Changed element is not a decimal");
-                        }
+                        value = checked((decimal)change.Value);
+                        return true;
                 }
             }
 
@@ -680,11 +598,7 @@ namespace Azure.Core.Json
 
             if (Changes.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
             {
-                if (change.ValueKind != JsonValueKind.String)
-                {
-                    // TODO
-                    throw new InvalidOperationException();
-                }
+                change.EnsureString();
 
                 switch (change.Value)
                 {
@@ -692,7 +606,7 @@ namespace Azure.Core.Json
                         value = g;
                         return true;
                     case string:
-                        MutableJsonChange.ConvertToJsonElement(change, _root.SerializerOptions).TryGetGuid(out value);
+                        SerializeToJsonElement(change.Value).TryGetGuid(out value);
                         return true;
                     case JsonElement element:
                         return element.TryGetGuid(out value);
@@ -700,8 +614,7 @@ namespace Azure.Core.Json
                         value = default;
                         return false;
                     default:
-                        // TODO
-                        throw new InvalidOperationException("Changed element is not a Guid.");
+                        throw new InvalidOperationException($"Element {change.Value} cannot be converted to Guid.");
                 }
             }
 
@@ -724,11 +637,7 @@ namespace Azure.Core.Json
 
             if (Changes.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
             {
-                if (change.ValueKind != JsonValueKind.Number)
-                {
-                    // TODO
-                    throw new InvalidOperationException();
-                }
+                change.EnsureNumber();
 
                 switch (change.Value)
                 {
@@ -741,16 +650,8 @@ namespace Azure.Core.Json
                         value = default;
                         return false;
                     default:
-                        try
-                        {
-                            value = (short)change.Value;
-                            return true;
-                        }
-                        catch (InvalidCastException)
-                        {
-                            // TODO
-                            throw new InvalidOperationException("Changed element is not a short");
-                        }
+                        value = checked((short)change.Value);
+                        return true;
                 }
             }
 
@@ -773,11 +674,7 @@ namespace Azure.Core.Json
 
             if (Changes.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
             {
-                if (change.ValueKind != JsonValueKind.Number)
-                {
-                    // TODO
-                    throw new InvalidOperationException();
-                }
+                change.EnsureNumber();
 
                 switch (change.Value)
                 {
@@ -790,16 +687,8 @@ namespace Azure.Core.Json
                         value = default;
                         return false;
                     default:
-                        try
-                        {
-                            value = (sbyte)change.Value;
-                            return true;
-                        }
-                        catch (InvalidCastException)
-                        {
-                            // TODO
-                            throw new InvalidOperationException("Changed element is not an sbyte");
-                        }
+                        value = checked((sbyte)change.Value);
+                        return true;
                 }
             }
 
@@ -822,11 +711,7 @@ namespace Azure.Core.Json
 
             if (Changes.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
             {
-                if (change.ValueKind != JsonValueKind.Number)
-                {
-                    // TODO
-                    throw new InvalidOperationException();
-                }
+                change.EnsureNumber();
 
                 switch (change.Value)
                 {
@@ -839,16 +724,8 @@ namespace Azure.Core.Json
                         value = default;
                         return false;
                     default:
-                        try
-                        {
-                            value = (ushort)change.Value;
-                            return true;
-                        }
-                        catch (InvalidCastException)
-                        {
-                            // TODO
-                            throw new InvalidOperationException("Changed element is not a ushort.");
-                        }
+                        value = checked((ushort)change.Value);
+                        return true;
                 }
             }
 
@@ -871,11 +748,7 @@ namespace Azure.Core.Json
 
             if (Changes.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
             {
-                if (change.ValueKind != JsonValueKind.Number)
-                {
-                    // TODO
-                    throw new InvalidOperationException();
-                }
+                change.EnsureNumber();
 
                 switch (change.Value)
                 {
@@ -888,16 +761,8 @@ namespace Azure.Core.Json
                         value = default;
                         return false;
                     default:
-                        try
-                        {
-                            value = (uint)change.Value;
-                            return true;
-                        }
-                        catch (InvalidCastException)
-                        {
-                            // TODO
-                            throw new InvalidOperationException("Changed element is not a unint");
-                        }
+                        value = checked((uint)change.Value);
+                        return true;
                 }
             }
 
@@ -920,11 +785,7 @@ namespace Azure.Core.Json
 
             if (Changes.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
             {
-                if (change.ValueKind != JsonValueKind.Number)
-                {
-                    // TODO
-                    throw new InvalidOperationException();
-                }
+                change.EnsureNumber();
 
                 switch (change.Value)
                 {
@@ -937,16 +798,8 @@ namespace Azure.Core.Json
                         value = default;
                         return false;
                     default:
-                        try
-                        {
-                            value = (ulong)change.Value;
-                            return true;
-                        }
-                        catch (InvalidCastException)
-                        {
-                            // TODO
-                            throw new InvalidOperationException("Changed element is not a ulong");
-                        }
+                        value = checked((ulong)change.Value);
+                        return true;
                 }
             }
 
@@ -966,7 +819,7 @@ namespace Azure.Core.Json
         /// <summary>
         /// Gets an enumerator to enumerate the values in the JSON array represented by this MutableJsonElement.
         /// </summary>
-        internal ArrayEnumerator EnumerateArray()
+        public ArrayEnumerator EnumerateArray()
         {
             EnsureValid();
 
@@ -978,7 +831,7 @@ namespace Azure.Core.Json
         /// <summary>
         /// Gets an enumerator to enumerate the properties in the JSON object represented by this JsonElement.
         /// </summary>
-        internal ObjectEnumerator EnumerateObject()
+        public ObjectEnumerator EnumerateObject()
         {
             EnsureValid();
 
@@ -1450,20 +1303,40 @@ namespace Azure.Core.Json
             return _element.ToString() ?? "null";
         }
 
+        internal static JsonElement SerializeToJsonElement(object? value, JsonSerializerOptions? options = default)
+        {
+            byte[] bytes = JsonSerializer.SerializeToUtf8Bytes(value, options);
+            return ParseFromBytes(bytes);
+        }
+
+        private static JsonElement ParseFromBytes(byte[] bytes)
+        {
+            // Most JsonDocument.Parse calls return an array that is backed by one or more
+            // ArrayPool arrays.  Those arrays are not returned until the instance is disposed.
+            // This workaround allows us to dispose the JsonDocument so that we don't leak
+            // ArrayPool arrays.
+#if NET6_0_OR_GREATER
+            Utf8JsonReader reader = new(bytes);
+            return JsonElement.ParseValue(ref reader);
+#else
+            using JsonDocument doc = JsonDocument.Parse(bytes);
+            return doc.RootElement.Clone();
+#endif
+        }
+
         internal JsonElement GetJsonElement()
         {
             EnsureValid();
 
             if (Changes.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
             {
-                return MutableJsonChange.ConvertToJsonElement(change, _root.SerializerOptions);
+                return SerializeToJsonElement(change.Value);
             }
 
             // Account for changes to descendants of this element as well
             if (Changes.DescendantChanged(_path, _highWaterMark))
             {
-                JsonDocument document = JsonDocument.Parse(GetRawBytes());
-                return document.RootElement;
+                return ParseFromBytes(GetRawBytes());
             }
 
             return _element;
