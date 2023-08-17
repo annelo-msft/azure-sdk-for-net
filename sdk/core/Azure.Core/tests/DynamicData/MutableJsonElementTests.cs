@@ -409,7 +409,7 @@ namespace Azure.Core.Tests
         //    // Doesn't work if number change is outside range
         //    if (invalid is bool testRange && testRange)
         //    {
-        //        mdoc.RootElement.GetProperty("foo").Set(invalid);
+        //        mdoc.RootElement.GetProperty("foo").Set(testRange);
         //        Assert.IsFalse(tryGet(mdoc.RootElement.GetProperty("foo")).TryGet);
         //        Assert.Throws<FormatException>(() => get(mdoc.RootElement.GetProperty("foo")));
         //    }
