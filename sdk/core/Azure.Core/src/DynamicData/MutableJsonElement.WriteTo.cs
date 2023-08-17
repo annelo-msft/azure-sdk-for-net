@@ -9,11 +9,6 @@ namespace Azure.Core.Json
 {
     public partial struct MutableJsonElement
     {
-        internal void WriteTo(Utf8JsonWriter writer)
-        {
-            WriteElement(_path, _highWaterMark, _element, writer);
-        }
-
         internal void WriteTo(Utf8JsonWriter writer, string format)
         {
             switch (format)
@@ -29,38 +24,21 @@ namespace Azure.Core.Json
                     break;
             }
         }
+        internal void WriteTo(Utf8JsonWriter writer)
+        {
+            WriteElement(_path, _highWaterMark, _element, writer);
+        }
 
         private void WriteElement(string path, int highWaterMark, JsonElement element, Utf8JsonWriter writer)
         {
             if (Changes.TryGetChange(path, highWaterMark, out MutableJsonChange change))
             {
-                switch (change.Value)
+                if (!WriteChangeOrGetElement(change, writer, out JsonElement changeElement))
                 {
-                    case int i:
-                        writer.WriteNumberValue(i);
-                        return;
-                    case long l:
-                        writer.WriteNumberValue(l);
-                        return;
-                    case double d:
-                        writer.WriteNumberValue(d);
-                        return;
-                    case float f:
-                        writer.WriteNumberValue(f);
-                        return;
-                    case bool b:
-                        writer.WriteBooleanValue(b);
-                        return;
-                    case null:
-                        writer.WriteNullValue();
-                        return;
-                    default:
-                        break;
-
-                        // Note: string is not included to let JsonElement handle escaping.
+                    return;
                 }
 
-                element = change.GetSerializedValue();
+                element = changeElement;
                 highWaterMark = change.Index;
             }
 
@@ -105,10 +83,85 @@ namespace Azure.Core.Json
                 string propertyPath = MutableJsonDocument.ChangeTracker.PushProperty(path, propertyName);
 
                 writer.WritePropertyName(propertyName);
-                WriteElement(propertyPath, highWaterMark, property.GetSerializedValue(), writer);
+                if (WriteChangeOrGetElement(property, writer, out JsonElement changeElement))
+                {
+                    WriteElement(propertyPath, highWaterMark, changeElement, writer);
+                }
             }
 
             writer.WriteEndObject();
+        }
+
+        private bool WriteChangeOrGetElement(MutableJsonChange change, Utf8JsonWriter writer, out JsonElement element)
+        {
+            element = default;
+
+            switch (change.Value)
+            {
+                case bool b:
+                    writer.WriteBooleanValue(b);
+                    return false;
+                case string s:
+                    // TODO: Handle escaping
+                    writer.WriteStringValue(s);
+                    return false;
+                case byte b:
+                    writer.WriteNumberValue(b);
+                    return false;
+                case sbyte sb:
+                    writer.WriteNumberValue(sb);
+                    return false;
+                case short sh:
+                    writer.WriteNumberValue(sh);
+                    return false;
+                case ushort us:
+                    writer.WriteNumberValue(us);
+                    return false;
+                case int i:
+                    writer.WriteNumberValue(i);
+                    return false;
+                case uint u:
+                    writer.WriteNumberValue(u);
+                    return false;
+                case long l:
+                    writer.WriteNumberValue(l);
+                    return false;
+                case ulong ul:
+                    writer.WriteNumberValue(ul);
+                    return false;
+                case float f:
+                    writer.WriteNumberValue(f);
+                    return false;
+                case double d:
+                    writer.WriteNumberValue(d);
+                    return false;
+                case decimal d:
+                    writer.WriteNumberValue(d);
+                    return false;
+                case DateTime d:
+                    // TODO
+                    writer.WriteStringValue(d);
+                    return false;
+                case DateTimeOffset d:
+                    // TODO
+                    writer.WriteStringValue(d);
+                    return false;
+                case Guid g:
+                    // TODO
+                    writer.WriteStringValue(g);
+                    return false;
+                case null:
+                    writer.WriteNullValue();
+                    return false;
+                case JsonElement e:
+                    // TODO: Handle changes
+                    element = e;
+                    return true;
+                default:
+                    // Change can't have the type it has
+                    // TODO
+                    throw new InvalidOperationException();
+            }
         }
 
         private void WriteArray(string path, int highWaterMark, JsonElement element, Utf8JsonWriter writer)
