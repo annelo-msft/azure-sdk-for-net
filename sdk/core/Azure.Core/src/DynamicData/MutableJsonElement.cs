@@ -540,10 +540,20 @@ namespace Azure.Core.Json
 
             if (Changes.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
             {
+                if (change.ValueKind != JsonValueKind.String)
+                {
+                    // TODO
+                    throw new InvalidOperationException();
+                }
+
                 switch (change.Value)
                 {
                     case DateTime d:
                         value = d;
+                        return true;
+                    case DateTimeOffset:
+                    case string:
+                        MutableJsonChange.ConvertToJsonElement(change, _root.SerializerOptions).TryGetDateTime(out value);
                         return true;
                     case JsonElement element:
                         return element.TryGetDateTime(out value);
@@ -551,7 +561,8 @@ namespace Azure.Core.Json
                         value = default;
                         return false;
                     default:
-                        return change.GetSerializedValue().TryGetDateTime(out value);
+                        // TODO
+                        throw new InvalidOperationException("Changed element is not a DateTime");
                 }
             }
 
@@ -574,19 +585,29 @@ namespace Azure.Core.Json
 
             if (Changes.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
             {
+                if (change.ValueKind != JsonValueKind.String)
+                {
+                    // TODO
+                    throw new InvalidOperationException();
+                }
+
                 switch (change.Value)
                 {
                     case DateTimeOffset o:
                         value = o;
                         return true;
-                        ;
+                    case DateTime:
+                    case string:
+                        MutableJsonChange.ConvertToJsonElement(change, _root.SerializerOptions).TryGetDateTimeOffset(out value);
+                        return true;
                     case JsonElement element:
                         return element.TryGetDateTimeOffset(out value);
                     case null:
                         value = default;
                         return false;
                     default:
-                        return change.GetSerializedValue().TryGetDateTimeOffset(out value);
+                        // TODO
+                        throw new InvalidOperationException("Changed element is not a DateTime");
                 }
             }
 
@@ -658,10 +679,19 @@ namespace Azure.Core.Json
 
             if (Changes.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
             {
+                if (change.ValueKind != JsonValueKind.String)
+                {
+                    // TODO
+                    throw new InvalidOperationException();
+                }
+
                 switch (change.Value)
                 {
                     case Guid g:
                         value = g;
+                        return true;
+                    case string:
+                        MutableJsonChange.ConvertToJsonElement(change, _root.SerializerOptions).TryGetGuid(out value);
                         return true;
                     case JsonElement element:
                         return element.TryGetGuid(out value);
@@ -669,7 +699,8 @@ namespace Azure.Core.Json
                         value = default;
                         return false;
                     default:
-                        return change.GetSerializedValue().TryGetGuid(out value);
+                        // TODO
+                        throw new InvalidOperationException("Changed element is not a Guid.");
                 }
             }
 
