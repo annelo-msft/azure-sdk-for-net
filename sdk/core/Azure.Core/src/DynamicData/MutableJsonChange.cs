@@ -8,32 +8,17 @@ namespace Azure.Core.Json
 {
     internal struct MutableJsonChange
     {
-        private JsonElement? _serializedValue;
-        private readonly JsonSerializerOptions _serializerOptions;
-
         public MutableJsonChange(string path,
             int index,
             object? value,
-            JsonSerializerOptions options,
             MutableJsonChangeKind changeKind,
             string? addedPropertyName)
         {
             Path = path;
             Index = index;
             Value = value;
-            _serializerOptions = options;
             ChangeKind = changeKind;
             AddedPropertyName = addedPropertyName;
-
-            if (value is JsonElement element)
-            {
-                _serializedValue = element;
-            }
-
-            if (value is JsonDocument doc)
-            {
-                _serializedValue = doc.RootElement;
-            }
         }
 
         public string Path { get; }
