@@ -48,10 +48,21 @@ namespace Azure.Core.Tests
                 """u8;
             BinaryData data = new(json.ToArray());
 
-            MutableJsonDocument mdoc = MutableJsonDocument.Parse(data);
+            using MutableJsonDocument mdoc = MutableJsonDocument.Parse(data);
             mdoc.RootElement.GetProperty("foo").Set("hi");
 
             MutableJsonDocumentTests.ValidateWriteTo(data, mdoc);
+
+            ReadOnlySpan<byte> json2 = """
+                {
+                    "foo": "hi",
+                    "last_modified":"2023-03-23T16:35:35+00:00"
+                }
+                """u8;
+            BinaryData data2 = new(json2.ToArray());
+            mdoc.RootElement.GetProperty("last_modified").Set("2023-03-23T16:35:35+00:00");
+
+            MutableJsonDocumentTests.ValidateWriteTo(data2, mdoc);
         }
 
         [Test]
@@ -398,7 +409,7 @@ namespace Azure.Core.Tests
                 """;
 
             MutableJsonDocumentTests.ValidateWriteTo(expected, mdoc);
-            JsonElement element = DynamicData.SerializeToJsonElement( new
+            JsonElement element = DynamicData.SerializeToJsonElement(new
             {
                 Foo = new
                 {
@@ -1268,7 +1279,7 @@ namespace Azure.Core.Tests
             using MutableJsonDocument mdoc = MutableJsonDocument.Parse(json);
 
             JsonElement element = DynamicData.SerializeToJsonElement(new { ca = true, cb = false });
-            mdoc.RootElement.SetProperty("c",element);
+            mdoc.RootElement.SetProperty("c", element);
 
             ValidatePatch("""
                 {
