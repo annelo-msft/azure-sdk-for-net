@@ -218,7 +218,7 @@ namespace Azure.Core.Json
                         catch (InvalidCastException)
                         {
                             // TODO
-                            throw new InvalidOperationException();
+                            throw new InvalidOperationException("Changed element is not a double");
                         }
                 }
             }
@@ -261,6 +261,12 @@ namespace Azure.Core.Json
 
             if (Changes.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
             {
+                if (change.ValueKind != JsonValueKind.Number)
+                {
+                    // TODO
+                    throw new InvalidOperationException();
+                }
+
                 switch (change.Value)
                 {
                     case int i:
@@ -272,7 +278,16 @@ namespace Azure.Core.Json
                         value = default;
                         return false;
                     default:
-                        return change.GetSerializedValue().TryGetInt32(out value);
+                        try
+                        {
+                            value = (int)change.Value;
+                            return true;
+                        }
+                        catch (InvalidCastException)
+                        {
+                            // TODO
+                            throw new InvalidOperationException("Changed element is not an int");
+                        }
                 }
             }
 
@@ -309,6 +324,12 @@ namespace Azure.Core.Json
 
             if (Changes.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
             {
+                if (change.ValueKind != JsonValueKind.Number)
+                {
+                    // TODO
+                    throw new InvalidOperationException();
+                }
+
                 switch (change.Value)
                 {
                     case long l:
@@ -320,7 +341,16 @@ namespace Azure.Core.Json
                         value = default;
                         return false;
                     default:
-                        return change.GetSerializedValue().TryGetInt64(out value);
+                        try
+                        {
+                            value = (long)change.Value;
+                            return true;
+                        }
+                        catch (InvalidCastException)
+                        {
+                            // TODO
+                            throw new InvalidOperationException("Changed element is not a long");
+                        }
                 }
             }
 
@@ -357,6 +387,12 @@ namespace Azure.Core.Json
 
             if (Changes.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
             {
+                if (change.ValueKind != JsonValueKind.Number)
+                {
+                    // TODO
+                    throw new InvalidOperationException();
+                }
+
                 switch (change.Value)
                 {
                     case float f:
@@ -368,7 +404,16 @@ namespace Azure.Core.Json
                         value = default;
                         return false;
                     default:
-                        return change.GetSerializedValue().TryGetSingle(out value);
+                        try
+                        {
+                            value = (float)change.Value;
+                            return true;
+                        }
+                        catch (InvalidCastException)
+                        {
+                            // TODO
+                            throw new InvalidOperationException("Changed element is not a float");
+                        }
                 }
             }
 
@@ -446,6 +491,12 @@ namespace Azure.Core.Json
 
             if (Changes.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
             {
+                if (change.ValueKind != JsonValueKind.Number)
+                {
+                    // TODO
+                    throw new InvalidOperationException();
+                }
+
                 switch (change.Value)
                 {
                     case byte b:
@@ -457,7 +508,16 @@ namespace Azure.Core.Json
                         value = default;
                         return false;
                     default:
-                        return change.GetSerializedValue().TryGetByte(out value);
+                        try
+                        {
+                            value = (byte)change.Value;
+                            return true;
+                        }
+                        catch (InvalidCastException)
+                        {
+                            // TODO
+                            throw new InvalidOperationException("Changed element is not a byte");
+                        }
                 }
             }
 
@@ -549,6 +609,12 @@ namespace Azure.Core.Json
 
             if (Changes.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
             {
+                if (change.ValueKind != JsonValueKind.Number)
+                {
+                    // TODO
+                    throw new InvalidOperationException();
+                }
+
                 switch (change.Value)
                 {
                     case decimal d:
@@ -560,7 +626,16 @@ namespace Azure.Core.Json
                         value = default;
                         return false;
                     default:
-                        return change.GetSerializedValue().TryGetDecimal(out value);
+                        try
+                        {
+                            value = (decimal)change.Value;
+                            return true;
+                        }
+                        catch (InvalidCastException)
+                        {
+                            // TODO
+                            throw new InvalidOperationException("Changed element is not a decimal");
+                        }
                 }
             }
 
@@ -617,6 +692,12 @@ namespace Azure.Core.Json
 
             if (Changes.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
             {
+                if (change.ValueKind != JsonValueKind.Number)
+                {
+                    // TODO
+                    throw new InvalidOperationException();
+                }
+
                 switch (change.Value)
                 {
                     case short s:
@@ -628,7 +709,16 @@ namespace Azure.Core.Json
                         value = default;
                         return false;
                     default:
-                        return change.GetSerializedValue().TryGetInt16(out value);
+                        try
+                        {
+                            value = (short)change.Value;
+                            return true;
+                        }
+                        catch (InvalidCastException)
+                        {
+                            // TODO
+                            throw new InvalidOperationException("Changed element is not a short");
+                        }
                 }
             }
 
@@ -651,6 +741,12 @@ namespace Azure.Core.Json
 
             if (Changes.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
             {
+                if (change.ValueKind != JsonValueKind.Number)
+                {
+                    // TODO
+                    throw new InvalidOperationException();
+                }
+
                 switch (change.Value)
                 {
                     case sbyte b:
@@ -662,7 +758,16 @@ namespace Azure.Core.Json
                         value = default;
                         return false;
                     default:
-                        return change.GetSerializedValue().TryGetSByte(out value);
+                        try
+                        {
+                            value = (sbyte)change.Value;
+                            return true;
+                        }
+                        catch (InvalidCastException)
+                        {
+                            // TODO
+                            throw new InvalidOperationException("Changed element is not an sbyte");
+                        }
                 }
             }
 
@@ -685,6 +790,12 @@ namespace Azure.Core.Json
 
             if (Changes.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
             {
+                if (change.ValueKind != JsonValueKind.Number)
+                {
+                    // TODO
+                    throw new InvalidOperationException();
+                }
+
                 switch (change.Value)
                 {
                     case ushort u:
@@ -696,7 +807,16 @@ namespace Azure.Core.Json
                         value = default;
                         return false;
                     default:
-                        return change.GetSerializedValue().TryGetUInt16(out value);
+                        try
+                        {
+                            value = (ushort)change.Value;
+                            return true;
+                        }
+                        catch (InvalidCastException)
+                        {
+                            // TODO
+                            throw new InvalidOperationException("Changed element is not a ushort.");
+                        }
                 }
             }
 
@@ -719,6 +839,12 @@ namespace Azure.Core.Json
 
             if (Changes.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
             {
+                if (change.ValueKind != JsonValueKind.Number)
+                {
+                    // TODO
+                    throw new InvalidOperationException();
+                }
+
                 switch (change.Value)
                 {
                     case uint d:
@@ -730,7 +856,16 @@ namespace Azure.Core.Json
                         value = default;
                         return false;
                     default:
-                        return change.GetSerializedValue().TryGetUInt32(out value);
+                        try
+                        {
+                            value = (uint)change.Value;
+                            return true;
+                        }
+                        catch (InvalidCastException)
+                        {
+                            // TODO
+                            throw new InvalidOperationException("Changed element is not a unint");
+                        }
                 }
             }
 
@@ -753,6 +888,12 @@ namespace Azure.Core.Json
 
             if (Changes.TryGetChange(_path, _highWaterMark, out MutableJsonChange change))
             {
+                if (change.ValueKind != JsonValueKind.Number)
+                {
+                    // TODO
+                    throw new InvalidOperationException();
+                }
+
                 switch (change.Value)
                 {
                     case ulong u:
@@ -764,7 +905,16 @@ namespace Azure.Core.Json
                         value = default;
                         return false;
                     default:
-                        return change.GetSerializedValue().TryGetUInt64(out value);
+                        try
+                        {
+                            value = (ulong)change.Value;
+                            return true;
+                        }
+                        catch (InvalidCastException)
+                        {
+                            // TODO
+                            throw new InvalidOperationException("Changed element is not a ulong");
+                        }
                 }
             }
 
