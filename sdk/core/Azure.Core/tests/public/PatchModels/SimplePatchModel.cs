@@ -60,7 +60,17 @@ namespace Azure.Core.Tests.PatchModels
                 }
                 return null;
             }
-            set => _element.SetProperty("count", value);
+            set
+            {
+                if (value == null)
+                {
+                    _element.SetPropertyNull("count");
+                }
+                else
+                {
+                    _element.SetProperty("count", value.Value);
+                }
+            }
         }
 
         /// <summary>
@@ -76,7 +86,17 @@ namespace Azure.Core.Tests.PatchModels
                 }
                 return null;
             }
-            set => _element.SetProperty("updatedOn", value);
+            set
+            {
+                if (value == null)
+                {
+                    _element.SetPropertyNull("updatedOn");
+                }
+                else
+                {
+                    _element.SetProperty("updatedOn", value.Value);
+                }
+            }
         }
 #pragma warning restore AZC0020 // Avoid using banned types in libraries
     }

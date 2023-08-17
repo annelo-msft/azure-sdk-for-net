@@ -18,6 +18,8 @@ namespace Azure.Core.Json
     [JsonConverter(typeof(MutableJsonDocumentConverter))]
     internal sealed partial class MutableJsonDocument : IDisposable
     {
+        private static JsonSerializerOptions DefaultSerializerOptions = new JsonSerializerOptions();
+
         private static readonly ReadOnlyMemory<byte> _emptyJson = "{}"u8.ToArray();
         public static ReadOnlyMemory<byte> EmptyJson => _emptyJson;
 
@@ -204,7 +206,6 @@ namespace Azure.Core.Json
             _originalDocument.Dispose();
         }
 
-        private static JsonSerializerOptions DefaultSerializerOptions = new JsonSerializerOptions();
         private MutableJsonDocument(JsonDocument document, ReadOnlyMemory<byte> utf8Json, JsonSerializerOptions? serializerOptions)
         {
             _originalDocument = document;

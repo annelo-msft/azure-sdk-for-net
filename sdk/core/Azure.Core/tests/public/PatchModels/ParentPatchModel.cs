@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using Azure.Core.Json;
+using Azure.Core.Serialization;
 
 namespace Azure.Core.Tests.PatchModels
 {
@@ -58,7 +59,7 @@ namespace Azure.Core.Tests.PatchModels
                 {
                     if (!_element.TryGetProperty("child", out MutableJsonElement element))
                     {
-                        _element.SetProperty("child", new { });
+                        _element.SetProperty("child", DynamicData.SerializeToJsonElement(new { }));
                         element = _element.GetProperty("child");
                     }
 

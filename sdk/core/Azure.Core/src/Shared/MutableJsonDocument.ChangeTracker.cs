@@ -20,7 +20,7 @@ namespace Azure.Core.Json
             }
 
             private List<MutableJsonChange>? _changes;
-            private JsonSerializerOptions _options;
+            private readonly JsonSerializerOptions _options;
 
             internal const char Delimiter = (char)1;
 
@@ -102,7 +102,7 @@ namespace Azure.Core.Json
 
                 int index = _changes.Count;
 
-                _changes.Add(new MutableJsonChange(path, index, value, _options, changeKind, addedPropertyName));
+                _changes.Add(new MutableJsonChange(path, index, value, changeKind, addedPropertyName));
 
                 return index;
             }

@@ -19,7 +19,7 @@ namespace Azure.Core.Perf.Serializations
 
         protected override void Serialize(Utf8JsonWriter writer) => _model.Serialize(writer);
 
-        protected override string JsonFileName => "SimpleStandardModel.json";
+        protected override string JsonFileName => "SimplePatchModel.json";
 
         protected override void ModifyValues(SimpleStandardModel model)
         {

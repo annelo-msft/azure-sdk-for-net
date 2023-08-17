@@ -20,7 +20,7 @@ namespace Azure.Core.Json
         ///   An enumerable and enumerator for the properties of a JSON object.
         /// </summary>
         [DebuggerDisplay("{Current,nq}")]
-        public struct ObjectEnumerator : IEnumerable<(string Name, MutableJsonElement Value)>, IEnumerator<(string Name, MutableJsonElement Value)>
+        internal struct ObjectEnumerator : IEnumerable<(string Name, MutableJsonElement Value)>, IEnumerator<(string Name, MutableJsonElement Value)>
         {
             private readonly MutableJsonElement _target;
             private JsonElement.ObjectEnumerator _enumerator;
