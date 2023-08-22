@@ -1,8 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>$(RequiredTargetFrameworks);net47</TargetFrameworks>
-    <IncludeGeneratorSharedCode>true</IncludeGeneratorSharedCode>
-    <IncludeOperationsSharedSource>true</IncludeOperationsSharedSource>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Azure.Core" />
@@ -24,10 +22,26 @@
   <!-- Import Azure.Core shared source -->
   <ItemGroup>
     <Compile Remove="Shared\*.cs" />
+    <Compile Include="$(AzureCoreSharedSources)ApiVersionString.cs" LinkBase="Shared\Core" />
+    <Compile Include="$(AzureCoreSharedSources)AppContextSwitchHelper.cs" LinkBase="Shared/Core" />
+    <Compile Include="$(AzureCoreSharedSources)Argument.cs" LinkBase="Shared/Core" />
+    <Compile Include="$(AzureCoreSharedSources)AsyncLockWithValue.cs" LinkBase="Shared/Core" />
+    <Compile Include="$(AzureCoreSharedSources)ClientDiagnostics.cs" LinkBase="Shared\Core" />
     <Compile Include="$(AzureCoreSharedSources)ConnectionString.cs" LinkBase="Shared\Core" />
+    <Compile Include="$(AzureCoreSharedSources)ContentTypeUtilities.cs" LinkBase="Shared/Core" />
+    <Compile Include="$(AzureCoreSharedSources)DiagnosticScope.cs" LinkBase="Shared\Core" />
+    <Compile Include="$(AzureCoreSharedSources)DiagnosticScopeFactory.cs" LinkBase="Shared/Core" />
     <Compile Include="$(AzureCoreSharedSources)DictionaryHeaders.cs" LinkBase="Shared\Core" />
     <Compile Include="$(AzureCoreSharedSources)EventSourceEventFormatting.cs" LinkBase="Shared\Core" />
-    <Compile Include="$(AzureCoreSharedSources)ApiVersionString.cs" LinkBase="Shared\Core" />
+    <Compile Include="$(AzureCoreSharedSources)FixedDelayWithNoJitterStrategy.cs" LinkBase="Shared/Core" />
+    <Compile Include="$(AzureCoreSharedSources)HttpMessageSanitizer.cs" LinkBase="Shared/Core" />
+    <Compile Include="$(AzureCoreSharedSources)OperationHelpers.cs" LinkBase="Shared/Core" />
+    <Compile Include="$(AzureCoreSharedSources)OperationInternal.cs" LinkBase="Shared\Core" />
+    <Compile Include="$(AzureCoreSharedSources)OperationInternalBase.cs" LinkBase="Shared/Core" />
+    <Compile Include="$(AzureCoreSharedSources)OperationInternalOfT.cs" LinkBase="Shared/Core" />
+    <Compile Include="$(AzureCoreSharedSources)OperationPoller.cs" LinkBase="Shared/Core" />
+    <Compile Include="$(AzureCoreSharedSources)TaskExtensions.cs" LinkBase="Shared/Core" />
+    <Compile Include="$(AzureCoreSharedSources)VoidValue.cs" LinkBase="Shared\Core" />
   </ItemGroup>
     
   <ItemGroup>

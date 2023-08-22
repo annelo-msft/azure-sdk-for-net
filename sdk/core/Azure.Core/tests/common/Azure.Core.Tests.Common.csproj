@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>$(RequiredTargetFrameworks)</TargetFrameworks>
-    <IncludeGeneratorSharedCode>true</IncludeGeneratorSharedCode>
     <IncludeOperationsSharedSource>true</IncludeOperationsSharedSource>
     <IsTestSupportProject>true</IsTestSupportProject>
   </PropertyGroup>
@@ -15,6 +14,12 @@
   <ItemGroup>
     <Compile Include="$(AzureCoreSharedSources)ArrayBufferWriter.cs" LinkBase="Shared/Core" />
     <Compile Include="$(AzureCoreSharedSources)ModelSerializerHelper.cs" LinkBase="Shared/Core" />
+
+    <Compile Include="$(AzureCoreSharedSources)ApiVersionString.cs" LinkBase="Shared\Core" />
+    <Compile Include="$(AzureCoreSharedSources)ConnectionString.cs" LinkBase="Shared\Core" />
+    <Compile Include="$(AzureCoreSharedSources)DictionaryHeaders.cs" LinkBase="Shared\Core" />
+    <Compile Include="$(AzureCoreSharedSources)EventSourceEventFormatting.cs" LinkBase="Shared\Core" />
+
   </ItemGroup>
   
   <ItemGroup>
