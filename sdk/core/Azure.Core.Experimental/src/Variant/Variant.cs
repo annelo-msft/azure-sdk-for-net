@@ -1163,6 +1163,34 @@ namespace Azure
                     value = default!;
                 }
             }
+
+            // Handle numeric casts
+
+            //else if ((typeof(T) == typeof(byte) && _object == TypeFlags.Byte)
+            //    || (typeof(T) == typeof(double) && _object == TypeFlags.Double)
+            //    || (typeof(T) == typeof(short) && _object == TypeFlags.Int16)
+            //    || (typeof(T) == typeof(int) && _object == TypeFlags.Int32)
+            //    || (typeof(T) == typeof(long) && _object == TypeFlags.Int64)
+            //    || (typeof(T) == typeof(sbyte) && _object == TypeFlags.SByte)
+            //    || (typeof(T) == typeof(float) && _object == TypeFlags.Single)
+            //    || (typeof(T) == typeof(ushort) && _object == TypeFlags.UInt16)
+            //    || (typeof(T) == typeof(uint) && _object == TypeFlags.UInt32)
+            //    || (typeof(T) == typeof(ulong) && _object == TypeFlags.UInt64))
+
+            else if (typeof(T) == typeof(byte)
+                    || typeof(T) == typeof(double)
+                    || typeof(T) == typeof(short)
+                    || typeof(T) == typeof(int)
+                    || typeof(T) == typeof(long)
+                    || typeof(T) == typeof(sbyte)
+                    || typeof(T) == typeof(float)
+                    || typeof(T) == typeof(ushort)
+                    || typeof(T) == typeof(uint)
+                    || typeof(T) == typeof(ulong))
+            {
+                value = CastTo<T>();
+                result = true;
+            }
             else if (typeof(T) == typeof(int?) && _object == TypeFlags.Int32)
             {
                 value = Unsafe.As<int?, T>(ref Unsafe.AsRef((int?)_union.Int32));
@@ -1385,6 +1413,26 @@ namespace Azure
         {
             Debug.Assert(typeof(T).IsPrimitive);
             T value = Unsafe.As<Union, T>(ref Unsafe.AsRef(_union));
+            return value;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private readonly TTarget CastTo<TTarget, TSource>()
+        {
+            Debug.Assert(typeof(TTarget).IsPrimitive);
+            Debug.Assert(typeof(TSource).IsPrimitive);
+
+            TSource source = Unsafe.As<Union, TSource>(ref Unsafe.AsRef(_union));
+            TTarget value;
+            try
+            {
+                value = (TSource)source;
+            }
+            catch (InvalidCastException e)
+            {
+                throw e;
+            }
+
             return value;
         }
         #endregion
