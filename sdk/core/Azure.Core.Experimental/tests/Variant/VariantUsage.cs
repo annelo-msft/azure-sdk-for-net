@@ -39,6 +39,32 @@ namespace Azure.Core.Experimental.Tests
             Assert.AreEqual(value, v.ToString());
         }
 
+        [Test]
+        public void CanCastNumerics()
+        {
+            Variant v = 3;
+
+            Assert.AreEqual(typeof(int), v.Type);
+
+            Assert.AreEqual(3L, v.As<long>());
+            Assert.AreEqual(3L, (long)v);
+        }
+
+        [Test]
+        public void NumericCastThrowsIfUnsupported()
+        {
+            long big = int.MaxValue;
+            big++;
+            Variant v = big;
+
+            Assert.AreEqual(typeof(long), v.Type);
+
+            int i = (int)v;
+
+            Assert.Throws<InvalidCastException>(() => { int i = v.As<int>(); });
+            Assert.Throws<InvalidCastException>(() => { int i = (int)v; });
+        }
+
         #region Helpers
         public static IEnumerable<Variant[]> VariantValues()
         {

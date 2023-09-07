@@ -1177,17 +1177,69 @@ namespace Azure
             //    || (typeof(T) == typeof(uint) && _object == TypeFlags.UInt32)
             //    || (typeof(T) == typeof(ulong) && _object == TypeFlags.UInt64))
 
-            else if (typeof(T) == typeof(byte)
-                    || typeof(T) == typeof(double)
-                    || typeof(T) == typeof(short)
-                    || typeof(T) == typeof(int)
-                    || typeof(T) == typeof(long)
-                    || typeof(T) == typeof(sbyte)
-                    || typeof(T) == typeof(float)
-                    || typeof(T) == typeof(ushort)
-                    || typeof(T) == typeof(uint)
-                    || typeof(T) == typeof(ulong))
+            else if ((typeof(T) == typeof(byte)
+                        || typeof(T) == typeof(double)
+                        || typeof(T) == typeof(short)
+                        || typeof(T) == typeof(int)
+                        || typeof(T) == typeof(long)
+                        || typeof(T) == typeof(sbyte)
+                        || typeof(T) == typeof(float)
+                        || typeof(T) == typeof(ushort)
+                        || typeof(T) == typeof(uint)
+                        || typeof(T) == typeof(ulong)) &&
+                     (_object == TypeFlags.Byte
+                        || _object == TypeFlags.Double
+                        || _object == TypeFlags.Int16
+                        || _object == TypeFlags.Int32
+                        || _object == TypeFlags.Int64
+                        || _object == TypeFlags.SByte
+                        || _object == TypeFlags.Single
+                        || _object == TypeFlags.UInt16
+                        || _object == TypeFlags.UInt32
+                        || _object == TypeFlags.UInt64))
             {
+                if (_object == TypeFlags.Byte)
+                {
+                    byte b = CastTo<byte>();
+                    value = Convert.from
+                }
+                else if (_object == TypeFlags.Double)
+                {
+
+                }
+                else if (_object == TypeFlags.Int16)
+                {
+
+                }
+                else if (_object == TypeFlags.Int32)
+                {
+
+                }
+                else if (_object == TypeFlags.Int64)
+                {
+
+                }
+                else if (_object == TypeFlags.SByte)
+                {
+
+                }
+                else if (_object == TypeFlags.Single)
+                {
+
+                }
+                else if (_object == TypeFlags.UInt16)
+                {
+
+                }
+                else if (_object == TypeFlags.UInt32)
+                {
+
+                }
+                else if (_object == TypeFlags.UInt64)
+                {
+
+                }
+
                 value = CastTo<T>();
                 result = true;
             }
@@ -1417,13 +1469,41 @@ namespace Azure
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private readonly TTarget CastTo<TTarget, TSource>()
+        private readonly TTarget CastNumeric<TTarget, TSource>()
         {
             Debug.Assert(typeof(TTarget).IsPrimitive);
             Debug.Assert(typeof(TSource).IsPrimitive);
 
+            Debug.Assert(typeof(TTarget) == typeof(byte)
+                        || typeof(TTarget) == typeof(double)
+                        || typeof(TTarget) == typeof(short)
+                        || typeof(TTarget) == typeof(int)
+                        || typeof(TTarget) == typeof(long)
+                        || typeof(TTarget) == typeof(sbyte)
+                        || typeof(TTarget) == typeof(float)
+                        || typeof(TTarget) == typeof(ushort)
+                        || typeof(TTarget) == typeof(uint)
+                        || typeof(TTarget) == typeof(ulong));
+
+            Debug.Assert(typeof(TSource) == typeof(byte)
+                        || typeof(TSource) == typeof(double)
+                        || typeof(TSource) == typeof(short)
+                        || typeof(TSource) == typeof(int)
+                        || typeof(TSource) == typeof(long)
+                        || typeof(TSource) == typeof(sbyte)
+                        || typeof(TSource) == typeof(float)
+                        || typeof(TSource) == typeof(ushort)
+                        || typeof(TSource) == typeof(uint)
+                        || typeof(TSource) == typeof(ulong));
+
             TSource source = Unsafe.As<Union, TSource>(ref Unsafe.AsRef(_union));
             TTarget value;
+
+            if (typeof(TTarget) == typeof(byte))
+            {
+                value = Convert.ToByte(source);
+            }
+
             try
             {
                 value = (TSource)source;
