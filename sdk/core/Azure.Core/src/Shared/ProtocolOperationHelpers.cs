@@ -17,10 +17,13 @@ namespace Azure.Core
             where TTo : notnull
             => new ConvertOperation<TFrom, TTo>(operation, diagnostics, scopeName, convertFunc);
 
-        public static ValueTask<Operation<VoidValue>> ProcessMessageWithoutResponseValueAsync(HttpPipeline pipeline, HttpMessage message, ClientDiagnostics clientDiagnostics, string scopeName, OperationFinalStateVia finalStateVia, RequestContext? requestContext, WaitUntil waitUntil)
-            => ProcessMessageAsync(pipeline, message, clientDiagnostics, scopeName, finalStateVia, requestContext, waitUntil, _ => new VoidValue());
+        public static ValueTask<Operation> ProcessMessageWithoutResponseValueAsync(HttpPipeline pipeline, HttpMessage message, ClientDiagnostics clientDiagnostics, string scopeName, OperationFinalStateVia finalStateVia, RequestContext? requestContext, WaitUntil waitUntil)
+        {
+            ValueTask<Operation<VoidValue>> operation = ProcessMessageAsync(pipeline, message, clientDiagnostics, scopeName, finalStateVia, requestContext, waitUntil, _ => new VoidValue());
+            return operation;
+        }
 
-        public static Operation<VoidValue> ProcessMessageWithoutResponseValue(HttpPipeline pipeline, HttpMessage message, ClientDiagnostics clientDiagnostics, string scopeName, OperationFinalStateVia finalStateVia, RequestContext? requestContext, WaitUntil waitUntil)
+        public static Operation ProcessMessageWithoutResponseValue(HttpPipeline pipeline, HttpMessage message, ClientDiagnostics clientDiagnostics, string scopeName, OperationFinalStateVia finalStateVia, RequestContext? requestContext, WaitUntil waitUntil)
             => ProcessMessage(pipeline, message, clientDiagnostics, scopeName, finalStateVia, requestContext, waitUntil, _ => new VoidValue());
 
         public static ValueTask<Operation<BinaryData>> ProcessMessageAsync(HttpPipeline pipeline, HttpMessage message, ClientDiagnostics clientDiagnostics, string scopeName, OperationFinalStateVia finalStateVia, RequestContext? requestContext, WaitUntil waitUntil)
@@ -31,8 +34,8 @@ namespace Azure.Core
 
         public static async ValueTask<Operation<T>> ProcessMessageAsync<T>(HttpPipeline pipeline, HttpMessage message, ClientDiagnostics clientDiagnostics, string scopeName, OperationFinalStateVia finalStateVia, RequestContext? requestContext, WaitUntil waitUntil, Func<Response, T> resultSelector) where T: notnull
         {
-            var response = await pipeline.ProcessMessageAsync(message, requestContext).ConfigureAwait(false);
-            var operation = new ProtocolOperation<T>(clientDiagnostics, pipeline, message.Request, response, finalStateVia, scopeName, resultSelector);
+            Response response = await pipeline.ProcessMessageAsync(message, requestContext).ConfigureAwait(false);
+            ProtocolOperation<T> operation = new ProtocolOperation<T>(clientDiagnostics, pipeline, message.Request, response, finalStateVia, scopeName, resultSelector);
             if (waitUntil == WaitUntil.Completed)
             {
                 await operation.WaitForCompletionAsync(requestContext?.CancellationToken ?? default).ConfigureAwait(false);
@@ -42,8 +45,8 @@ namespace Azure.Core
 
         public static Operation<T> ProcessMessage<T>(HttpPipeline pipeline, HttpMessage message, ClientDiagnostics clientDiagnostics, string scopeName, OperationFinalStateVia finalStateVia, RequestContext? requestContext, WaitUntil waitUntil, Func<Response, T> resultSelector) where T : notnull
         {
-            var response = pipeline.ProcessMessage(message, requestContext);
-            var operation = new ProtocolOperation<T>(clientDiagnostics, pipeline, message.Request, response, finalStateVia, scopeName, resultSelector);
+            Response response = pipeline.ProcessMessage(message, requestContext);
+            ProtocolOperation<T> operation = new ProtocolOperation<T>(clientDiagnostics, pipeline, message.Request, response, finalStateVia, scopeName, resultSelector);
             if (waitUntil == WaitUntil.Completed)
             {
                 operation.WaitForCompletion(requestContext?.CancellationToken ?? default);
@@ -85,7 +88,7 @@ namespace Azure.Core
                     return GetRawResponse();
                 }
 
-                using var scope = CreateScope(_updateStatusScopeName);
+                using DiagnosticScope scope = CreateScope(_updateStatusScopeName);
                 try
                 {
                     return _operation.UpdateStatus(cancellationToken);
@@ -104,7 +107,7 @@ namespace Azure.Core
                     return GetRawResponse();
                 }
 
-                using var scope = CreateScope(_updateStatusScopeName);
+                using DiagnosticScope scope = CreateScope(_updateStatusScopeName);
                 try
                 {
                     return await _operation.UpdateStatusAsync(cancellationToken).ConfigureAwait(false);
@@ -123,10 +126,10 @@ namespace Azure.Core
                     return _response;
                 }
 
-                using var scope = CreateScope(_waitForCompletionScopeName);
+                using DiagnosticScope scope = CreateScope(_waitForCompletionScopeName);
                 try
                 {
-                    var result = _operation.WaitForCompletion(cancellationToken);
+                    Response<TFrom> result = _operation.WaitForCompletion(cancellationToken);
                     return CreateResponseOfTTo(result);
                 }
                 catch (Exception e)
@@ -143,10 +146,10 @@ namespace Azure.Core
                     return _response;
                 }
 
-                using var scope = CreateScope(_waitForCompletionScopeName);
+                using DiagnosticScope scope = CreateScope(_waitForCompletionScopeName);
                 try
                 {
-                    var result = _operation.WaitForCompletion(pollingInterval, cancellationToken);
+                    Response<TFrom> result = _operation.WaitForCompletion(pollingInterval, cancellationToken);
                     return CreateResponseOfTTo(result);
                 }
                 catch (Exception e)
@@ -163,10 +166,10 @@ namespace Azure.Core
                     return _response;
                 }
 
-                using var scope = CreateScope(_waitForCompletionScopeName);
+                using DiagnosticScope scope = CreateScope(_waitForCompletionScopeName);
                 try
                 {
-                    var result = await _operation.WaitForCompletionAsync(cancellationToken).ConfigureAwait(false);
+                    Response<TFrom> result = await _operation.WaitForCompletionAsync(cancellationToken).ConfigureAwait(false);
                     return CreateResponseOfTTo(result);
                 }
                 catch (Exception e)
@@ -183,10 +186,10 @@ namespace Azure.Core
                     return _response;
                 }
 
-                using var scope = CreateScope(_waitForCompletionScopeName);
+                using DiagnosticScope scope = CreateScope(_waitForCompletionScopeName);
                 try
                 {
-                    var result = await _operation.WaitForCompletionAsync(pollingInterval, cancellationToken).ConfigureAwait(false);
+                    Response<TFrom> result = await _operation.WaitForCompletionAsync(pollingInterval, cancellationToken).ConfigureAwait(false);
                     return CreateResponseOfTTo(result);
                 }
                 catch (Exception e)
@@ -204,15 +207,15 @@ namespace Azure.Core
 
             private Response<TTo> CreateResponseOfTTo(Response rawResponse)
             {
-                var value = _convertFunc(rawResponse);
-                var response = Response.FromValue(value, rawResponse);
+                TTo value = _convertFunc(rawResponse);
+                Response<TTo> response = Response.FromValue(value, rawResponse);
                 Interlocked.CompareExchange(ref _response, response, null);
                 return _response;
             }
 
             private DiagnosticScope CreateScope(string name)
             {
-                var scope = _diagnostics.CreateScope(name);
+                DiagnosticScope scope = _diagnostics.CreateScope(name);
                 scope.Start();
                 return scope;
             }
