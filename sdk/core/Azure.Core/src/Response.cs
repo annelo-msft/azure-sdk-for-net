@@ -48,6 +48,14 @@ namespace Azure
         internal RequestFailedDetailsParser? RequestFailedDetailsParser { get; set; }
 
         /// <summary>
+        /// Returns header value if the header is stored in the collection. If header has multiple values they are going to be joined with a comma.
+        /// </summary>
+        /// <param name="name">The header name.</param>
+        /// <param name="value">The reference to populate with value.</param>
+        /// <returns><c>true</c> if the specified header is stored in the collection, otherwise <c>false</c>.</returns>
+        protected internal override abstract bool TryGetHeader(string name, [NotNullWhen(true)] out string? value);
+
+        /// <summary>
         /// Returns header values if the header is stored in the collection.
         /// </summary>
         /// <param name="name">The header name.</param>

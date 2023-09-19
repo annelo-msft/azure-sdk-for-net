@@ -128,7 +128,10 @@ namespace Azure.Core
             _headers.Select(header => new HttpHeader(header.Key, JoinHeaderValues(header.Value)));
 
         /// <inheritdoc />
-        public override bool TryGetHeader(string name, out string value)
+#if HAS_INTERNALS_VISIBLE_CORE
+        internal
+#endif
+        protected override bool TryGetHeader(string name, out string value)
         {
             if (_headers.TryGetValue(name, out List<string> headers))
             {
