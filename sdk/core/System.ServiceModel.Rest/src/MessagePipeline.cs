@@ -115,7 +115,7 @@ public class MessagePipeline : Pipeline<PipelineMessage>
 
     public override PipelineMessage CreateMessage(RequestOptions options, ResponseErrorClassifier classifier)
     {
-        throw new NotImplementedException();
+        return _transport.CreateMessage(options, classifier);
     }
 
     ///// <summary>

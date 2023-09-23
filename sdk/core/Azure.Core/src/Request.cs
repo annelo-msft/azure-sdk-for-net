@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.ServiceModel.Rest.Core;
@@ -40,7 +41,8 @@ namespace Azure.Core
         /// <param name="uri"></param>
         public override void SetUri(RequestUri uri)
         {
-            Uri = (RequestUriBuilder)uri;
+            Argument.AssertNotNull(uri, nameof(uri));
+            _uri = new RequestUriBuilderAdapter(uri);
         }
 
         /// <summary>
@@ -54,8 +56,21 @@ namespace Azure.Core
         /// <param name="method"></param>
         public override void SetMethod(string method)
         {
-            // TODO: add validation of types
-            Method = new RequestMethod(method);
+            Method = VerbToMethod(method);
+        }
+
+        private static RequestMethod VerbToMethod(string verb)
+        {
+            return verb switch
+            {
+                "GET" => RequestMethod.Get,
+                "POST" => RequestMethod.Post,
+                "PUT" => RequestMethod.Put,
+                "HEAD" => RequestMethod.Head,
+                "DELETE" => RequestMethod.Delete,
+                "PATCH" => RequestMethod.Patch,
+                _ => throw new ArgumentOutOfRangeException(nameof(verb)),
+            };
         }
 
         /// <summary>
@@ -69,7 +84,7 @@ namespace Azure.Core
         /// <param name="content"></param>
         public override void SetContent(RequestBody content)
         {
-            Content = (RequestContent)content;
+            Content = new RequestBodyContent(content);
         }
 
         /// <summary>

@@ -11,7 +11,7 @@ namespace Azure.Core.Pipeline
     /// <summary>
     /// Adapter class to enable setting Request.Content to RequestBody values.
     /// </summary>
-    public sealed class RequestBodyContent : RequestContent
+    internal sealed class RequestBodyContent : RequestContent
     {
         private readonly RequestBody _body;
 

@@ -46,7 +46,10 @@ public class MessagePipelineTransport : PipelineTransport<PipelineMessage>, IDis
     /// <returns></returns>
     public override PipelineMessage CreateMessage(RequestOptions options, ResponseErrorClassifier classifier)
     {
-        throw new NotImplementedException();
+        Request request = _transport.CreateRequest();
+        HttpMessage message = new HttpMessage(request, (ResponseClassifier)classifier);
+        message.CancellationToken = options.CancellationToken;
+        return message;
     }
 
     /// <summary>
@@ -79,7 +82,7 @@ public class MessagePipelineTransport : PipelineTransport<PipelineMessage>, IDis
 
     private static HttpMessage ToHttpMessage(PipelineMessage message)
     {
-        var tam = message as MessagePipelineMessage;
+        var tam = message as HttpMessage;
         if (tam == null)
             throw new Exception("this message is not mine");
 
@@ -116,48 +119,5 @@ public class MessagePipelineTransport : PipelineTransport<PipelineMessage>, IDis
             response.ContentStream = buffer;
         }
         return response;
-    }
-
-    private static RequestMethod VerbToMethod(string verb)
-    {
-        switch (verb)
-        {
-            case "GET":
-                return RequestMethod.Get;
-            case "POST":
-                return RequestMethod.Post;
-            case "PUT":
-                return RequestMethod.Put;
-            case "HEAD":
-                return RequestMethod.Head;
-            case "DELETE":
-                return RequestMethod.Delete;
-            case "PATCH":
-                return RequestMethod.Patch;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(verb));
-        }
-    }
-}
-
-internal class MessagePipelineMessage : PipelineMessage
-{
-    public MessagePipelineMessage(Request request) : base(request)
-        => PipelineRequest = request;
-
-    public override PipelineResponse? PipelineResponse
-    {
-        get => throw new NotImplementedException();
-        set => throw new NotImplementedException();
-    }
-    public override PipelineRequest PipelineRequest
-    {
-        get => throw new NotImplementedException();
-        set => throw new NotImplementedException();
-    }
-
-    public override void Dispose()
-    {
-        throw new NotImplementedException();
     }
 }
