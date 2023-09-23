@@ -95,10 +95,11 @@ namespace System.ServiceModel.Rest.Core
     }
     public abstract partial class PipelineMessage : System.IDisposable
     {
-        protected PipelineMessage(System.ServiceModel.Rest.Core.PipelineRequest request) { }
+        protected PipelineMessage(System.ServiceModel.Rest.Core.PipelineRequest request, System.ServiceModel.Rest.Core.ResponseErrorClassifier classifier) { }
         public System.Threading.CancellationToken CancellationToken { get { throw null; } set { } }
         public abstract System.ServiceModel.Rest.Core.PipelineRequest PipelineRequest { get; set; }
         public abstract System.ServiceModel.Rest.Core.PipelineResponse? PipelineResponse { get; set; }
+        public abstract System.ServiceModel.Rest.Core.ResponseErrorClassifier ResponseErrorClassifier { get; set; }
         public abstract void Dispose();
     }
     public enum PipelinePosition
@@ -167,9 +168,11 @@ namespace System.ServiceModel.Rest.Experimental
         public static void AssertNotNull<T>(T value, string name) { }
         public static void ThrowIfCancellationRequested(System.Threading.CancellationToken cancellationToken) { }
     }
-    public partial class KeyCredentialPolicy
+    public partial class KeyCredentialPolicy : System.ServiceModel.Rest.Core.IPipelinePolicy<System.ServiceModel.Rest.Core.PipelineMessage>
     {
-        public KeyCredentialPolicy() { }
+        public KeyCredentialPolicy(System.ServiceModel.Rest.KeyCredential credential, string name, string? prefix = null) { }
+        public void Process(System.ServiceModel.Rest.Core.PipelineMessage message, System.ServiceModel.Rest.Core.PipelineEnumerator pipeline) { }
+        public System.Threading.Tasks.ValueTask ProcessAsync(System.ServiceModel.Rest.Core.PipelineMessage message, System.ServiceModel.Rest.Core.PipelineEnumerator pipeline) { throw null; }
     }
 }
 namespace System.ServiceModel.Rest.Experimental.Core
@@ -179,12 +182,12 @@ namespace System.ServiceModel.Rest.Experimental.Core
         public RequestUri() { }
         protected bool HasPath { get { throw null; } }
         protected bool HasQuery { get { throw null; } }
-        public string? Host { get { throw null; } set { } }
-        public string Path { get { throw null; } set { } }
+        public virtual string? Host { get { throw null; } set { } }
+        public virtual string Path { get { throw null; } set { } }
         public string PathAndQuery { get { throw null; } }
-        public int Port { get { throw null; } set { } }
-        public string Query { get { throw null; } set { } }
-        public string? Scheme { get { throw null; } set { } }
+        public virtual int Port { get { throw null; } set { } }
+        public virtual string Query { get { throw null; } set { } }
+        public virtual string? Scheme { get { throw null; } set { } }
         public virtual void AppendPath(System.ReadOnlySpan<char> value, bool escape) { }
         public virtual void AppendPath(string value) { }
         public virtual void AppendPath(string value, bool escape) { }

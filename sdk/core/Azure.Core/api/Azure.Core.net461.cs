@@ -479,7 +479,7 @@ namespace Azure.Core
     }
     public partial class HttpMessage : System.ServiceModel.Rest.Core.PipelineMessage, System.IDisposable
     {
-        public HttpMessage(Azure.Core.Request request, Azure.Core.ResponseClassifier responseClassifier) : base (default(System.ServiceModel.Rest.Core.PipelineRequest)) { }
+        public HttpMessage(Azure.Core.Request request, Azure.Core.ResponseClassifier responseClassifier) : base (default(System.ServiceModel.Rest.Core.PipelineRequest), default(System.ServiceModel.Rest.Core.ResponseErrorClassifier)) { }
         public bool BufferResponse { get { throw null; } set { } }
         public bool HasResponse { get { throw null; } }
         public System.TimeSpan? NetworkTimeout { get { throw null; } set { } }
@@ -491,6 +491,8 @@ namespace Azure.Core
         public Azure.Core.Request Request { get { throw null; } }
         public Azure.Response Response { get { throw null; } set { } }
         public Azure.Core.ResponseClassifier ResponseClassifier { get { throw null; } set { } }
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Never)]
+        public override System.ServiceModel.Rest.Core.ResponseErrorClassifier ResponseErrorClassifier { get { throw null; } set { } }
         public override void Dispose() { }
         public System.IO.Stream? ExtractResponseContent() { throw null; }
         public void SetProperty(string name, object value) { }
@@ -1051,14 +1053,6 @@ namespace Azure.Core.Pipeline
         public override void Process(Azure.Core.HttpMessage message, System.ReadOnlyMemory<Azure.Core.Pipeline.HttpPipelinePolicy> pipeline) { }
         public override System.Threading.Tasks.ValueTask ProcessAsync(Azure.Core.HttpMessage message, System.ReadOnlyMemory<Azure.Core.Pipeline.HttpPipelinePolicy> pipeline) { throw null; }
         public static void SetAllowAutoRedirect(Azure.Core.HttpMessage message, bool allowAutoRedirect) { }
-    }
-    public sealed partial class RequestBodyContent : Azure.Core.RequestContent
-    {
-        public RequestBodyContent(System.ServiceModel.Rest.Core.RequestBody body) { }
-        public override void Dispose() { }
-        public override bool TryComputeLength(out long length) { throw null; }
-        public override void WriteTo(System.IO.Stream stream, System.Threading.CancellationToken cancellation) { }
-        public override System.Threading.Tasks.Task WriteToAsync(System.IO.Stream stream, System.Threading.CancellationToken cancellation) { throw null; }
     }
     public partial class RetryPolicy : Azure.Core.Pipeline.HttpPipelinePolicy
     {

@@ -72,8 +72,11 @@ public class MessagePipeline : Pipeline<PipelineMessage>
         if (options.PerCallPolicies != null) pipelineLength += options.PerCallPolicies.Length;
         pipelineLength += options.RetryPolicy == null ? 0 : 1;
         pipelineLength += options.LoggingPolicy == null ? 0 : 1;
+
         pipelineLength++; // for transport
-        var pipeline = new IPipelinePolicy<PipelineMessage>[pipelineLength];
+
+        IPipelinePolicy<PipelineMessage>[] pipeline
+            = new IPipelinePolicy<PipelineMessage>[pipelineLength];
 
         int index = 0;
 
@@ -85,10 +88,12 @@ public class MessagePipeline : Pipeline<PipelineMessage>
             options.PerCallPolicies.CopyTo(pipeline.AsSpan());
             index += options.PerCallPolicies.Length;
         }
+
         if (options.RetryPolicy != null)
         {
             pipeline[index++] = options.RetryPolicy;
         }
+
         if (options.PerTryPolicies != null)
         {
             options.PerTryPolicies.CopyTo(pipeline.AsSpan(index));
@@ -96,7 +101,7 @@ public class MessagePipeline : Pipeline<PipelineMessage>
         }
 
         clientPerTryPolicies.CopyTo(pipeline.AsSpan(index));
-        index += clientPerCallPolicies.Length;
+        index += clientPerTryPolicies.Length;
 
         if (options.LoggingPolicy != null)
         {
