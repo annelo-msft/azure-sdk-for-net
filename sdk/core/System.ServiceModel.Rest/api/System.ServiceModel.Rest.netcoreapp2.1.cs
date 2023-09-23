@@ -112,6 +112,10 @@ namespace System.ServiceModel.Rest.Core
         protected PipelineRequest() { }
         public abstract string ClientRequestId { get; set; }
         public abstract void Dispose();
+        public abstract void SetContent(System.ServiceModel.Rest.Core.RequestBody content);
+        public abstract void SetHeaderValue(string name, string value);
+        public abstract void SetMethod(string method);
+        public abstract void SetUri(System.ServiceModel.Rest.Experimental.Core.RequestUri uri);
     }
     public abstract partial class PipelineResponse
     {

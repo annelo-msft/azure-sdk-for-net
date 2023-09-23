@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.ServiceModel.Rest.Core;
+using System.ServiceModel.Rest.Experimental.Core;
 using Azure.Core.Pipeline;
 
 namespace Azure.Core
@@ -34,14 +35,42 @@ namespace Azure.Core
         }
 
         /// <summary>
+        /// TBD.
+        /// </summary>
+        /// <param name="uri"></param>
+        public override void SetUri(RequestUri uri)
+        {
+            Uri = (RequestUriBuilder)uri;
+        }
+
+        /// <summary>
         /// Gets or sets the request HTTP method.
         /// </summary>
         public virtual RequestMethod Method { get; set; }
 
         /// <summary>
+        /// TBD.
+        /// </summary>
+        /// <param name="method"></param>
+        public override void SetMethod(string method)
+        {
+            // TODO: add validation of types
+            Method = new RequestMethod(method);
+        }
+
+        /// <summary>
         /// Gets or sets the request content.
         /// </summary>
         public virtual RequestContent? Content { get; set; }
+
+        /// <summary>
+        /// TBD.
+        /// </summary>
+        /// <param name="content"></param>
+        public override void SetContent(RequestBody content)
+        {
+            Content = (RequestContent)content;
+        }
 
         /// <summary>
         /// Adds a header value to the header collection.
@@ -83,6 +112,14 @@ namespace Azure.Core
             RemoveHeader(name);
             AddHeader(name, value);
         }
+
+        /// <summary>
+        /// TBD.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        public override void SetHeaderValue(string name, string value)
+            => SetHeader(name, value);
 
         /// <summary>
         /// Removes the header from the collection.
