@@ -37,6 +37,8 @@ namespace System.ServiceModel.Rest.Experimental
 
         public async ValueTask ProcessAsync(PipelineMessage message, PipelineEnumerator pipeline)
         {
+            message.PipelineRequest.SetHeaderValue(_name, _prefix != null ? $"{_prefix} {_credential.Key}" : _credential.Key);
+
             await pipeline.ProcessNextAsync().ConfigureAwait(false);
         }
     }
