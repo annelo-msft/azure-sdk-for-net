@@ -139,6 +139,9 @@ public class MessagePipeline : Pipeline<PipelineMessage>
     {
         var enumerator = new MessagePipelineExecutor(_policies, message);
         enumerator.ProcessNext();
+
+        // Send is complete, we can annotate the response.
+        message.PipelineResponse!.IsError = message.ResponseErrorClassifier.IsErrorResponse(message);
     }
 
     public override ValueTask SendAsync(PipelineMessage message)
