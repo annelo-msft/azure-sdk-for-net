@@ -3,16 +3,17 @@
 
 using System;
 using System.Diagnostics;
+using System.ServiceModel.Rest.Experimental;
 
 #nullable enable
 
-namespace Azure.Core
+namespace System.ServiceModel.Rest.Core
 {
     /// <summary>
     /// This type inherits from ResponseClassifier and is designed to work
-    /// efficiently with classifier customizations specified in <see cref="RequestContext"/>.
+    /// efficiently with classifier customizations specified in <see cref="RequestOptions"/>.
     /// </summary>
-    public class StatusCodeClassifier : ResponseClassifier
+    public class StatusCodeClassifier : ResponseErrorClassifier
     {
         // We need 10 ulongs to represent status codes 100 - 599.
         private const int Length = 10;
@@ -44,7 +45,7 @@ namespace Azure.Core
         }
 
         /// <inheritdoc/>
-        public override bool IsErrorResponse(HttpMessage message)
+        public override bool IsErrorResponse(PipelineMessage message)
         {
             bool isError;
 
@@ -59,10 +60,11 @@ namespace Azure.Core
                 }
             }
 
-            return !IsSuccessCode(message.Response.Status);
+            return !IsSuccessCode(message.PipelineResponse!.Status);
         }
 
-        internal virtual StatusCodeClassifier Clone()
+        // TODO: make this internal again
+        public virtual StatusCodeClassifier Clone()
         {
             ulong[] successCodes = new ulong[Length];
             Array.Copy(_successCodes, successCodes, Length);
@@ -72,7 +74,7 @@ namespace Azure.Core
 
         internal void AddClassifier(int statusCode, bool isError)
         {
-            Argument.AssertInRange(statusCode, 0, 639, nameof(statusCode));
+            ClientUtilities.AssertInRange(statusCode, 0, 639, nameof(statusCode));
 
             var index = statusCode >> 6;        // divides by 64
             int bit = statusCode & 0b111111;    // keeps the bits up to 63

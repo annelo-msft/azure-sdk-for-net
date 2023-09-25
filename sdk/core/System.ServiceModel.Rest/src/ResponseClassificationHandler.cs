@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Azure.Core
+namespace System.ServiceModel.Rest.Core
 {
     /// <summary>
     /// A type that analyzes an HTTP message and determines if the response it holds
@@ -26,6 +26,6 @@ namespace Azure.Core
         /// <param name="message">The message to classify.</param>
         /// <param name="isError">Whether the message's response should be considered an error.</param>
         /// <returns><code>true</code> if the handler had a classification for this message; <code>false</code> otherwise.</returns>
-        public abstract bool TryClassify(HttpMessage message, out bool isError);
+        public abstract bool TryClassify(PipelineMessage message, out bool isError);
     }
 }

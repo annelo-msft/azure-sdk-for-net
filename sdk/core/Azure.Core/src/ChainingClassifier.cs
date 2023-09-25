@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using System;
+using System.ServiceModel.Rest.Core;
 
 namespace Azure.Core
 {
@@ -73,11 +74,14 @@ namespace Azure.Core
                 _statusCodes = statusCodes;
             }
 
-            public override bool TryClassify(HttpMessage message, out bool isError)
+            public bool TryClassify(HttpMessage message, out bool isError)
+                => TryClassify((PipelineMessage)message, out isError);
+
+            public override bool TryClassify(PipelineMessage message, out bool isError)
             {
                 foreach (var classification in _statusCodes)
                 {
-                    if (classification.Status == message.Response.Status)
+                    if (classification.Status == message.PipelineResponse!.Status)
                     {
                         isError = classification.IsError;
                         return true;

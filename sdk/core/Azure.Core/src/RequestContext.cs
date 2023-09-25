@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ServiceModel.Rest;
+using System.ServiceModel.Rest.Core;
 using Azure.Core;
 using Azure.Core.Pipeline;
 
@@ -145,7 +146,7 @@ namespace Azure
             _frozen = true;
         }
 
-        internal ResponseClassifier Apply(ResponseClassifier classifier)
+        internal ResponseErrorClassifier Apply(ResponseErrorClassifier classifier)
         {
             if (_statusCodes == null && _handlers == null)
             {
