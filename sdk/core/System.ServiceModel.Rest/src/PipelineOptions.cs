@@ -7,7 +7,8 @@ using System.ServiceModel.Rest.Core.Pipeline;
 namespace System.ServiceModel.Rest;
 
 /// <summary>
-/// Controls the creation and behavior of the pipeline.
+/// Controls the creation of the pipeline.
+/// Works with InvocationOptions, which controls the behavior of the pipeline.
 /// </summary>
 public class PipelineOptions
 {

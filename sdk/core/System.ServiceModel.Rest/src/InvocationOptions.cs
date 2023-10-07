@@ -7,7 +7,8 @@ namespace System.ServiceModel.Rest;
 
 /// <summary>
 /// Controls the end-to-end duration of the service method call, including
-/// the message being sent down the pipeline.
+/// the message being sent down the pipeline.  For the duration of pipeline.Send,
+/// this may change some behaviors in various pipeline policies and the transport.
 /// </summary>
 // TODO: Make options freezable
 // TODO: This was RequestOptions, I'm changing it for now, we can change it back if
@@ -29,9 +30,17 @@ public class InvocationOptions
     // TODO: Can we throw if someone gives us Transport options and transport isn't
     // in the pipeline?
 
-    // TODO: do these make more sense in Invocation or Pipeline?
+    // TODO: do these (buffer response and network timeout) make more sense in
+    // Invocation or Pipeline?
     // Note: right now invocation is about things that have broader scope than
     // just the pipeline.Send operation, but pipeline.Send is part of the invocation.
+
+    // TODO: note that these pre-suppose that the response buffering policy is
+    // present in the pipeline, and if they are not, they don't make sense to have.
+    // We could feasibly add validation in the new libraries to tell people they've
+    // set options the pipeline might not use, or back in required policies in the
+    // pipeline, or somehow engineer it such that construction and invocation options
+    // work together to make it so people can't do the wrong thing.
     public virtual bool BufferResponse
     {
         get => _bufferResponse;
