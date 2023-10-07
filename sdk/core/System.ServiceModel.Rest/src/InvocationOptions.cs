@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using System.ServiceModel.Rest.Core;
 using System.Threading;
 
 namespace System.ServiceModel.Rest;
@@ -23,7 +24,11 @@ public class InvocationOptions
     // Moving CancellationToken here because it's needed for Pipeline.Send
     public CancellationToken CancellationToken { get; set; } = DefaultCancellationToken;
 
+    public virtual ResponseErrorClassifier ResponseClassifier { get; set; } = DefaultResponseClassifier;
+
     public static CancellationToken DefaultCancellationToken { get; set; } = CancellationToken.None;
+
+    public static ResponseErrorClassifier DefaultResponseClassifier { get; set; } = new ResponseErrorClassifier();
 
     #region Transport options - TODO: move to a subtype type?
 

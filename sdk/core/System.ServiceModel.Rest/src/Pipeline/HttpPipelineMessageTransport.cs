@@ -59,10 +59,10 @@ public partial class HttpPipelineMessageTransport : PipelineTransport<PipelineMe
         };
     }
 
-    public override PipelineMessage CreateMessage(InvocationOptions options, ResponseErrorClassifier classifier)
+    public override PipelineMessage CreateMessage(InvocationOptions options)
     {
         PipelineRequest request = new HttpPipelineRequest();
-        PipelineMessage message = new PipelineMessage(request, classifier);
+        PipelineMessage message = new PipelineMessage(request);
 
         // TODO: use options
 
@@ -117,14 +117,14 @@ public partial class HttpPipelineMessageTransport : PipelineTransport<PipelineMe
                 // HttpClient.Send would throw a NotSupported exception instead of GetAwaiter().GetResult()
                 // throwing a System.Threading.SynchronizationLockException: Cannot wait on monitors on this runtime.
 #pragma warning disable CA1416 // 'HttpClient.Send(HttpRequestMessage, HttpCompletionOption, CancellationToken)' is unsupported on 'browser'
-                responseMessage = _httpClient.Send(httpRequest, HttpCompletionOption.ResponseHeadersRead, message.CancellationToken);
+                responseMessage = _httpClient.Send(httpRequest, HttpCompletionOption.ResponseHeadersRead, options.CancellationToken);
 #pragma warning restore CA1416
             }
             else
 #endif
             {
 #pragma warning disable AZC0110 // DO NOT use await keyword in possibly synchronous scope.
-                responseMessage = await _httpClient.SendAsync(httpRequest, HttpCompletionOption.ResponseHeadersRead, message.CancellationToken).ConfigureAwait(false);
+                responseMessage = await _httpClient.SendAsync(httpRequest, HttpCompletionOption.ResponseHeadersRead, options.CancellationToken).ConfigureAwait(false);
 #pragma warning restore AZC0110 // DO NOT use await keyword in possibly synchronous scope.
             }
 
@@ -133,11 +133,11 @@ public partial class HttpPipelineMessageTransport : PipelineTransport<PipelineMe
 #if NET5_0_OR_GREATER
                 if (async)
                 {
-                    contentStream = await responseMessage.Content.ReadAsStreamAsync(message.CancellationToken).ConfigureAwait(false);
+                    contentStream = await responseMessage.Content.ReadAsStreamAsync(options.CancellationToken).ConfigureAwait(false);
                 }
                 else
                 {
-                    contentStream = responseMessage.Content.ReadAsStream(message.CancellationToken);
+                    contentStream = responseMessage.Content.ReadAsStream(options.CancellationToken);
                 }
 #else
 #pragma warning disable AZC0110 // DO NOT use await keyword in possibly synchronous scope.
@@ -147,9 +147,9 @@ public partial class HttpPipelineMessageTransport : PipelineTransport<PipelineMe
             }
         }
         // HttpClient on NET5 throws OperationCanceledException from sync call sites, normalize to TaskCanceledException
-        catch (OperationCanceledException e) when (ClientUtilities.ShouldWrapInOperationCanceledException(e, message.CancellationToken))
+        catch (OperationCanceledException e) when (ClientUtilities.ShouldWrapInOperationCanceledException(e, options.CancellationToken))
         {
-            throw ClientUtilities.CreateOperationCanceledException(e, message.CancellationToken);
+            throw ClientUtilities.CreateOperationCanceledException(e, options.CancellationToken);
         }
         catch (HttpRequestException e)
         {
@@ -157,6 +157,9 @@ public partial class HttpPipelineMessageTransport : PipelineTransport<PipelineMe
         }
 
         OnReceivedResponse(message, responseMessage, contentStream);
+
+        // Set IsError meta-data on the response.
+        message.Response.IsError = options.ResponseClassifier.IsErrorResponse(message);
     }
 
     /// <summary>

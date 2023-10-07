@@ -108,25 +108,21 @@ public class MessagePipeline : Pipeline<PipelineMessage, InvocationOptions>
         return new MessagePipeline(pipeline);
     }
 
-    public override PipelineMessage CreateMessage(InvocationOptions options, ResponseErrorClassifier classifier)
+    public override PipelineMessage CreateMessage(InvocationOptions options)
     {
-        return _transport.CreateMessage(options, classifier);
+        return _transport.CreateMessage(options);
     }
 
     public override void Send(PipelineMessage message, InvocationOptions options)
     {
         IPipelineEnumerator enumerator = new MessagePipelineExecutor(message, options, _policies);
         enumerator.ProcessNext();
-
-        message.Response.IsError = message.ResponseClassifier.IsErrorResponse(message);
     }
 
     public override async ValueTask SendAsync(PipelineMessage message, InvocationOptions options)
     {
         IPipelineEnumerator enumerator = new MessagePipelineExecutor(message, options, _policies);
         await enumerator.ProcessNextAsync().ConfigureAwait(false);
-
-        message.Response.IsError = message.ResponseClassifier.IsErrorResponse(message);
     }
 
     internal struct MessagePipelineExecutor : IPipelineEnumerator

@@ -180,10 +180,10 @@ public class HttpPipelineRequest : PipelineRequest, IDisposable
 
     #region Construction for transport
 
-    internal HttpRequestMessage BuildRequestMessage(PipelineMessage? message = default)
+    internal HttpRequestMessage BuildRequestMessage(PipelineMessage? message = default, InvocationOptions? options = default)
     {
         HttpRequestMessage httpRequest = new HttpRequestMessage(_method, GetUri());
-        CancellationToken cancellationToken = message?.CancellationToken ?? default;
+        CancellationToken cancellationToken = options?.CancellationToken ?? default;
 
         PipelineContentAdapter? httpContent = _content != null ? new PipelineContentAdapter(_content, cancellationToken) : null;
         httpRequest.Content = httpContent;

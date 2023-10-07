@@ -35,7 +35,7 @@ public class ResponseBufferingPolicy : IPipelinePolicy<PipelineMessage, Invocati
 
     private async ValueTask ProcessSyncOrAsync(PipelineMessage message, InvocationOptions options, IPipelineEnumerator pipeline, bool async)
     {
-        CancellationToken oldToken = message.CancellationToken;
+        CancellationToken oldToken = options.CancellationToken;
         using CancellationTokenSource cts = CancellationTokenSource.CreateLinkedTokenSource(oldToken);
 
         TimeSpan networkTimeout = _networkTimeout;
@@ -47,7 +47,7 @@ public class ResponseBufferingPolicy : IPipelinePolicy<PipelineMessage, Invocati
         cts.CancelAfter(networkTimeout);
         try
         {
-            message.CancellationToken = cts.Token;
+            options.CancellationToken = cts.Token;
             if (async)
             {
                 await pipeline.ProcessNextAsync().ConfigureAwait(false);
@@ -64,7 +64,7 @@ public class ResponseBufferingPolicy : IPipelinePolicy<PipelineMessage, Invocati
         }
         finally
         {
-            message.CancellationToken = oldToken;
+            options.CancellationToken = oldToken;
             cts.CancelAfter(Timeout.Infinite);
         }
 
