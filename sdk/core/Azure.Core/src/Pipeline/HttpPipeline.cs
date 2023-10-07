@@ -16,7 +16,7 @@ namespace Azure.Core.Pipeline
     /// <summary>
     /// Represents a primitive for sending HTTP requests and receiving responses extensible by adding <see cref="HttpPipelinePolicy"/> processing steps.
     /// </summary>
-    public class HttpPipeline : Pipeline<HttpMessage>
+    public class HttpPipeline : Pipeline<HttpMessage, InvocationOptions>
     {
         private static readonly AsyncLocal<HttpMessagePropertiesScope?> CurrentHttpMessagePropertiesScope = new AsyncLocal<HttpMessagePropertiesScope?>();
 
@@ -163,15 +163,17 @@ namespace Azure.Core.Pipeline
                 return _pipeline.Span[0].ProcessAsync(message, _pipeline.Slice(1));
             }
 
-            return SendAsync(message);
+            InvocationOptions options = new HttpPipelineInvocationOptions(message);
+            return SendAsync(message, options);
         }
 
         /// <summary>
         /// TBD.
         /// </summary>
         /// <param name="message"></param>
+        /// <param name="options"></param>
         /// <returns></returns>
-        public override async ValueTask SendAsync(HttpMessage message)
+        public override async ValueTask SendAsync(HttpMessage message, InvocationOptions options)
         {
             int length = _pipeline.Length + message.Policies!.Count;
             var policies = ArrayPool<HttpPipelinePolicy>.Shared.Rent(length);
@@ -204,14 +206,16 @@ namespace Azure.Core.Pipeline
                 return;
             }
 
-            Send(message);
+            InvocationOptions options = new HttpPipelineInvocationOptions(message);
+            Send(message, options);
         }
 
         /// <summary>
         /// TBD.
         /// </summary>
         /// <param name="message"></param>
-        public override void Send(HttpMessage message)
+        /// <param name="options"></param>
+        public override void Send(HttpMessage message, InvocationOptions options)
         {
             int length = _pipeline.Length + message.Policies!.Count;
             var policies = ArrayPool<HttpPipelinePolicy>.Shared.Rent(length);

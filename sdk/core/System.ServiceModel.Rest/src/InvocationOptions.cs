@@ -32,13 +32,13 @@ public class InvocationOptions
     // TODO: do these make more sense in Invocation or Pipeline?
     // Note: right now invocation is about things that have broader scope than
     // just the pipeline.Send operation, but pipeline.Send is part of the invocation.
-    public bool BufferResponse
+    public virtual bool BufferResponse
     {
         get => _bufferResponse;
         set => _bufferResponse = value;
     }
 
-    public TimeSpan? NetworkTimeout { get; set; }
+    public virtual TimeSpan? NetworkTimeout { get; set; }
 
     #endregion
 }

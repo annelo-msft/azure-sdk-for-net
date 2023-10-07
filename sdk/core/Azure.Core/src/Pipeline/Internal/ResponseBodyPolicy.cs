@@ -109,33 +109,6 @@ namespace Azure.Core.Pipeline
         {
         }
 
-        protected override bool TryGetNetworkTimeoutOverride(PipelineMessage message, out TimeSpan timeout)
-        {
-            if (message is not HttpMessage httpMessage)
-            {
-                throw new InvalidOperationException($"Unsupported message type: '{message.GetType()}'.");
-            }
-
-            if (httpMessage.NetworkTimeout is TimeSpan networkTimeoutOverride)
-            {
-                timeout = networkTimeoutOverride;
-                return true;
-            }
-
-            timeout = default;
-            return false;
-        }
-
-        protected override bool BufferResponse(PipelineMessage message)
-        {
-            if (message is not HttpMessage httpMessage)
-            {
-                throw new InvalidOperationException($"Unsupported message type: '{message.GetType()}'.");
-            }
-
-            return httpMessage.BufferResponse;
-        }
-
         protected override void SetReadTimeoutStream(PipelineMessage message, Stream responseContentStream, TimeSpan networkTimeout)
         {
             message.Response.ContentStream = new ReadTimeoutStream(responseContentStream, networkTimeout);
