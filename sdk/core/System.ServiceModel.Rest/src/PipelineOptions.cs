@@ -11,16 +11,6 @@ namespace System.ServiceModel.Rest;
 /// </summary>
 public class PipelineOptions
 {
-    #region Transport options - TODO: move to a subtype type?
-
-    // TODO: do these make more sense in Invocation or Pipeline?
-    // Note: right now invocation is about things that have broader scope than
-    // just the pipeline.Send operation, but pipeline.Send is part of the invocation.
-    public bool BufferResponse { get; set; }
-
-    public TimeSpan NetworkTimeout { get; set; }
-    #endregion
-
     #region Pipeline creation: Customer-specified policies
     public IPipelinePolicy<PipelineMessage>[]? PerTryPolicies { get; set; }
 

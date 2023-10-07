@@ -28,12 +28,12 @@ public class MessagePipeline : Pipeline<PipelineMessage>
     }
 
     public static MessagePipeline Create(
-        InvocationOptions options,
+        PipelineOptions options,
         params IPipelinePolicy<PipelineMessage>[] perTryPolicies)
         => Create(options, perTryPolicies, ReadOnlySpan<IPipelinePolicy<PipelineMessage>>.Empty);
 
     public static MessagePipeline Create(
-        InvocationOptions options,
+        PipelineOptions options,
         ReadOnlySpan<IPipelinePolicy<PipelineMessage>> perCallPolicies,
         ReadOnlySpan<IPipelinePolicy<PipelineMessage>> perTryPolicies)
     {
@@ -90,7 +90,8 @@ public class MessagePipeline : Pipeline<PipelineMessage>
 
         // TODO: add NetworkTimeout to RetryOptions
         // TODO: would it make sense for this to live on options instead?
-        ResponseBufferingPolicy bufferingPolicy = new(TimeSpan.FromSeconds(100), options.BufferResponse);
+        // TODO: stop hard-coding buffer response
+        ResponseBufferingPolicy bufferingPolicy = new(TimeSpan.FromSeconds(100), true /*options.BufferResponse*/);
         pipeline[index++] = bufferingPolicy;
 
         if (options.Transport != null)
