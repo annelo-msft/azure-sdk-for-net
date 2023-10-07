@@ -94,13 +94,17 @@ namespace Azure.Core.Pipeline
         /// Creates a new <see cref="HttpMessage"/> instance.
         /// </summary>
         /// <returns>The message.</returns>
-        public HttpMessage CreateMessage() => new HttpMessage(CreateRequest(), ResponseClassifier);
+        public HttpMessage CreateMessage()
+        {
+            return new HttpMessage(CreateRequest(), ResponseClassifier);
+        }
 
         /// <summary>
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        public HttpMessage CreateMessage(RequestContext? context) => CreateMessage(context, default);
+        public HttpMessage CreateMessage(RequestContext? context)
+            => CreateMessage(context, default);
 
         /// <summary>
         /// Creates a new <see cref="HttpMessage"/> instance.
@@ -108,37 +112,27 @@ namespace Azure.Core.Pipeline
         /// <param name="context">Context specifying the message options.</param>
         /// <param name="classifier"></param>
         /// <returns>The message.</returns>
-        public HttpMessage CreateMessage(RequestContext? context, ResponseClassifier? classifier)
-            => CreateMessage((InvocationOptions?)context, classifier);
+        public HttpMessage CreateMessage(RequestContext? context, ResponseClassifier? classifier = default)
+        {
+            HttpMessage message = CreateMessage();
+            if (classifier != null)
+            {
+                message.ResponseClassifier = classifier;
+            }
+            message.ApplyRequestContext(context, classifier);
+            return message;
+        }
 
         /// <summary>
-        /// Creates a new <see cref="HttpMessage"/> instance.
+        /// TBD
         /// </summary>
-        /// <param name="options">Request options to be used by the pipeline when sending the message request.</param>
-        /// <param name="classifier">Classifier to apply to the response.</param>
-        /// <returns>The HTTP message.</returns>
-        public override HttpMessage CreateMessage(InvocationOptions? options, ResponseErrorClassifier? classifier = default)
+        /// <param name="options"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public override HttpMessage CreateMessage(InvocationOptions options)
         {
-            classifier ??= ResponseClassifier.Shared;
-
-            HttpMessage message = new HttpMessage(CreateRequest(), classifier);
-
-            if (options is not null)
-            {
-                // TODO: is it better to set once or hold an options in the message?
-                // holding an options in the message would let us set it on the base class
-                // if we need to call it in the System.ServiceModel.Rest pipeline.
-                // but, should message hold options?  That seems inside-out if options
-                // holds a pipeline.  Must think!
-                message.BufferResponse = options.BufferResponse;
-            }
-
-            if (options is RequestContext context)
-            {
-                message.ApplyRequestContext(context, (ResponseClassifier?)classifier);
-            }
-
-            return message;
+            // TODO: this will go away soon :)
+            throw new NotImplementedException();
         }
 
         /// <summary>
