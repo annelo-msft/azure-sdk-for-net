@@ -94,9 +94,7 @@ namespace Azure.Core.Pipeline
         /// </summary>
         /// <returns>The message.</returns>
         public override HttpMessage CreateMessage()
-        {
-            return new HttpMessage(CreateRequest(), ResponseClassifier);
-        }
+            => new HttpMessage(CreateRequest(), ResponseClassifier);
 
         /// <summary>
         /// </summary>
@@ -113,12 +111,15 @@ namespace Azure.Core.Pipeline
         /// <returns>The message.</returns>
         public HttpMessage CreateMessage(RequestContext? context, ResponseClassifier? classifier = default)
         {
-            HttpMessage message = CreateMessage();
-            if (classifier != null)
-            {
-                message.ResponseClassifier = classifier;
-            }
+            HttpMessage message = new HttpMessage(CreateRequest(), classifier ?? ResponseClassifier);
+
+            // TODO: Note: Azure.Core-based libraries are going to need to somehow create the
+            // message by passing in the request context to create message so that
+            // message.ApplyContext() will be applied.  This is a bit of a tangle, but
+            // I think we can solve it with a little reworkd.
+
             message.ApplyRequestContext(context, classifier);
+
             return message;
         }
 
