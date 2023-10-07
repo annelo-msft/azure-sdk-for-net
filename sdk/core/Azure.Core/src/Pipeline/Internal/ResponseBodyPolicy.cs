@@ -28,7 +28,11 @@ namespace Azure.Core.Pipeline
 
             try
             {
-                await _policy.ProcessAsync(message, executor).ConfigureAwait(false);
+                // TODO: idea: if invocation options was an interface, message could just implement
+                // it instead of using an adapter everywhere?  It would bake in the options, though.
+                // TODO: Could we hide the options in the executor somehow?  How would that worok?
+                HttpPipelineInvocationOptions options = new HttpPipelineInvocationOptions(message);
+                await _policy.ProcessAsync(message, options, executor).ConfigureAwait(false);
             }
             catch (TaskCanceledException e)
             {
@@ -56,7 +60,8 @@ namespace Azure.Core.Pipeline
 
             try
             {
-                _policy.Process(message, executor);
+                HttpPipelineInvocationOptions options = new HttpPipelineInvocationOptions(message);
+                _policy.Process(message, options, executor);
             }
             catch (TaskCanceledException e)
             {

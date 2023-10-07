@@ -9,11 +9,11 @@ namespace System.ServiceModel.Rest
     public partial class InvocationOptions
     {
         public InvocationOptions() { }
-        public bool BufferResponse { get { throw null; } set { } }
+        public virtual bool BufferResponse { get { throw null; } set { } }
         public System.Threading.CancellationToken CancellationToken { get { throw null; } set { } }
         public static System.Threading.CancellationToken DefaultCancellationToken { get { throw null; } set { } }
         public System.ServiceModel.Rest.ErrorBehavior ErrorBehavior { get { throw null; } set { } }
-        public System.TimeSpan? NetworkTimeout { get { throw null; } set { } }
+        public virtual System.TimeSpan? NetworkTimeout { get { throw null; } set { } }
     }
     public partial class KeyCredential
     {
