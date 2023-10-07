@@ -23,7 +23,7 @@ public abstract class PipelineTransport<TMessage> : IPipelinePolicy<TMessage>
     /// <summary>
     /// TBD: needed for inheritdoc.
     /// </summary>
-    public abstract TMessage CreateMessage(RequestOptions options, ResponseErrorClassifier classifier);
+    public abstract TMessage CreateMessage(InvocationOptions options, ResponseErrorClassifier classifier);
 
     // Note: if we were willing to constrain TMessage, we could make
     // SetResponse a method on message instead of the transport?

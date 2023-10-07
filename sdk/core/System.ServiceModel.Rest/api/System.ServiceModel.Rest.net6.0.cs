@@ -6,6 +6,13 @@ namespace System.ServiceModel.Rest
         Default = 0,
         NoThrow = 1,
     }
+    public partial class InvocationOptions : System.ServiceModel.Rest.PipelineOptions
+    {
+        public InvocationOptions() { }
+        public System.Threading.CancellationToken CancellationToken { get { throw null; } set { } }
+        public static System.Threading.CancellationToken DefaultCancellationToken { get { throw null; } set { } }
+        public System.ServiceModel.Rest.ErrorBehavior ErrorBehavior { get { throw null; } set { } }
+    }
     public partial class KeyCredential
     {
         public KeyCredential(string key) { }
@@ -26,17 +33,15 @@ namespace System.ServiceModel.Rest
         public virtual T? Value { get { throw null; } }
         public override System.ServiceModel.Rest.Core.PipelineResponse GetRawResponse() { throw null; }
     }
-    public partial class RequestOptions
+    public partial class PipelineOptions
     {
-        public RequestOptions() { }
+        public PipelineOptions() { }
         public bool BufferResponse { get { throw null; } set { } }
-        public System.Threading.CancellationToken CancellationToken { get { throw null; } set { } }
-        public static System.Threading.CancellationToken DefaultCancellationToken { get { throw null; } set { } }
         public static System.ServiceModel.Rest.Core.Pipeline.IPipelinePolicy<System.ServiceModel.Rest.Core.PipelineMessage>? DefaultLoggingPolicy { get { throw null; } set { } }
         public static System.ServiceModel.Rest.Core.Pipeline.IPipelinePolicy<System.ServiceModel.Rest.Core.PipelineMessage>? DefaultRetryPolicy { get { throw null; } set { } }
         public static System.ServiceModel.Rest.Core.Pipeline.PipelineTransport<System.ServiceModel.Rest.Core.PipelineMessage>? DefaultTransport { get { throw null; } set { } }
-        public System.ServiceModel.Rest.ErrorBehavior ErrorBehavior { get { throw null; } set { } }
         public System.ServiceModel.Rest.Core.Pipeline.IPipelinePolicy<System.ServiceModel.Rest.Core.PipelineMessage>? LoggingPolicy { get { throw null; } set { } }
+        public System.TimeSpan NetworkTimeout { get { throw null; } set { } }
         public System.ServiceModel.Rest.Core.Pipeline.IPipelinePolicy<System.ServiceModel.Rest.Core.PipelineMessage>[]? PerCallPolicies { get { throw null; } set { } }
         public System.ServiceModel.Rest.Core.Pipeline.IPipelinePolicy<System.ServiceModel.Rest.Core.PipelineMessage>[]? PerTryPolicies { get { throw null; } set { } }
         public System.ServiceModel.Rest.Core.Pipeline.IPipelinePolicy<System.ServiceModel.Rest.Core.PipelineMessage>? RetryPolicy { get { throw null; } set { } }
@@ -119,7 +124,7 @@ namespace System.ServiceModel.Rest.Core
     }
     public partial class TelemetrySource
     {
-        public TelemetrySource(System.ServiceModel.Rest.RequestOptions options, bool suppressNestedClientActivities = true) { }
+        public TelemetrySource(System.ServiceModel.Rest.InvocationOptions options, bool suppressNestedClientActivities = true) { }
         public System.ServiceModel.Rest.Core.TelemetrySpan CreateSpan(string name) { throw null; }
     }
     [System.Runtime.InteropServices.StructLayoutAttribute(System.Runtime.InteropServices.LayoutKind.Sequential)]
@@ -138,7 +143,7 @@ namespace System.ServiceModel.Rest.Core.Pipeline
     {
         public HttpPipelineMessageTransport() { }
         public HttpPipelineMessageTransport(System.Net.Http.HttpClient client) { }
-        public override System.ServiceModel.Rest.Core.PipelineMessage CreateMessage(System.ServiceModel.Rest.RequestOptions options, System.ServiceModel.Rest.Core.ResponseErrorClassifier classifier) { throw null; }
+        public override System.ServiceModel.Rest.Core.PipelineMessage CreateMessage(System.ServiceModel.Rest.InvocationOptions options, System.ServiceModel.Rest.Core.ResponseErrorClassifier classifier) { throw null; }
         public virtual void Dispose() { }
         protected virtual void Dispose(bool disposing) { }
         protected virtual void OnReceivedResponse(System.ServiceModel.Rest.Core.PipelineMessage message, System.Net.Http.HttpResponseMessage httpResponse, System.IO.Stream? contentStream) { }
@@ -198,16 +203,16 @@ namespace System.ServiceModel.Rest.Core.Pipeline
     public partial class MessagePipeline : System.ServiceModel.Rest.Core.Pipeline.Pipeline<System.ServiceModel.Rest.Core.PipelineMessage>
     {
         public MessagePipeline(System.ServiceModel.Rest.Core.Pipeline.PipelineTransport<System.ServiceModel.Rest.Core.PipelineMessage> transport, System.ReadOnlyMemory<System.ServiceModel.Rest.Core.Pipeline.IPipelinePolicy<System.ServiceModel.Rest.Core.PipelineMessage>> policies) { }
-        public static System.ServiceModel.Rest.Core.Pipeline.MessagePipeline Create(System.ServiceModel.Rest.RequestOptions options, System.ReadOnlySpan<System.ServiceModel.Rest.Core.Pipeline.IPipelinePolicy<System.ServiceModel.Rest.Core.PipelineMessage>> perCallPolicies, System.ReadOnlySpan<System.ServiceModel.Rest.Core.Pipeline.IPipelinePolicy<System.ServiceModel.Rest.Core.PipelineMessage>> perTryPolicies) { throw null; }
-        public static System.ServiceModel.Rest.Core.Pipeline.MessagePipeline Create(System.ServiceModel.Rest.RequestOptions options, params System.ServiceModel.Rest.Core.Pipeline.IPipelinePolicy<System.ServiceModel.Rest.Core.PipelineMessage>[] perTryPolicies) { throw null; }
-        public override System.ServiceModel.Rest.Core.PipelineMessage CreateMessage(System.ServiceModel.Rest.RequestOptions options, System.ServiceModel.Rest.Core.ResponseErrorClassifier classifier) { throw null; }
+        public static System.ServiceModel.Rest.Core.Pipeline.MessagePipeline Create(System.ServiceModel.Rest.InvocationOptions options, System.ReadOnlySpan<System.ServiceModel.Rest.Core.Pipeline.IPipelinePolicy<System.ServiceModel.Rest.Core.PipelineMessage>> perCallPolicies, System.ReadOnlySpan<System.ServiceModel.Rest.Core.Pipeline.IPipelinePolicy<System.ServiceModel.Rest.Core.PipelineMessage>> perTryPolicies) { throw null; }
+        public static System.ServiceModel.Rest.Core.Pipeline.MessagePipeline Create(System.ServiceModel.Rest.InvocationOptions options, params System.ServiceModel.Rest.Core.Pipeline.IPipelinePolicy<System.ServiceModel.Rest.Core.PipelineMessage>[] perTryPolicies) { throw null; }
+        public override System.ServiceModel.Rest.Core.PipelineMessage CreateMessage(System.ServiceModel.Rest.InvocationOptions options, System.ServiceModel.Rest.Core.ResponseErrorClassifier classifier) { throw null; }
         public override void Send(System.ServiceModel.Rest.Core.PipelineMessage message) { }
         public override System.Threading.Tasks.ValueTask SendAsync(System.ServiceModel.Rest.Core.PipelineMessage message) { throw null; }
     }
     public abstract partial class PipelineTransport<TMessage> : System.ServiceModel.Rest.Core.Pipeline.IPipelinePolicy<TMessage>
     {
         protected PipelineTransport() { }
-        public abstract TMessage CreateMessage(System.ServiceModel.Rest.RequestOptions options, System.ServiceModel.Rest.Core.ResponseErrorClassifier classifier);
+        public abstract TMessage CreateMessage(System.ServiceModel.Rest.InvocationOptions options, System.ServiceModel.Rest.Core.ResponseErrorClassifier classifier);
         public abstract void Process(TMessage message);
         public void Process(TMessage message, System.ServiceModel.Rest.Core.Pipeline.IPipelineEnumerator pipeline) { }
         public abstract System.Threading.Tasks.ValueTask ProcessAsync(TMessage message);
@@ -216,7 +221,7 @@ namespace System.ServiceModel.Rest.Core.Pipeline
     public abstract partial class Pipeline<TMessage>
     {
         protected Pipeline() { }
-        public abstract TMessage CreateMessage(System.ServiceModel.Rest.RequestOptions options, System.ServiceModel.Rest.Core.ResponseErrorClassifier classifier);
+        public abstract TMessage CreateMessage(System.ServiceModel.Rest.InvocationOptions options, System.ServiceModel.Rest.Core.ResponseErrorClassifier classifier);
         public abstract void Send(TMessage message);
         public abstract System.Threading.Tasks.ValueTask SendAsync(TMessage message);
     }
@@ -340,10 +345,10 @@ namespace System.ServiceModel.Rest.Internal
     }
     public static partial class PipelineProtocolExtensions
     {
-        public static System.ServiceModel.Rest.NullableResult<bool> ProcessHeadAsBoolMessage(this System.ServiceModel.Rest.Core.Pipeline.Pipeline<System.ServiceModel.Rest.Core.PipelineMessage> pipeline, System.ServiceModel.Rest.Core.PipelineMessage message, System.ServiceModel.Rest.Core.TelemetrySource clientDiagnostics, System.ServiceModel.Rest.RequestOptions? requestContext) { throw null; }
-        public static System.Threading.Tasks.ValueTask<System.ServiceModel.Rest.NullableResult<bool>> ProcessHeadAsBoolMessageAsync(this System.ServiceModel.Rest.Core.Pipeline.Pipeline<System.ServiceModel.Rest.Core.PipelineMessage> pipeline, System.ServiceModel.Rest.Core.PipelineMessage message, System.ServiceModel.Rest.Core.TelemetrySource clientDiagnostics, System.ServiceModel.Rest.RequestOptions? requestContext) { throw null; }
-        public static System.ServiceModel.Rest.Core.PipelineResponse ProcessMessage(this System.ServiceModel.Rest.Core.Pipeline.Pipeline<System.ServiceModel.Rest.Core.PipelineMessage> pipeline, System.ServiceModel.Rest.Core.PipelineMessage message, System.ServiceModel.Rest.RequestOptions? requestContext, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { throw null; }
-        public static System.Threading.Tasks.ValueTask<System.ServiceModel.Rest.Core.PipelineResponse> ProcessMessageAsync(this System.ServiceModel.Rest.Core.Pipeline.Pipeline<System.ServiceModel.Rest.Core.PipelineMessage> pipeline, System.ServiceModel.Rest.Core.PipelineMessage message, System.ServiceModel.Rest.RequestOptions? requestContext, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { throw null; }
+        public static System.ServiceModel.Rest.NullableResult<bool> ProcessHeadAsBoolMessage(this System.ServiceModel.Rest.Core.Pipeline.Pipeline<System.ServiceModel.Rest.Core.PipelineMessage> pipeline, System.ServiceModel.Rest.Core.PipelineMessage message, System.ServiceModel.Rest.Core.TelemetrySource clientDiagnostics, System.ServiceModel.Rest.InvocationOptions? requestContext) { throw null; }
+        public static System.Threading.Tasks.ValueTask<System.ServiceModel.Rest.NullableResult<bool>> ProcessHeadAsBoolMessageAsync(this System.ServiceModel.Rest.Core.Pipeline.Pipeline<System.ServiceModel.Rest.Core.PipelineMessage> pipeline, System.ServiceModel.Rest.Core.PipelineMessage message, System.ServiceModel.Rest.Core.TelemetrySource clientDiagnostics, System.ServiceModel.Rest.InvocationOptions? requestContext) { throw null; }
+        public static System.ServiceModel.Rest.Core.PipelineResponse ProcessMessage(this System.ServiceModel.Rest.Core.Pipeline.Pipeline<System.ServiceModel.Rest.Core.PipelineMessage> pipeline, System.ServiceModel.Rest.Core.PipelineMessage message, System.ServiceModel.Rest.InvocationOptions? requestContext, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { throw null; }
+        public static System.Threading.Tasks.ValueTask<System.ServiceModel.Rest.Core.PipelineResponse> ProcessMessageAsync(this System.ServiceModel.Rest.Core.Pipeline.Pipeline<System.ServiceModel.Rest.Core.PipelineMessage> pipeline, System.ServiceModel.Rest.Core.PipelineMessage message, System.ServiceModel.Rest.InvocationOptions? requestContext, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { throw null; }
     }
     public partial class RequestUri
     {

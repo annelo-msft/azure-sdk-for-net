@@ -28,12 +28,12 @@ public class MessagePipeline : Pipeline<PipelineMessage>
     }
 
     public static MessagePipeline Create(
-        RequestOptions options,
+        InvocationOptions options,
         params IPipelinePolicy<PipelineMessage>[] perTryPolicies)
         => Create(options, perTryPolicies, ReadOnlySpan<IPipelinePolicy<PipelineMessage>>.Empty);
 
     public static MessagePipeline Create(
-        RequestOptions options,
+        InvocationOptions options,
         ReadOnlySpan<IPipelinePolicy<PipelineMessage>> perCallPolicies,
         ReadOnlySpan<IPipelinePolicy<PipelineMessage>> perTryPolicies)
     {
@@ -107,7 +107,7 @@ public class MessagePipeline : Pipeline<PipelineMessage>
         return new MessagePipeline(pipeline);
     }
 
-    public override PipelineMessage CreateMessage(RequestOptions options, ResponseErrorClassifier classifier)
+    public override PipelineMessage CreateMessage(InvocationOptions options, ResponseErrorClassifier classifier)
     {
         return _transport.CreateMessage(options, classifier);
     }

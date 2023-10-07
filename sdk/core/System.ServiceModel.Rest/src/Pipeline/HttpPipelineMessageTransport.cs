@@ -59,7 +59,7 @@ public partial class HttpPipelineMessageTransport : PipelineTransport<PipelineMe
         };
     }
 
-    public override PipelineMessage CreateMessage(RequestOptions options, ResponseErrorClassifier classifier)
+    public override PipelineMessage CreateMessage(InvocationOptions options, ResponseErrorClassifier classifier)
     {
         PipelineRequest request = new HttpPipelineRequest();
         PipelineMessage message = new PipelineMessage(request, classifier);

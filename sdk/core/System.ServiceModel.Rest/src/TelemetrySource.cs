@@ -10,7 +10,7 @@ namespace System.ServiceModel.Rest.Core
     {
         private readonly DiagnosticScopeFactory _factory;
 
-        public TelemetrySource(RequestOptions options, bool suppressNestedClientActivities = true)
+        public TelemetrySource(InvocationOptions options, bool suppressNestedClientActivities = true)
         {
             _factory = new DiagnosticScopeFactory(
                 options.GetType().Namespace!,

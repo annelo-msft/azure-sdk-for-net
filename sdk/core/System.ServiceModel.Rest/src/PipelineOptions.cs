@@ -1,0 +1,45 @@
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
+using System.ServiceModel.Rest.Core;
+using System.ServiceModel.Rest.Core.Pipeline;
+
+namespace System.ServiceModel.Rest;
+
+/// <summary>
+/// Controls the creation and behavior of the pipeline.
+/// </summary>
+public class PipelineOptions
+{
+    #region Transport options - TODO: move to a subtype type?
+
+    // TODO: do these make more sense in Invocation or Pipeline?
+    // Note: right now invocation is about things that have broader scope than
+    // just the pipeline.Send operation, but pipeline.Send is part of the invocation.
+    public bool BufferResponse { get; set; }
+
+    public TimeSpan NetworkTimeout { get; set; }
+    #endregion
+
+    #region Pipeline creation: Customer-specified policies
+    public IPipelinePolicy<PipelineMessage>[]? PerTryPolicies { get; set; }
+
+    public IPipelinePolicy<PipelineMessage>[]? PerCallPolicies { get; set; }
+    #endregion
+
+    #region Pipeline creation: Required policy overrides
+    public IPipelinePolicy<PipelineMessage>? RetryPolicy { get; set; }
+
+    public IPipelinePolicy<PipelineMessage>? LoggingPolicy { get; set; }
+
+    public PipelineTransport<PipelineMessage>? Transport { get; set; }
+    #endregion
+
+    #region Defaults for pipeline creation
+    public static IPipelinePolicy<PipelineMessage>? DefaultRetryPolicy { get; set; }
+
+    public static IPipelinePolicy<PipelineMessage>? DefaultLoggingPolicy { get; set; }
+
+    public static PipelineTransport<PipelineMessage>? DefaultTransport { get; set; }
+    #endregion
+}
