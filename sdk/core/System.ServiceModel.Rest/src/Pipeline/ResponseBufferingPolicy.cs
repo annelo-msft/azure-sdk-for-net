@@ -18,12 +18,10 @@ public class ResponseBufferingPolicy : IPipelinePolicy<PipelineMessage, Invocati
     private const int DefaultCopyBufferSize = 81920;
 
     private readonly TimeSpan _networkTimeout;
-    private readonly bool _bufferResponse;
 
-    public ResponseBufferingPolicy(TimeSpan networkTimeout, bool bufferResponse)
+    public ResponseBufferingPolicy(TimeSpan networkTimeout)
     {
         _networkTimeout = networkTimeout;
-        _bufferResponse = bufferResponse;
     }
 
     public void Process(PipelineMessage message, InvocationOptions options, IPipelineEnumerator pipeline)
@@ -40,7 +38,7 @@ public class ResponseBufferingPolicy : IPipelinePolicy<PipelineMessage, Invocati
         CancellationToken oldToken = message.CancellationToken;
         using CancellationTokenSource cts = CancellationTokenSource.CreateLinkedTokenSource(oldToken);
 
-        var networkTimeout = _networkTimeout;
+        TimeSpan networkTimeout = _networkTimeout;
         if (options.NetworkTimeout is TimeSpan networkTimeoutOverride)
         {
             networkTimeout = networkTimeoutOverride;
@@ -112,15 +110,6 @@ public class ResponseBufferingPolicy : IPipelinePolicy<PipelineMessage, Invocati
                 throw;
             }
         }
-        else if (networkTimeout != Timeout.InfiniteTimeSpan)
-        {
-            SetReadTimeoutStream(message, responseContentStream, networkTimeout);
-        }
-    }
-
-    protected virtual void SetReadTimeoutStream(PipelineMessage message, Stream responseContentStream, TimeSpan networkTimeout)
-    {
-        message.Response.ContentStream = new ReadTimeoutStream(responseContentStream, networkTimeout);
     }
 
     private async Task CopyToAsync(Stream source, Stream destination, CancellationTokenSource cancellationTokenSource)

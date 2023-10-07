@@ -91,7 +91,7 @@ public class MessagePipeline : Pipeline<PipelineMessage, InvocationOptions>
         // TODO: add NetworkTimeout to RetryOptions
         // TODO: would it make sense for this to live on options instead?
         // TODO: stop hard-coding buffer response
-        ResponseBufferingPolicy bufferingPolicy = new(TimeSpan.FromSeconds(100), true /*options.BufferResponse*/);
+        ResponseBufferingPolicy bufferingPolicy = new(TimeSpan.FromSeconds(100));
         pipeline[index++] = bufferingPolicy;
 
         if (options.Transport != null)

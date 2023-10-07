@@ -227,10 +227,9 @@ namespace System.ServiceModel.Rest.Core.Pipeline
     }
     public partial class ResponseBufferingPolicy : System.ServiceModel.Rest.Core.Pipeline.IPipelinePolicy<System.ServiceModel.Rest.Core.PipelineMessage, System.ServiceModel.Rest.InvocationOptions>
     {
-        public ResponseBufferingPolicy(System.TimeSpan networkTimeout, bool bufferResponse) { }
+        public ResponseBufferingPolicy(System.TimeSpan networkTimeout) { }
         public void Process(System.ServiceModel.Rest.Core.PipelineMessage message, System.ServiceModel.Rest.InvocationOptions options, System.ServiceModel.Rest.Core.Pipeline.IPipelineEnumerator pipeline) { }
         public System.Threading.Tasks.ValueTask ProcessAsync(System.ServiceModel.Rest.Core.PipelineMessage message, System.ServiceModel.Rest.InvocationOptions options, System.ServiceModel.Rest.Core.Pipeline.IPipelineEnumerator pipeline) { throw null; }
-        protected virtual void SetReadTimeoutStream(System.ServiceModel.Rest.Core.PipelineMessage message, System.IO.Stream responseContentStream, System.TimeSpan networkTimeout) { }
     }
 }
 namespace System.ServiceModel.Rest.Internal
