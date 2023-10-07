@@ -11,7 +11,7 @@ namespace System.ServiceModel.Rest.Core.Pipeline;
 
 // Introduces the dependency on System.Net.Http;
 
-public partial class HttpPipelineMessageTransport : PipelineTransport<PipelineMessage>, IDisposable
+public partial class HttpPipelineMessageTransport : PipelineTransport<PipelineMessage, InvocationOptions>, IDisposable
 {
     /// <summary>
     /// A shared instance of <see cref="HttpPipelineMessageTransport"/> with default parameters.
@@ -69,13 +69,13 @@ public partial class HttpPipelineMessageTransport : PipelineTransport<PipelineMe
         return message;
     }
 
-    public override void Process(PipelineMessage message)
+    public override void Process(PipelineMessage message, InvocationOptions options)
     {
 #pragma warning disable AZC0102 // Do not use GetAwaiter().GetResult().
 
 #if NET6_0_OR_GREATER
 
-        ProcessSyncOrAsync(message, async: false).GetAwaiter().GetResult();
+        ProcessSyncOrAsync(message, options, async: false).GetAwaiter().GetResult();
 
 #else
 
@@ -84,18 +84,18 @@ public partial class HttpPipelineMessageTransport : PipelineTransport<PipelineMe
         // The resolution is for a customer to upgrade to a net6.0+ target,
         // where we are able to provide a code path that calls HttpClient native sync APIs.
 
-        ProcessSyncOrAsync(message, async: true).AsTask().GetAwaiter().GetResult();
+        ProcessSyncOrAsync(message, options, async: true).AsTask().GetAwaiter().GetResult();
 
 #endif
 
 #pragma warning restore AZC0102 // Do not use GetAwaiter().GetResult().
     }
 
-    public override async ValueTask ProcessAsync(PipelineMessage message)
-        => await ProcessSyncOrAsync(message, async: true).ConfigureAwait(false);
+    public override async ValueTask ProcessAsync(PipelineMessage message, InvocationOptions options)
+        => await ProcessSyncOrAsync(message, options, async: true).ConfigureAwait(false);
 
 #pragma warning disable CA1801 // async parameter unused on netstandard
-    private async ValueTask ProcessSyncOrAsync(PipelineMessage message, bool async)
+    private async ValueTask ProcessSyncOrAsync(PipelineMessage message, InvocationOptions options, bool async)
 #pragma warning restore CA1801
     {
         using HttpRequestMessage httpRequest = BuildRequestMessage(message);

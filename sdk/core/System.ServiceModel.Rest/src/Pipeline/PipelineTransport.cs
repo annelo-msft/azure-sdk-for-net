@@ -6,19 +6,21 @@ using System.Threading.Tasks;
 
 namespace System.ServiceModel.Rest.Core.Pipeline;
 
-public abstract class PipelineTransport<TMessage> : IPipelinePolicy<TMessage>
+public abstract class PipelineTransport<TMessage, TOptions> : IPipelinePolicy<TMessage, TOptions>
 {
     /// <summary>
     /// TBD: needed for inheritdoc.
     /// </summary>
     /// <param name="message"></param>
-    public abstract void Process(TMessage message);
+    /// <param name="options"></param>
+    public abstract void Process(TMessage message, TOptions options);
 
     /// <summary>
     /// TBD: needed for inheritdoc.
     /// </summary>
     /// <param name="message"></param>
-    public abstract ValueTask ProcessAsync(TMessage message);
+    /// /// <param name="options"></param>
+    public abstract ValueTask ProcessAsync(TMessage message, TOptions options);
 
     /// <summary>
     /// TBD: needed for inheritdoc.
@@ -29,17 +31,17 @@ public abstract class PipelineTransport<TMessage> : IPipelinePolicy<TMessage>
     // SetResponse a method on message instead of the transport?
     //public abstract void SetResponse(TMessage message, PipelineResponse response);
 
-    public void Process(TMessage message, IPipelineEnumerator pipeline)
+    public void Process(TMessage message, TOptions options, IPipelineEnumerator pipeline)
     {
         Debug.Assert(pipeline.Length == 0);
 
-        Process(message);
+        Process(message, options);
     }
 
-    public async ValueTask ProcessAsync(TMessage message, IPipelineEnumerator pipeline)
+    public async ValueTask ProcessAsync(TMessage message, TOptions options, IPipelineEnumerator pipeline)
     {
         Debug.Assert(pipeline.Length == 0);
 
-        await ProcessAsync(message).ConfigureAwait(false);
+        await ProcessAsync(message, options).ConfigureAwait(false);
     }
 }
