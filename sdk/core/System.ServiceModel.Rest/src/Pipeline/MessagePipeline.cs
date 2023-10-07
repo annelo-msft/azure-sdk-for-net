@@ -108,9 +108,9 @@ public class MessagePipeline : Pipeline<PipelineMessage, InvocationOptions>
         return new MessagePipeline(pipeline);
     }
 
-    public override PipelineMessage CreateMessage(InvocationOptions options)
+    public override PipelineMessage CreateMessage()
     {
-        return _transport.CreateMessage(options);
+        return _transport.CreateMessage();
     }
 
     public override void Send(PipelineMessage message, InvocationOptions options)

@@ -970,10 +970,9 @@ namespace Azure.Core.Pipeline
         public Azure.Core.ResponseClassifier ResponseClassifier { get { throw null; } }
         public static System.IDisposable CreateClientRequestIdScope(string? clientRequestId) { throw null; }
         public static System.IDisposable CreateHttpMessagePropertiesScope(System.Collections.Generic.IDictionary<string, object?> messageProperties) { throw null; }
-        public Azure.Core.HttpMessage CreateMessage() { throw null; }
+        public override Azure.Core.HttpMessage CreateMessage() { throw null; }
         public Azure.Core.HttpMessage CreateMessage(Azure.RequestContext? context) { throw null; }
         public Azure.Core.HttpMessage CreateMessage(Azure.RequestContext? context, Azure.Core.ResponseClassifier? classifier = null) { throw null; }
-        public override Azure.Core.HttpMessage CreateMessage(System.ServiceModel.Rest.InvocationOptions options) { throw null; }
         public Azure.Core.Request CreateRequest() { throw null; }
         public override void Send(Azure.Core.HttpMessage message, System.ServiceModel.Rest.InvocationOptions options) { }
         public void Send(Azure.Core.HttpMessage message, System.Threading.CancellationToken cancellationToken) { }

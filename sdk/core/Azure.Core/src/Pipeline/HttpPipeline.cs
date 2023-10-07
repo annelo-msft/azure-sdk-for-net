@@ -6,7 +6,6 @@ using System.Buffers;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.ServiceModel.Rest;
-using System.ServiceModel.Rest.Core;
 using System.ServiceModel.Rest.Core.Pipeline;
 using System.Threading;
 using System.Threading.Tasks;
@@ -94,7 +93,7 @@ namespace Azure.Core.Pipeline
         /// Creates a new <see cref="HttpMessage"/> instance.
         /// </summary>
         /// <returns>The message.</returns>
-        public HttpMessage CreateMessage()
+        public override HttpMessage CreateMessage()
         {
             return new HttpMessage(CreateRequest(), ResponseClassifier);
         }
@@ -121,18 +120,6 @@ namespace Azure.Core.Pipeline
             }
             message.ApplyRequestContext(context, classifier);
             return message;
-        }
-
-        /// <summary>
-        /// TBD
-        /// </summary>
-        /// <param name="options"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public override HttpMessage CreateMessage(InvocationOptions options)
-        {
-            // TODO: this will go away soon :)
-            throw new NotImplementedException();
         }
 
         /// <summary>

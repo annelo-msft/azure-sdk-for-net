@@ -6,7 +6,6 @@ namespace System.ServiceModel.Rest.Core;
 public class PipelineMessage : IDisposable
 {
     private PipelineResponse? _response;
-
     private bool _disposed;
 
     protected internal PipelineMessage(PipelineRequest request)

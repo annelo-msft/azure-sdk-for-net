@@ -59,12 +59,10 @@ public partial class HttpPipelineMessageTransport : PipelineTransport<PipelineMe
         };
     }
 
-    public override PipelineMessage CreateMessage(InvocationOptions options)
+    public override PipelineMessage CreateMessage()
     {
         PipelineRequest request = new HttpPipelineRequest();
         PipelineMessage message = new PipelineMessage(request);
-
-        // TODO: use options
 
         return message;
     }
