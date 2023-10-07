@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace System.ServiceModel.Rest.Core.Pipeline;
 
-public class MessagePipeline : Pipeline<PipelineMessage>
+public class MessagePipeline : Pipeline<PipelineMessage, InvocationOptions>
 {
     private readonly ReadOnlyMemory<IPipelinePolicy<PipelineMessage>> _policies;
     private readonly PipelineTransport<PipelineMessage> _transport;
@@ -113,17 +113,17 @@ public class MessagePipeline : Pipeline<PipelineMessage>
         return _transport.CreateMessage(options, classifier);
     }
 
-    public override void Send(PipelineMessage message)
+    public override void Send(PipelineMessage message, InvocationOptions options)
     {
-        IPipelineEnumerator enumerator = new MessagePipelineExecutor(_policies, message);
+        IPipelineEnumerator enumerator = new MessagePipelineExecutor(message, options, _policies);
         enumerator.ProcessNext();
 
         message.Response.IsError = message.ResponseClassifier.IsErrorResponse(message);
     }
 
-    public override async ValueTask SendAsync(PipelineMessage message)
+    public override async ValueTask SendAsync(PipelineMessage message, InvocationOptions options)
     {
-        IPipelineEnumerator enumerator = new MessagePipelineExecutor(_policies, message);
+        IPipelineEnumerator enumerator = new MessagePipelineExecutor(message, options, _policies);
         await enumerator.ProcessNextAsync().ConfigureAwait(false);
 
         message.Response.IsError = message.ResponseClassifier.IsErrorResponse(message);
@@ -132,12 +132,17 @@ public class MessagePipeline : Pipeline<PipelineMessage>
     internal struct MessagePipelineExecutor : IPipelineEnumerator
     {
         private PipelineMessage _message;
+        private InvocationOptions _options;
         private ReadOnlyMemory<IPipelinePolicy<PipelineMessage>> _policies;
 
-        public MessagePipelineExecutor(ReadOnlyMemory<IPipelinePolicy<PipelineMessage>> policies, PipelineMessage message)
+        public MessagePipelineExecutor(
+            PipelineMessage message,
+            InvocationOptions options,
+            ReadOnlyMemory<IPipelinePolicy<PipelineMessage>> policies )
         {
-            _policies = policies;
             _message = message;
+            _options = options;
+            _policies = policies;
         }
 
         public int Length => _policies.Length;
