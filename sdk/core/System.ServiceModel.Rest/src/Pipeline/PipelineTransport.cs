@@ -27,10 +27,6 @@ public abstract class PipelineTransport<TMessage, TOptions> : IPipelinePolicy<TM
     /// </summary>
     public abstract TMessage CreateMessage();
 
-    // Note: if we were willing to constrain TMessage, we could make
-    // SetResponse a method on message instead of the transport?
-    //public abstract void SetResponse(TMessage message, PipelineResponse response);
-
     public void Process(TMessage message, TOptions options, IPipelineEnumerator pipeline)
     {
         Debug.Assert(pipeline.Length == 0);

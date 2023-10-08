@@ -22,7 +22,7 @@ namespace Azure.Core.Pipeline
         public abstract Request CreateRequest();
 
         /// <summary>
-        /// TBD
+        /// TBD.
         /// </summary>
         public HttpPipelineTransport() : base() { }
 
