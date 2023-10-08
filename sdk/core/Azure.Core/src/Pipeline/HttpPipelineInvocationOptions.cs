@@ -3,6 +3,8 @@
 
 using System;
 using System.ServiceModel.Rest;
+using System.ServiceModel.Rest.Core;
+using System.Threading;
 
 namespace Azure.Core.Pipeline
 {
@@ -18,6 +20,12 @@ namespace Azure.Core.Pipeline
             _message = message;
         }
 
+        public override CancellationToken CancellationToken
+        {
+            get => _message.CancellationToken;
+            set => _message.CancellationToken = value;
+        }
+
         public override bool BufferResponse
         {
             get => _message.BufferResponse;
@@ -28,6 +36,12 @@ namespace Azure.Core.Pipeline
         {
             get => _message.NetworkTimeout;
             set => _message.NetworkTimeout = value;
+        }
+
+        public override ResponseErrorClassifier ResponseClassifier
+        {
+            get => _message.ResponseClassifier;
+            set => _message.ResponseClassifier = (ResponseClassifier)value;
         }
     }
 }

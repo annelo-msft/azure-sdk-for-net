@@ -96,7 +96,7 @@ public partial class HttpPipelineMessageTransport : PipelineTransport<PipelineMe
     private async ValueTask ProcessSyncOrAsync(PipelineMessage message, InvocationOptions options, bool async)
 #pragma warning restore CA1801
     {
-        using HttpRequestMessage httpRequest = BuildRequestMessage(message);
+        using HttpRequestMessage httpRequest = BuildRequestMessage(message, options);
 
         OnSendingRequest(message);
 
@@ -175,14 +175,14 @@ public partial class HttpPipelineMessageTransport : PipelineTransport<PipelineMe
     protected virtual void OnReceivedResponse(PipelineMessage message, HttpResponseMessage httpResponse, Stream? contentStream)
         => message.Response = new HttpPipelineResponse(httpResponse, contentStream);
 
-    private static HttpRequestMessage BuildRequestMessage(PipelineMessage message)
+    private static HttpRequestMessage BuildRequestMessage(PipelineMessage message, InvocationOptions options)
     {
         if (message.Request is not HttpPipelineRequest pipelineRequest)
         {
             throw new InvalidOperationException($"The request type is not compatible with the transport: '{message.Request?.GetType()}'.");
         }
 
-        return pipelineRequest.BuildRequestMessage(message);
+        return pipelineRequest.BuildRequestMessage(message, options);
     }
 
     #region IDisposable

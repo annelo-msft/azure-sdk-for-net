@@ -19,16 +19,12 @@ public class InvocationOptions
     // Default is yes, buffer the response.
     private bool _bufferResponse = true;
 
-    public ErrorBehavior ErrorBehavior { get; set; } = ErrorBehavior.Default;
+    public virtual ErrorBehavior ErrorBehavior { get; set; } = ErrorBehavior.Default;
 
     // Moving CancellationToken here because it's needed for Pipeline.Send
-    public CancellationToken CancellationToken { get; set; } = DefaultCancellationToken;
+    public virtual CancellationToken CancellationToken { get; set; } = DefaultCancellationToken;
 
     public virtual ResponseErrorClassifier ResponseClassifier { get; set; } = DefaultResponseClassifier;
-
-    public static CancellationToken DefaultCancellationToken { get; set; } = CancellationToken.None;
-
-    public static ResponseErrorClassifier DefaultResponseClassifier { get; set; } = new ResponseErrorClassifier();
 
     #region Transport options - TODO: move to a subtype type?
 
@@ -55,4 +51,8 @@ public class InvocationOptions
     public virtual TimeSpan? NetworkTimeout { get; set; }
 
     #endregion
+
+    public static CancellationToken DefaultCancellationToken { get; set; } = CancellationToken.None;
+
+    public static ResponseErrorClassifier DefaultResponseClassifier { get; set; } = new ResponseErrorClassifier();
 }
