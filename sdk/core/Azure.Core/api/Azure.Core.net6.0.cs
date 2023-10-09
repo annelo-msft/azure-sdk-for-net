@@ -960,7 +960,7 @@ namespace Azure.Core.Pipeline
         public sealed override Azure.Core.Request CreateRequest() { throw null; }
         public override void Dispose() { }
         protected override void OnReceivedResponse(System.ServiceModel.Rest.Core.PipelineMessage message, System.Net.Http.HttpResponseMessage httpResponse, System.IO.Stream? contentStream) { }
-        protected override void OnSendingRequest(System.ServiceModel.Rest.Core.PipelineMessage message) { }
+        protected override void OnSendingRequest(System.ServiceModel.Rest.Core.PipelineMessage message, System.Net.Http.HttpRequestMessage httpRequest) { }
         public override void Process(Azure.Core.HttpMessage message) { }
         public override System.Threading.Tasks.ValueTask ProcessAsync(Azure.Core.HttpMessage message) { throw null; }
     }

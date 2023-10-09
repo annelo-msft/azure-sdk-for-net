@@ -10,10 +10,10 @@ namespace System.ServiceModel.Rest
     {
         public InvocationOptions() { }
         public virtual bool BufferResponse { get { throw null; } set { } }
-        public System.Threading.CancellationToken CancellationToken { get { throw null; } set { } }
+        public virtual System.Threading.CancellationToken CancellationToken { get { throw null; } set { } }
         public static System.Threading.CancellationToken DefaultCancellationToken { get { throw null; } set { } }
         public static System.ServiceModel.Rest.Core.ResponseErrorClassifier DefaultResponseClassifier { get { throw null; } set { } }
-        public System.ServiceModel.Rest.ErrorBehavior ErrorBehavior { get { throw null; } set { } }
+        public virtual System.ServiceModel.Rest.ErrorBehavior ErrorBehavior { get { throw null; } set { } }
         public virtual System.TimeSpan? NetworkTimeout { get { throw null; } set { } }
         public virtual System.ServiceModel.Rest.Core.ResponseErrorClassifier ResponseClassifier { get { throw null; } set { } }
     }
@@ -141,7 +141,7 @@ namespace System.ServiceModel.Rest.Core.Pipeline
         public virtual void Dispose() { }
         protected virtual void Dispose(bool disposing) { }
         protected virtual void OnReceivedResponse(System.ServiceModel.Rest.Core.PipelineMessage message, System.Net.Http.HttpResponseMessage httpResponse, System.IO.Stream? contentStream) { }
-        protected virtual void OnSendingRequest(System.ServiceModel.Rest.Core.PipelineMessage message) { }
+        protected virtual void OnSendingRequest(System.ServiceModel.Rest.Core.PipelineMessage message, System.Net.Http.HttpRequestMessage httpRequest) { }
         public override void Process(System.ServiceModel.Rest.Core.PipelineMessage message, System.ServiceModel.Rest.InvocationOptions options) { }
         public override System.Threading.Tasks.ValueTask ProcessAsync(System.ServiceModel.Rest.Core.PipelineMessage message, System.ServiceModel.Rest.InvocationOptions options) { throw null; }
     }
@@ -153,7 +153,6 @@ namespace System.ServiceModel.Rest.Core.Pipeline
         protected virtual void AddHeader(string name, string value) { }
         protected virtual bool ContainsHeader(string name) { throw null; }
         public virtual void Dispose() { }
-        protected virtual void OnSending(System.ServiceModel.Rest.Core.PipelineMessage message, System.Net.Http.HttpRequestMessage httpRequest) { }
         protected virtual bool RemoveHeader(string name) { throw null; }
         protected virtual void SetHeader(string name, string value) { }
         public override void SetHeaderValue(string name, string value) { }

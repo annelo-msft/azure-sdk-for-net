@@ -98,7 +98,7 @@ public partial class HttpPipelineMessageTransport : PipelineTransport<PipelineMe
     {
         using HttpRequestMessage httpRequest = BuildRequestMessage(message, options);
 
-        OnSendingRequest(message);
+        OnSendingRequest(message, httpRequest);
 
         HttpResponseMessage responseMessage;
         Stream? contentStream = null;
@@ -164,7 +164,8 @@ public partial class HttpPipelineMessageTransport : PipelineTransport<PipelineMe
     /// TBD. Needed for inheritdoc.
     /// </summary>
     /// <param name="message"></param>
-    protected virtual void OnSendingRequest(PipelineMessage message) { }
+    /// <param name="httpRequest"></param>
+    protected virtual void OnSendingRequest(PipelineMessage message, HttpRequestMessage httpRequest) { }
 
     /// <summary>
     /// TBD.  Needed for inheritdoc.

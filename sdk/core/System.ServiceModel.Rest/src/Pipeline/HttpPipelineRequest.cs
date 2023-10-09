@@ -224,12 +224,8 @@ public class HttpPipelineRequest : PipelineRequest, IDisposable
             }
         }
 
-        OnSending(message!, httpRequest);
-
         return httpRequest;
     }
-
-    protected virtual void OnSending(PipelineMessage message, HttpRequestMessage httpRequest) { }
 
     private sealed class PipelineContentAdapter : HttpContent
     {
