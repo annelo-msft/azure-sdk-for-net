@@ -25,7 +25,7 @@ public abstract class PipelineTransport<TMessage, TOptions> : IPipelinePolicy<TM
     /// <summary>
     /// TBD: needed for inheritdoc.
     /// </summary>
-    public abstract TMessage CreateMessage();
+    public abstract TMessage CreateMessage(string method, Uri uri);
 
     public void Process(TMessage message, TOptions options, IPipelineEnumerator pipeline)
     {

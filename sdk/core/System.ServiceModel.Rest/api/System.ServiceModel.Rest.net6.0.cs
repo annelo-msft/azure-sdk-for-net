@@ -77,12 +77,11 @@ namespace System.ServiceModel.Rest.Core
     }
     public abstract partial class PipelineRequest
     {
-        protected PipelineRequest() { }
+        public PipelineRequest(string method, System.Uri uri) { }
         public abstract System.ServiceModel.Rest.Core.RequestBody? Content { get; set; }
-        public abstract System.Uri Uri { get; set; }
         protected internal virtual System.Uri GetUri() { throw null; }
         public abstract void SetHeaderValue(string name, string value);
-        public abstract void SetMethod(string method);
+        public virtual bool TryGetMethod(out string method) { throw null; }
     }
     public abstract partial class PipelineResponse : System.IDisposable
     {
@@ -137,7 +136,7 @@ namespace System.ServiceModel.Rest.Core.Pipeline
     {
         public HttpPipelineMessageTransport() { }
         public HttpPipelineMessageTransport(System.Net.Http.HttpClient client) { }
-        public override System.ServiceModel.Rest.Core.PipelineMessage CreateMessage() { throw null; }
+        public override System.ServiceModel.Rest.Core.PipelineMessage CreateMessage(string method, System.Uri uri) { throw null; }
         public virtual void Dispose() { }
         protected virtual void Dispose(bool disposing) { }
         protected virtual void OnReceivedResponse(System.ServiceModel.Rest.Core.PipelineMessage message, System.Net.Http.HttpResponseMessage httpResponse, System.IO.Stream? contentStream) { }
@@ -147,22 +146,18 @@ namespace System.ServiceModel.Rest.Core.Pipeline
     }
     public partial class HttpPipelineRequest : System.ServiceModel.Rest.Core.PipelineRequest, System.IDisposable
     {
-        public HttpPipelineRequest() { }
+        public HttpPipelineRequest(string method, System.Uri uri) : base (default(string), default(System.Uri)) { }
         public override System.ServiceModel.Rest.Core.RequestBody? Content { get { throw null; } set { } }
-        public override System.Uri Uri { get { throw null; } set { } }
         protected virtual void AddHeader(string name, string value) { }
         protected virtual bool ContainsHeader(string name) { throw null; }
         public virtual void Dispose() { }
         protected virtual bool RemoveHeader(string name) { throw null; }
         protected virtual void SetHeader(string name, string value) { }
         public override void SetHeaderValue(string name, string value) { }
-        public virtual void SetMethod(System.Net.Http.HttpMethod method) { }
-        public override void SetMethod(string method) { }
         public override string ToString() { throw null; }
         protected virtual bool TryGetHeader(string name, out string? value) { throw null; }
         protected bool TryGetHeaderNames(out System.Collections.Generic.IEnumerable<string> headerNames) { throw null; }
         protected virtual bool TryGetHeaderValues(string name, out System.Collections.Generic.IEnumerable<string>? values) { throw null; }
-        public virtual bool TryGetMethod(out System.Net.Http.HttpMethod method) { throw null; }
     }
     public partial class HttpPipelineResponse : System.ServiceModel.Rest.Core.PipelineResponse, System.IDisposable
     {
@@ -198,14 +193,14 @@ namespace System.ServiceModel.Rest.Core.Pipeline
         public MessagePipeline(System.ServiceModel.Rest.Core.Pipeline.PipelineTransport<System.ServiceModel.Rest.Core.PipelineMessage, System.ServiceModel.Rest.InvocationOptions> transport, System.ReadOnlyMemory<System.ServiceModel.Rest.Core.Pipeline.IPipelinePolicy<System.ServiceModel.Rest.Core.PipelineMessage, System.ServiceModel.Rest.InvocationOptions>> policies) { }
         public static System.ServiceModel.Rest.Core.Pipeline.MessagePipeline Create(System.ServiceModel.Rest.PipelineOptions options, System.ReadOnlySpan<System.ServiceModel.Rest.Core.Pipeline.IPipelinePolicy<System.ServiceModel.Rest.Core.PipelineMessage, System.ServiceModel.Rest.InvocationOptions>> perCallPolicies, System.ReadOnlySpan<System.ServiceModel.Rest.Core.Pipeline.IPipelinePolicy<System.ServiceModel.Rest.Core.PipelineMessage, System.ServiceModel.Rest.InvocationOptions>> perTryPolicies) { throw null; }
         public static System.ServiceModel.Rest.Core.Pipeline.MessagePipeline Create(System.ServiceModel.Rest.PipelineOptions options, params System.ServiceModel.Rest.Core.Pipeline.IPipelinePolicy<System.ServiceModel.Rest.Core.PipelineMessage, System.ServiceModel.Rest.InvocationOptions>[] perTryPolicies) { throw null; }
-        public override System.ServiceModel.Rest.Core.PipelineMessage CreateMessage() { throw null; }
+        public override System.ServiceModel.Rest.Core.PipelineMessage CreateMessage(string method, System.Uri uri) { throw null; }
         public override void Send(System.ServiceModel.Rest.Core.PipelineMessage message, System.ServiceModel.Rest.InvocationOptions options) { }
         public override System.Threading.Tasks.ValueTask SendAsync(System.ServiceModel.Rest.Core.PipelineMessage message, System.ServiceModel.Rest.InvocationOptions options) { throw null; }
     }
     public abstract partial class PipelineTransport<TMessage, TOptions> : System.ServiceModel.Rest.Core.Pipeline.IPipelinePolicy<TMessage, TOptions>
     {
         protected PipelineTransport() { }
-        public abstract TMessage CreateMessage();
+        public abstract TMessage CreateMessage(string method, System.Uri uri);
         public abstract void Process(TMessage message, TOptions options);
         public void Process(TMessage message, TOptions options, System.ServiceModel.Rest.Core.Pipeline.IPipelineEnumerator pipeline) { }
         public abstract System.Threading.Tasks.ValueTask ProcessAsync(TMessage message, TOptions options);
@@ -214,7 +209,7 @@ namespace System.ServiceModel.Rest.Core.Pipeline
     public abstract partial class Pipeline<TMessage, TOptions>
     {
         protected Pipeline() { }
-        public abstract TMessage CreateMessage();
+        public abstract TMessage CreateMessage(string method, System.Uri uri);
         public abstract void Send(TMessage message, TOptions options);
         public abstract System.Threading.Tasks.ValueTask SendAsync(TMessage message, TOptions options);
     }

@@ -59,9 +59,9 @@ public partial class HttpPipelineMessageTransport : PipelineTransport<PipelineMe
         };
     }
 
-    public override PipelineMessage CreateMessage()
+    public override PipelineMessage CreateMessage(string method, Uri uri)
     {
-        PipelineRequest request = new HttpPipelineRequest();
+        PipelineRequest request = new HttpPipelineRequest(method, uri);
         PipelineMessage message = new PipelineMessage(request);
 
         return message;

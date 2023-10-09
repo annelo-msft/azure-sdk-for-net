@@ -9,14 +9,29 @@ namespace System.ServiceModel.Rest.Core;
 // Multiple inheritance here, will need a pattern to address that.
 public abstract class PipelineRequest
 {
-    // TODO: generator constraint requires us to make this settable, revisit later?
-    public abstract void SetMethod(string method);
+    private readonly string _method;
+    private readonly Uri _uri;
+
+    public PipelineRequest(string method, Uri uri)
+    {
+        _method = method;
+        _uri = uri;
+    }
 
     // TODO: generator constraint requires us to make this settable, revisit later?
-    public abstract Uri Uri { get; set; }
+    //public abstract void SetMethod(string method);
+
+    // TODO: generator constraint requires us to make this settable, revisit later?
+    //public abstract Uri Uri { get; set; }
 
     // TODO: this stinks, can we make it go away?  It needs a step back and more rework.
-    protected internal virtual Uri GetUri() => Uri;
+    protected internal virtual Uri GetUri() => _uri;
+
+    public virtual bool TryGetMethod(out string method)
+    {
+        method = _method;
+        return true;
+    }
 
     // TODO: Can we change this to BinaryData?
     public abstract RequestBody? Content { get; set; }

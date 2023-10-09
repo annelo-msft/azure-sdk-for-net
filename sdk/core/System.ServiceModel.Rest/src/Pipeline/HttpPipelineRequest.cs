@@ -19,23 +19,23 @@ public class HttpPipelineRequest : PipelineRequest, IDisposable
 {
     private const string AuthorizationHeaderName = "Authorization";
 
-    private HttpMethod _method;
-    private Uri? _uri;
+    //private readonly HttpMethod _method;
+    //private readonly Uri? _uri;
     private RequestBody? _content;
 
     private ArrayBackedPropertyBag<IgnoreCaseString, object> _headers;
 
-    public HttpPipelineRequest()
+    public HttpPipelineRequest(string method, Uri uri) : base(method, uri)
     {
-        _method = HttpMethod.Get;
+        //_method = HttpMethod.Get;
         _headers = new ArrayBackedPropertyBag<IgnoreCaseString, object>();
     }
 
-    public override Uri Uri
-    {
-        get => _uri!;
-        set => _uri = value;
-    }
+    //public override Uri Uri
+    //{
+    //    get => _uri!;
+    //    set => _uri = value;
+    //}
 
     public override RequestBody? Content
     {
@@ -46,17 +46,17 @@ public class HttpPipelineRequest : PipelineRequest, IDisposable
     public override void SetHeaderValue(string name, string value)
         => SetHeader(name, value);
 
-    public override void SetMethod(string method)
-        => _method = ToHttpMethod(method);
+    //public override void SetMethod(string method)
+    //    => _method = ToHttpMethod(method);
 
-    public virtual void SetMethod(HttpMethod method)
-        => _method = method;
+    //public virtual void SetMethod(HttpMethod method)
+    //    => _method = method;
 
-    public virtual bool TryGetMethod(out HttpMethod method)
-    {
-        method = _method;
-        return true;
-    }
+    //public virtual bool TryGetMethod(out HttpMethod method)
+    //{
+    //    method = _method;
+    //    return true;
+    //}
 
     // PATCH value needed for compat with pre-net5.0 TFMs
     private static readonly HttpMethod _patchMethod = new HttpMethod("PATCH");
@@ -182,7 +182,9 @@ public class HttpPipelineRequest : PipelineRequest, IDisposable
 
     internal HttpRequestMessage BuildRequestMessage(PipelineMessage? message = default, InvocationOptions? options = default)
     {
-        HttpRequestMessage httpRequest = new HttpRequestMessage(_method, GetUri());
+        TryGetMethod(out string method);
+        HttpMethod httpMethod = ToHttpMethod(method);
+        HttpRequestMessage httpRequest = new HttpRequestMessage(httpMethod, GetUri());
         CancellationToken cancellationToken = options?.CancellationToken ?? default;
 
         PipelineContentAdapter? httpContent = _content != null ? new PipelineContentAdapter(_content, cancellationToken) : null;

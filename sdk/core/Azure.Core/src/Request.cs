@@ -17,11 +17,18 @@ namespace Azure.Core
 #pragma warning restore AZC0012 // Avoid single word type names
     {
         private RequestUriBuilder? _uriBuilder;
+        private static readonly string DefaultMethod = "GET";
+        private static readonly Uri DefaultUri = new Uri("http://www.azure.com");
+
+        /// <summary>
+        /// TBD.
+        /// </summary>
+        public Request() : base("GET", DefaultUri) { }
 
         /// <summary>
         /// Gets or sets and instance of <see cref="RequestUriBuilder"/> used to create the Uri.
         /// </summary>
-        public new virtual RequestUriBuilder Uri
+        public virtual RequestUriBuilder Uri
         {
             get
             {
@@ -49,7 +56,7 @@ namespace Azure.Core
             {
                 try
                 {
-                    TryGetMethod(out HttpMethod method);
+                    TryGetMethod(out string method);
                     return SystemToAzureMethod(method.Method);
                 }
                 catch (InvalidOperationException)
