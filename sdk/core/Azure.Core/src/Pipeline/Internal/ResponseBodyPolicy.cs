@@ -3,6 +3,7 @@
 
 using System;
 using System.IO;
+using System.ServiceModel.Rest.Core;
 using System.ServiceModel.Rest.Core.Pipeline;
 using System.Threading;
 using System.Threading.Tasks;
@@ -38,7 +39,7 @@ namespace Azure.Core.Pipeline
             // pipeline-creation time, or we get an override value from the message that
             // we use for the duration of this invocation only.
             TimeSpan invocationNetworkTimeout = _networkTimeout;
-            if (ResponseBufferingPolicy.TryGetNetworkTimeout(message, out TimeSpan networkTimeoutOverride))
+            if (PipelineTransport<PipelineMessage>.TryGetNetworkTimeout(message, out TimeSpan networkTimeoutOverride))
             {
                 invocationNetworkTimeout = networkTimeoutOverride;
             }
@@ -54,7 +55,7 @@ namespace Azure.Core.Pipeline
                     _policy.Process(message, executor);
                 }
 
-                if (!ResponseBufferingPolicy.TryGetBufferResponse(message, out bool bufferResponse))
+                if (!PipelineTransport<PipelineMessage>.TryGetBufferResponse(message, out bool bufferResponse))
                 {
                     // We default to buffering the response if not set on message.
                     bufferResponse = true;

@@ -25,7 +25,7 @@ public partial class HttpPipelineMessageTransport : PipelineTransport<PipelineMe
 
     public HttpPipelineMessageTransport() : this(CreateDefaultClient())
     {
-        // We will dispose the httpClient.
+        // We own httpClient and will dispose it.
         _ownsClient = true;
     }
 
@@ -35,18 +35,12 @@ public partial class HttpPipelineMessageTransport : PipelineTransport<PipelineMe
 
         _httpClient = client;
 
-        // The caller will dispose the httpClient.
+        // The caller owns httpClient and will dispose it.
         _ownsClient = false;
     }
 
     private static HttpClient CreateDefaultClient()
     {
-        // TODO:
-        //   - SSL settings?
-        //   - Proxy settings?
-        //   - Cookies?
-        //   - MaxConnectionsPerServer?  PooledConnectionLifetime?
-
         HttpClientHandler handler = new HttpClientHandler()
         {
             AllowAutoRedirect = false
@@ -54,7 +48,7 @@ public partial class HttpPipelineMessageTransport : PipelineTransport<PipelineMe
 
         return new HttpClient(handler)
         {
-            // TODO: Timeouts are handled by the pipeline
+            // Timeouts are handled by the transport, via options.NetworkTimeout.
             Timeout = Timeout.InfiniteTimeSpan,
         };
     }

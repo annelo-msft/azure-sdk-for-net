@@ -50,7 +50,7 @@ public class ResponseBufferingPolicy : IPipelinePolicy<PipelineMessage>
         // pipeline-creation time, or we get an override value from the message that
         // we use for the duration of this invocation only.
         TimeSpan invocationNetworkTimeout = _networkTimeout;
-        if (TryGetNetworkTimeout(message, out TimeSpan networkTimeoutOverride))
+        if (PipelineTransport<PipelineMessage>.TryGetNetworkTimeout(message, out TimeSpan networkTimeoutOverride))
         {
             invocationNetworkTimeout = networkTimeoutOverride;
         }
@@ -80,7 +80,7 @@ public class ResponseBufferingPolicy : IPipelinePolicy<PipelineMessage>
         }
 
         // Default to true if property is not present
-        if (TryGetBufferResponse(message, out bool bufferResponse) && !bufferResponse)
+        if (PipelineTransport<PipelineMessage>.TryGetBufferResponse(message, out bool bufferResponse) && !bufferResponse)
         {
             return;
         }
@@ -191,48 +191,4 @@ public class ResponseBufferingPolicy : IPipelinePolicy<PipelineMessage>
                 $"The operation was cancelled because it exceeded the configured timeout of {timeout:g}. ");
         }
     }
-
-    #region Buffer Response Override
-
-    public static void SetBufferResponse(PipelineMessage message, bool bufferResponse)
-        => message.SetProperty(typeof(BufferResponsePropertyKey), bufferResponse);
-
-    public static bool TryGetBufferResponse(PipelineMessage message, out bool bufferResponse)
-    {
-        if (message.TryGetProperty(typeof(BufferResponsePropertyKey), out object? value) &&
-            value is bool doBuffer)
-        {
-            bufferResponse = doBuffer;
-            return true;
-        }
-
-        bufferResponse = default;
-        return false;
-    }
-
-    private struct BufferResponsePropertyKey { }
-
-    #endregion
-
-    #region Network Timeout Override
-
-    public static void SetNetworkTimeout(PipelineMessage message, TimeSpan networkTimeout)
-        => message.SetProperty(typeof(NetworkTimeoutPropertyKey), networkTimeout);
-
-    public static bool TryGetNetworkTimeout(PipelineMessage message, out TimeSpan networkTimeout)
-    {
-        if (message.TryGetProperty(typeof(NetworkTimeoutPropertyKey), out object? value) &&
-            value is TimeSpan timeout)
-        {
-            networkTimeout = timeout;
-            return true;
-        }
-
-        networkTimeout = default;
-        return false;
-    }
-
-    private struct NetworkTimeoutPropertyKey { }
-
-    #endregion
 }

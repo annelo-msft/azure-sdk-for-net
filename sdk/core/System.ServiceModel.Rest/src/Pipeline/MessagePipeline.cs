@@ -99,7 +99,7 @@ public class MessagePipeline : Pipeline<PipelineMessage>
         {
             // Add default transport.
             // TODO: Note this adds an HTTP dependency we should be aware of.
-            pipeline[index++] = HttpPipelineMessageTransport.Shared;
+            pipeline[index++] = new HttpPipelineMessageTransport(options.NetworkTimeout);
         }
 
         return new MessagePipeline(pipeline);
