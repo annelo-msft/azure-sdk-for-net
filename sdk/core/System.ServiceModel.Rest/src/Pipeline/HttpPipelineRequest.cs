@@ -15,26 +15,35 @@ namespace System.ServiceModel.Rest.Core.Pipeline;
 
 // This adds the Http dependency, and some implementation
 
-public class HttpPipelineRequest : PipelineRequest, IDisposable
+internal class HttpPipelineRequest : PipelineRequest, IDisposable
 {
     private const string AuthorizationHeaderName = "Authorization";
+    private static readonly Uri _invalidUri = new("http://www.example.com");
 
     private HttpMethod _method;
     private Uri? _uri;
     private RequestBody? _content;
-
-    private ArrayBackedPropertyBag<IgnoreCaseString, object> _headers;
+    private MessageRequestHeaders? _headers;
 
     public HttpPipelineRequest()
     {
+        // Default to get is validated in Azure.Core unit tests.
+        // TODO: Would it be better to be explicit and put this in the constructor?
         _method = HttpMethod.Get;
-        _headers = new ArrayBackedPropertyBag<IgnoreCaseString, object>();
     }
 
-    public override Uri Uri
+    public override void SetUri(Uri uri) => _uri = uri;
+
+    public override bool TryGetUri(out Uri uri)
     {
-        get => _uri!;
-        set => _uri = value;
+        if (_uri is not null)
+        {
+            uri = _uri;
+            return true;
+        }
+
+        uri = _invalidUri;
+        return false;
     }
 
     public override RequestBody? Content
@@ -43,18 +52,14 @@ public class HttpPipelineRequest : PipelineRequest, IDisposable
         set => _content = value;
     }
 
-    public override void SetHeaderValue(string name, string value)
-        => SetHeader(name, value);
+    public override MessageHeaders Headers => _headers ??= new MessageRequestHeaders();
 
     public override void SetMethod(string method)
         => _method = ToHttpMethod(method);
 
-    public virtual void SetMethod(HttpMethod method)
-        => _method = method;
-
-    public virtual bool TryGetMethod(out HttpMethod method)
+    public override bool TryGetMethod(out string method)
     {
-        method = _method;
+        method = _method.Method;
         return true;
     }
 
@@ -75,114 +80,13 @@ public class HttpPipelineRequest : PipelineRequest, IDisposable
         }; ;
     }
 
-    #region Header implementation
-
-    protected virtual void SetHeader(string name, string value)
-    {
-        _headers.Set(new IgnoreCaseString(name), value);
-    }
-
-    protected virtual void AddHeader(string name, string value)
-    {
-        if (_headers.TryAdd(new IgnoreCaseString(name), value, out var existingValue))
-        {
-            return;
-        }
-
-        switch (existingValue)
-        {
-            case string stringValue:
-                _headers.Set(new IgnoreCaseString(name), new List<string> { stringValue, value });
-                break;
-            case List<string> listValue:
-                listValue.Add(value);
-                break;
-        }
-    }
-
-    protected bool TryGetHeaderNames(out IEnumerable<string> headerNames)
-    {
-        headerNames = GetHeaderNames();
-        return true;
-    }
-
-    private IEnumerable<string> GetHeaderNames()
-    {
-        for (int i = 0; i < _headers.Count; i++)
-        {
-            _headers.GetAt(i, out var name, out var _);
-            yield return name;
-        }
-    }
-
-    protected virtual bool TryGetHeader(string name, [NotNullWhen(true)] out string? value)
-    {
-        if (_headers.TryGetValue(new IgnoreCaseString(name), out var headerValue))
-        {
-            value = GetHttpHeaderValue(name, headerValue);
-            return true;
-        }
-
-        value = default;
-        return false;
-    }
-
-    protected virtual bool TryGetHeaderValues(string name, [NotNullWhen(true)] out IEnumerable<string>? values)
-    {
-        if (_headers.TryGetValue(new IgnoreCaseString(name), out var value))
-        {
-            values = value switch
-            {
-                string headerValue => new[] { headerValue },
-                List<string> headerValues => headerValues,
-                _ => throw new InvalidOperationException($"Unexpected type for header {name}: {value.GetType()}")
-            };
-            return true;
-        }
-
-        values = default;
-        return false;
-    }
-
-    protected virtual bool ContainsHeader(string name) => _headers.TryGetValue(new IgnoreCaseString(name), out _);
-
-    protected virtual bool RemoveHeader(string name) => _headers.TryRemove(new IgnoreCaseString(name));
-
-    private static string GetHttpHeaderValue(string headerName, object value) => value switch
-    {
-        string headerValue => headerValue,
-        List<string> headerValues => string.Join(",", headerValues),
-        _ => throw new InvalidOperationException($"Unexpected type for header {headerName}: {value?.GetType()}")
-    };
-
-    private readonly struct IgnoreCaseString : IEquatable<IgnoreCaseString>
-    {
-        private readonly string _value;
-
-        public IgnoreCaseString(string value)
-        {
-            _value = value;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool Equals(IgnoreCaseString other) => string.Equals(_value, other._value, StringComparison.OrdinalIgnoreCase);
-        public override bool Equals(object? obj) => obj is IgnoreCaseString other && Equals(other);
-        public override int GetHashCode() => _value.GetHashCode();
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool operator ==(IgnoreCaseString left, IgnoreCaseString right) => left.Equals(right);
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool operator !=(IgnoreCaseString left, IgnoreCaseString right) => !left.Equals(right);
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static implicit operator string(IgnoreCaseString ics) => ics._value;
-    }
-    #endregion
-
     #region Construction for transport
 
     internal HttpRequestMessage BuildRequestMessage(PipelineMessage? message = default)
     {
-        HttpRequestMessage httpRequest = new HttpRequestMessage(_method, GetUri());
+        Uri uri;
+        TryGetUri(out uri);
+        HttpRequestMessage httpRequest = new HttpRequestMessage(_method, uri);
         CancellationToken cancellationToken = message?.CancellationToken ?? default;
 
         PipelineContentAdapter? httpContent = _content != null ? new PipelineContentAdapter(_content, cancellationToken) : null;
@@ -191,33 +95,32 @@ public class HttpPipelineRequest : PipelineRequest, IDisposable
         httpRequest.Headers.ExpectContinue = false;
 #endif
 
-        for (int i = 0; i < _headers.Count; i++)
+        Headers.TryGetHeaders(out IEnumerable<MessageHeader<string, object>> headers);
+        foreach (MessageHeader<string, object> header in headers)
         {
-            _headers.GetAt(i, out IgnoreCaseString headerName, out object value);
-
-            switch (value)
+            switch (header.Value)
             {
                 case string stringValue:
                     // Authorization is special cased because it is in the hot path for auth polices that set this header on each request and retry.
-                    if (headerName == AuthorizationHeaderName && AuthenticationHeaderValue.TryParse(stringValue, out var authHeader))
+                    if (header.Name == AuthorizationHeaderName && AuthenticationHeaderValue.TryParse(stringValue, out var authHeader))
                     {
                         httpRequest.Headers.Authorization = authHeader;
                     }
-                    else if (!httpRequest.Headers.TryAddWithoutValidation(headerName, stringValue))
+                    else if (!httpRequest.Headers.TryAddWithoutValidation(header.Name, stringValue))
                     {
-                        if (httpContent != null && !httpContent.Headers.TryAddWithoutValidation(headerName, stringValue))
+                        if (httpContent != null && !httpContent.Headers.TryAddWithoutValidation(header.Name, stringValue))
                         {
-                            throw new InvalidOperationException($"Unable to add header {headerName} to header collection.");
+                            throw new InvalidOperationException($"Unable to add header {header.Name} to header collection.");
                         }
                     }
                     break;
 
                 case List<string> listValue:
-                    if (!httpRequest.Headers.TryAddWithoutValidation(headerName, listValue))
+                    if (!httpRequest.Headers.TryAddWithoutValidation(header.Name, listValue))
                     {
-                        if (httpContent != null && !httpContent.Headers.TryAddWithoutValidation(headerName, listValue))
+                        if (httpContent != null && !httpContent.Headers.TryAddWithoutValidation(header.Name, listValue))
                         {
-                            throw new InvalidOperationException($"Unable to add header {headerName} to header collection.");
+                            throw new InvalidOperationException($"Unable to add header {header.Name} to header collection.");
                         }
                     }
                     break;
@@ -257,8 +160,6 @@ public class HttpPipelineRequest : PipelineRequest, IDisposable
 
     public virtual void Dispose()
     {
-        _headers.Dispose();
-
         var content = _content;
         if (content != null)
         {
