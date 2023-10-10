@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.ServiceModel.Rest.Core.Pipeline;
+using System.ServiceModel.Rest.Core;
 using Azure.Core.Pipeline;
 
 namespace Azure.Core
@@ -13,7 +13,7 @@ namespace Azure.Core
     /// Represents an HTTP request. Use <see cref="HttpPipeline.CreateMessage()"/> or <see cref="HttpPipeline.CreateRequest"/> to create an instance.
     /// </summary>
 #pragma warning disable AZC0012 // Avoid single word type names
-    public abstract class Request : HttpPipelineRequest
+    public abstract class Request : PipelineRequest
 #pragma warning restore AZC0012 // Avoid single word type names
     {
         private RequestUriBuilder? _uriBuilder;
@@ -21,7 +21,7 @@ namespace Azure.Core
         /// <summary>
         /// Gets or sets and instance of <see cref="RequestUriBuilder"/> used to create the Uri.
         /// </summary>
-        public new virtual RequestUriBuilder Uri
+        public virtual RequestUriBuilder Uri
         {
             get
             {
@@ -35,12 +35,6 @@ namespace Azure.Core
         }
 
         /// <summary>
-        /// TBD.
-        /// </summary>
-        /// <returns></returns>
-        protected override Uri GetUri() => Uri.ToUri();
-
-        /// <summary>
         /// Gets or sets the request HTTP method.
         /// </summary>
         public virtual RequestMethod Method
@@ -49,8 +43,8 @@ namespace Azure.Core
             {
                 try
                 {
-                    TryGetMethod(out HttpMethod method);
-                    return SystemToAzureMethod(method.Method);
+                    TryGetMethod(out string method);
+                    return SystemToAzureMethod(method);
                 }
                 catch (InvalidOperationException)
                 {
@@ -58,7 +52,7 @@ namespace Azure.Core
                     return new RequestMethod();
                 }
             }
-            set { base.SetMethod(AzureToSystemMethod(value)); }
+            set { SetMethod(value.Method); }
         }
 
         private static RequestMethod SystemToAzureMethod(string verb)
@@ -97,37 +91,12 @@ namespace Azure.Core
         /// Gets or sets the request content.
         /// </summary>
 
-        public new virtual RequestContent? Content
-        {
-            get => (RequestContent?)base.Content;
-            set => base.Content = value;
-        }
+        public new abstract RequestContent? Content { get; set; }
 
         /// <summary>
         /// Gets or sets the client request id that was sent to the server as <c>x-ms-client-request-id</c> headers.
         /// </summary>
         public abstract string ClientRequestId { get; set; }
-
-        internal void AddHeaderInternal(string name, string value)
-            => AddHeader(name, value);
-        internal bool ContainsHeaderInternal(string name)
-            => ContainsHeader(name);
-        internal bool RemoveHeaderInternal(string name)
-            => RemoveHeader(name);
-        internal void SetHeaderInternal(string name, string value)
-            => SetHeader(name, value);
-        internal bool TryGetHeaderInternal(string name, out string? value)
-            => TryGetHeader(name, out value);
-        internal bool TryGetHeaderValuesInternal(string name, out IEnumerable<string>? values)
-            => TryGetHeaderValues(name, out values);
-
-        /// <summary>
-        /// TBD.
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="value"></param>
-        public override void SetHeaderValue(string name, string value)
-            => SetHeader(name, value);
 
         /// <summary>
         /// Returns an iterator enumerating <see cref="HttpHeader"/> in the request.
@@ -138,6 +107,6 @@ namespace Azure.Core
         /// <summary>
         /// Gets the response HTTP headers.
         /// </summary>
-        public RequestHeaders Headers => new(this);
+        public new RequestHeaders Headers => new(this);
     }
 }
