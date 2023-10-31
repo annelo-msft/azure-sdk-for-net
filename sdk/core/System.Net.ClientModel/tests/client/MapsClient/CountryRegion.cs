@@ -17,46 +17,23 @@ public class CountryRegion : IJsonModel<CountryRegion>
 
     public string IsoCode { get; }
 
-    internal static CountryRegion FromJson(JsonElement element)
-    {
-        if (element.ValueKind == JsonValueKind.Null)
-        {
-            return null;
-        }
-
-        string isoCode = default;
-
-        foreach (var property in element.EnumerateObject())
-        {
-            if (property.NameEquals("isoCode"u8))
-            {
-                isoCode = property.Value.GetString();
-                continue;
-            }
-        }
-
-        return new CountryRegion(isoCode);
-    }
-
     public CountryRegion Read(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
     {
-        using var document = JsonDocument.ParseValue(ref reader);
-        return FromJson(document.RootElement);
+        // Read JSON values and return CountryRegion
     }
 
     public CountryRegion Read(BinaryData data, ModelReaderWriterOptions options)
     {
-        using var document = JsonDocument.Parse(data.ToString());
-        return FromJson(document.RootElement);
+        // Read JSON from BinaryData and return CountryRegion
     }
 
     public void Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
     {
-        throw new NotSupportedException("This model is used for output only");
+        // Write JSON representing model to Utf8JsonWriter
     }
 
     public BinaryData Write(ModelReaderWriterOptions options)
     {
-        throw new NotSupportedException("This model is used for output only");
+        // Write JSON representing model to returned BinaryData value
     }
 }

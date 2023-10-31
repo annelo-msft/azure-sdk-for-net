@@ -21,69 +21,28 @@ public class IPAddressCountryPair : IJsonModel<IPAddressCountryPair>
 
     public IPAddress IpAddress { get; }
 
-    internal static IPAddressCountryPair FromJson(JsonElement element)
-    {
-        if (element.ValueKind == JsonValueKind.Null)
-        {
-            return null;
-        }
-
-        CountryRegion countryRegion = default;
-        IPAddress ipAddress = default;
-
-        foreach (var property in element.EnumerateObject())
-        {
-            if (property.NameEquals("countryRegion"u8))
-            {
-                if (property.Value.ValueKind == JsonValueKind.Null)
-                {
-                    continue;
-                }
-
-                countryRegion = CountryRegion.FromJson(property.Value);
-                continue;
-            }
-
-            if (property.NameEquals("ipAddress"u8))
-            {
-                if (property.Value.ValueKind == JsonValueKind.Null)
-                {
-                    continue;
-                }
-
-                ipAddress = IPAddress.Parse(property.Value.GetString());
-                continue;
-            }
-        }
-
-        return new IPAddressCountryPair(countryRegion, ipAddress);
-    }
-
     internal static IPAddressCountryPair FromResponse(MessageResponse response)
     {
-        using var document = JsonDocument.Parse(response.Body);
-        return FromJson(document.RootElement);
+        // Read JSON from response.Body and return IPAddressCountryPair
     }
 
     public IPAddressCountryPair Read(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
     {
-        using var document = JsonDocument.ParseValue(ref reader);
-        return FromJson(document.RootElement);
+        // Read JSON values and return IPAddressCountryPair
     }
 
     public IPAddressCountryPair Read(BinaryData data, ModelReaderWriterOptions options)
     {
-        using var document = JsonDocument.Parse(data.ToString());
-        return FromJson(document.RootElement);
+        // Read JSON from BinaryData and return IPAddressCountryPair
     }
 
     public void Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
     {
-        throw new NotSupportedException("This model is used for output only");
+        // Write JSON representing model to Utf8JsonWriter
     }
 
     public BinaryData Write(ModelReaderWriterOptions options)
     {
-        throw new NotSupportedException("This model is used for output only");
+        // Write JSON representing model to returned BinaryData value
     }
 }
