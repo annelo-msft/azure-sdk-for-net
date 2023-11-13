@@ -2,13 +2,13 @@
 // Licensed under the MIT License.
 
 using System;
+using System.ClientModel;
+using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Runtime.Serialization;
-using System.ClientModel;
-using System.ClientModel.Primitives;
 using System.Text;
 using Azure.Core;
 using Azure.Core.Pipeline;
@@ -149,7 +149,6 @@ namespace Azure
 
         /// <inheritdoc />
         protected RequestFailedException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
         {
             ErrorCode = info.GetString(nameof(ErrorCode));
         }

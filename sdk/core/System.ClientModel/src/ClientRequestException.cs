@@ -31,7 +31,7 @@ namespace System.ClientModel
             // TODO: What is the experience if someone tries to access this.Response?
         }
 
-        public virtual MessageResponse? GetRawResponse()
+        public MessageResponse? GetRawResponse()
         {
             // Stubbed out for API review
             // TODO: pull over implementation from Azure.Core
@@ -42,16 +42,6 @@ namespace System.ClientModel
         {
             // TODO: implement for real
             return $"Service error: {response.Status}";
-        }
-
-        /// <summary>
-        /// TBD
-        /// </summary>
-        /// <param name="info"></param>
-        /// <param name="context"></param>
-        protected ClientRequestException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-            Status = info.GetInt32(nameof(Status));
         }
     }
 }
