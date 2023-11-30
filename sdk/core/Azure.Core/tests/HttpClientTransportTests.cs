@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Azure.Core.Pipeline;
@@ -69,6 +70,34 @@ namespace Azure.Core.Tests
             await ExecuteRequest(request, transport);
 
             Assert.AreEqual(expectedUri, requestUri);
+        }
+
+        [Test]
+        public async Task ResponseRemainsBufferedAfterMessageDisposed()
+        {
+            var mockHandler = new MockContentHandler();
+
+            var transport = new HttpClientTransport(mockHandler);
+            Request request = transport.CreateRequest();
+            request.Method = RequestMethod.Get;
+            request.Uri.Reset(new Uri("http://example.com:340"));
+
+            Response response = await SendRequestDisposeMessage(request, transport);
+            Stream stream = response.ContentStream;
+            byte[] buffer = new byte[8];
+            stream.Read(buffer, 0, 7);
+        }
+
+        private class MockContentHandler : HttpMessageHandler
+        {
+            private static readonly HttpResponseMessage _response = new()
+            {
+                StatusCode = HttpStatusCode.OK,
+                Content = new StringContent("{ \"key\": \"abc\", \"value\" :\"def\" }", Encoding.UTF8, "application/json")
+            };
+
+            protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+                => await Task.FromResult(_response).ConfigureAwait(false);
         }
 
         public static object[] HeadersWithValuesAndType =>

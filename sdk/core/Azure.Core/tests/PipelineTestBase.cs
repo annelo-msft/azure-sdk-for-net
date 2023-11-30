@@ -63,6 +63,23 @@ namespace Azure.Core.Tests
             return message.Response;
         }
 
+        protected async Task<Response> SendRequestDisposeMessage(Request request, HttpPipelineTransport transport, CancellationToken cancellationToken = default)
+        {
+            using HttpMessage message = new(request, ResponseClassifier.Shared);
+            message.CancellationToken = cancellationToken;
+
+            if (_isAsync)
+            {
+                await transport.ProcessAsync(message);
+            }
+            else
+            {
+                transport.Process(message);
+            }
+
+            return message.Response;
+        }
+
         protected const string Pfx = @"
 MIIQ5gIBAzCCEKIGCSqGSIb3DQEHAaCCEJMEghCPMIIQizCCCowGCSqGSIb3DQEHAaCCCn0Eggp5
 MIIKdTCCCnEGCyqGSIb3DQEMCgECoIIJfjCCCXowHAYKKoZIhvcNAQwBAzAOBAg6i6mCUbwdbAIC
