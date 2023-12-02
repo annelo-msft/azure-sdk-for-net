@@ -161,12 +161,12 @@ namespace System.ClientModel.Primitives
     public partial class PipelineMessage : System.IDisposable
     {
         protected internal PipelineMessage(System.ClientModel.Primitives.PipelineRequest request) { }
-        public virtual System.Threading.CancellationToken CancellationToken { get { throw null; } set { } }
+        public System.Threading.CancellationToken CancellationToken { get { throw null; } set { } }
         public System.ClientModel.Primitives.MessageClassifier? MessageClassifier { get { throw null; } protected internal set { } }
-        public virtual System.ClientModel.Primitives.PipelineRequest Request { get { throw null; } }
-        public virtual System.ClientModel.Primitives.PipelineResponse Response { get { throw null; } protected internal set { } }
+        public System.ClientModel.Primitives.PipelineRequest Request { get { throw null; } }
+        public System.ClientModel.Primitives.PipelineResponse Response { get { throw null; } protected internal set { } }
         public void Apply(System.ClientModel.RequestOptions options, System.ClientModel.Primitives.MessageClassifier? messageClassifier = null) { }
-        public virtual void Dispose() { }
+        public void Dispose() { }
         protected virtual void Dispose(bool disposing) { }
         public void SetProperty(System.Type type, object value) { }
         public bool TryGetProperty(System.Type type, out object? value) { throw null; }
