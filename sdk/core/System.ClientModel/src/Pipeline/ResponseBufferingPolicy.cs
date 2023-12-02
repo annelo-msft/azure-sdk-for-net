@@ -88,7 +88,7 @@ public class ResponseBufferingPolicy : PipelinePolicy
         }
 
         Stream? responseContentStream = message.Response.ContentStream;
-        if (responseContentStream == null || responseContentStream.CanSeek)
+        if (responseContentStream == null || responseContentStream is MemoryStream)
         {
             // There is either no content on the response, or the content has already
             // been buffered.
