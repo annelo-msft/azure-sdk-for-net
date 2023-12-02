@@ -81,7 +81,7 @@ public partial class HttpClientPipelineTransport
                 // intentionally left the network stream undisposed.
 
                 var contentStream = _contentStream;
-                if (!ResponseBufferingPolicy.TryGetBufferedStream(contentStream, out _))
+                if (contentStream is not null && !TryGetBufferedContent(out _))
                 {
                     contentStream?.Dispose();
                     _contentStream = null;
