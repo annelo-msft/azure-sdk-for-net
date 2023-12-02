@@ -47,7 +47,7 @@ public abstract class PipelineResponse : IDisposable
                 return s_emptyBinaryData;
             }
 
-            if (!TryGetBufferedContent(out MemoryStream bufferedContent))
+            if (!ResponseBufferingPolicy.TryGetBufferedStream(ContentStream, out MemoryStream bufferedContent))
             {
                 throw new InvalidOperationException($"The response is not buffered.");
             }
@@ -70,23 +70,6 @@ public abstract class PipelineResponse : IDisposable
     public virtual bool IsError { get; protected internal set; }
 
     #endregion
-
-    internal bool TryGetBufferedContent(out MemoryStream bufferedContent)
-    {
-        if (ContentStream is MemoryStream content)
-        {
-            bufferedContent = content;
-            return true;
-        }
-
-        bufferedContent = default!;
-        return false;
-    }
-
-    internal static bool ContentIsBuffered(Stream stream)
-    {
-        return stream is MemoryStream;
-    }
 
     public abstract void Dispose();
 }

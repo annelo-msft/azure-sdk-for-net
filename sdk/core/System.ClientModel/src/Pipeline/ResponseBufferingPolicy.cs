@@ -88,11 +88,11 @@ public class ResponseBufferingPolicy : PipelinePolicy
         }
 
         Stream? responseContentStream = message.Response.ContentStream;
-        if (responseContentStream == null || PipelineResponse.ContentIsBuffered(responseContentStream))
+        if (responseContentStream is null ||
+            TryGetBufferedStream(responseContentStream, out MemoryStream bufferedStream))
         {
             // There is either no content on the response, or the content has already
             // been buffered.
-            // TODO: there is a bug here if a user overrides the default transport.
             return;
         }
 
@@ -105,14 +105,13 @@ public class ResponseBufferingPolicy : PipelinePolicy
 
         try
         {
-            var bufferedStream = new MemoryStream();
             if (async)
             {
-                await CopyToAsync(responseContentStream, bufferedStream, invocationNetworkTimeout, cts).ConfigureAwait(false);
+                bufferedStream = await BufferResponseAsync(responseContentStream, cts.Token).ConfigureAwait(false);
             }
             else
             {
-                CopyTo(responseContentStream, bufferedStream, invocationNetworkTimeout, cts);
+                bufferedStream = BufferResponse(responseContentStream, cts.Token);
             }
 
             responseContentStream.Dispose();
@@ -131,29 +130,27 @@ public class ResponseBufferingPolicy : PipelinePolicy
         }
     }
 
-    private async Task CopyToAsync(Stream source, Stream destination, TimeSpan networkTimeout, CancellationTokenSource cancellationTokenSource)
+    private static async Task CopyToAsync(Stream source, Stream destination, CancellationToken cancellationToken)
     {
         byte[] buffer = ArrayPool<byte>.Shared.Rent(DefaultCopyBufferSize);
         try
         {
             while (true)
             {
-                cancellationTokenSource.CancelAfter(networkTimeout);
 #pragma warning disable CA1835 // ReadAsync(Memory<>) overload is not available in all targets
-                int bytesRead = await source.ReadAsync(buffer, 0, buffer.Length, cancellationTokenSource.Token).ConfigureAwait(false);
+                int bytesRead = await source.ReadAsync(buffer, 0, buffer.Length, cancellationToken).ConfigureAwait(false);
 #pragma warning restore // ReadAsync(Memory<>) overload is not available in all targets
                 if (bytesRead == 0) break;
-                await destination.WriteAsync(new ReadOnlyMemory<byte>(buffer, 0, bytesRead), cancellationTokenSource.Token).ConfigureAwait(false);
+                await destination.WriteAsync(new ReadOnlyMemory<byte>(buffer, 0, bytesRead), cancellationToken).ConfigureAwait(false);
             }
         }
         finally
         {
-            cancellationTokenSource.CancelAfter(Timeout.InfiniteTimeSpan);
             ArrayPool<byte>.Shared.Return(buffer);
         }
     }
 
-    private void CopyTo(Stream source, Stream destination, TimeSpan networkTimeout, CancellationTokenSource cancellationTokenSource)
+    private static void CopyTo(Stream source, Stream destination, CancellationToken cancellationToken)
     {
         byte[] buffer = ArrayPool<byte>.Shared.Rent(DefaultCopyBufferSize);
         try
@@ -161,14 +158,12 @@ public class ResponseBufferingPolicy : PipelinePolicy
             int read;
             while ((read = source.Read(buffer, 0, buffer.Length)) != 0)
             {
-                cancellationTokenSource.Token.ThrowIfCancellationRequested();
-                cancellationTokenSource.CancelAfter(networkTimeout);
+                cancellationToken.ThrowIfCancellationRequested();
                 destination.Write(buffer, 0, read);
             }
         }
         finally
         {
-            cancellationTokenSource.CancelAfter(Timeout.InfiniteTimeSpan);
             ArrayPool<byte>.Shared.Return(buffer);
         }
     }
@@ -192,6 +187,34 @@ public class ResponseBufferingPolicy : PipelinePolicy
                 timeoutToken,
                 $"The operation was cancelled because it exceeded the configured timeout of {timeout:g}. ");
         }
+    }
+
+    private class BufferedStream : MemoryStream { }
+
+    internal static bool TryGetBufferedStream(Stream? stream, out MemoryStream bufferedStream)
+    {
+        if (stream is BufferedStream buffer)
+        {
+            bufferedStream = buffer;
+            return true;
+        }
+
+        bufferedStream = default!;
+        return false;
+    }
+
+    public static MemoryStream BufferResponse(Stream stream, CancellationToken cancellationToken = default)
+    {
+        BufferedStream bufferedStream = new BufferedStream();
+        CopyTo(stream, bufferedStream, cancellationToken);
+        return bufferedStream;
+    }
+
+    public static async Task<MemoryStream> BufferResponseAsync(Stream stream, CancellationToken cancellationToken = default)
+    {
+        BufferedStream bufferedStream = new BufferedStream();
+        await CopyToAsync(stream, bufferedStream, cancellationToken).ConfigureAwait(false);
+        return bufferedStream;
     }
 
     #region Buffer Response Override

@@ -7,6 +7,7 @@ using System.Linq;
 using Azure.Core.TestFramework;
 using NUnit.Framework;
 using Moq;
+using System.ClientModel.Primitives;
 
 namespace Azure.Core.Tests
 {
@@ -115,7 +116,7 @@ namespace Azure.Core.Tests
             // Ensure that the BinaryData is formed over the used portion of the memory stream, not the entire buffer.
             MemoryStream ms = new MemoryStream(50);
             var responseWithEmptyBody = new MockResponse(200);
-            responseWithEmptyBody.ContentStream = ms;
+            responseWithEmptyBody.ContentStream = ResponseBufferingPolicy.BufferResponse(ms);
             Assert.AreEqual(0, response.Content.ToArray().Length);
 
             // Ensure that even if the stream has been read and the cursor is sitting at the end of stream, the
