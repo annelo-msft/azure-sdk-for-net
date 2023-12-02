@@ -92,7 +92,6 @@ public class ResponseBufferingPolicy : PipelinePolicy
         {
             // There is either no content on the response, or the content has already
             // been buffered.
-            // TODO: there is a bug here if a user overrides the default transport.
             return;
         }
 
