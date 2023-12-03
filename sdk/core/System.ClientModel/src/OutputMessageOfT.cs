@@ -11,8 +11,8 @@ public abstract class OutputMessage<T> : OptionalOutputMessage<T>
     protected OutputMessage(T value, PipelineResponse response)
         : base(value, response) { }
 
-    public override T Value => base.Value!;
+    public sealed override T Value => base.Value!;
 
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public override bool HasValue => true;
+    public sealed override bool HasValue => true;
 }
