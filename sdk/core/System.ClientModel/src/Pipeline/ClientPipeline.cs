@@ -66,7 +66,8 @@ public sealed partial class ClientPipeline
             pipelineLength += options.BeforeTransportPolicies.Length;
         }
 
-        pipelineLength++; // for retry policy
+        // TODO: RetryPolicy will come in a later PR.
+        //pipelineLength++; // for retry policy
         pipelineLength++; // for response buffering policy
         pipelineLength++; // for transport
 
@@ -85,7 +86,7 @@ public sealed partial class ClientPipeline
 
         int perCallIndex = index;
 
-        // TODO: RetryPolicy will come in in a later PR.
+        // TODO: RetryPolicy will come in a later PR.
         //if (options.RetryPolicy != null)
         //{
         //    policies[index++] = options.RetryPolicy;

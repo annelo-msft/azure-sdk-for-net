@@ -39,8 +39,7 @@ public class PipelineMessage : IDisposable
 
     //public void Apply(RequestOptions options, PipelineMessageClassifier? messageClassifier = default)
     //{
-    //    // This design moves the client-author API (options.Apply) off the
-    //    // client-user type RequestOptions.
+    //    // TODO: Add test to validate CancellationToken is set by Apply
     //    options.Apply(this, messageClassifier);
     //}
 
