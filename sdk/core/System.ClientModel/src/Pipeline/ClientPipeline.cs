@@ -127,8 +127,9 @@ public sealed partial class ClientPipeline
         }
         else
         {
-            // Add default transport.
-            policies[index++] = HttpClientPipelineTransport.Shared;
+            // TODO: Transport implementation will come in a later PR.
+            //// Add default transport.
+            //policies[index++] = HttpClientPipelineTransport.Shared;
         }
 
         return new ClientPipeline(policies, perCallIndex, perTryIndex, beforeTransportIndex); ;
