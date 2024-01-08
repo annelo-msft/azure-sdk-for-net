@@ -13,15 +13,15 @@ namespace Azure.Core.Tests.ModelSerializationTests.Models
     {
         private Dictionary<string, BinaryData> _rawData;
 
-        public static implicit operator RequestContent(BaseModel baseModel)
-        {
-            if (baseModel == null)
-            {
-                return null;
-            }
+        //public static implicit operator RequestContent(BaseModel baseModel)
+        //{
+        //    if (baseModel == null)
+        //    {
+        //        return null;
+        //    }
 
-            return RequestContent.Create(baseModel, ModelSerializerOptions.DefaultWireOptions);
-        }
+        //    return RequestContent.Create(baseModel, ModelSerializerOptions.DefaultWireOptions);
+        //}
 
         public static explicit operator BaseModel(Response response)
         {

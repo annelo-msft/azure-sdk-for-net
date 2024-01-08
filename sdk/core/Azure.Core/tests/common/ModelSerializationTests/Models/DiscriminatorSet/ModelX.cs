@@ -35,15 +35,15 @@ namespace Azure.Core.Tests.ModelSerializationTests.Models
 
         void IUtf8JsonSerializable.Write(Utf8JsonWriter writer) => ((IModelJsonSerializable<ModelX>)this).Serialize(writer, ModelSerializerOptions.DefaultWireOptions);
 
-        public static implicit operator RequestContent(ModelX modelX)
-        {
-            if (modelX == null)
-            {
-                return null;
-            }
+        //public static implicit operator RequestContent(ModelX modelX)
+        //{
+        //    if (modelX == null)
+        //    {
+        //        return null;
+        //    }
 
-            return RequestContent.Create(modelX, ModelSerializerOptions.DefaultWireOptions);
-        }
+        //    return RequestContent.Create(modelX, ModelSerializerOptions.DefaultWireOptions);
+        //}
 
         public static explicit operator ModelX(Response response)
         {

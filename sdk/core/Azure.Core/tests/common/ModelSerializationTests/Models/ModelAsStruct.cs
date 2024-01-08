@@ -62,10 +62,10 @@ namespace Azure.Core.Tests.ModelSerializationTests.Models
             return ModelSerializer.SerializeCore(this, options);
         }
 
-        public static implicit operator RequestContent(ModelAsStruct model)
-        {
-            return RequestContent.Create(model, ModelSerializerOptions.DefaultWireOptions);
-        }
+        //public static implicit operator RequestContent(ModelAsStruct model)
+        //{
+        //    return RequestContent.Create(model, ModelSerializerOptions.DefaultWireOptions);
+        //}
 
         ModelAsStruct IModelSerializable<ModelAsStruct>.Deserialize(BinaryData data, ModelSerializerOptions options)
         {

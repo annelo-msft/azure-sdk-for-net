@@ -44,15 +44,15 @@ namespace Azure.Core.Tests.ModelSerializationTests.Models
         [XmlElement("RenamedChildModelXml")]
         public ChildModelXml RenamedChildModelXml { get; set; }
 
-        public static implicit operator RequestContent(ModelXml modelXml)
-        {
-            if (modelXml == null)
-            {
-                return null;
-            }
+        //public static implicit operator RequestContent(ModelXml modelXml)
+        //{
+        //    if (modelXml == null)
+        //    {
+        //        return null;
+        //    }
 
-            return RequestContent.Create((IModelSerializable<ModelXml>)modelXml, ModelSerializerOptions.DefaultWireOptions);
-        }
+        //    return RequestContent.Create((IModelSerializable<ModelXml>)modelXml, ModelSerializerOptions.DefaultWireOptions);
+        //}
 
         public static explicit operator ModelXml(Response response)
         {

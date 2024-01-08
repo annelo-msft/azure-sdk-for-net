@@ -22,15 +22,15 @@ namespace Azure.Core.Tests.ResourceManager.Compute
     {
         internal AvailabilitySetData() { }
 
-        public static implicit operator RequestContent(AvailabilitySetData availabilitySetData)
-        {
-            if (availabilitySetData is null)
-            {
-                return null;
-            }
+        //public static implicit operator RequestContent(AvailabilitySetData availabilitySetData)
+        //{
+        //    if (availabilitySetData is null)
+        //    {
+        //        return null;
+        //    }
 
-            return RequestContent.Create(availabilitySetData, ModelSerializerOptions.DefaultWireOptions);
-        }
+        //    return RequestContent.Create(availabilitySetData, ModelSerializerOptions.DefaultWireOptions);
+        //}
 
         public static explicit operator AvailabilitySetData(Response response)
         {

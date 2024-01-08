@@ -17,7 +17,7 @@ namespace Azure.Core.Tests.Public.ModelSerializationTests
 
         protected override string JsonPayload => WirePayload;
 
-        protected override Func<AvailabilitySetData, RequestContent> ToRequestContent => model => model;
+        //protected override Func<AvailabilitySetData, RequestContent> ToRequestContent => model => model;
 
         protected override Func<Response, AvailabilitySetData> FromResponse => response => (AvailabilitySetData)response;
 

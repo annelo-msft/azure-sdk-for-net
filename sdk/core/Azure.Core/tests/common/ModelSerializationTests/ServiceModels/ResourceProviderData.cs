@@ -18,15 +18,15 @@ namespace Azure.Core.Tests.ResourceManager.Resources
     /// </summary>
     public partial class ResourceProviderData
     {
-        public static implicit operator RequestContent(ResourceProviderData resourceProviderData)
-        {
-            if (resourceProviderData == null)
-            {
-                return null;
-            }
+        //public static implicit operator RequestContent(ResourceProviderData resourceProviderData)
+        //{
+        //    if (resourceProviderData == null)
+        //    {
+        //        return null;
+        //    }
 
-            return RequestContent.Create(resourceProviderData, ModelSerializerOptions.DefaultWireOptions);
-        }
+        //    return RequestContent.Create(resourceProviderData, ModelSerializerOptions.DefaultWireOptions);
+        //}
 
         public static explicit operator ResourceProviderData(Response response)
         {
