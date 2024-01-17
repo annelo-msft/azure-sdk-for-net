@@ -3,9 +3,9 @@
 
 namespace System.ClientModel.Primitives;
 
-public class PipelineMessageClassifier
+public abstract class PipelineMessageClassifier
 {
-    internal static PipelineMessageClassifier Default { get; } = new PipelineMessageClassifier();
+    internal static PipelineMessageClassifier Default { get; } = new DefaultMessageClassifier();
 
     public static PipelineMessageClassifier Create(ReadOnlySpan<ushort> successStatusCodes)
         => new ResponseStatusClassifier(successStatusCodes);
@@ -15,14 +15,19 @@ public class PipelineMessageClassifier
     /// <summary>
     /// Specifies if the response contained in the <paramref name="message"/> is not successful.
     /// </summary>
-    public virtual bool IsErrorResponse(PipelineMessage message)
-    {
-        if (message.Response is null)
-        {
-            throw new InvalidOperationException("IsError must be called on a message where the OutputMessage is populated.");
-        }
+    public abstract bool IsErrorResponse(PipelineMessage message);
 
-        int statusKind = message.Response.Status / 100;
-        return statusKind == 4 || statusKind == 5;
+    private class DefaultMessageClassifier : PipelineMessageClassifier
+    {
+        public override bool IsErrorResponse(PipelineMessage message)
+        {
+            if (message.Response is null)
+            {
+                throw new InvalidOperationException("IsError must be called on a message where the OutputMessage is populated.");
+            }
+
+            int statusKind = message.Response.Status / 100;
+            return statusKind == 4 || statusKind == 5;
+        }
     }
 }
