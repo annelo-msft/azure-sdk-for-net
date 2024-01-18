@@ -637,6 +637,31 @@ namespace Azure.Core.Tests
             await task2;
         }
 
+        [Test]
+        public void WaitThrowsOnCancellation()
+        {
+            // Wait long enough to observe the cancellation.
+            DelayStrategy delay = DelayStrategy.CreateFixedDelayStrategy(TimeSpan.FromMinutes(1));
+            RetryPolicy retryPolicy = new RetryPolicy(maxRetries: 0, delay);
+
+            CancellationTokenSource cts = new CancellationTokenSource();
+
+            MockTransport mockTransport = CreateMockTransport();
+            ReadOnlyMemory<HttpPipelinePolicy> pipeline = new HttpPipelinePolicy[2]
+            {
+                retryPolicy,
+                new HttpPipelineTransportPolicy(mockTransport, default)
+            };
+
+            Request request = mockTransport.CreateRequest();
+            HttpMessage message = new HttpMessage(request, default);
+            message.SetCancellationToken(cts.Token);
+
+            cts.Cancel();
+
+            Assert.ThrowsAsync<TaskCanceledException>(async () => await retryPolicy.ProcessAsync(message, pipeline));
+        }
+
         private static void AssertRetryEvent(TestEventListener listener, MockRequest request, int retryNumber)
         {
             EventWrittenEventArgs e = listener.SingleEventById(10, args => args.GetProperty<int>("retryNumber") == retryNumber);
