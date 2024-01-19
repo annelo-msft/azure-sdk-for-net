@@ -12,38 +12,6 @@ namespace System.ClientModel.Tests.Message;
 public class PipelineResponseHeadersTests
 {
     [Test]
-    public void AddThrowsNotSupportedException()
-    {
-        HttpResponseMessage httpResponse = new HttpResponseMessage();
-        HttpContent content = new ByteArrayContent(BinaryData.FromString("Content").ToArray());
-
-        HttpClientResponseHeaders headers = new(httpResponse, content);
-
-        Assert.Throws<NotSupportedException>(() => headers.Add("Mock-Header", "Mock value"));
-    }
-
-    [Test]
-    public void SetThrowsNotSupportedException()
-    {
-        HttpResponseMessage httpResponse = new HttpResponseMessage();
-        HttpContent content = new ByteArrayContent(BinaryData.FromString("Content").ToArray());
-
-        HttpClientResponseHeaders headers = new(httpResponse, content);
-
-        Assert.Throws<NotSupportedException>(() => headers.Set("Mock-Header", "Mock value"));
-    }
-
-    [Test]
-    public void RemoveThrowsNotSupportedException()
-    {
-        HttpResponseMessage httpResponse = new HttpResponseMessage();
-        HttpContent content = new ByteArrayContent(BinaryData.FromString("Content").ToArray());
-        HttpClientResponseHeaders headers = new(httpResponse, content);
-
-        Assert.Throws<NotSupportedException>(() => headers.Remove("Mock-Header"));
-    }
-
-    [Test]
     public void CanGetSingleValueAsString()
     {
         HttpResponseMessage httpResponse = new HttpResponseMessage();
