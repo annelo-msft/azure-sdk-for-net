@@ -14,7 +14,7 @@ namespace System.ClientModel.Primitives;
 
 public partial class HttpClientPipelineTransport
 {
-    private class HttpPipelineRequest : PipelineRequest
+    public class HttpPipelineRequest : PipelineRequest
     {
         private const string AuthorizationHeaderName = "Authorization";
 
@@ -26,7 +26,7 @@ public partial class HttpClientPipelineTransport
 
         private bool _disposed;
 
-        protected internal HttpPipelineRequest()
+        public HttpPipelineRequest()
         {
             _method = HttpMethod.Get.Method;
             _headers = new ArrayBackedRequestHeaders();

@@ -14,6 +14,9 @@ namespace Azure.Core
     {
         private readonly Request _request;
 
+        /// <summary>
+        /// </summary>
+        /// <param name="request"></param>
         internal RequestHeaders(Request request)
         {
             _request = request;

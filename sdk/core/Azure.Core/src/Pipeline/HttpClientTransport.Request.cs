@@ -16,7 +16,7 @@ namespace Azure.Core.Pipeline
     /// </summary>
     public partial class HttpClientTransport : HttpPipelineTransport, IDisposable
     {
-        private sealed class HttpClientTransportRequest : Request
+        public sealed class HttpClientTransportRequest : Request
         {
             // In this implementation of the abstract Azure.Core.Request type,
             // we have two fields for each of the public properties -- one on the

@@ -14,7 +14,7 @@
     <EnableClientSdkAnalyzers>true</EnableClientSdkAnalyzers>
     <EnableBannedApiAnalyzers>false</EnableBannedApiAnalyzers>
     <ApiCompatBaselineTargetFramework Condition="'$(TargetFramework)' == 'net472'">net461</ApiCompatBaselineTargetFramework>
-    <NoWarn>AZC0020;NU1101</NoWarn>
+    <NoWarn>AZC0020;NU1101;CS1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
