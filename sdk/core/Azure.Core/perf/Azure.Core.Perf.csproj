@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Condition="'$(AzureCoreVersion)' == ''" Include="../../Azure.Core/src/Azure.Core.csproj" />
+    <ProjectReference Condition="'$(AzureCoreVersion)' == ''" Include="..\src\Azure.Core2.csproj" />
     <PackageReference Condition="'$(AzureCoreVersion)' != ''" Include="Azure.Core" VersionOverride="$(AzureCoreVersion)" />
   </ItemGroup>
   <ItemGroup>
