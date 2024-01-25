@@ -13,19 +13,16 @@ namespace System.ClientModel.Tests.Client.ModelReaderWriterTests.Models
     {
         private Dictionary<string, BinaryData> _rawData;
 
-        public static implicit operator BinaryContent(BaseModel baseModel)
-        {
-            if (baseModel == null)
-            {
-                return null;
-            }
+        public string Kind { get; internal set; }
+        public string Name { get; set; }
 
-            return BinaryContent.Create(baseModel, ModelReaderWriterHelper.WireOptions);
-        }
+        public static implicit operator BinaryContent(BaseModel baseModel)
+            => BinaryContent.Create(baseModel, ModelReaderWriterHelper.WireOptions);
 
         public static explicit operator BaseModel(ClientResult result)
         {
-            if (result is null) throw new ArgumentNullException(nameof(result));
+            if (result is null)
+                throw new ArgumentNullException(nameof(result));
 
             using JsonDocument jsonDocument = JsonDocument.Parse(result.GetRawResponse().Content);
             return DeserializeBaseModel(jsonDocument.RootElement, ModelReaderWriterHelper.WireOptions);
@@ -35,9 +32,6 @@ namespace System.ClientModel.Tests.Client.ModelReaderWriterTests.Models
         {
             _rawData = rawData ?? new Dictionary<string, BinaryData>();
         }
-
-        public string Kind { get; internal set; }
-        public string Name { get; set; }
 
         protected internal void SerializeRawData(Utf8JsonWriter writer)
         {
@@ -86,8 +80,9 @@ namespace System.ClientModel.Tests.Client.ModelReaderWriterTests.Models
 
             if (element.ValueKind == JsonValueKind.Null)
             {
-                return null;
+                throw new InvalidOperationException("Failed to deserialize");
             }
+
             if (element.TryGetProperty("kind", out JsonElement discriminator))
             {
                 switch (discriminator.GetString())
@@ -100,7 +95,7 @@ namespace System.ClientModel.Tests.Client.ModelReaderWriterTests.Models
             }
 
             //Deserialize unknown subtype
-            string kind = default;
+            string? kind = default;
             OptionalProperty<string> name = default;
             Dictionary<string, BinaryData> rawData = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -121,6 +116,7 @@ namespace System.ClientModel.Tests.Client.ModelReaderWriterTests.Models
                     rawData.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }
+
             return new UnknownBaseModel(kind, name, rawData);
         }
 

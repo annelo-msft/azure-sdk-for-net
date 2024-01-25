@@ -13,12 +13,12 @@ internal static class OptionalProperty
         return !(collection is OptionalList<T> changeTrackingList && changeTrackingList.IsUndefined);
     }
 
-    public static bool IsCollectionDefined<TKey, TValue>(IReadOnlyDictionary<TKey, TValue> collection)
+    public static bool IsCollectionDefined<TKey, TValue>(IReadOnlyDictionary<TKey, TValue> collection) where TKey : notnull
     {
         return !(collection is OptionalDictionary<TKey, TValue> changeTrackingList && changeTrackingList.IsUndefined);
     }
 
-    public static bool IsCollectionDefined<TKey, TValue>(IDictionary<TKey, TValue> collection)
+    public static bool IsCollectionDefined<TKey, TValue>(IDictionary<TKey, TValue> collection) where TKey : notnull
     {
         return !(collection is OptionalDictionary<TKey, TValue> changeTrackingList && changeTrackingList.IsUndefined);
     }
@@ -41,7 +41,7 @@ internal static class OptionalProperty
         return value.ValueKind != JsonValueKind.Undefined;
     }
 
-    public static IReadOnlyDictionary<TKey, TValue> ToDictionary<TKey, TValue>(OptionalProperty<IReadOnlyDictionary<TKey, TValue>> optional)
+    public static IReadOnlyDictionary<TKey, TValue> ToDictionary<TKey, TValue>(OptionalProperty<IReadOnlyDictionary<TKey, TValue>> optional) where TKey : notnull
     {
         if (optional.HasValue)
         {
@@ -50,7 +50,7 @@ internal static class OptionalProperty
         return new OptionalDictionary<TKey, TValue>(optional);
     }
 
-    public static IDictionary<TKey, TValue> ToDictionary<TKey, TValue>(OptionalProperty<IDictionary<TKey, TValue>> optional)
+    public static IDictionary<TKey, TValue> ToDictionary<TKey, TValue>(OptionalProperty<IDictionary<TKey, TValue>> optional) where TKey : notnull
     {
         if (optional.HasValue)
         {
