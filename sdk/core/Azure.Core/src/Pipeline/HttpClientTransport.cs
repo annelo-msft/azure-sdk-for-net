@@ -3,7 +3,6 @@
 
 using System;
 using System.ClientModel;
-using System.ClientModel.Primitives;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
