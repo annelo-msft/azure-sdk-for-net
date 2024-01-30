@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using System.ClientModel.Internal;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -14,24 +15,21 @@ public abstract class PipelineTransport : PipelinePolicy
     /// </summary>
     /// <param name="message"></param>
     public void Process(PipelineMessage message)
-    {
-        ProcessCore(message);
-
-        if (message.Response is null)
-        {
-            throw new InvalidOperationException("Response was not set by transport.");
-        }
-
-        message.Response.SetIsError(ClassifyResponse(message));
-    }
+        => ProcessSyncOrAsync(message, async: false).EnsureCompleted();
 
     /// <summary>
     /// TBD: needed for inheritdoc.
     /// </summary>
     /// <param name="message"></param>
     public async ValueTask ProcessAsync(PipelineMessage message)
+        => await ProcessSyncOrAsync(message, async: true).ConfigureAwait(false);
+
+    private async ValueTask ProcessSyncOrAsync(PipelineMessage message, bool async)
     {
-        await ProcessCoreAsync(message).ConfigureAwait(false);
+        if (async)
+        {
+            await ProcessCoreAsync(message).ConfigureAwait(false);
+        }
 
         if (message.Response is null)
         {
