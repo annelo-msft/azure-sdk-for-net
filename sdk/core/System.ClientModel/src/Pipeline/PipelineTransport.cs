@@ -4,6 +4,8 @@
 using System.ClientModel.Internal;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace System.ClientModel.Primitives;
@@ -26,9 +28,31 @@ public abstract class PipelineTransport : PipelinePolicy
 
     private async ValueTask ProcessSyncOrAsync(PipelineMessage message, bool async)
     {
-        if (async)
+        Debug.Assert(message.NetworkTimeout is not null);
+
+        TimeSpan invocationNetworkTimeout = (TimeSpan)message.NetworkTimeout!;
+
+        CancellationToken oldToken = message.CancellationToken;
+        using CancellationTokenSource cts = CancellationTokenSource.CreateLinkedTokenSource(oldToken);
+        cts.CancelAfter(invocationNetworkTimeout);
+
+        try
         {
-            await ProcessCoreAsync(message).ConfigureAwait(false);
+            message.CancellationToken = cts.Token;
+            if (async)
+            {
+                await ProcessCoreAsync(message).ConfigureAwait(false);
+            }
+        }
+        catch (OperationCanceledException ex)
+        {
+            CancellationHelper.ThrowIfCancellationRequestedOrTimeout(oldToken, cts.Token, ex, invocationNetworkTimeout);
+            throw;
+        }
+        finally
+        {
+            message.CancellationToken = oldToken;
+            cts.CancelAfter(Timeout.Infinite);
         }
 
         if (message.Response is null)
@@ -37,6 +61,59 @@ public abstract class PipelineTransport : PipelinePolicy
         }
 
         message.Response.SetIsError(ClassifyResponse(message));
+        message.Response!.NetworkTimeout = invocationNetworkTimeout;
+
+        Stream? responseContentStream = message.Response!.ContentStream;
+        if (responseContentStream is null ||
+            message.Response.TryGetBufferedContent(out var _))
+        {
+            // There is either no content on the response, or the content has already
+            // been buffered.
+            return;
+        }
+
+        if (!message.BufferResponse)
+        {
+            // Client has requested not to buffer the message response content.
+            // If applicable, wrap it in a read-timeout stream.
+            if (invocationNetworkTimeout != Timeout.InfiniteTimeSpan)
+            {
+                message.Response.ContentStream = new ReadTimeoutStream(responseContentStream, invocationNetworkTimeout);
+            }
+
+            return;
+        }
+
+        // If we got this far, buffer the response.
+
+        // If cancellation is possible (whether due to network timeout or a user cancellation token being passed), then
+        // register callback to dispose the stream on cancellation.
+        if (invocationNetworkTimeout != Timeout.InfiniteTimeSpan || oldToken.CanBeCanceled)
+        {
+            cts.Token.Register(state => ((Stream?)state)?.Dispose(), responseContentStream);
+        }
+
+        try
+        {
+            if (async)
+            {
+                await message.Response.BufferContentAsync(invocationNetworkTimeout, cts).ConfigureAwait(false);
+            }
+            else
+            {
+                message.Response.BufferContent(invocationNetworkTimeout, cts);
+            }
+        }
+        // We dispose stream on timeout or user cancellation so catch and check if cancellation token was cancelled
+        catch (Exception ex)
+            when (ex is ObjectDisposedException
+                      or IOException
+                      or OperationCanceledException
+                      or NotSupportedException)
+        {
+            CancellationHelper.ThrowIfCancellationRequestedOrTimeout(oldToken, cts.Token, ex, invocationNetworkTimeout);
+            throw;
+        }
     }
 
     private static bool ClassifyResponse(PipelineMessage message)

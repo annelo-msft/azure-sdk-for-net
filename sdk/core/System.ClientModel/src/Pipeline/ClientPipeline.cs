@@ -69,7 +69,7 @@ public sealed partial class ClientPipeline
         pipelineLength += options.BeforeTransportPolicies?.Length ?? 0;
 
         pipelineLength++; // for retry policy
-        pipelineLength++; // for response buffering policy
+        //pipelineLength++; // for response buffering policy
         pipelineLength++; // for transport
 
         PipelinePolicy[] policies = new PipelinePolicy[pipelineLength];
@@ -104,7 +104,7 @@ public sealed partial class ClientPipeline
         int perTryIndex = index;
 
         // Response buffering comes before the transport.
-        policies[index++] = ResponseBufferingPolicy.Default;
+        //policies[index++] = ResponseBufferingPolicy.Default;
 
         // Before transport policies come before the transport.
         beforeTransportPolicies.CopyTo(policies.AsSpan(index));
