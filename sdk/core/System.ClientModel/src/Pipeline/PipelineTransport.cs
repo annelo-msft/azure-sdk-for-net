@@ -62,24 +62,19 @@ public abstract class PipelineTransport : PipelinePolicy
         message.Response.SetIsError(ClassifyResponse(message));
         message.Response!.NetworkTimeout = networkTimeout;
 
-        Stream? responseContentStream = message.Response!.ContentStream;
-        if (responseContentStream is null ||
-            message.Response.TryGetBufferedContent(out var _))
+        if (message.Response!.ContentStream is not null)
         {
-            // There is either no content on the response, or the content has already
-            // been buffered.
+            // No need to buffer if there is no content stream.
             return;
         }
 
         if (!message.BufferResponse)
         {
-            // Client has requested not to buffer the message response content.
-            // If applicable, wrap it in a read-timeout stream.
-            if (networkTimeout != Timeout.InfiniteTimeSpan)
-            {
-                message.Response.ContentStream = new ReadTimeoutStream(responseContentStream, networkTimeout);
-            }
-
+            // Don't buffer the response content, e.g. in order to return the
+            // network stream to the end user of a client as part of a streaming
+            // API.  In this case, we wrap the content stream in a read-timeout
+            // stream, to respect the client's network timeout setting.
+            WrapNetworkStream(message, networkTimeout);
             return;
         }
 
@@ -89,7 +84,7 @@ public abstract class PipelineTransport : PipelinePolicy
         // register callback to dispose the stream on cancellation.
         if (networkTimeout != Timeout.InfiniteTimeSpan || userToken.CanBeCanceled)
         {
-            joinedTokenSource.Token.Register(state => ((Stream?)state)?.Dispose(), responseContentStream);
+            joinedTokenSource.Token.Register(state => ((Stream?)state)?.Dispose(), message.Response!.ContentStream);
         }
 
         try
@@ -125,6 +120,15 @@ public abstract class PipelineTransport : PipelinePolicy
         }
 
         return isError;
+    }
+
+    private static void WrapNetworkStream(PipelineMessage message, TimeSpan networkTimeout)
+    {
+        if (networkTimeout != Timeout.InfiniteTimeSpan)
+        {
+            Stream contentStream = message.Response!.ContentStream!;
+            message.Response!.ContentStream = new ReadTimeoutStream(contentStream, networkTimeout);
+        }
     }
 
     protected abstract void ProcessCore(PipelineMessage message);
