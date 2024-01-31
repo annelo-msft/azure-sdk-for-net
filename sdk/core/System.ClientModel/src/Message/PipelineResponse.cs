@@ -12,7 +12,7 @@ namespace System.ClientModel.Primitives;
 public abstract class PipelineResponse : IDisposable
 {
     // TODO(matell): The .NET Framework team plans to add BinaryData.Empty in dotnet/runtime#49670, and we can use it then.
-    private static readonly BinaryData s_emptyBinaryData = new(Array.Empty<byte>());
+    internal static readonly BinaryData s_emptyBinaryData = new(Array.Empty<byte>());
 
     private bool _isError = false;
 
@@ -30,35 +30,14 @@ public abstract class PipelineResponse : IDisposable
 
     protected abstract PipelineResponseHeaders GetHeadersCore();
 
+    internal bool BufferResponseRequested { get; set; }
+
+    public virtual BinaryData Content { get => s_emptyBinaryData; }
+
     /// <summary>
     /// Gets the contents of HTTP response. Returns <c>null</c> for responses without content.
     /// </summary>
     public abstract Stream? ContentStream { get; set; }
-
-    public virtual BinaryData Content
-    {
-        get
-        {
-            if (ContentStream == null)
-            {
-                return s_emptyBinaryData;
-            }
-
-            if (!TryGetBufferedContent(out MemoryStream bufferedContent))
-            {
-                throw new InvalidOperationException($"The response is not buffered.");
-            }
-
-            if (bufferedContent.TryGetBuffer(out ArraySegment<byte> segment))
-            {
-                return new BinaryData(segment.AsMemory());
-            }
-            else
-            {
-                return new BinaryData(bufferedContent.ToArray());
-            }
-        }
-    }
 
     /// <summary>
     /// Indicates whether the status code of the returned response is considered
@@ -136,7 +115,8 @@ public abstract class PipelineResponse : IDisposable
 #pragma warning disable CA1835 // ReadAsync(Memory<>) overload is not available in all targets
                 int bytesRead = await source.ReadAsync(buffer, 0, buffer.Length, cancellationTokenSource.Token).ConfigureAwait(false);
 #pragma warning restore // ReadAsync(Memory<>) overload is not available in all targets
-                if (bytesRead == 0) break;
+                if (bytesRead == 0)
+                    break;
                 await destination.WriteAsync(new ReadOnlyMemory<byte>(buffer, 0, bytesRead), cancellationTokenSource.Token).ConfigureAwait(false);
             }
         }

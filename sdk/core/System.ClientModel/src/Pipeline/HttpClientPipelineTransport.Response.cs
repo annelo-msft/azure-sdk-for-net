@@ -1,14 +1,16 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using System.ClientModel.Internal;
 using System.IO;
 using System.Net.Http;
+using System.Threading;
 
 namespace System.ClientModel.Primitives;
 
 public partial class HttpClientPipelineTransport
 {
-    private class HttpPipelineResponse : PipelineResponse
+    private class HttpClientPipelineResponse : PipelineResponse
     {
         private readonly HttpResponseMessage _httpResponse;
 
@@ -23,7 +25,7 @@ public partial class HttpClientPipelineTransport
 
         private bool _disposed;
 
-        public HttpPipelineResponse(HttpResponseMessage httpResponse)
+        public HttpClientPipelineResponse(HttpResponseMessage httpResponse)
         {
             _httpResponse = httpResponse ?? throw new ArgumentNullException(nameof(httpResponse));
             _httpResponseContent = _httpResponse.Content;
@@ -35,14 +37,54 @@ public partial class HttpClientPipelineTransport
             => _httpResponse.ReasonPhrase ?? string.Empty;
 
         protected override PipelineResponseHeaders GetHeadersCore()
-            => new HttpClientResponseHeaders(_httpResponse, _httpResponseContent);
+            => new HttpClientResponseHeaders(_httpResponse.Headers, _httpResponseContent);
 
+        private byte[]? _contentBytes;
+        public override BinaryData Content
+        {
+            get
+            {
+                if (BufferResponseRequested)
+                {
+                    if (_contentBytes is null)
+                    {
+                        return s_emptyBinaryData;
+                    }
+
+                    return BinaryData.FromBytes(_contentBytes);
+                }
+                else
+                {
+                    if (_contentStreamRead)
+                    {
+                        throw new InvalidOperationException("Network stream has already been accessed via ContentStream property.");
+                    }
+                    else
+                    {
+                        if (ContentStream is null)
+                        {
+                            return s_emptyBinaryData;
+                        }
+
+                        return BinaryData.FromStream(ContentStream);
+                    }
+                }
+            }
+        }
+
+        private bool _contentStreamRead = false;
         public override Stream? ContentStream
         {
-            get => _contentStream;
+            get
+            {
+                _contentStreamRead = true;
+                return _contentStream;
+            }
             set
             {
-                // Make sure we don't dispose the content if the stream was replaced
+                // We null the HttpResponseMessage.Content property to ensure
+                // that when we dispose the message, we don't also dispose the
+                // content we need for reading header values later on.
                 _httpResponse.Content = null;
 
                 _contentStream = value;
@@ -78,7 +120,7 @@ public partial class HttpClientPipelineTransport
                 // a network connection open.
                 //
                 // One tricky piece here is that in some cases, we may not have buffered
-                // the content because we  wanted to pass the live network stream out of
+                // the content because we wanted to pass the live network stream out of
                 // the client method and back to the end-user caller of the client e.g.
                 // for a streaming API.  If the latter is the case, the client should have
                 // called the HttpMessage.ExtractResponseContent method to obtain a reference
@@ -98,5 +140,15 @@ public partial class HttpClientPipelineTransport
             }
         }
         #endregion
+    }
+
+    // TODO: remove duplication
+    private static void WrapNetworkStream(PipelineMessage message, TimeSpan networkTimeout)
+    {
+        if (networkTimeout != Timeout.InfiniteTimeSpan)
+        {
+            Stream contentStream = message.Response!.ContentStream!;
+            message.Response!.ContentStream = new ReadTimeoutStream(contentStream, networkTimeout);
+        }
     }
 }

@@ -67,6 +67,9 @@ public abstract class PipelineTransport : PipelinePolicy
         message.Response.SetIsError(ClassifyResponse(message));
         message.Response!.NetworkTimeout = networkTimeout;
 
+        // Tell the response whether someone asked it to be buffered or not!
+        message.Response.BufferResponseRequested = message.BufferResponse;
+
         if (message.Response!.ContentStream is null)
         {
             // No need to buffer if there is no content stream.
