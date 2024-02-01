@@ -3,6 +3,7 @@
 
 using System.Buffers;
 using System.ClientModel.Internal;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,7 +16,10 @@ public abstract class PipelineResponse : IDisposable
     internal static readonly BinaryData s_emptyBinaryData = new(Array.Empty<byte>());
 
     private bool _isError = false;
-    private bool _isBuffered = false;
+    private bool _hasContent = false;
+
+    // If this is non-null, the stream has been buffered.
+    private byte[]? _contentBytes;
 
     /// <summary>
     /// Gets the HTTP status code.
@@ -31,14 +35,52 @@ public abstract class PipelineResponse : IDisposable
 
     protected abstract PipelineResponseHeaders GetHeadersCore();
 
-    internal bool BufferResponseRequested { get; set; }
+    public virtual BinaryData Content
+    {
+        get
+        {
+            if (!_hasContent)
+            {
+                return s_emptyBinaryData;
+            }
 
-    public virtual BinaryData Content { get => s_emptyBinaryData; }
+            if (_contentBytes is not null)
+            {
+                return BinaryData.FromBytes(_contentBytes);
+            }
+
+            BufferContent();
+            return BinaryData.FromBytes(_contentBytes!);
+        }
+    }
 
     /// <summary>
     /// Gets the contents of HTTP response. Returns <c>null</c> for responses without content.
     /// </summary>
-    public abstract Stream? ContentStream { get; set; }
+    // Note that this will be the stream set by the transport's ProcessCore
+    // implementation (a live network stream or a mock stream) until the
+    // internal UpdateContent method is called.
+    private Stream? _contentStream;
+    public virtual Stream? ContentStream
+    {
+        get
+        {
+            if (!_hasContent)
+            {
+                return null;
+            }
+
+            if (_contentBytes is not null)
+            {
+                return new MemoryStream(_contentBytes);
+            }
+
+            Debug.Assert(_contentStream is not null);
+            return _contentStream;
+        }
+
+        set => _contentStream = value;
+    }
 
     /// <summary>
     /// Indicates whether the status code of the returned response is considered
@@ -53,7 +95,7 @@ public abstract class PipelineResponse : IDisposable
 
     protected virtual void SetIsErrorCore(bool isError) => _isError = isError;
 
-    internal TimeSpan NetworkTimeout { get; set; } = ClientPipeline.DefaultNetworkTimeout;
+    internal TimeSpan NetworkTimeout { get; set; }
 
     public abstract void Dispose();
 
@@ -62,17 +104,17 @@ public abstract class PipelineResponse : IDisposable
     // Same value as Stream.CopyTo uses by default
     private const int DefaultCopyBufferSize = 81920;
 
-    internal void SetContent(bool bufferResponse, CancellationToken userToken, CancellationTokenSource joinedTokenSource)
-        => SetContentSyncOrAsync(bufferResponse, userToken, joinedTokenSource, async: false).EnsureCompleted();
+    internal void UpdateContent(bool bufferResponse, CancellationToken userToken, CancellationTokenSource joinedTokenSource)
+        => UpdateContentSyncOrAsync(bufferResponse, userToken, joinedTokenSource, async: false).EnsureCompleted();
 
-    internal async Task SetContentAsync(bool bufferResponse, CancellationToken userToken, CancellationTokenSource joinedTokenSource)
-        => await SetContentSyncOrAsync(bufferResponse, userToken, joinedTokenSource, async: true).ConfigureAwait(false);
+    internal async Task UpdateContentAsync(bool bufferResponse, CancellationToken userToken, CancellationTokenSource joinedTokenSource)
+        => await UpdateContentSyncOrAsync(bufferResponse, userToken, joinedTokenSource, async: true).ConfigureAwait(false);
 
-    private async Task SetContentSyncOrAsync(bool bufferResponse, CancellationToken userToken, CancellationTokenSource joinedTokenSource, bool async)
+    private async Task UpdateContentSyncOrAsync(bool bufferResponse, CancellationToken userToken, CancellationTokenSource joinedTokenSource, bool async)
     {
         if (ContentStream is null)
         {
-            // Nothing to do
+            _hasContent = false;
             return;
         }
 
@@ -108,12 +150,12 @@ public abstract class PipelineResponse : IDisposable
                 BufferContent(joinedTokenSource);
             }
         }
-        // We dispose stream on timeout or user cancellation so catch and check if cancellation token was cancelled
-        catch (Exception ex)
-            when (ex is ObjectDisposedException
-                      or IOException
-                      or OperationCanceledException
-                      or NotSupportedException)
+        // We dispose the stream on timeout or user cancellation so catch and
+        // check if cancellation token was cancelled.
+        catch (Exception ex) when (ex is ObjectDisposedException
+                                      or IOException
+                                      or OperationCanceledException
+                                      or NotSupportedException)
         {
             CancellationHelper.ThrowIfCancellationRequestedOrTimeout(userToken, joinedTokenSource.Token, ex, NetworkTimeout);
             throw;
@@ -128,76 +170,69 @@ public abstract class PipelineResponse : IDisposable
 
     private async Task BufferContentSyncOrAsync(CancellationTokenSource? cts, bool async)
     {
-        Stream? responseContentStream = ContentStream;
-        if (responseContentStream == null || _isBuffered)
+        Stream? networkStream = ContentStream;
+        if (networkStream == null || _contentBytes is not null)
         {
             // No need to buffer content.
             return;
         }
 
-        MemoryStream bufferStream = new();
-
+        // TODO: Come back and optimize this - for now, just a POC.
         if (async)
         {
-            await CopyToAsync(responseContentStream, bufferStream, NetworkTimeout, cts ?? new CancellationTokenSource()).ConfigureAwait(false);
+            var temp = await BinaryData.FromStreamAsync(networkStream, cts?.Token ?? default).ConfigureAwait(false);
+            _contentBytes = temp.ToArray();
         }
         else
         {
-            CopyTo(responseContentStream, bufferStream, NetworkTimeout, cts ?? new CancellationTokenSource());
+            _contentBytes = BinaryData.FromStream(networkStream).ToArray();
         }
 
-        responseContentStream.Dispose();
-        bufferStream.Position = 0;
-        ContentStream = bufferStream;
-
-        _isBuffered = true;
+        networkStream.Dispose();
     }
 
-    private static async Task CopyToAsync(Stream source, Stream destination, TimeSpan timeout, CancellationTokenSource cancellationTokenSource)
-    {
-        byte[] buffer = ArrayPool<byte>.Shared.Rent(DefaultCopyBufferSize);
-        try
-        {
-            while (true)
-            {
-                cancellationTokenSource.CancelAfter(timeout);
-#pragma warning disable CA1835 // ReadAsync(Memory<>) overload is not available in all targets
-                int bytesRead = await source.ReadAsync(buffer, 0, buffer.Length, cancellationTokenSource.Token).ConfigureAwait(false);
-#pragma warning restore // ReadAsync(Memory<>) overload is not available in all targets
-                if (bytesRead == 0)
-                    break;
-                await destination.WriteAsync(new ReadOnlyMemory<byte>(buffer, 0, bytesRead), cancellationTokenSource.Token).ConfigureAwait(false);
-            }
-        }
-        finally
-        {
-            cancellationTokenSource.CancelAfter(Timeout.InfiniteTimeSpan);
-            ArrayPool<byte>.Shared.Return(buffer);
-        }
-    }
+    //    private static async Task CopyToAsync(Stream source, Stream destination, TimeSpan timeout, CancellationTokenSource cancellationTokenSource)
+    //    {
+    //        byte[] buffer = ArrayPool<byte>.Shared.Rent(DefaultCopyBufferSize);
+    //        try
+    //        {
+    //            while (true)
+    //            {
+    //                cancellationTokenSource.CancelAfter(timeout);
+    //#pragma warning disable CA1835 // ReadAsync(Memory<>) overload is not available in all targets
+    //                int bytesRead = await source.ReadAsync(buffer, 0, buffer.Length, cancellationTokenSource.Token).ConfigureAwait(false);
+    //#pragma warning restore // ReadAsync(Memory<>) overload is not available in all targets
+    //                if (bytesRead == 0)
+    //                    break;
+    //                await destination.WriteAsync(new ReadOnlyMemory<byte>(buffer, 0, bytesRead), cancellationTokenSource.Token).ConfigureAwait(false);
+    //            }
+    //        }
+    //        finally
+    //        {
+    //            cancellationTokenSource.CancelAfter(Timeout.InfiniteTimeSpan);
+    //            ArrayPool<byte>.Shared.Return(buffer);
+    //        }
+    //    }
 
-    private static void CopyTo(Stream source, Stream destination, TimeSpan timeout, CancellationTokenSource cancellationTokenSource)
-    {
-        byte[] buffer = ArrayPool<byte>.Shared.Rent(DefaultCopyBufferSize);
-        try
-        {
-            int read;
-            while ((read = source.Read(buffer, 0, buffer.Length)) != 0)
-            {
-                cancellationTokenSource.Token.ThrowIfCancellationRequested();
-                cancellationTokenSource.CancelAfter(timeout);
-                destination.Write(buffer, 0, read);
-            }
-        }
-        finally
-        {
-            cancellationTokenSource.CancelAfter(Timeout.InfiniteTimeSpan);
-            ArrayPool<byte>.Shared.Return(buffer);
-        }
-    }
+    //    private static void CopyTo(Stream source, Stream destination, TimeSpan timeout, CancellationTokenSource cancellationTokenSource)
+    //    {
+    //        byte[] buffer = ArrayPool<byte>.Shared.Rent(DefaultCopyBufferSize);
+    //        try
+    //        {
+    //            int read;
+    //            while ((read = source.Read(buffer, 0, buffer.Length)) != 0)
+    //            {
+    //                cancellationTokenSource.Token.ThrowIfCancellationRequested();
+    //                cancellationTokenSource.CancelAfter(timeout);
+    //                destination.Write(buffer, 0, read);
+    //            }
+    //        }
+    //        finally
+    //        {
+    //            cancellationTokenSource.CancelAfter(Timeout.InfiniteTimeSpan);
+    //            ArrayPool<byte>.Shared.Return(buffer);
+    //        }
+    //    }
 
-    private static Stream WrapNetworkStream(Stream contentStream, TimeSpan networkTimeout)
-        => networkTimeout == Timeout.InfiniteTimeSpan ? contentStream
-            : new ReadTimeoutStream(contentStream, networkTimeout);
     #endregion
 }

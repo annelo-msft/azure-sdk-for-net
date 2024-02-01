@@ -69,11 +69,11 @@ public abstract class PipelineTransport : PipelinePolicy
 
         if (async)
         {
-            await message.Response!.SetContentAsync(message.BufferResponse, userToken, joinedTokenSource).ConfigureAwait(false);
+            await message.Response!.UpdateContentAsync(message.BufferResponse, userToken, joinedTokenSource).ConfigureAwait(false);
         }
         else
         {
-            message.Response!.SetContent(message.BufferResponse, userToken, joinedTokenSource);
+            message.Response!.UpdateContent(message.BufferResponse, userToken, joinedTokenSource);
         }
     }
 

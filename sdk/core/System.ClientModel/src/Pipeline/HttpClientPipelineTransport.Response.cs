@@ -22,8 +22,6 @@ public partial class HttpClientPipelineTransport
         // references to network resources.
         private readonly HttpContent _httpResponseContent;
 
-        private Stream? _contentStream;
-
         private bool _disposed;
 
         public HttpClientPipelineResponse(HttpResponseMessage httpResponse, Stream contentStream)
@@ -34,7 +32,7 @@ public partial class HttpClientPipelineTransport
             // Don't let anyone dispose the content, which is used by headers.
             _httpResponse.Content = null;
 
-            _contentStream = contentStream;
+            ContentStream = contentStream;
         }
 
         public override int Status => (int)_httpResponse.StatusCode;
@@ -44,44 +42,6 @@ public partial class HttpClientPipelineTransport
 
         protected override PipelineResponseHeaders GetHeadersCore()
             => new HttpClientResponseHeaders(_httpResponse.Headers, _httpResponseContent);
-
-        //public override BinaryData Content
-        //{
-        //    get
-        //    {
-        //        if (BufferResponseRequested)
-        //        {
-        //            if (_contentBytes is null)
-        //            {
-        //                return s_emptyBinaryData;
-        //            }
-
-        //            return BinaryData.FromBytes(_contentBytes);
-        //        }
-        //        else
-        //        {
-        //            if (_contentStreamRead)
-        //            {
-        //                throw new InvalidOperationException("Network stream has already been accessed via ContentStream property.");
-        //            }
-        //            else
-        //            {
-        //                if (ContentStream is null)
-        //                {
-        //                    return s_emptyBinaryData;
-        //                }
-
-        //                return BinaryData.FromStream(ContentStream);
-        //            }
-        //        }
-        //    }
-        //}
-
-        public override Stream? ContentStream
-        {
-            get => _contentStream;
-            set => _contentStream = value;
-        }
 
         #region IDisposable
 
