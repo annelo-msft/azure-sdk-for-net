@@ -16,7 +16,6 @@ public abstract class PipelineResponse : IDisposable
     internal static readonly BinaryData s_emptyBinaryData = new(Array.Empty<byte>());
 
     private bool _isError = false;
-    private bool _hasContent = false;
 
     // If this is non-null, the stream has been buffered.
     private byte[]? _contentBytes;
@@ -35,11 +34,13 @@ public abstract class PipelineResponse : IDisposable
 
     protected abstract PipelineResponseHeaders GetHeadersCore();
 
+    internal bool IsBuffered => _contentBytes != null;
+
     public virtual BinaryData Content
     {
         get
         {
-            if (!_hasContent)
+            if (ContentStream is null)
             {
                 return s_emptyBinaryData;
             }
@@ -60,27 +61,7 @@ public abstract class PipelineResponse : IDisposable
     // Note that this will be the stream set by the transport's ProcessCore
     // implementation (a live network stream or a mock stream) until the
     // internal UpdateContent method is called.
-    private Stream? _contentStream;
-    public virtual Stream? ContentStream
-    {
-        get
-        {
-            if (!_hasContent)
-            {
-                return null;
-            }
-
-            if (_contentBytes is not null)
-            {
-                return new MemoryStream(_contentBytes);
-            }
-
-            Debug.Assert(_contentStream is not null);
-            return _contentStream;
-        }
-
-        set => _contentStream = value;
-    }
+    public abstract Stream? ContentStream { get; set; }
 
     /// <summary>
     /// Indicates whether the status code of the returned response is considered
@@ -114,7 +95,6 @@ public abstract class PipelineResponse : IDisposable
     {
         if (ContentStream is null)
         {
-            _hasContent = false;
             return;
         }
 
@@ -170,7 +150,7 @@ public abstract class PipelineResponse : IDisposable
 
     private async Task BufferContentSyncOrAsync(CancellationTokenSource? cts, bool async)
     {
-        Stream? networkStream = ContentStream;
+        using Stream? networkStream = ContentStream;
         if (networkStream == null || _contentBytes is not null)
         {
             // No need to buffer content.
@@ -188,7 +168,8 @@ public abstract class PipelineResponse : IDisposable
             _contentBytes = BinaryData.FromStream(networkStream).ToArray();
         }
 
-        networkStream.Dispose();
+        // TODO: is there a way to initialize this lazily instead?
+        ContentStream = new MemoryStream(_contentBytes);
     }
 
     //    private static async Task CopyToAsync(Stream source, Stream destination, TimeSpan timeout, CancellationTokenSource cancellationTokenSource)

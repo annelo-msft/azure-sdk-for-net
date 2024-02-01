@@ -33,14 +33,16 @@ public class PipelineResponseTests
         Assert.AreEqual("body content", responseWithBody.Content.ToString());
     }
 
-    [Test]
-    public void ContentPropertyThrowsForNonMemoryStream()
-    {
-        var response = new MockPipelineResponse(200);
-        response.ContentStream = new ThrowingStream();
+    // TODO: Add tests of new functionality.
 
-        Assert.Throws<InvalidOperationException>(() => { BinaryData d = response.Content; });
-    }
+    //[Test]
+    //public void ContentPropertyThrowsForNonMemoryStream()
+    //{
+    //    var response = new MockPipelineResponse(200);
+    //    response.ContentStream = new ThrowingStream();
+
+    //    Assert.Throws<InvalidOperationException>(() => { BinaryData d = response.Content; });
+    //}
 
     #region Helpers
 

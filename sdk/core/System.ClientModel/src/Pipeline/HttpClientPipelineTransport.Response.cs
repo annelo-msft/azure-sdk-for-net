@@ -43,6 +43,8 @@ public partial class HttpClientPipelineTransport
         protected override PipelineResponseHeaders GetHeadersCore()
             => new HttpClientResponseHeaders(_httpResponse.Headers, _httpResponseContent);
 
+        public override Stream? ContentStream { get; set; }
+
         #region IDisposable
 
         public override void Dispose()
@@ -82,14 +84,17 @@ public partial class HttpClientPipelineTransport
                 // not disposed, because the entity that replaced the response content
                 // intentionally left the network stream undisposed.
 
-                // TODO: remove this and feel great about it!
+                // TODO: it would be good to revisit the assumptions here and see if
+                // we can be clear about when we pass control onto the caller.
+                // Right now, this is prevented by tests like
+                // NonBufferedFailedResponseStreamDisposed.
 
-                //var contentStream = _contentStream;
-                //if (contentStream is not null && !TryGetBufferedContent(out _))
-                //{
-                //    contentStream?.Dispose();
-                //    _contentStream = null;
-                //}
+                var contentStream = ContentStream;
+                if (contentStream is not null && !IsBuffered)
+                {
+                    contentStream?.Dispose();
+                    ContentStream = null;
+                }
 
                 _disposed = true;
             }
