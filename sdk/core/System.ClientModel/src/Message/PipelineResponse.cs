@@ -158,62 +158,63 @@ public abstract class PipelineResponse : IDisposable
         }
 
         // TODO: Come back and optimize this - for now, just a POC.
+        MemoryStream stream = new();
         if (async)
         {
-            var temp = await BinaryData.FromStreamAsync(networkStream, cts?.Token ?? default).ConfigureAwait(false);
-            _contentBytes = temp.ToArray();
+            await CopyToAsync(networkStream, stream, NetworkTimeout, cts ?? new CancellationTokenSource()).ConfigureAwait(false);
         }
         else
         {
-            _contentBytes = BinaryData.FromStream(networkStream).ToArray();
+            CopyTo(networkStream, stream, NetworkTimeout, cts ?? new CancellationTokenSource());
         }
+        _contentBytes = stream.GetBuffer();
 
         // TODO: is there a way to initialize this lazily instead?
         ContentStream = new MemoryStream(_contentBytes);
     }
 
-    //    private static async Task CopyToAsync(Stream source, Stream destination, TimeSpan timeout, CancellationTokenSource cancellationTokenSource)
-    //    {
-    //        byte[] buffer = ArrayPool<byte>.Shared.Rent(DefaultCopyBufferSize);
-    //        try
-    //        {
-    //            while (true)
-    //            {
-    //                cancellationTokenSource.CancelAfter(timeout);
-    //#pragma warning disable CA1835 // ReadAsync(Memory<>) overload is not available in all targets
-    //                int bytesRead = await source.ReadAsync(buffer, 0, buffer.Length, cancellationTokenSource.Token).ConfigureAwait(false);
-    //#pragma warning restore // ReadAsync(Memory<>) overload is not available in all targets
-    //                if (bytesRead == 0)
-    //                    break;
-    //                await destination.WriteAsync(new ReadOnlyMemory<byte>(buffer, 0, bytesRead), cancellationTokenSource.Token).ConfigureAwait(false);
-    //            }
-    //        }
-    //        finally
-    //        {
-    //            cancellationTokenSource.CancelAfter(Timeout.InfiniteTimeSpan);
-    //            ArrayPool<byte>.Shared.Return(buffer);
-    //        }
-    //    }
+    private static async Task CopyToAsync(Stream source, Stream destination, TimeSpan timeout, CancellationTokenSource cancellationTokenSource)
+    {
+        byte[] buffer = ArrayPool<byte>.Shared.Rent(DefaultCopyBufferSize);
+        try
+        {
+            while (true)
+            {
+                cancellationTokenSource.CancelAfter(timeout);
+#pragma warning disable CA1835 // ReadAsync(Memory<>) overload is not available in all targets
+                int bytesRead = await source.ReadAsync(buffer, 0, buffer.Length, cancellationTokenSource.Token).ConfigureAwait(false);
+#pragma warning restore // ReadAsync(Memory<>) overload is not available in all targets
+                if (bytesRead == 0)
+                    break;
+                await destination.WriteAsync(new ReadOnlyMemory<byte>(buffer, 0, bytesRead), cancellationTokenSource.Token).ConfigureAwait(false);
+            }
+        }
+        finally
+        {
+            cancellationTokenSource.CancelAfter(Timeout.InfiniteTimeSpan);
+            ArrayPool<byte>.Shared.Return(buffer);
+        }
+    }
 
-    //    private static void CopyTo(Stream source, Stream destination, TimeSpan timeout, CancellationTokenSource cancellationTokenSource)
-    //    {
-    //        byte[] buffer = ArrayPool<byte>.Shared.Rent(DefaultCopyBufferSize);
-    //        try
-    //        {
-    //            int read;
-    //            while ((read = source.Read(buffer, 0, buffer.Length)) != 0)
-    //            {
-    //                cancellationTokenSource.Token.ThrowIfCancellationRequested();
-    //                cancellationTokenSource.CancelAfter(timeout);
-    //                destination.Write(buffer, 0, read);
-    //            }
-    //        }
-    //        finally
-    //        {
-    //            cancellationTokenSource.CancelAfter(Timeout.InfiniteTimeSpan);
-    //            ArrayPool<byte>.Shared.Return(buffer);
-    //        }
-    //    }
+    private static void CopyTo(Stream source, Stream destination, TimeSpan timeout, CancellationTokenSource cancellationTokenSource)
+    {
+        byte[] buffer = ArrayPool<byte>.Shared.Rent(DefaultCopyBufferSize);
+        try
+        {
+            int read;
+            while ((read = source.Read(buffer, 0, buffer.Length)) != 0)
+            {
+                cancellationTokenSource.Token.ThrowIfCancellationRequested();
+                cancellationTokenSource.CancelAfter(timeout);
+                destination.Write(buffer, 0, read);
+            }
+        }
+        finally
+        {
+            cancellationTokenSource.CancelAfter(Timeout.InfiniteTimeSpan);
+            ArrayPool<byte>.Shared.Return(buffer);
+        }
+    }
 
     #endregion
 }
