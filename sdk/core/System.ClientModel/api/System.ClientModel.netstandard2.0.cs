@@ -204,7 +204,7 @@ namespace System.ClientModel.Primitives
     {
         protected PipelineResponse() { }
         public virtual System.BinaryData Content { get { throw null; } }
-        public abstract System.IO.Stream? ContentStream { get; set; }
+        public virtual System.IO.Stream? ContentStream { get { throw null; } set { } }
         public System.ClientModel.Primitives.PipelineResponseHeaders Headers { get { throw null; } }
         public virtual bool IsError { get { throw null; } }
         public abstract string ReasonPhrase { get; }
