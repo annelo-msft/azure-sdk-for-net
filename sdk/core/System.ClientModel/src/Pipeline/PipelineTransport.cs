@@ -82,7 +82,7 @@ public abstract class PipelineTransport : PipelinePolicy
             // network stream to the end user of a client as part of a streaming
             // API.  In this case, we wrap the content stream in a read-timeout
             // stream, to respect the client's network timeout setting.
-            WrapNetworkStream(message, networkTimeout);
+            message.Response!.ContentStream = WrapNetworkStream(message.Response!.ContentStream, networkTimeout);
             return;
         }
 
@@ -130,14 +130,8 @@ public abstract class PipelineTransport : PipelinePolicy
         return isError;
     }
 
-    private static void WrapNetworkStream(PipelineMessage message, TimeSpan networkTimeout)
-    {
-        if (networkTimeout != Timeout.InfiniteTimeSpan)
-        {
-            Stream contentStream = message.Response!.ContentStream!;
-            message.Response!.ContentStream = new ReadTimeoutStream(contentStream, networkTimeout);
-        }
-    }
+    internal static Stream WrapNetworkStream(Stream contentStream, TimeSpan networkTimeout)
+        => networkTimeout == Timeout.InfiniteTimeSpan ? contentStream : new ReadTimeoutStream(contentStream, networkTimeout);
 
     protected abstract void ProcessCore(PipelineMessage message);
 

@@ -12,6 +12,9 @@ public partial class HttpClientPipelineTransport
 {
     private class HttpClientPipelineResponse : PipelineResponse
     {
+        // We store this reference, even though we expect it to be disposed, because
+        // we read Status and ReasonPhrase from it, and they aren't affected by the
+        // call to HttpResponseMessage.Dispose.
         private readonly HttpResponseMessage _httpResponse;
 
         // We keep a reference to the http response content so it will be available
@@ -25,10 +28,15 @@ public partial class HttpClientPipelineTransport
 
         private bool _disposed;
 
-        public HttpClientPipelineResponse(HttpResponseMessage httpResponse)
+        public HttpClientPipelineResponse(HttpResponseMessage httpResponse, Stream contentStream)
         {
             _httpResponse = httpResponse ?? throw new ArgumentNullException(nameof(httpResponse));
             _httpResponseContent = _httpResponse.Content;
+
+            // Don't let anyone dispose the content, which is used by headers.
+            _httpResponse.Content = null;
+
+            _contentStream = contentStream;
         }
 
         public override int Status => (int)_httpResponse.StatusCode;
@@ -82,10 +90,10 @@ public partial class HttpClientPipelineTransport
             }
             set
             {
-                // We null the HttpResponseMessage.Content property to ensure
-                // that when we dispose the message, we don't also dispose the
-                // content we need for reading header values later on.
-                _httpResponse.Content = null;
+                //// We null the HttpResponseMessage.Content property to ensure
+                //// that when we dispose the message, we don't also dispose the
+                //// content we need for reading header values later on.
+                //_httpResponse.Content = null;
 
                 _contentStream = value;
             }
@@ -104,8 +112,9 @@ public partial class HttpClientPipelineTransport
         {
             if (disposing && !_disposed)
             {
-                var httpResponse = _httpResponse;
-                httpResponse?.Dispose();
+                // The transport is responsible for disposing the HttpResponseMessage.
+                //var httpResponse = _httpResponse;
+                //httpResponse?.Dispose();
 
                 // Some notes on this:
                 //
@@ -140,15 +149,5 @@ public partial class HttpClientPipelineTransport
             }
         }
         #endregion
-    }
-
-    // TODO: remove duplication
-    private static void WrapNetworkStream(PipelineMessage message, TimeSpan networkTimeout)
-    {
-        if (networkTimeout != Timeout.InfiniteTimeSpan)
-        {
-            Stream contentStream = message.Response!.ContentStream!;
-            message.Response!.ContentStream = new ReadTimeoutStream(contentStream, networkTimeout);
-        }
     }
 }

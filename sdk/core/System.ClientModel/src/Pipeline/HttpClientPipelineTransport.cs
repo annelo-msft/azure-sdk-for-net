@@ -95,7 +95,6 @@ public partial class HttpClientPipelineTransport : PipelineTransport, IDisposabl
         OnSendingRequest(message, httpRequest);
 
         HttpResponseMessage responseMessage;
-        //Stream? contentStream = null;
         message.Response = null;
 
         try
@@ -118,23 +117,47 @@ public partial class HttpClientPipelineTransport : PipelineTransport, IDisposabl
 #pragma warning restore AZC0110 // DO NOT use await keyword in possibly synchronous scope.
             }
 
-//            if (responseMessage.Content != null)
-//            {
-//#if NET6_0_OR_GREATER
-//                if (async)
-//                {
-//                    contentStream = await responseMessage.Content.ReadAsStreamAsync(message.CancellationToken).ConfigureAwait(false);
-//                }
-//                else
-//                {
-//                    contentStream = responseMessage.Content.ReadAsStream(message.CancellationToken);
-//                }
-//#else
-//#pragma warning disable AZC0110 // DO NOT use await keyword in possibly synchronous scope.
-//                contentStream = await responseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false);
-//#pragma warning restore AZC0110 // DO NOT use await keyword in possibly synchronous scope.
-//#endif
-//            }
+            if (responseMessage.Content != null)
+            {
+                if (message.BufferResponse)
+                {
+                    byte[]? contentBytes = null;
+                    if (async)
+                    {
+                        contentBytes = await responseMessage.Content.ReadAsByteArrayAsync(message.CancellationToken).ConfigureAwait(false);
+                    }
+                    else
+                    {
+                        // TODO: come back and optimize -- only a POC for now
+                        Stream tempStream = responseMessage.Content.ReadAsStream(message.CancellationToken);
+                        contentBytes = BinaryData.FromStream(tempStream).ToArray();
+                    }
+
+                    message.Response = new HttpClientPipelineResponse(responseMessage, contentStream);
+                }
+                else
+                {
+                    Stream? contentStream = null;
+#if NET6_0_OR_GREATER
+                    if (async)
+                    {
+                        contentStream = await responseMessage.Content.ReadAsStreamAsync(message.CancellationToken).ConfigureAwait(false);
+                    }
+                    else
+                    {
+                        contentStream = responseMessage.Content.ReadAsStream(message.CancellationToken);
+                    }
+#else
+#pragma warning disable AZC0110 // DO NOT use await keyword in possibly synchronous scope.
+                    contentStream = await responseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false);
+#pragma warning restore AZC0110 // DO NOT use await keyword in possibly synchronous scope.
+#endif
+                    // Wrap the content stream in a read timeout stream.
+                    contentStream = WrapNetworkStream(contentStream, message.NetworkTimeout!.Value);
+
+                    message.Response = new HttpClientPipelineResponse(responseMessage, contentStream);
+                }
+            }
         }
         // HttpClient on NET5 throws OperationCanceledException from sync call sites, normalize to TaskCanceledException
         catch (OperationCanceledException e) when (CancellationHelper.ShouldWrapInOperationCanceledException(e, message.CancellationToken))
@@ -146,8 +169,6 @@ public partial class HttpClientPipelineTransport : PipelineTransport, IDisposabl
             throw new ClientResultException(e.Message, response: default, e);
         }
 
-        message.Response = new HttpClientPipelineResponse(responseMessage);
-
         // This extensibility point lets derived types do the following:
         //   1. Set message.Response to an implementation-specific type, e.g. Azure.Core.Response.
         //   2. Make any necessary modifications based on the System.Net.Http.HttpResponseMessage.
@@ -157,6 +178,8 @@ public partial class HttpClientPipelineTransport : PipelineTransport, IDisposabl
         //{
         //    message.Response.ContentStream = contentStream;
         //}
+
+        responseMessage.Dispose();
     }
 
     /// <summary>
