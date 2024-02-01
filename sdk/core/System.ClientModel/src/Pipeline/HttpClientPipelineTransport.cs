@@ -95,7 +95,6 @@ public partial class HttpClientPipelineTransport : PipelineTransport, IDisposabl
         OnSendingRequest(message, httpRequest);
 
         HttpResponseMessage responseMessage;
-        Stream? contentStream = null;
         message.Response = null;
 
         try
@@ -120,6 +119,7 @@ public partial class HttpClientPipelineTransport : PipelineTransport, IDisposabl
 
             if (responseMessage.Content != null)
             {
+                Stream? contentStream = null;
 #if NET6_0_OR_GREATER
                 if (async)
                 {
@@ -134,6 +134,8 @@ public partial class HttpClientPipelineTransport : PipelineTransport, IDisposabl
                 contentStream = await responseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false);
 #pragma warning restore AZC0110 // DO NOT use await keyword in possibly synchronous scope.
 #endif
+
+                message.Response = new HttpClientPipelineResponse(responseMessage, contentStream);
             }
         }
         // HttpClient on NET5 throws OperationCanceledException from sync call sites, normalize to TaskCanceledException
@@ -146,20 +148,12 @@ public partial class HttpClientPipelineTransport : PipelineTransport, IDisposabl
             throw new ClientResultException(e.Message, response: default, e);
         }
 
-        message.Response = new HttpPipelineResponse(responseMessage);
-
         // This extensibility point lets derived types do the following:
         //   1. Set message.Response to an implementation-specific type, e.g. Azure.Core.Response.
         //   2. Make any necessary modifications based on the System.Net.Http.HttpResponseMessage.
         OnReceivedResponse(message, responseMessage);
 
-        // We set derived values on the MessageResponse here, including Content and IsError
-        // to ensure these things happen in the transport.  If derived implementations need
-        // to override these default transport values, they can do so in pipeline policies.
-        if (contentStream is not null)
-        {
-            message.Response.ContentStream = contentStream;
-        }
+        responseMessage.Dispose();
     }
 
     /// <summary>

@@ -8,8 +8,11 @@ namespace System.ClientModel.Primitives;
 
 public partial class HttpClientPipelineTransport
 {
-    private class HttpPipelineResponse : PipelineResponse
+    private class HttpClientPipelineResponse : PipelineResponse
     {
+        // We store this reference, even though we expect it to be disposed, because
+        // we read Status and ReasonPhrase from it, and they aren't affected by the
+        // call to HttpResponseMessage.Dispose.
         private readonly HttpResponseMessage _httpResponse;
 
         // We keep a reference to the http response content so it will be available
@@ -19,14 +22,17 @@ public partial class HttpClientPipelineTransport
         // references to network resources.
         private readonly HttpContent _httpResponseContent;
 
-        private Stream? _contentStream;
-
         private bool _disposed;
 
-        public HttpPipelineResponse(HttpResponseMessage httpResponse)
+        public HttpClientPipelineResponse(HttpResponseMessage httpResponse, Stream contentStream)
         {
             _httpResponse = httpResponse ?? throw new ArgumentNullException(nameof(httpResponse));
             _httpResponseContent = _httpResponse.Content;
+
+            // Don't let anyone dispose the content, which is used by headers.
+            _httpResponse.Content = null;
+
+            ContentStream = contentStream;
         }
 
         public override int Status => (int)_httpResponse.StatusCode;
@@ -35,19 +41,9 @@ public partial class HttpClientPipelineTransport
             => _httpResponse.ReasonPhrase ?? string.Empty;
 
         protected override PipelineResponseHeaders GetHeadersCore()
-            => new HttpClientResponseHeaders(_httpResponse, _httpResponseContent);
+            => new HttpClientResponseHeaders(_httpResponse.Headers, _httpResponseContent);
 
-        public override Stream? ContentStream
-        {
-            get => _contentStream;
-            set
-            {
-                // Make sure we don't dispose the content if the stream was replaced
-                _httpResponse.Content = null;
-
-                _contentStream = value;
-            }
-        }
+        public override Stream? ContentStream { get; set; }
 
         #region IDisposable
 
@@ -62,8 +58,9 @@ public partial class HttpClientPipelineTransport
         {
             if (disposing && !_disposed)
             {
-                var httpResponse = _httpResponse;
-                httpResponse?.Dispose();
+                // The transport is responsible for disposing the HttpResponseMessage.
+                //var httpResponse = _httpResponse;
+                //httpResponse?.Dispose();
 
                 // Some notes on this:
                 //
@@ -78,7 +75,7 @@ public partial class HttpClientPipelineTransport
                 // a network connection open.
                 //
                 // One tricky piece here is that in some cases, we may not have buffered
-                // the content because we  wanted to pass the live network stream out of
+                // the content because we wanted to pass the live network stream out of
                 // the client method and back to the end-user caller of the client e.g.
                 // for a streaming API.  If the latter is the case, the client should have
                 // called the HttpMessage.ExtractResponseContent method to obtain a reference
@@ -87,11 +84,16 @@ public partial class HttpClientPipelineTransport
                 // not disposed, because the entity that replaced the response content
                 // intentionally left the network stream undisposed.
 
-                var contentStream = _contentStream;
-                if (contentStream is not null && !TryGetBufferedContent(out _))
+                // TODO: it would be good to revisit the assumptions here and see if
+                // we can be clear about when we pass control onto the caller.
+                // Right now, this is prevented by tests like
+                // NonBufferedFailedResponseStreamDisposed.
+
+                var contentStream = ContentStream;
+                if (contentStream is not null && !IsBuffered)
                 {
                     contentStream?.Dispose();
-                    _contentStream = null;
+                    ContentStream = null;
                 }
 
                 _disposed = true;
