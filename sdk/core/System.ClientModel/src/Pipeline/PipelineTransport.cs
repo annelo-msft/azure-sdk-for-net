@@ -67,54 +67,13 @@ public abstract class PipelineTransport : PipelinePolicy
         message.Response.SetIsError(ClassifyResponse(message));
         message.Response!.NetworkTimeout = networkTimeout;
 
-        // Tell the response whether someone asked it to be buffered or not!
-        message.Response.BufferResponseRequested = message.BufferResponse;
-
-        if (message.Response!.ContentStream is null)
+        if (async)
         {
-            // No need to buffer if there is no content stream.
-            return;
+            await message.Response!.SetContentAsync(message.BufferResponse, userToken, joinedTokenSource).ConfigureAwait(false);
         }
-
-        if (!message.BufferResponse)
+        else
         {
-            // Don't buffer the response content, e.g. in order to return the
-            // network stream to the end user of a client as part of a streaming
-            // API.  In this case, we wrap the content stream in a read-timeout
-            // stream, to respect the client's network timeout setting.
-            message.Response!.ContentStream = WrapNetworkStream(message.Response!.ContentStream, networkTimeout);
-            return;
-        }
-
-        // If we got this far, buffer the response.
-
-        // If cancellation is possible (whether due to network timeout or a user cancellation token being passed), then
-        // register callback to dispose the stream on cancellation.
-        if (networkTimeout != Timeout.InfiniteTimeSpan || userToken.CanBeCanceled)
-        {
-            joinedTokenSource.Token.Register(state => ((Stream?)state)?.Dispose(), message.Response!.ContentStream);
-        }
-
-        try
-        {
-            if (async)
-            {
-                await message.Response.BufferContentAsync(networkTimeout, joinedTokenSource).ConfigureAwait(false);
-            }
-            else
-            {
-                message.Response.BufferContent(networkTimeout, joinedTokenSource);
-            }
-        }
-        // We dispose stream on timeout or user cancellation so catch and check if cancellation token was cancelled
-        catch (Exception ex)
-            when (ex is ObjectDisposedException
-                      or IOException
-                      or OperationCanceledException
-                      or NotSupportedException)
-        {
-            CancellationHelper.ThrowIfCancellationRequestedOrTimeout(userToken, joinedTokenSource.Token, ex, networkTimeout);
-            throw;
+            message.Response!.SetContent(message.BufferResponse, userToken, joinedTokenSource);
         }
     }
 
@@ -129,9 +88,6 @@ public abstract class PipelineTransport : PipelinePolicy
 
         return isError;
     }
-
-    internal static Stream WrapNetworkStream(Stream contentStream, TimeSpan networkTimeout)
-        => networkTimeout == Timeout.InfiniteTimeSpan ? contentStream : new ReadTimeoutStream(contentStream, networkTimeout);
 
     protected abstract void ProcessCore(PipelineMessage message);
 

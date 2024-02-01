@@ -1,10 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using System.ClientModel.Internal;
 using System.IO;
 using System.Net.Http;
-using System.Threading;
 
 namespace System.ClientModel.Primitives;
 
@@ -25,29 +23,18 @@ public partial class HttpClientPipelineTransport
         private readonly HttpContent _httpResponseContent;
 
         private Stream? _contentStream;
-        private byte[]? _contentBytes;
 
         private bool _disposed;
 
-        public HttpClientPipelineResponse(HttpResponseMessage httpResponse, byte[] contentBytes)
-            : this(httpResponse)
-        {
-            _contentBytes = contentBytes;
-        }
-
         public HttpClientPipelineResponse(HttpResponseMessage httpResponse, Stream contentStream)
-            : this(httpResponse)
-        {
-            _contentStream = contentStream;
-        }
-
-        internal HttpClientPipelineResponse(HttpResponseMessage httpResponse)
         {
             _httpResponse = httpResponse ?? throw new ArgumentNullException(nameof(httpResponse));
             _httpResponseContent = _httpResponse.Content;
 
             // Don't let anyone dispose the content, which is used by headers.
             _httpResponse.Content = null;
+
+            _contentStream = contentStream;
         }
 
         public override int Status => (int)_httpResponse.StatusCode;
@@ -58,55 +45,42 @@ public partial class HttpClientPipelineTransport
         protected override PipelineResponseHeaders GetHeadersCore()
             => new HttpClientResponseHeaders(_httpResponse.Headers, _httpResponseContent);
 
-        public override BinaryData Content
-        {
-            get
-            {
-                if (BufferResponseRequested)
-                {
-                    if (_contentBytes is null)
-                    {
-                        return s_emptyBinaryData;
-                    }
+        //public override BinaryData Content
+        //{
+        //    get
+        //    {
+        //        if (BufferResponseRequested)
+        //        {
+        //            if (_contentBytes is null)
+        //            {
+        //                return s_emptyBinaryData;
+        //            }
 
-                    return BinaryData.FromBytes(_contentBytes);
-                }
-                else
-                {
-                    if (_contentStreamRead)
-                    {
-                        throw new InvalidOperationException("Network stream has already been accessed via ContentStream property.");
-                    }
-                    else
-                    {
-                        if (ContentStream is null)
-                        {
-                            return s_emptyBinaryData;
-                        }
+        //            return BinaryData.FromBytes(_contentBytes);
+        //        }
+        //        else
+        //        {
+        //            if (_contentStreamRead)
+        //            {
+        //                throw new InvalidOperationException("Network stream has already been accessed via ContentStream property.");
+        //            }
+        //            else
+        //            {
+        //                if (ContentStream is null)
+        //                {
+        //                    return s_emptyBinaryData;
+        //                }
 
-                        return BinaryData.FromStream(ContentStream);
-                    }
-                }
-            }
-        }
+        //                return BinaryData.FromStream(ContentStream);
+        //            }
+        //        }
+        //    }
+        //}
 
-        private bool _contentStreamRead = false;
         public override Stream? ContentStream
         {
-            get
-            {
-                _contentStreamRead = true;
-                return _contentStream;
-            }
-            set
-            {
-                //// We null the HttpResponseMessage.Content property to ensure
-                //// that when we dispose the message, we don't also dispose the
-                //// content we need for reading header values later on.
-                //_httpResponse.Content = null;
-
-                _contentStream = value;
-            }
+            get => _contentStream;
+            set => _contentStream = value;
         }
 
         #region IDisposable
@@ -148,12 +122,14 @@ public partial class HttpClientPipelineTransport
                 // not disposed, because the entity that replaced the response content
                 // intentionally left the network stream undisposed.
 
-                var contentStream = _contentStream;
-                if (contentStream is not null && !TryGetBufferedContent(out _))
-                {
-                    contentStream?.Dispose();
-                    _contentStream = null;
-                }
+                // TODO: remove this and feel great about it!
+
+                //var contentStream = _contentStream;
+                //if (contentStream is not null && !TryGetBufferedContent(out _))
+                //{
+                //    contentStream?.Dispose();
+                //    _contentStream = null;
+                //}
 
                 _disposed = true;
             }
