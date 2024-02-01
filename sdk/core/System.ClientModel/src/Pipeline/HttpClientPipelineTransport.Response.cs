@@ -25,18 +25,29 @@ public partial class HttpClientPipelineTransport
         private readonly HttpContent _httpResponseContent;
 
         private Stream? _contentStream;
+        private byte[]? _contentBytes;
 
         private bool _disposed;
 
+        public HttpClientPipelineResponse(HttpResponseMessage httpResponse, byte[] contentBytes)
+            : this(httpResponse)
+        {
+            _contentBytes = contentBytes;
+        }
+
         public HttpClientPipelineResponse(HttpResponseMessage httpResponse, Stream contentStream)
+            : this(httpResponse)
+        {
+            _contentStream = contentStream;
+        }
+
+        internal HttpClientPipelineResponse(HttpResponseMessage httpResponse)
         {
             _httpResponse = httpResponse ?? throw new ArgumentNullException(nameof(httpResponse));
             _httpResponseContent = _httpResponse.Content;
 
             // Don't let anyone dispose the content, which is used by headers.
             _httpResponse.Content = null;
-
-            _contentStream = contentStream;
         }
 
         public override int Status => (int)_httpResponse.StatusCode;
@@ -47,7 +58,6 @@ public partial class HttpClientPipelineTransport
         protected override PipelineResponseHeaders GetHeadersCore()
             => new HttpClientResponseHeaders(_httpResponse.Headers, _httpResponseContent);
 
-        private byte[]? _contentBytes;
         public override BinaryData Content
         {
             get

@@ -133,7 +133,7 @@ public partial class HttpClientPipelineTransport : PipelineTransport, IDisposabl
                         contentBytes = BinaryData.FromStream(tempStream).ToArray();
                     }
 
-                    message.Response = new HttpClientPipelineResponse(responseMessage, contentStream);
+                    message.Response = new HttpClientPipelineResponse(responseMessage, contentBytes);
                 }
                 else
                 {
@@ -173,11 +173,6 @@ public partial class HttpClientPipelineTransport : PipelineTransport, IDisposabl
         //   1. Set message.Response to an implementation-specific type, e.g. Azure.Core.Response.
         //   2. Make any necessary modifications based on the System.Net.Http.HttpResponseMessage.
         OnReceivedResponse(message, responseMessage);
-
-        //if (contentStream is not null)
-        //{
-        //    message.Response.ContentStream = contentStream;
-        //}
 
         responseMessage.Dispose();
     }
