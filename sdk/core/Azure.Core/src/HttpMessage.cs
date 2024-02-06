@@ -16,7 +16,6 @@ namespace Azure.Core
     {
         private ArrayBackedPropertyBag<ulong, object> _propertyBag;
         private Response? _response;
-        private bool _ownsResponse;
 
         /// <summary>
         /// Creates a new instance of <see cref="HttpMessage"/>.
@@ -30,7 +29,6 @@ namespace Azure.Core
             ResponseClassifier = responseClassifier;
             BufferResponse = true;
             _propertyBag = new ArrayBackedPropertyBag<ulong, object>();
-            _ownsResponse = true;
         }
 
         /// <summary>
@@ -49,10 +47,10 @@ namespace Azure.Core
                 if (_response == null)
                 {
 #pragma warning disable CA1065 // Do not raise exceptions in unexpected locations
-                    throw new InvalidOperationException("Response is not set on this message. "
+                    throw new InvalidOperationException($"{nameof(Response)} is not set on this message. "
                         + "This is may be because the message was not sent via pipeline.Send, "
                         + "the pipeline transport did not populate the response, or because "
-                        + "TransferResponseDisposeOwnership was called.");
+                        + $"{nameof(TransferResponseDisposeOwnership)} was called.");
 #pragma warning restore CA1065 // Do not raise exceptions in unexpected locations
                 }
                 return _response;
@@ -214,7 +212,6 @@ namespace Azure.Core
         {
             Response response = Response;
             _response = null;
-            _ownsResponse = false;
             return response;
         }
 
@@ -226,14 +223,11 @@ namespace Azure.Core
             Request.Dispose();
             _propertyBag.Dispose();
 
-            if (_ownsResponse)
+            var response = _response;
+            if (response != null)
             {
-                var response = _response;
-                if (response != null)
-                {
-                    _response = null;
-                    response.Dispose();
-                }
+                _response = null;
+                response.Dispose();
             }
         }
 
