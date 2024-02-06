@@ -5,6 +5,7 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using Azure.Core.Pipeline;
 
@@ -79,49 +80,56 @@ namespace Azure.Core
         /// TBD.
         /// </summary>
         /// <returns></returns>
-        protected override string GetMethodCore()
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        protected sealed override string GetMethodCore()
             => _method.Method;
 
         /// <summary>
         /// TBD.
         /// </summary>
         /// <param name="method"></param>
-        protected override void SetMethodCore(string method)
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        protected sealed override void SetMethodCore(string method)
             => _method = RequestMethod.Parse(method);
 
         /// <summary>
         /// TBD.
         /// </summary>
         /// <returns></returns>
-        protected override Uri GetUriCore()
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        protected sealed override Uri GetUriCore()
             => Uri.ToUri();
 
         /// <summary>
         /// TBD.
         /// </summary>
         /// <param name="uri"></param>
-        protected override void SetUriCore(Uri uri)
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        protected sealed override void SetUriCore(Uri uri)
             => Uri.Reset(uri);
 
         /// <summary>
         /// TBD.
         /// </summary>
         /// <returns></returns>
-        protected override BinaryContent? GetContentCore()
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        protected sealed override BinaryContent? GetContentCore()
             => _content;
 
         /// <summary>
         /// TBD.
         /// </summary>
         /// <param name="content"></param>
-        protected override void SetContentCore(BinaryContent? content)
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        protected sealed override void SetContentCore(BinaryContent? content)
             => _content = (RequestContent?)content;
 
         /// <summary>
         /// TBD.
         /// </summary>
         /// <returns></returns>
-        protected override PipelineRequestHeaders GetHeadersCore()
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        protected sealed override PipelineRequestHeaders GetHeadersCore()
             => new ClientModelRequestHeaders(Headers);
 
         #endregion

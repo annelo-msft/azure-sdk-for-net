@@ -35,6 +35,12 @@ public abstract class PipelineResponse : IDisposable
     /// </summary>
     public abstract Stream? ContentStream { get; set; }
 
+    /// <summary>
+    /// Gets the contents of HTTP response, if it is available.
+    /// </summary>
+    /// <remarks>
+    /// Throws <see cref="InvalidOperationException"/> when <see cref="PipelineResponse.ContentStream"/> is not a <see cref="MemoryStream"/>.
+    /// </remarks>
     public virtual BinaryData Content
     {
         get
