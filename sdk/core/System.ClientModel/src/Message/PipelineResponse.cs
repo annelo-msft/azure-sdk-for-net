@@ -15,7 +15,7 @@ public abstract class PipelineResponse : IDisposable
     private static readonly BinaryData s_emptyBinaryData = new(Array.Empty<byte>());
 
     private bool _isError = false;
-    private BinaryData? _bufferedContent;
+    private BinaryData? _content;
 
     /// <summary>
     /// Gets the HTTP status code.
@@ -40,8 +40,8 @@ public abstract class PipelineResponse : IDisposable
     /// Gets the content of the HTTP response, if it is available.
     /// </summary>
     /// <remarks>
-    /// Throws <see cref="InvalidOperationException"/> when the response has not
-    /// been buffered by the pipeline.
+    /// Throws <see cref="InvalidOperationException"/> when the response
+    /// ContentStream has not been buffered.
     /// </remarks>
     public virtual BinaryData Content
     {
@@ -52,16 +52,40 @@ public abstract class PipelineResponse : IDisposable
                 return s_emptyBinaryData;
             }
 
-            if (!IsBuffered)
+            // If _content has a value, it means that we have already buffered
+            // the response content from ContentStream, either in the pipeline's
+            // buffering logic, or from the lazy evaluation below.
+            if (_content is not null)
+            {
+                return _content;
+            }
+
+            // We lazily buffer the response content if we already have it
+            // loaded in memory, i.e. if someone has used the ContentStream
+            // setter to assign a MemoryStream to it.  We don't automatically
+            // buffer in other cases to avoid possibly reading a live network
+            // stream synchronously or attempting to load to large a data
+            // buffer into memory.
+            if (ContentStream is not MemoryStream content || !content.CanSeek)
             {
                 throw new InvalidOperationException($"The response is not buffered.");
             }
 
-            return _bufferedContent!;
+            if (content.TryGetBuffer(out ArraySegment<byte> segment))
+            {
+                _content = new BinaryData(segment.AsMemory());
+            }
+            else
+            {
+                _content = new BinaryData(content.ToArray());
+            }
+
+            return _content;
         }
     }
 
-    public bool IsBuffered => _bufferedContent is not null;
+    public bool IsBuffered => _content is not null ||
+        (ContentStream is MemoryStream && ContentStream.CanSeek);
 
     /// <summary>
     /// Indicates whether the status code of the returned response is considered
@@ -126,15 +150,6 @@ public abstract class PipelineResponse : IDisposable
         responseContentStream.Dispose();
         bufferStream.Position = 0;
         ContentStream = bufferStream;
-
-        if (bufferStream.TryGetBuffer(out ArraySegment<byte> segment))
-        {
-            _bufferedContent = new BinaryData(segment.AsMemory());
-        }
-        else
-        {
-            _bufferedContent = new BinaryData(bufferStream.ToArray());
-        }
     }
 
     private static async Task CopyToAsync(Stream source, Stream destination, TimeSpan timeout, CancellationTokenSource cancellationTokenSource)
