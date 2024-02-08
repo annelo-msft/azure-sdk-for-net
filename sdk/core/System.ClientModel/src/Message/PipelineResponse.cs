@@ -85,18 +85,6 @@ public abstract class PipelineResponse : IDisposable
     // Same value as Stream.CopyTo uses by default
     private const int DefaultCopyBufferSize = 81920;
 
-    internal bool TryGetBufferedContent(out MemoryStream bufferedContent)
-    {
-        if (ContentStream is MemoryStream content)
-        {
-            bufferedContent = content;
-            return true;
-        }
-
-        bufferedContent = default!;
-        return false;
-    }
-
     internal void BufferContent(TimeSpan? timeout = default, CancellationTokenSource? cts = default)
         => BufferContentSyncOrAsync(timeout, cts, async: false).EnsureCompleted();
 

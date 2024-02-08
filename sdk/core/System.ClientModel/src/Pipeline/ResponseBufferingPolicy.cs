@@ -65,8 +65,7 @@ public class ResponseBufferingPolicy : PipelinePolicy
         message.Response!.NetworkTimeout = invocationNetworkTimeout;
 
         Stream? responseContentStream = message.Response!.ContentStream;
-        if (responseContentStream is null ||
-            message.Response.TryGetBufferedContent(out var _))
+        if (responseContentStream is null || message.Response!.IsBuffered)
         {
             // There is either no content on the response, or the content has already
             // been buffered.
