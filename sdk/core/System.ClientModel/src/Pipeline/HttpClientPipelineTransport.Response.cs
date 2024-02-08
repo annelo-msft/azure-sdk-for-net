@@ -62,7 +62,7 @@ public partial class HttpClientPipelineTransport
         {
             if (disposing && !_disposed)
             {
-                var httpResponse = _httpResponse;
+                HttpResponseMessage httpResponse = _httpResponse;
                 httpResponse?.Dispose();
 
                 // Some notes on this:
@@ -77,19 +77,30 @@ public partial class HttpClientPipelineTransport
                 // 2. If the content is not buffered, we dispose it so that we don't leave
                 // a network connection open.
                 //
-                // One tricky piece here is that in some cases, we may not have buffered
-                // the content because we  wanted to pass the live network stream out of
-                // the client method and back to the end-user caller of the client e.g.
-                // for a streaming API.  If the latter is the case, the client should have
-                // called the HttpMessage.ExtractResponseContent method to obtain a reference
-                // to the network stream, and the response content was replaced by a stream
-                // that we are ok to dispose here.  In this case, the network stream is
-                // not disposed, because the entity that replaced the response content
-                // intentionally left the network stream undisposed.
+                // If the response has not been buffered, this is because a client or
+                // other caller of pipeline.Send set message.BufferResponse = false.
+                // The reason to do this in a client is because the client is providing
+                // a streaming API in which it passes the live network stream to the caller
+                // of a a service method.
+                //
+                // In clients with protocol methods, clients must call ExtractResponse
+                // to allow returning an undisposed response from the protocol method.
+                // In this case, the caller of the protocol method is responsible for
+                // disposing the response, which will dispose the network stream with it.
+                //
+                // In some Azure.Core-based client convenince methods in libraries without
+                // protocol methods, the client may have called HttpMessage's
+                // ExtractResponseContent method to obtain a reference to the network
+                // stream instead of ExtractResponse.  If that is the case, the response
+                // content was replaced by a stream that makes dispose here a no-op.
+                // In this case, the caller of the protocol method is also responsible for
+                // disposing the network stream returned from the convenience method, but
+                // will do so by disposing the stream directly, rather than disposing the
+                // response that holds it.
 
-                var contentStream = _contentStream;
-                if (contentStream is not null && !TryGetBufferedContent(out _))
+                if (!IsBuffered)
                 {
+                    Stream? contentStream = _contentStream;
                     contentStream?.Dispose();
                     _contentStream = null;
                 }
