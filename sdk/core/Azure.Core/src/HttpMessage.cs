@@ -26,7 +26,7 @@ namespace Azure.Core
             Argument.AssertNotNull(request, nameof(request));
 
             ResponseClassifier = responseClassifier;
-            NetworkTimeout = request.NetworkTimeout;
+            NetworkTimeout = request.NetworkTimeout ?? ClientOptions.DefaultNetworkTimeout;
         }
 
         /// <summary>
