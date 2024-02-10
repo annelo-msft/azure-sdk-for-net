@@ -27,7 +27,7 @@ namespace Azure.Core.Tests
             var stream1 = new MockReadStream(100, throwAfter: 50, canSeek: true);
             var stream2 = new MockReadStream(50, offset: 50);
 
-            MockTransport mockTransport = CreateNonBufferingTransport(
+            MockTransport mockTransport = CreateMockTransport(
                 new MockResponse(200) { ContentStream = stream1 },
                 new MockResponse(200) { ContentStream = stream2 }
             );
@@ -60,7 +60,7 @@ namespace Azure.Core.Tests
             var stream1 = new MockReadStream(100, throwAfter: 50);
             var stream2 = new MockReadStream(50, offset: 50);
 
-            MockTransport mockTransport = CreateNonBufferingTransport(
+            MockTransport mockTransport = CreateMockTransport(
                 new MockResponse(200) { ContentStream = stream1 },
                 new MockResponse(200) { ContentStream = stream2 }
             );
@@ -91,7 +91,7 @@ namespace Azure.Core.Tests
             var stream1 = new MockReadStream(100, throwAfter: 50, canSeek: true);
             var stream2 = new MockReadStream(50, offset: 50, throwAfter: 0, exceptionType: typeof(InvalidOperationException));
 
-            MockTransport mockTransport = CreateNonBufferingTransport(
+            MockTransport mockTransport = CreateMockTransport(
                 new MockResponse(200) { ContentStream = stream1 },
                 new MockResponse(200) { ContentStream = stream2 }
             );
@@ -130,7 +130,7 @@ namespace Azure.Core.Tests
 
             var stream1 = new MockReadStream(100, throwAfter: 25, canSeek: true, exceptionType: initial);
 
-            MockTransport mockTransport = CreateNonBufferingTransport(
+            MockTransport mockTransport = CreateMockTransport(
                 new MockResponse(200) { ContentStream = stream1 });
             var pipeline = new HttpPipeline(mockTransport);
 
@@ -157,7 +157,7 @@ namespace Azure.Core.Tests
             var stream1 = new MockReadStream(100, throwAfter: 50, exceptionType: typeof(OperationCanceledException), canSeek: true);
             var stream2 = new MockReadStream(50, offset: 50);
 
-            MockTransport mockTransport = CreateNonBufferingTransport(
+            MockTransport mockTransport = CreateMockTransport(
                 new MockResponse(200) { ContentStream = stream1 },
                 new MockResponse(200) { ContentStream = stream2 }
             );
@@ -190,7 +190,7 @@ namespace Azure.Core.Tests
             var stream1 = new NoLengthStream();
             var stream2 = new MockReadStream(50);
 
-            MockTransport mockTransport = CreateNonBufferingTransport(
+            MockTransport mockTransport = CreateMockTransport(
                 new MockResponse(200) { ContentStream = stream1 },
                 new MockResponse(200) { ContentStream = stream2 }
             );
@@ -217,7 +217,7 @@ namespace Azure.Core.Tests
         public async Task ThrowsIfSendingRetryRequestThrows()
         {
             var stream1 = new MockReadStream(100, throwAfter: 50);
-            MockTransport mockTransport = CreateNonBufferingTransport(new MockResponse(200) { ContentStream = stream1 });
+            MockTransport mockTransport = CreateMockTransport(new MockResponse(200) { ContentStream = stream1 });
 
             var pipeline = new HttpPipeline(mockTransport);
 
@@ -255,7 +255,7 @@ namespace Azure.Core.Tests
         [Test]
         public async Task RetriesMaxCountAndThrowsAggregateException()
         {
-            MockTransport mockTransport = CreateNonBufferingTransport(
+            MockTransport mockTransport = CreateMockTransport(
                 new MockResponse(200) { ContentStream = new MockReadStream(100, throwAfter: 1) },
                 new MockResponse(200) { ContentStream = new MockReadStream(100, throwAfter: 1, offset: 1) },
                 new MockResponse(200) { ContentStream = new MockReadStream(100, throwAfter: 1, offset: 2) },

@@ -647,7 +647,7 @@ namespace Azure.Core.Tests
             }
             setupRequest?.Invoke(mockResponse);
 
-            MockTransport mockTransport = CreateNonBufferingTransport(mockResponse);
+            MockTransport mockTransport = CreateMockTransport(mockResponse);
             var pipeline = new HttpPipeline(mockTransport, new[] { new LoggingPolicy(logContent: true, maxLength, _sanitizer, "Test-SDK") });
 
             Response response = await SendRequestAsync(pipeline, request =>
