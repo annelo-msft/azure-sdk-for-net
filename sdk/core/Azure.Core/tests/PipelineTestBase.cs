@@ -33,6 +33,7 @@ namespace Azure.Core.Tests
         {
             var message = new HttpMessage(request, ResponseClassifier.Shared);
             message.SetCancellationToken(cancellationToken);
+            //message.BufferResponse = false;
             if (_isAsync)
             {
                 await transport.ProcessAsync(message);
