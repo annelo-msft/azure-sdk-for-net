@@ -105,10 +105,7 @@ namespace Azure.Core.Pipeline
         public HttpMessage CreateMessage()
         {
             Request request = CreateRequest();
-            HttpMessage message = new(request, ResponseClassifier)
-            {
-                NetworkTimeout = request.NetworkTimeout
-            };
+            HttpMessage message = new(request, ResponseClassifier);
             return message;
         }
 
@@ -128,10 +125,7 @@ namespace Azure.Core.Pipeline
         public HttpMessage CreateMessage(RequestContext? context, ResponseClassifier? classifier = default)
         {
             Request request = CreateRequest();
-            HttpMessage message = new(request, classifier ?? ResponseClassifier)
-            {
-                NetworkTimeout = request.NetworkTimeout
-            };
+            HttpMessage message = new(request, classifier ?? ResponseClassifier);
 
             if (context != null)
             {
@@ -156,7 +150,6 @@ namespace Azure.Core.Pipeline
         {
             message.SetCancellationToken(cancellationToken);
             message.ProcessingStartTime = DateTimeOffset.UtcNow;
-            message.NetworkTimeout ??= _networkTimeout;
             AddHttpMessageProperties(message);
 
             if (message.Policies == null || message.Policies.Count == 0)
@@ -192,7 +185,6 @@ namespace Azure.Core.Pipeline
         {
             message.SetCancellationToken(cancellationToken);
             message.ProcessingStartTime = DateTimeOffset.UtcNow;
-            message.NetworkTimeout ??= _networkTimeout;
             AddHttpMessageProperties(message);
 
             if (message.Policies == null || message.Policies.Count == 0)
