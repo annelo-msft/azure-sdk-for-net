@@ -10,7 +10,6 @@ using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using Azure.Core;
-using Azure.Core.Pipeline;
 
 namespace Azure.Analytics.Purview.DataMap;
 
@@ -118,7 +117,6 @@ internal class MultipartFormDataBinaryContent : RequestContent
     public override bool TryComputeLength(out long length)
     {
         // We can't call the protected method on HttpContent
-
         if (_multipartContent.Headers.ContentLength is long contentLength)
         {
             length = contentLength;
@@ -131,25 +129,16 @@ internal class MultipartFormDataBinaryContent : RequestContent
 
     public override void WriteTo(Stream stream, CancellationToken cancellationToken = default)
     {
-        // TODO: polyfill sync-over-async for netstandard2.0 for Azure clients.
-        // Tracked by https://github.com/Azure/azure-sdk-for-net/issues/42674
-
-#if NET6_0_OR_GREATER
-        _multipartContent.CopyTo(stream, default, cancellationToken);
-#else
-#pragma warning disable AZC0107 // DO NOT call public asynchronous method in synchronous scope.
-        _multipartContent.CopyToAsync(stream).EnsureCompleted();
-#pragma warning restore AZC0107 // DO NOT call public asynchronous method in synchronous scope.
-#endif
+        _multipartContent.CopyTo(stream, cancellationToken);
     }
 
     public override async Task WriteToAsync(Stream stream, CancellationToken cancellationToken = default)
     {
-#if NET6_0_OR_GREATER
+        //#if NET6_0_OR_GREATER
         await _multipartContent.CopyToAsync(stream, cancellationToken).ConfigureAwait(false);
-#else
-    await _multipartContent.CopyToAsync(stream).ConfigureAwait(false);
-#endif
+        //#else
+        //    await _multipartContent.CopyToAsync(stream).ConfigureAwait(false);
+        //#endif
     }
 
     public override void Dispose()
