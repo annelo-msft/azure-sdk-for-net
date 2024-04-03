@@ -340,45 +340,7 @@ namespace Azure.Core.Tests
             await content.WriteToAsync(destination);
 
             Assert.IsTrue(content.TryComputeLength(out long length));
-
             Assert.AreEqual(length, destination.Length);
-
-            //const long PerContent = 1024 * 1024;
-            //const long ContentCount = 2048;
-
-            //var bytes = new byte[PerContent];
-            //for (int i = 0; i < ContentCount; i++)
-            //{
-            //    form.Add(new ByteArrayContent(bytes), "file", Guid.NewGuid().ToString());
-            //}
-
-            //long totalAsyncRead = 0, totalSyncArrayRead = 0, totalSyncSpanRead = 0;
-            //int bytesRead;
-
-            //using (Stream s = await form.ReadAsStreamAsync(readStreamAsync))
-            //{
-            //    s.Position = 0;
-            //    while ((bytesRead = await s.ReadAsync(bytes, 0, bytes.Length)) > 0)
-            //    {
-            //        totalAsyncRead += bytesRead;
-            //    }
-
-            //    s.Position = 0;
-            //    while ((bytesRead = s.Read(bytes, 0, bytes.Length)) > 0)
-            //    {
-            //        totalSyncArrayRead += bytesRead;
-            //    }
-
-            //    s.Position = 0;
-            //    while ((bytesRead = s.Read(new Span<byte>(bytes, 0, bytes.Length))) > 0)
-            //    {
-            //        totalSyncSpanRead += bytesRead;
-            //    }
-            //}
-
-            //Assert.Equal(totalAsyncRead, totalSyncArrayRead);
-            //Assert.Equal(totalAsyncRead, totalSyncSpanRead);
-            //Assert.InRange(totalAsyncRead, PerContent * ContentCount, long.MaxValue);
         }
 
         [Test]
