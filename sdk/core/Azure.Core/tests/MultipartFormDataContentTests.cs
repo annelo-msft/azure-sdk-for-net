@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Azure.Core.Emitted;
+using Azure.Core.Pipeline;
 using NUnit.Framework;
 
 namespace Azure.Core.Tests
@@ -323,6 +324,64 @@ namespace Azure.Core.Tests
         }
 
         [Test]
+        public async Task MultipartContent_LargeContent_AllBytesWritten()
+        {
+            var content = new MultipartFormDataRequestContent();
+
+            long GB = 1024 * 1024 * 1024;
+            long size = 8 * GB;
+
+            TooLargeInputStream source = new TooLargeInputStream(size);
+
+            content.Add(source, "large_file");
+
+            InfiniteSinkStream destination = new();
+
+            await content.WriteToAsync(destination);
+
+            Assert.IsTrue(content.TryComputeLength(out long length));
+
+            Assert.AreEqual(length, destination.Length);
+
+            //const long PerContent = 1024 * 1024;
+            //const long ContentCount = 2048;
+
+            //var bytes = new byte[PerContent];
+            //for (int i = 0; i < ContentCount; i++)
+            //{
+            //    form.Add(new ByteArrayContent(bytes), "file", Guid.NewGuid().ToString());
+            //}
+
+            //long totalAsyncRead = 0, totalSyncArrayRead = 0, totalSyncSpanRead = 0;
+            //int bytesRead;
+
+            //using (Stream s = await form.ReadAsStreamAsync(readStreamAsync))
+            //{
+            //    s.Position = 0;
+            //    while ((bytesRead = await s.ReadAsync(bytes, 0, bytes.Length)) > 0)
+            //    {
+            //        totalAsyncRead += bytesRead;
+            //    }
+
+            //    s.Position = 0;
+            //    while ((bytesRead = s.Read(bytes, 0, bytes.Length)) > 0)
+            //    {
+            //        totalSyncArrayRead += bytesRead;
+            //    }
+
+            //    s.Position = 0;
+            //    while ((bytesRead = s.Read(new Span<byte>(bytes, 0, bytes.Length))) > 0)
+            //    {
+            //        totalSyncSpanRead += bytesRead;
+            //    }
+            //}
+
+            //Assert.Equal(totalAsyncRead, totalSyncArrayRead);
+            //Assert.Equal(totalAsyncRead, totalSyncSpanRead);
+            //Assert.InRange(totalAsyncRead, PerContent * ContentCount, long.MaxValue);
+        }
+
+        [Test]
         public void Dispose_Empty_Success()
         {
             var content = new MultipartFormDataRequestContent();
@@ -367,6 +426,100 @@ namespace Azure.Core.Tests
             protected override void Dispose(bool disposing)
             {
                 DisposeCount++;
+            }
+        }
+
+        private class InfiniteSinkStream : Stream
+        {
+            private long _position;
+
+            public override bool CanRead => false;
+
+            public override bool CanSeek => false;
+
+            public override bool CanWrite => true;
+
+            public override long Length => _position;
+
+            public override long Position
+            {
+                get => _position;
+                set => _position = value;
+            }
+
+            public override void Flush()
+            {
+                throw new NotImplementedException();
+            }
+
+            public override int Read(byte[] buffer, int offset, int count)
+            {
+                throw new NotImplementedException();
+            }
+
+            public override long Seek(long offset, SeekOrigin origin)
+            {
+                throw new NotImplementedException();
+            }
+
+            public override void SetLength(long value)
+            {
+                throw new NotImplementedException();
+            }
+
+            public override void Write(byte[] buffer, int offset, int count)
+            {
+                _position += count;
+            }
+        }
+
+        private class TooLargeInputStream : ReadOnlyStream
+        {
+            private readonly Random _random;
+            private readonly long _length;
+            private long _position;
+
+            public TooLargeInputStream(long length)
+            {
+                _random = new Random();
+
+                _length = length;
+                _position = 0;
+            }
+
+            public override bool CanRead => true;
+
+            public override bool CanSeek => true;
+
+            public override long Length => _length;
+
+            public override long Position
+            {
+                get => _position;
+                set => _position = value;
+            }
+
+            public override int Read(byte[] buffer, int offset, int count)
+            {
+                int size = count;
+                if (size > _length - _position)
+                {
+                    size = checked((int)(_length - _position));
+                }
+
+                byte[] next = new byte[size];
+                _random.NextBytes(next);
+
+                Array.Copy(next, 0, buffer, offset, size);
+
+                _position += size;
+                return size;
+            }
+
+            public override long Seek(long offset, SeekOrigin origin)
+            {
+                Position = offset;
+                return Position;
             }
         }
 
