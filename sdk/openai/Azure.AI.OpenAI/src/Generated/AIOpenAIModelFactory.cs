@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace Azure.AI.OpenAI
@@ -37,7 +38,7 @@ namespace Azure.AI.OpenAI
         /// </param>
         /// <param name="deploymentName"> The model to use for this transcription request. </param>
         /// <returns> A new <see cref="OpenAI.AudioTranscriptionOptions"/> instance for mocking. </returns>
-        public static AudioTranscriptionOptions AudioTranscriptionOptions(BinaryData audioData = null, string filename = null, AudioTranscriptionFormat? responseFormat = null, string language = null, string prompt = null, float? temperature = null, string deploymentName = null)
+        public static AudioTranscriptionOptions AudioTranscriptionOptions(Stream audioData = null, string filename = null, AudioTranscriptionFormat? responseFormat = null, string language = null, string prompt = null, float? temperature = null, string deploymentName = null)
         {
             return new AudioTranscriptionOptions(
                 audioData,
@@ -127,7 +128,7 @@ namespace Azure.AI.OpenAI
         /// </param>
         /// <param name="deploymentName"> The model to use for this translation request. </param>
         /// <returns> A new <see cref="OpenAI.AudioTranslationOptions"/> instance for mocking. </returns>
-        public static AudioTranslationOptions AudioTranslationOptions(BinaryData audioData = null, string filename = null, AudioTranslationFormat? responseFormat = null, string prompt = null, float? temperature = null, string deploymentName = null)
+        public static AudioTranslationOptions AudioTranslationOptions(Stream audioData = null, string filename = null, AudioTranslationFormat? responseFormat = null, string prompt = null, float? temperature = null, string deploymentName = null)
         {
             return new AudioTranslationOptions(
                 audioData,

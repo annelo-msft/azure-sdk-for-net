@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Azure.AI.OpenAI
 {
@@ -51,7 +52,7 @@ namespace Azure.AI.OpenAI
         ///  flac, mp3, mp4, mpeg, mpga, m4a, ogg, wav, webm.
         /// </param>
         /// <exception cref="ArgumentNullException"> <paramref name="audioData"/> is null. </exception>
-        public AudioTranscriptionOptions(BinaryData audioData)
+        public AudioTranscriptionOptions(Stream audioData)
         {
             Argument.AssertNotNull(audioData, nameof(audioData));
 
@@ -81,7 +82,7 @@ namespace Azure.AI.OpenAI
         /// </param>
         /// <param name="deploymentName"> The model to use for this transcription request. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal AudioTranscriptionOptions(BinaryData audioData, string filename, AudioTranscriptionFormat? responseFormat, string language, string prompt, float? temperature, string deploymentName, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal AudioTranscriptionOptions(Stream audioData, string filename, AudioTranscriptionFormat? responseFormat, string language, string prompt, float? temperature, string deploymentName, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             AudioData = audioData;
             Filename = filename;
@@ -115,7 +116,7 @@ namespace Azure.AI.OpenAI
         /// </list>
         /// </para>
         /// </summary>
-        public BinaryData AudioData { get; }
+        public Stream AudioData { get; }
         /// <summary> The optional filename or descriptive identifier to associate with with the audio data. </summary>
         public string Filename { get; set; }
         /// <summary> The requested format of the transcription response data, which will influence the content and detail of the result. </summary>
