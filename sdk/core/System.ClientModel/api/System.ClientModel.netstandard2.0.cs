@@ -107,10 +107,6 @@ namespace System.ClientModel.Primitives
         protected sealed override void ProcessCore(System.ClientModel.Primitives.PipelineMessage message) { }
         protected sealed override System.Threading.Tasks.ValueTask ProcessCoreAsync(System.ClientModel.Primitives.PipelineMessage message) { throw null; }
     }
-    public partial interface IJsonModel
-    {
-        System.Collections.Generic.IDictionary<string, object> AdditionalProperties { get; }
-    }
     public partial interface IJsonModel<out T> : System.ClientModel.Primitives.IPersistableModel<T>
     {
         T Create(ref System.Text.Json.Utf8JsonReader reader, System.ClientModel.Primitives.ModelReaderWriterOptions options);
@@ -122,18 +118,19 @@ namespace System.ClientModel.Primitives
         string GetFormatFromOptions(System.ClientModel.Primitives.ModelReaderWriterOptions options);
         System.BinaryData Write(System.ClientModel.Primitives.ModelReaderWriterOptions options);
     }
-    public abstract partial class JsonModel<T> : System.ClientModel.Primitives.IJsonModel, System.ClientModel.Primitives.IJsonModel<T>, System.ClientModel.Primitives.IPersistableModel<T>
+    public abstract partial class JsonModel<T> : System.ClientModel.Primitives.IJsonModel<T>, System.ClientModel.Primitives.IPersistableModel<T>
     {
         protected JsonModel() { }
-        System.Collections.Generic.IDictionary<string, object> System.ClientModel.Primitives.IJsonModel.AdditionalProperties { get { throw null; } }
         protected abstract T CreateCore(ref System.Text.Json.Utf8JsonReader reader, System.ClientModel.Primitives.ModelReaderWriterOptions options);
         protected virtual string GetFormatFromOptionsCore(System.ClientModel.Primitives.ModelReaderWriterOptions options) { throw null; }
         protected void ReadUnknownProperty(ref System.Text.Json.Utf8JsonReader reader, System.ClientModel.Primitives.ModelReaderWriterOptions options) { }
+        public void SetUnknownProperty<U>(string name, U value) { }
         T System.ClientModel.Primitives.IJsonModel<T>.Create(ref System.Text.Json.Utf8JsonReader reader, System.ClientModel.Primitives.ModelReaderWriterOptions options) { throw null; }
         void System.ClientModel.Primitives.IJsonModel<T>.Write(System.Text.Json.Utf8JsonWriter writer, System.ClientModel.Primitives.ModelReaderWriterOptions options) { }
         T System.ClientModel.Primitives.IPersistableModel<T>.Create(System.BinaryData data, System.ClientModel.Primitives.ModelReaderWriterOptions options) { throw null; }
         string System.ClientModel.Primitives.IPersistableModel<T>.GetFormatFromOptions(System.ClientModel.Primitives.ModelReaderWriterOptions options) { throw null; }
         System.BinaryData System.ClientModel.Primitives.IPersistableModel<T>.Write(System.ClientModel.Primitives.ModelReaderWriterOptions options) { throw null; }
+        public bool TryGetUnknownProperty<U>(string name, out U? value) { throw null; }
         protected abstract void WriteCore(System.Text.Json.Utf8JsonWriter writer, System.ClientModel.Primitives.ModelReaderWriterOptions options);
         protected void WriteUnknownProperties(System.Text.Json.Utf8JsonWriter writer, System.ClientModel.Primitives.ModelReaderWriterOptions options) { }
     }

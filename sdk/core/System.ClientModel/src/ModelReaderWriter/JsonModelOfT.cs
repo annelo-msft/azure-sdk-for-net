@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using System.ClientModel.Internal;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
@@ -8,12 +9,49 @@ using System.Text.Json;
 namespace System.ClientModel.Primitives;
 
 #pragma warning disable CS1591 // public XML comments
-public abstract class JsonModel<T> : IJsonModel, IJsonModel<T>
+public abstract class JsonModel<T> : IJsonModel<T>
 {
     private Dictionary<string, object>? _unknownProperties;
 
-    IDictionary<string, object> IJsonModel.AdditionalProperties
-        => _unknownProperties ??= new();
+    public bool TryGetUnknownProperty<U>(string name, out U? value)
+    {
+        if (_unknownProperties is null)
+        {
+            value = default;
+            return false;
+        }
+
+        if (!_unknownProperties.TryGetValue(name, out object? propertyValue))
+        {
+            value = default;
+            return false;
+        }
+
+        if (propertyValue is BinaryData serializedValue &&
+            typeof(U) != typeof(BinaryData))
+        {
+            // Try to deserialize a serialized value to the requested type.
+            value = (U?)ModelReaderWriter.Read(serializedValue, typeof(U));
+            return value is not null;
+        }
+
+        if (propertyValue is not U typedValue)
+        {
+            throw new InvalidOperationException($"Property '{name}' is type '{propertyValue?.GetType()}'");
+        }
+
+        value = typedValue;
+        return true;
+    }
+
+    public void SetUnknownProperty<U>(string name, U value)
+    {
+        Argument.AssertNotNull(name, nameof(name));
+        Argument.AssertNotNull(value, nameof(value));
+
+        _unknownProperties ??= new();
+        _unknownProperties[name] = value!;
+    }
 
 #pragma warning disable AZC0014 // Avoid using banned types in public API
     protected abstract T CreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
@@ -141,7 +179,7 @@ public abstract class JsonModel<T> : IJsonModel, IJsonModel<T>
     {
         string name = reader.GetString()!;
         BinaryData value = ReadUnknownValue(ref reader);
-        ((IJsonModel)this).AdditionalProperties.Add(name, value);
+        SetUnknownProperty(name, value);
     }
 
 #pragma warning disable AZC0014 // Avoid using banned types in public API
