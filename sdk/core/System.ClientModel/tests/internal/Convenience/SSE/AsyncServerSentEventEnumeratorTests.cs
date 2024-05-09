@@ -16,7 +16,7 @@ public class AsyncServerSentEventEnumeratorTests
     public async Task EnumeratesEvents()
     {
         using Stream contentStream = BinaryData.FromString(_mockContent).ToStream();
-        AsyncServerSentEventEnumerator enumerator = new(contentStream, "[DONE]");
+        AsyncSseItemCollection enumerator = new(contentStream, "[DONE]");
 
         int i = 0;
         while (await enumerator.MoveNextAsync())
@@ -38,7 +38,7 @@ public class AsyncServerSentEventEnumeratorTests
         CancellationToken token = new(true);
 
         using Stream contentStream = BinaryData.FromString(_mockContent).ToStream();
-        AsyncServerSentEventEnumerator enumerator = new(contentStream, "[DONE]", token);
+        AsyncSseItemCollection enumerator = new(contentStream, "[DONE]", token);
 
         Assert.ThrowsAsync<OperationCanceledException>(async () => await enumerator.MoveNextAsync());
     }
@@ -60,7 +60,7 @@ public class AsyncServerSentEventEnumeratorTests
             """;
 
         using Stream contentStream = BinaryData.FromString(mockContent).ToStream();
-        AsyncServerSentEventEnumerator enumerator = new(contentStream, "~stop~");
+        AsyncSseItemCollection enumerator = new(contentStream, "~stop~");
 
         List<ServerSentEvent> events = new();
 

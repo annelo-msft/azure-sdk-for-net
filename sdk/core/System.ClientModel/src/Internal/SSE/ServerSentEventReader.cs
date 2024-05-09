@@ -5,38 +5,40 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace System.ClientModel.Internal;
+namespace System.Formats.Sse;
 
 // TODO: Different sync and async readers to dispose differently?
-internal sealed class ServerSentEventReader : IDisposable, IAsyncDisposable
+internal sealed class ServerSentEventReader<T> : IDisposable, IAsyncDisposable
 {
+    private readonly Func<string, T> _parseItem;
     private Stream? _stream;
     private StreamReader? _reader;
 
     public int? LastEventId { get; private set; }
 
-    public ServerSentEventReader(Stream stream)
+    public ServerSentEventReader(Stream stream, Func<string, T> parseItem)
     {
         _stream = stream;
         _reader = new StreamReader(stream);
+        _parseItem = parseItem;
     }
 
-    /// <summary>
-    /// Synchronously retrieves the next server-sent event from the underlying stream, blocking until a new event is
-    /// available and returning null once no further data is present on the stream.
-    /// </summary>
-    /// <param name="cancellationToken"> An optional cancellation token that can abort subsequent reads. </param>
-    /// <returns>
-    ///     The next <see cref="ServerSentEvent"/> in the stream, or null once no more data can be read from the stream.
-    /// </returns>
-    public ServerSentEvent? TryGetNextEvent(CancellationToken cancellationToken = default)
+    ///// <summary>
+    ///// Synchronously retrieves the next server-sent event from the underlying stream, blocking until a new event is
+    ///// available and returning null once no further data is present on the stream.
+    ///// </summary>
+    ///// <param name="cancellationToken"> An optional cancellation token that can abort subsequent reads. </param>
+    ///// <returns>
+    /////     The next <see cref="ServerSentEvent"/> in the stream, or null once no more data can be read from the stream.
+    ///// </returns>
+    public SseItem<T>? TryGetNextEvent(CancellationToken cancellationToken = default)
     {
         if (_reader is null)
         {
-            throw new ObjectDisposedException(nameof(ServerSentEventReader));
+            throw new ObjectDisposedException(nameof(ServerSentEventReader<T>));
         }
 
-        PendingEvent pending = default;
+        PendingSseItem pending = default;
         while (true)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -54,27 +56,27 @@ internal sealed class ServerSentEventReader : IDisposable, IAsyncDisposable
 
             if (dispatch)
             {
-                return new ServerSentEvent(pending);
+                return pending.ToSseItem(_parseItem);
             }
         }
     }
 
-    /// <summary>
-    /// Asynchronously retrieves the next server-sent event from the underlying stream, blocking until a new event is
-    /// available and returning null once no further data is present on the stream.
-    /// </summary>
-    /// <param name="cancellationToken"> An optional cancellation token that can abort subsequent reads. </param>
-    /// <returns>
-    ///     The next <see cref="ServerSentEvent"/> in the stream, or null once no more data can be read from the stream.
-    /// </returns>
-    public async Task<ServerSentEvent?> TryGetNextEventAsync(CancellationToken cancellationToken = default)
+    ///// <summary>
+    ///// Asynchronously retrieves the next server-sent event from the underlying stream, blocking until a new event is
+    ///// available and returning null once no further data is present on the stream.
+    ///// </summary>
+    ///// <param name="cancellationToken"> An optional cancellation token that can abort subsequent reads. </param>
+    ///// <returns>
+    /////     The next <see cref="ServerSentEvent"/> in the stream, or null once no more data can be read from the stream.
+    ///// </returns>
+    public async Task<SseItem<T>?> TryGetNextEventAsync(CancellationToken cancellationToken = default)
     {
         if (_reader is null)
         {
-            throw new ObjectDisposedException(nameof(ServerSentEventReader));
+            throw new ObjectDisposedException(nameof(ServerSentEventReader<T>));
         }
 
-        PendingEvent pending = default;
+        PendingSseItem pending = default;
         while (true)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -92,12 +94,12 @@ internal sealed class ServerSentEventReader : IDisposable, IAsyncDisposable
 
             if (dispatch)
             {
-                return new ServerSentEvent(pending);
+                return pending.ToSseItem(_parseItem);
             }
         }
     }
 
-    private static void ProcessLine(string line, ref PendingEvent pending, out bool dispatch)
+    private static void ProcessLine(string line, ref PendingSseItem pending, out bool dispatch)
     {
         dispatch = false;
 
@@ -122,7 +124,7 @@ internal sealed class ServerSentEventReader : IDisposable, IAsyncDisposable
             switch (field.FieldType)
             {
                 case ServerSentEventFieldKind.Event:
-                    pending.EventNameField = field;
+                    pending.EventTypeField = field;
                     break;
                 case ServerSentEventFieldKind.Data:
                     pending.DataLength += field.Value.Length + 1;
