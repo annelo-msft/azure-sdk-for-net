@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-namespace System.ClientModel.Internal;
+namespace System.Formats.Sse;
 
 // SSE specification: https://html.spec.whatwg.org/multipage/server-sent-events.html#parsing-an-event-stream
 internal enum ServerSentEventFieldKind
