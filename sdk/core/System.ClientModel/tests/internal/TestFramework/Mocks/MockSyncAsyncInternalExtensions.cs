@@ -8,15 +8,15 @@ namespace ClientModel.Tests.Internal.Mocks;
 
 internal static class MockSyncAsyncInternalExtensions
 {
-    public static async Task<ServerSentEvent?> TryGetNextEventSyncOrAsync(this ServerSentEventReader reader, bool isAsync)
-    {
-        if (isAsync)
-        {
-            return await reader.TryGetNextEventAsync().ConfigureAwait(false);
-        }
-        else
-        {
-            return reader.TryGetNextEvent();
-        }
-    }
+    //public static async Task<ServerSentEvent?> TryGetNextEventSyncOrAsync(this ServerSentEventReader reader, bool isAsync)
+    //{
+    //    if (isAsync)
+    //    {
+    //        return await reader.TryGetNextEventAsync().ConfigureAwait(false);
+    //    }
+    //    else
+    //    {
+    //        return reader.TryGetNextEvent();
+    //    }
+    //}
 }

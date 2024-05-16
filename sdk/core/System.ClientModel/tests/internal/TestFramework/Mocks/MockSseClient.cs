@@ -3,11 +3,10 @@
 
 using System;
 using System.ClientModel;
-using System.ClientModel.Internal;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text.Json;
+using System.Formats.Sse;
 using System.Threading;
 using System.Threading.Tasks;
 using Azure.Core.TestFramework;
@@ -93,7 +92,7 @@ public class MockSseClient
             private readonly AsyncMockJsonModelCollection _enumerable;
             private readonly CancellationToken _cancellationToken;
 
-            private IAsyncEnumerator<ServerSentEvent>? _events;
+            private IAsyncEnumerator<SseItem<MockJsonModel>>? _events;
             private MockJsonModel? _current;
 
             private bool _started;
@@ -130,11 +129,7 @@ public class MockSseClient
                         return false;
                     }
 
-                    BinaryData data = BinaryData.FromString(_events.Current.Data);
-                    MockJsonModel model = ModelReaderWriter.Read<MockJsonModel>(data) ??
-                        throw new JsonException($"Failed to deserialize expected type MockJsonModel from sse data payload '{_events.Current.Data}'.");
-
-                    _current = model;
+                    _current = _events.Current.Data;
                     return true;
                 }
 
@@ -142,7 +137,7 @@ public class MockSseClient
                 return false;
             }
 
-            private async Task<IAsyncEnumerator<ServerSentEvent>> CreateEventEnumeratorAsync()
+            private async Task<IAsyncEnumerator<SseItem<MockJsonModel>>> CreateEventEnumeratorAsync()
             {
                 ClientResult result = await _getResultAsync().ConfigureAwait(false);
                 PipelineResponse response = result.GetRawResponse();
@@ -153,9 +148,13 @@ public class MockSseClient
                     throw new ArgumentException("Unable to create result from response with null ContentStream", nameof(response));
                 }
 
-                AsyncServerSentEventEnumerable enumerable = new(response.ContentStream);
+                SseEnumerable<MockJsonModel> enumerable = SseParser.Parse(response.ContentStream, ParseModel);
                 return enumerable.GetAsyncEnumerator(_cancellationToken);
             }
+
+            private MockJsonModel ParseModel(string _, ReadOnlySpan<byte> data)
+                // TODO: check for errors
+                => ModelReaderWriter.Read<MockJsonModel>(BinaryData.FromBytes(data.ToArray()))!;
 
             public async ValueTask DisposeAsync()
             {

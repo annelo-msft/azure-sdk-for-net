@@ -7,6 +7,7 @@ using System.ClientModel.Internal;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Formats.Sse;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -50,7 +51,7 @@ public static class MockSseClientExtensions
         {
             private readonly string _terminalData;
 
-            private IAsyncEnumerator<ServerSentEvent>? _events;
+            private IAsyncEnumerator<SseItem<BinaryData>>? _events;
             private BinaryData? _current;
 
             public BinaryData Current { get => _current!; }
@@ -59,7 +60,7 @@ public static class MockSseClientExtensions
             {
                 Debug.Assert(contentStream is not null);
 
-                AsyncServerSentEventEnumerable enumerable = new(contentStream!);
+                SseEnumerable<BinaryData> enumerable = SseParser.Parse(contentStream!, ParseData);
                 _events = enumerable.GetAsyncEnumerator(cancellationToken);
 
                 _terminalData = terminalData;
@@ -80,13 +81,16 @@ public static class MockSseClientExtensions
                         return false;
                     }
 
-                    _current = BinaryData.FromString(_events.Current.Data);
+                    _current = _events.Current.Data;
                     return true;
                 }
 
                 _current = default;
                 return false;
             }
+
+            private BinaryData ParseData(string _, ReadOnlySpan<byte> data)
+                => BinaryData.FromBytes(data.ToArray());
 
             public async ValueTask DisposeAsync()
             {
