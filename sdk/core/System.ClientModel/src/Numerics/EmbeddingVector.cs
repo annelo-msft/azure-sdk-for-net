@@ -4,6 +4,8 @@
 namespace System.ClientModel.Primitives;
 
 #pragma warning disable CS1591 // public XML comments
+
+// TODO: implement IPersistableModel<T>
 public readonly struct EmbeddingVector
 {
     private readonly object _vector;
@@ -25,6 +27,7 @@ public readonly struct EmbeddingVector
     public static EmbeddingVector FromFloat32(ReadOnlyMemory<float> vector)
         => new(EmbeddingType.Single, vector);
 
+    // ToBytes?
     public ReadOnlyMemory<byte> ToInt8Memory()
     {
         if (Type != EmbeddingType.Byte)
@@ -35,6 +38,7 @@ public readonly struct EmbeddingVector
         return (_vector as byte[]) ?? (ReadOnlyMemory<byte>)_vector;
     }
 
+    // ToShorts?
     public ReadOnlyMemory<short> ToInt16Memory()
     {
         if (Type != EmbeddingType.Short)
@@ -45,6 +49,8 @@ public readonly struct EmbeddingVector
         return (_vector as short[]) ?? (ReadOnlyMemory<short>)_vector;
     }
 
+    // ToFloats?
+    // Would it make sense to standardize naming e.g. with other APIs like JsonElement?
     public ReadOnlyMemory<float> ToFloat32Memory()
     {
         if (Type != EmbeddingType.Single)
