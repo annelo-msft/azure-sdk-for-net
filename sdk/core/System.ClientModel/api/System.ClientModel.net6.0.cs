@@ -109,6 +109,25 @@ namespace System.ClientModel.Primitives
         protected virtual void Wait(System.TimeSpan time, System.Threading.CancellationToken cancellationToken) { }
         protected virtual System.Threading.Tasks.Task WaitAsync(System.TimeSpan time, System.Threading.CancellationToken cancellationToken) { throw null; }
     }
+    public enum EmbeddingType
+    {
+        Byte = 0,
+        Short = 1,
+        Single = 2,
+    }
+    [System.Runtime.InteropServices.StructLayoutAttribute(System.Runtime.InteropServices.LayoutKind.Sequential)]
+    public readonly partial struct EmbeddingVector
+    {
+        private readonly object _dummy;
+        private readonly int _dummyPrimitive;
+        public System.ClientModel.Primitives.EmbeddingType Type { get { throw null; } }
+        public static System.ClientModel.Primitives.EmbeddingVector FromFloat32(System.ReadOnlyMemory<float> vector) { throw null; }
+        public static System.ClientModel.Primitives.EmbeddingVector FromInt16(System.ReadOnlyMemory<short> vector) { throw null; }
+        public static System.ClientModel.Primitives.EmbeddingVector FromInt8(System.ReadOnlyMemory<byte> vector) { throw null; }
+        public System.ReadOnlyMemory<float> ToFloat32Memory() { throw null; }
+        public System.ReadOnlyMemory<short> ToInt16Memory() { throw null; }
+        public System.ReadOnlyMemory<byte> ToInt8Memory() { throw null; }
+    }
     public partial class HttpClientPipelineTransport : System.ClientModel.Primitives.PipelineTransport, System.IDisposable
     {
         public HttpClientPipelineTransport() { }
