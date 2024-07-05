@@ -18,8 +18,8 @@ namespace System.ClientModel;
 public class PageResult<T> : ClientResult
 {
     private PageResult(IReadOnlyList<T> values,
-        ContinuationToken pageToken,
-        ContinuationToken? nextPageToken,
+        BinaryData pageToken,
+        BinaryData? nextPageToken,
         PipelineResponse response) : base(response)
     {
         Argument.AssertNotNull(values, nameof(values));
@@ -39,7 +39,7 @@ public class PageResult<T> : ClientResult
     /// Gets a token that can be used to request or rehydrate a collection
     /// beginning with this page of values.
     /// </summary>
-    public ContinuationToken PageToken { get; }
+    public BinaryData PageToken { get; }
 
     /// <summary>
     /// Gets a token that can be used to request or rehydrate a collection
@@ -47,7 +47,7 @@ public class PageResult<T> : ClientResult
     /// <see cref="NextPageToken"/> is null, the current page is the last page
     /// of values in the collection.
     /// </summary>
-    public ContinuationToken? NextPageToken { get; }
+    public BinaryData? NextPageToken { get; }
 
     /// <summary>
     /// Create a <see cref="PageResult{T}"/> from the provided parameters.
@@ -62,6 +62,6 @@ public class PageResult<T> : ClientResult
     /// page.</param>
     /// <returns>A <see cref="PageResult{T}"/> holding the provided values.
     /// </returns>
-    public static PageResult<T> Create(IReadOnlyList<T> values, ContinuationToken pageToken, ContinuationToken? nextPageToken, PipelineResponse response)
+    public static PageResult<T> Create(IReadOnlyList<T> values, BinaryData pageToken, BinaryData? nextPageToken, PipelineResponse response)
         => new(values, pageToken, nextPageToken, response);
 }

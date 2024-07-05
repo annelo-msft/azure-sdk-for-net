@@ -9,7 +9,7 @@ using System.Text.Json;
 
 namespace ClientModel.Tests.Paging;
 
-internal class ValuesPageToken : ContinuationToken
+internal class ValuesPageToken // : ContinuationToken
 {
     protected ValuesPageToken(string? order, int? pageSize, int? offset)
     {
@@ -22,7 +22,7 @@ internal class ValuesPageToken : ContinuationToken
     public int? PageSize { get; }
     public int? Offset { get; }
 
-    public override BinaryData ToBytes()
+    public BinaryData ToBytes()
     {
         using MemoryStream stream = new();
         using Utf8JsonWriter writer = new(stream);
@@ -62,14 +62,14 @@ internal class ValuesPageToken : ContinuationToken
         return new ValuesPageToken(Order, PageSize, offset);
     }
 
-    public static ValuesPageToken FromToken(ContinuationToken pageToken)
+    public static ValuesPageToken FromToken(BinaryData pageToken)
     {
-        if (pageToken is ValuesPageToken token)
-        {
-            return token;
-        }
+        //if (pageToken is ValuesPageToken token)
+        //{
+        //    return token;
+        //}
 
-        BinaryData data = pageToken.ToBytes();
+        BinaryData data = pageToken;//.ToBytes();
 
         if (data.ToMemory().Length == 0)
         {

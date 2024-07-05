@@ -53,7 +53,7 @@ internal class ValuesPageEnumerator : PageEnumerator<ValueItem>
         ValuesPageToken pageToken = ValuesPageToken.FromOptions(_order, _pageSize, _offset);
         ValuesPageToken? nextPageToken = pageToken.GetNextPageToken(_nextOffset, MockPagingData.Count);
 
-        return PageResult<ValueItem>.Create(pageModel.Values, pageToken, nextPageToken, response);
+        return PageResult<ValueItem>.Create(pageModel.Values, pageToken.ToBytes(), nextPageToken?.ToBytes(), response);
     }
 
     public override ClientResult GetFirst()

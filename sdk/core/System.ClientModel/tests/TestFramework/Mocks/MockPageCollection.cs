@@ -39,7 +39,7 @@ public class MockPageCollection<T> : PageCollection<T>
         List<T> pageValues = _values.GetRange(_current, pageSize);
 
         // Make page tokens not useful for mocks.
-        ContinuationToken mockPageToken = ContinuationToken.FromBytes(BinaryData.FromString("{}"));
+        BinaryData mockPageToken = BinaryData.FromBytes(BinaryData.FromString("{}"));
         return PageResult<T>.Create(pageValues, mockPageToken, null, new MockPipelineResponse(200));
     }
 }

@@ -39,7 +39,7 @@ public class PagingClient
     }
 
     public virtual AsyncPageCollection<ValueItem> GetValuesAsync(
-        ContinuationToken firstPageToken,
+        BinaryData firstPageToken,
         CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNull(firstPageToken, nameof(firstPageToken));
@@ -72,7 +72,7 @@ public class PagingClient
     }
 
     public virtual PageCollection<ValueItem> GetValues(
-        ContinuationToken firstPageToken,
+        BinaryData firstPageToken,
         CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNull(firstPageToken, nameof(firstPageToken));

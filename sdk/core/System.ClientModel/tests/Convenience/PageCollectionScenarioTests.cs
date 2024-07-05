@@ -28,7 +28,7 @@ public class PageScenarioCollectionTests
         PageCollection<ValueItem> pages = client.GetValues();
         PageResult<ValueItem> page = pages.GetCurrentPage();
 
-        ContinuationToken pageToken = page.PageToken;
+        BinaryData pageToken = page.PageToken;
 
         PageCollection<ValueItem> rehydratedPages = client.GetValues(pageToken);
         PageResult<ValueItem> rehydratedPage = rehydratedPages.GetCurrentPage();
@@ -56,7 +56,7 @@ public class PageScenarioCollectionTests
         AsyncPageCollection<ValueItem> pages = client.GetValuesAsync();
         PageResult<ValueItem> page = await pages.GetCurrentPageAsync();
 
-        ContinuationToken pageToken = page.PageToken;
+        BinaryData pageToken = page.PageToken;
 
         AsyncPageCollection<ValueItem> rehydratedPages = client.GetValuesAsync(pageToken);
         PageResult<ValueItem> rehydratedPage = await rehydratedPages.GetCurrentPageAsync();
@@ -87,7 +87,7 @@ public class PageScenarioCollectionTests
         PageCollection<ValueItem> pages = client.GetValues(order: order);
         PageResult<ValueItem> page = pages.GetCurrentPage();
 
-        ContinuationToken pageToken = page.PageToken;
+        BinaryData pageToken = page.PageToken;
 
         PageCollection<ValueItem> rehydratedPages = client.GetValues(pageToken);
         PageResult<ValueItem> rehydratedPage = rehydratedPages.GetCurrentPage();
@@ -114,7 +114,7 @@ public class PageScenarioCollectionTests
         AsyncPageCollection<ValueItem> pages = client.GetValuesAsync(order: order);
         PageResult<ValueItem> page = await pages.GetCurrentPageAsync();
 
-        ContinuationToken pageToken = page.PageToken;
+        BinaryData pageToken = page.PageToken;
 
         AsyncPageCollection<ValueItem> rehydratedPages = client.GetValuesAsync(pageToken);
         PageResult<ValueItem> rehydratedPage = await rehydratedPages.GetCurrentPageAsync();
@@ -141,7 +141,7 @@ public class PageScenarioCollectionTests
         PageCollection<ValueItem> pages = client.GetValues(pageSize: pageSize);
         PageResult<ValueItem> page = pages.GetCurrentPage();
 
-        ContinuationToken pageToken = page.PageToken;
+        BinaryData pageToken = page.PageToken;
 
         PageCollection<ValueItem> rehydratedPages = client.GetValues(pageToken);
         PageResult<ValueItem> rehydratedPage = rehydratedPages.GetCurrentPage();
@@ -166,7 +166,7 @@ public class PageScenarioCollectionTests
         AsyncPageCollection<ValueItem> pages = client.GetValuesAsync(pageSize: pageSize);
         PageResult<ValueItem> page = await pages.GetCurrentPageAsync();
 
-        ContinuationToken pageToken = page.PageToken;
+        BinaryData pageToken = page.PageToken;
 
         AsyncPageCollection<ValueItem> rehydratedPages = client.GetValuesAsync(pageToken);
         PageResult<ValueItem> rehydratedPage = await rehydratedPages.GetCurrentPageAsync();
@@ -191,7 +191,7 @@ public class PageScenarioCollectionTests
         PageCollection<ValueItem> pages = client.GetValues(offset: offset);
         PageResult<ValueItem> page = pages.GetCurrentPage();
 
-        ContinuationToken pageToken = page.PageToken;
+        BinaryData pageToken = page.PageToken;
 
         PageCollection<ValueItem> rehydratedPages = client.GetValues(pageToken);
         PageResult<ValueItem> rehydratedPage = rehydratedPages.GetCurrentPage();
@@ -218,7 +218,7 @@ public class PageScenarioCollectionTests
         AsyncPageCollection<ValueItem> pages = client.GetValuesAsync(offset: offset);
         PageResult<ValueItem> page = await pages.GetCurrentPageAsync();
 
-        ContinuationToken pageToken = page.PageToken;
+        BinaryData pageToken = page.PageToken;
 
         AsyncPageCollection<ValueItem> rehydratedPages = client.GetValuesAsync(pageToken);
         PageResult<ValueItem> rehydratedPage = await rehydratedPages.GetCurrentPageAsync();
@@ -251,7 +251,7 @@ public class PageScenarioCollectionTests
         PageCollection<ValueItem> pages = client.GetValues(order, pageSize, offset);
         PageResult<ValueItem> page = pages.GetCurrentPage();
 
-        ContinuationToken pageToken = page.PageToken;
+        BinaryData pageToken = page.PageToken;
 
         PageCollection<ValueItem> rehydratedPages = client.GetValues(pageToken);
         PageResult<ValueItem> rehydratedPage = rehydratedPages.GetCurrentPage();
@@ -292,7 +292,7 @@ public class PageScenarioCollectionTests
         AsyncPageCollection<ValueItem> pages = client.GetValuesAsync(order, pageSize, offset);
         PageResult<ValueItem> page = await pages.GetCurrentPageAsync();
 
-        ContinuationToken pageToken = page.PageToken;
+        BinaryData pageToken = page.PageToken;
 
         AsyncPageCollection<ValueItem> rehydratedPages = client.GetValuesAsync(pageToken);
         PageResult<ValueItem> rehydratedPage = await rehydratedPages.GetCurrentPageAsync();
