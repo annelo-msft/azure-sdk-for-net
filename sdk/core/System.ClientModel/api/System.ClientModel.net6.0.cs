@@ -101,6 +101,15 @@ namespace System.ClientModel.Primitives
         public sealed override void Process(System.ClientModel.Primitives.PipelineMessage message, System.Collections.Generic.IReadOnlyList<System.ClientModel.Primitives.PipelinePolicy> pipeline, int currentIndex) { }
         public sealed override System.Threading.Tasks.ValueTask ProcessAsync(System.ClientModel.Primitives.PipelineMessage message, System.Collections.Generic.IReadOnlyList<System.ClientModel.Primitives.PipelinePolicy> pipeline, int currentIndex) { throw null; }
     }
+    public partial class BinaryContent<T> : System.ClientModel.BinaryContent where T : System.ClientModel.Primitives.IPersistableModel<T>
+    {
+        public BinaryContent(T value) { }
+        public T Value { get { throw null; } }
+        public override void Dispose() { }
+        public override bool TryComputeLength(out long length) { throw null; }
+        public override void WriteTo(System.IO.Stream stream, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { }
+        public override System.Threading.Tasks.Task WriteToAsync(System.IO.Stream stream, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { throw null; }
+    }
     [System.FlagsAttribute]
     public enum ClientErrorBehaviors
     {
