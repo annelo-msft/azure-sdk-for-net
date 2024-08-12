@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using System.ClientModel.Primitives;
+
 namespace Azure.Core
 {
     /// <summary>
@@ -96,5 +98,10 @@ namespace Azure.Core
         /// If you don't handle CAE responses in these API calls, your app could end up in a loop retrying an API call with a token that is still in the returned lifespan of the token but has been revoked due to CAE.
         /// </remarks>
         public bool IsCaeEnabled { get; }
+
+        internal static TokenRequestContext FromClientTokenRequestContext(ClientTokenRequestContext context)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

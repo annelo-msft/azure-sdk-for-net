@@ -101,6 +101,15 @@ namespace System.ClientModel.Primitives
         public sealed override void Process(System.ClientModel.Primitives.PipelineMessage message, System.Collections.Generic.IReadOnlyList<System.ClientModel.Primitives.PipelinePolicy> pipeline, int currentIndex) { }
         public sealed override System.Threading.Tasks.ValueTask ProcessAsync(System.ClientModel.Primitives.PipelineMessage message, System.Collections.Generic.IReadOnlyList<System.ClientModel.Primitives.PipelinePolicy> pipeline, int currentIndex) { throw null; }
     }
+    [System.Runtime.InteropServices.StructLayoutAttribute(System.Runtime.InteropServices.LayoutKind.Sequential)]
+    public partial struct ClientAccessToken
+    {
+        private object _dummy;
+        private int _dummyPrimitive;
+        public System.DateTimeOffset ExpiresOn { get { throw null; } }
+        public System.DateTimeOffset? RefreshOn { get { throw null; } }
+        public string Token { get { throw null; } }
+    }
     [System.FlagsAttribute]
     public enum ClientErrorBehaviors
     {
@@ -142,6 +151,23 @@ namespace System.ClientModel.Primitives
         protected virtual System.Threading.Tasks.ValueTask<bool> ShouldRetryAsync(System.ClientModel.Primitives.PipelineMessage message, System.Exception? exception) { throw null; }
         protected virtual void Wait(System.TimeSpan time, System.Threading.CancellationToken cancellationToken) { }
         protected virtual System.Threading.Tasks.Task WaitAsync(System.TimeSpan time, System.Threading.CancellationToken cancellationToken) { throw null; }
+    }
+    public abstract partial class ClientTokenCredential
+    {
+        protected ClientTokenCredential() { }
+        public abstract System.ClientModel.Primitives.ClientAccessToken GetToken(System.ClientModel.Primitives.ClientTokenRequestContext requestContext, System.Threading.CancellationToken cancellationToken);
+        public abstract System.Threading.Tasks.ValueTask<System.ClientModel.Primitives.ClientAccessToken> GetTokenAsync(System.ClientModel.Primitives.ClientTokenRequestContext requestContext, System.Threading.CancellationToken cancellationToken);
+    }
+    [System.Runtime.InteropServices.StructLayoutAttribute(System.Runtime.InteropServices.LayoutKind.Sequential)]
+    public partial struct ClientTokenRequestContext
+    {
+        private object _dummy;
+        private int _dummyPrimitive;
+        public string? Claims { get { throw null; } }
+        public bool IsCaeEnabled { get { throw null; } }
+        public string? ParentRequestId { get { throw null; } }
+        public string[] Scopes { get { throw null; } }
+        public string? TenantId { get { throw null; } }
     }
     public partial class HttpClientPipelineTransport : System.ClientModel.Primitives.PipelineTransport, System.IDisposable
     {

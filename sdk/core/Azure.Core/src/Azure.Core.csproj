@@ -21,7 +21,6 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" />
-    <PackageReference Include="System.ClientModel" />
     <PackageReference Include="System.Numerics.Vectors" />
     <PackageReference Include="System.Diagnostics.DiagnosticSource" />
     <PackageReference Include="System.Threading.Tasks.Extensions" />
@@ -79,6 +78,10 @@
     <Compile Include="Shared\CancellationHelper.cs" />
     <Compile Include="Shared\OperationPoller.cs" />
     <Compile Include="Shared\TypeReferenceTypeAttribute.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\System.ClientModel\src\System.ClientModel.csproj" />
   </ItemGroup>
 
 </Project>

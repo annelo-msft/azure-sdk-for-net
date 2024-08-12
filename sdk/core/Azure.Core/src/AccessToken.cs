@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using System;
+using System.ClientModel.Primitives;
 
 namespace Azure.Core
 {
@@ -64,6 +65,11 @@ namespace Azure.Core
         public override int GetHashCode()
         {
             return HashCodeBuilder.Combine(Token, ExpiresOn);
+        }
+
+        internal ClientAccessToken ToClientAccessToken()
+        {
+            throw new NotImplementedException();
         }
     }
 }

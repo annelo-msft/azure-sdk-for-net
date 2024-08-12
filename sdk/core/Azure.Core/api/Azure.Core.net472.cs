@@ -762,11 +762,13 @@ namespace Azure.Core
         public void Apply(Azure.Core.HttpMessage message) { }
         public override string ToString() { throw null; }
     }
-    public abstract partial class TokenCredential
+    public abstract partial class TokenCredential : System.ClientModel.Primitives.ClientTokenCredential
     {
         protected TokenCredential() { }
         public abstract Azure.Core.AccessToken GetToken(Azure.Core.TokenRequestContext requestContext, System.Threading.CancellationToken cancellationToken);
+        public override System.ClientModel.Primitives.ClientAccessToken GetToken(System.ClientModel.Primitives.ClientTokenRequestContext requestContext, System.Threading.CancellationToken cancellationToken) { throw null; }
         public abstract System.Threading.Tasks.ValueTask<Azure.Core.AccessToken> GetTokenAsync(Azure.Core.TokenRequestContext requestContext, System.Threading.CancellationToken cancellationToken);
+        public override System.Threading.Tasks.ValueTask<System.ClientModel.Primitives.ClientAccessToken> GetTokenAsync(System.ClientModel.Primitives.ClientTokenRequestContext requestContext, System.Threading.CancellationToken cancellationToken) { throw null; }
     }
     [System.Runtime.InteropServices.StructLayoutAttribute(System.Runtime.InteropServices.LayoutKind.Sequential)]
     public readonly partial struct TokenRequestContext

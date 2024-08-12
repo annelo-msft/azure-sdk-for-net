@@ -3,13 +3,14 @@
 
 using System.Threading;
 using System.Threading.Tasks;
+using System.ClientModel.Primitives;
 
 namespace Azure.Core
 {
     /// <summary>
     /// Represents a credential capable of providing an OAuth token.
     /// </summary>
-    public abstract class TokenCredential
+    public abstract class TokenCredential : ClientTokenCredential
     {
         /// <summary>
         /// Gets an <see cref="AccessToken"/> for the specified set of scopes.
@@ -30,5 +31,23 @@ namespace Azure.Core
         /// <remarks>Caching and management of the lifespan for the <see cref="AccessToken"/> is considered the responsibility of the caller: each call should request a fresh token being requested.</remarks>
         [CallerShouldAudit("https://aka.ms/azsdk/callershouldaudit/identity")]
         public abstract AccessToken GetToken(TokenRequestContext requestContext, CancellationToken cancellationToken);
+
+#pragma warning disable CS1591
+        public override async ValueTask<ClientAccessToken> GetTokenAsync(ClientTokenRequestContext requestContext, CancellationToken cancellationToken)
+        {
+            TokenRequestContext context = TokenRequestContext.FromClientTokenRequestContext(requestContext);
+            AccessToken accessToken = await GetTokenAsync(context, cancellationToken).ConfigureAwait(false);
+            ClientAccessToken token = accessToken.ToClientAccessToken();
+            return token;
+        }
+
+        public override ClientAccessToken GetToken(ClientTokenRequestContext requestContext, CancellationToken cancellationToken)
+        {
+            TokenRequestContext context = TokenRequestContext.FromClientTokenRequestContext(requestContext);
+            AccessToken accessToken = GetToken(context, cancellationToken);
+            ClientAccessToken token = accessToken.ToClientAccessToken();
+            return token;
+        }
+#pragma warning restore CS1591
     }
 }
