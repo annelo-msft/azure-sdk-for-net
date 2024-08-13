@@ -35,7 +35,7 @@ public abstract class AsyncPageCollection<T> : IAsyncEnumerable<PageResult<T>>
     /// Get the current page of the collection.
     /// </summary>
     /// <returns>The current page in the collection.</returns>
-    public async Task<PageResult<T>> GetCurrentPageAsync()
+    public async ValueTask<PageResult<T>> GetCurrentPageAsync()
         => await GetCurrentPageAsyncCore().ConfigureAwait(false);
 
     /// <summary>
@@ -60,7 +60,7 @@ public abstract class AsyncPageCollection<T> : IAsyncEnumerable<PageResult<T>>
     /// Get the current page of the collection.
     /// </summary>
     /// <returns>The current page in the collection.</returns>
-    protected abstract Task<PageResult<T>> GetCurrentPageAsyncCore();
+    protected abstract ValueTask<PageResult<T>> GetCurrentPageAsyncCore();
 
     /// <summary>
     /// Get an async enumerator that can enumerate the pages of values returned

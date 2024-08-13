@@ -22,7 +22,7 @@ public class MockAsyncPageCollection<T> : AsyncPageCollection<T>
         _pageSize = pageSize;
     }
 
-    protected override async Task<PageResult<T>> GetCurrentPageAsyncCore()
+    protected override async ValueTask<PageResult<T>> GetCurrentPageAsyncCore()
         => await GetPageFromCurrentStateAsync().ConfigureAwait(false);
 
     protected override async IAsyncEnumerator<PageResult<T>> GetAsyncEnumeratorCore(CancellationToken cancellationToken)
@@ -35,7 +35,7 @@ public class MockAsyncPageCollection<T> : AsyncPageCollection<T>
         }
     }
 
-    private async Task<PageResult<T>> GetPageFromCurrentStateAsync()
+    private async ValueTask<PageResult<T>> GetPageFromCurrentStateAsync()
     {
         await Task.Delay(0);
 

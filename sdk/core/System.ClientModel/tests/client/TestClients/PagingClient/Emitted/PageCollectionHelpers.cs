@@ -57,7 +57,7 @@ internal class PageCollectionHelpers
             _enumerator = enumerator;
         }
 
-        protected override async Task<PageResult<T>> GetCurrentPageAsyncCore()
+        protected override async ValueTask<PageResult<T>> GetCurrentPageAsyncCore()
             => await _enumerator.GetCurrentPageAsync().ConfigureAwait(false);
 
         protected override IAsyncEnumerator<PageResult<T>> GetAsyncEnumeratorCore(CancellationToken cancellationToken = default)
