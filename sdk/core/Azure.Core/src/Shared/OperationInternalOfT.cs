@@ -63,13 +63,6 @@ namespace Azure.Core
         public static OperationInternal<T> Succeeded(Response rawResponse, T value) => new(OperationState<T>.Success(rawResponse, value));
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="OperationInternal"/> class in a final failed state.
-        /// </summary>
-        /// <param name="rawResponse">The final value of <see cref="OperationInternalBase.RawResponse"/>.</param>
-        /// <param name="operationFailedException">The exception that will be thrown by <c>UpdateStatusAsync</c>.</param>
-        public static OperationInternal<T> Failed(Response rawResponse, RequestFailedException operationFailedException) => new(OperationState<T>.Failure(rawResponse, operationFailedException));
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="OperationInternal{T}"/> class.
         /// </summary>
         /// <param name="operation">The long-running operation making use of this class. Passing "<c>this</c>" is expected.</param>

@@ -47,11 +47,11 @@ namespace Azure.Core
         // VoidValue is a private empty struct which only purpose is to be used as generic parameter.
         private readonly OperationInternal<VoidValue> _internalOperation;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="OperationInternal"/> class in a final successful state.
-        /// </summary>
-        /// <param name="rawResponse">The final value of <see cref="OperationInternalBase.RawResponse"/>.</param>
-        public static OperationInternal Succeeded(Response rawResponse) => new(OperationState.Success(rawResponse));
+        ///// <summary>
+        ///// Initializes a new instance of the <see cref="OperationInternal"/> class in a final successful state.
+        ///// </summary>
+        ///// <param name="rawResponse">The final value of <see cref="OperationInternalBase.RawResponse"/>.</param>
+        //public static OperationInternal Succeeded(Response rawResponse) => new(OperationState.Success(rawResponse));
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OperationInternal"/> class.
@@ -87,13 +87,13 @@ namespace Azure.Core
             _internalOperation = new OperationInternal<VoidValue>(new OperationToOperationOfTProxy(operation), clientDiagnostics, rawResponse, operationTypeName ?? operation.GetType().Name, scopeAttributes, fallbackStrategy);
         }
 
-        internal OperationInternal(OperationState finalState)
-            : base(finalState.RawResponse)
-        {
-            _internalOperation = finalState.HasSucceeded
-                ? OperationInternal<VoidValue>.Succeeded(finalState.RawResponse, default)
-                : OperationInternal<VoidValue>.Failed(finalState.RawResponse, finalState.OperationFailedException!);
-        }
+        //internal OperationInternal(OperationState finalState)
+        //    : base(finalState.RawResponse)
+        //{
+        //    _internalOperation = finalState.HasSucceeded
+        //        ? OperationInternal<VoidValue>.Succeeded(finalState.RawResponse, default)
+        //        : OperationInternal<VoidValue>.Failed(finalState.RawResponse, finalState.OperationFailedException!);
+        //}
 
         public override Response RawResponse => _internalOperation.RawResponse;
 
@@ -243,7 +243,7 @@ namespace Azure.Core
                 throw new ArgumentNullException(nameof(rawResponse));
             }
 
-            return new OperationState(rawResponse, false, default, default);
+            return new OperationState(rawResponse, false, false, default);
         }
     }
 }
