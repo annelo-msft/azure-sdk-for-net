@@ -783,6 +783,26 @@ namespace Azure.Core.Tests
             Assert.AreEqual(51, count);
         }
 
+        [Test]
+        public async Task NoBodyResponseHasZeroLengthContentStream()
+        {
+            HttpPipeline pipeline = HttpPipelineBuilder.Build(GetOptions());
+
+            using TestServer testServer = new TestServer(
+                context =>
+                {
+                    context.Response.StatusCode = 200;
+                });
+
+            using HttpMessage message = pipeline.CreateMessage();
+            message.Request.Uri.Reset(testServer.Address);
+
+            await pipeline.SendAsync(message, default);
+
+            Assert.AreEqual(200, message.Response.Status);
+            Assert.AreEqual(0, message.Response.ContentStream.Length);
+        }
+
         private class CallbackPolicy : HttpPipelineSynchronousPolicy
         {
             private readonly Action<HttpMessage> _callback;

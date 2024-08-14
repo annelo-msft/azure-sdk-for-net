@@ -3,10 +3,9 @@
 
 using System;
 using System.IO;
-using System.Linq;
 using Azure.Core.TestFramework;
-using NUnit.Framework;
 using Moq;
+using NUnit.Framework;
 
 namespace Azure.Core.Tests
 {
@@ -169,6 +168,13 @@ namespace Azure.Core.Tests
 
             Assert.IsTrue(response.Object.IsError);
         }
+
+        //[Test]
+        //public void NoBodyResponseHasZeroLengthContentStream()
+        //{
+        //    MockResponse response = new(200);
+        //    Assert.AreEqual(0, response.ContentStream.Length);
+        //}
 
         internal class TestPayload
         {
