@@ -185,11 +185,7 @@ namespace Azure.ResourceManager.Storage.Tests
             Assert.AreEqual(assignmentProperties.ExecutionContext.Trigger.Parameters.StartOn, taskAssignment1.Data.Properties.ExecutionContext.Trigger.Parameters.StartOn);
 
             //delete TaskAssignement
-            try
-            {
-                await taskAssignment1.DeleteAsync(WaitUntil.Completed);
-            }
-            catch { }
+            await taskAssignment1.DeleteAsync(WaitUntil.Completed);
 
             //validate if deleted successfully
             var exception = Assert.ThrowsAsync<RequestFailedException>(async () => { await _storageTaskAssignmentCollection.GetAsync(taskAssignementName); });
@@ -228,7 +224,7 @@ namespace Azure.ResourceManager.Storage.Tests
                 new StorageTaskAssignmentData(assignmentProperties))).Value;
 
             // list TaskAssignmentInstancesReport
-            var assignments = await _storageTaskAssignmentCollection.GetAllAsync(maxpagesize:1).ToEnumerableAsync();
+            var assignments = await _storageTaskAssignmentCollection.GetAllAsync(maxpagesize: 1).ToEnumerableAsync();
             Assert.IsTrue(assignments.Count >= 2);
         }
 

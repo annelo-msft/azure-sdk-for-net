@@ -8,6 +8,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.ResourceManager.Stora
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.ResourceManager.Storage.Samples", "samples\Azure.ResourceManager.Storage.Samples.csproj", "{3A8E7468-6F29-4C5C-83B5-EB817E308C85}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.Core.TestFramework", "..\..\core\Azure.Core.TestFramework\src\Azure.Core.TestFramework.csproj", "{8888567A-5758-4938-9314-4B00C5303B46}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.Core", "..\..\core\Azure.Core\src\Azure.Core.csproj", "{D403E700-A408-4FC8-8BF3-BF7B75EA28B4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +30,14 @@ Global
 		{3A8E7468-6F29-4C5C-83B5-EB817E308C85}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3A8E7468-6F29-4C5C-83B5-EB817E308C85}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3A8E7468-6F29-4C5C-83B5-EB817E308C85}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8888567A-5758-4938-9314-4B00C5303B46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8888567A-5758-4938-9314-4B00C5303B46}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8888567A-5758-4938-9314-4B00C5303B46}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8888567A-5758-4938-9314-4B00C5303B46}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D403E700-A408-4FC8-8BF3-BF7B75EA28B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D403E700-A408-4FC8-8BF3-BF7B75EA28B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D403E700-A408-4FC8-8BF3-BF7B75EA28B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D403E700-A408-4FC8-8BF3-BF7B75EA28B4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

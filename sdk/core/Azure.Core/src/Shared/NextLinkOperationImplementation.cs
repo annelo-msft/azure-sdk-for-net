@@ -530,7 +530,7 @@ namespace Azure.Core
 
             if (response.Status is >= 200 and <= 204)
             {
-                if (response.ContentStream is { Length: > 0 })
+                if (response.ContentStream is { Length: > 4 })
                 {
                     try
                     {
