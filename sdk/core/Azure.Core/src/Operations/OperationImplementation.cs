@@ -11,20 +11,18 @@ namespace Azure.Core.Operations;
 #pragma warning disable CS1591 // public XML comments
 public abstract class OperationImplementation
 {
-    private readonly ClientDiagnostics _diagnostics;
-    private readonly IReadOnlyDictionary<string, string>? _scopeAttributes;
-    private readonly DelayStrategy? _fallbackStrategy;
-    private readonly AsyncLockWithValue<Response> _responseLock;
-
-    private readonly string _waitForCompletionResponseScopeName;
-
-    protected string UpdateStatusScopeName { get; }
-    protected string WaitForCompletionScopeName { get; }
-
-    public virtual Response GetRawResponse()
+    public OperationImplementation(string id, Response response, bool hasCompleted)
     {
-        throw new NotImplementedException();
+        Id = id;
+        Response = response;
+        HasCompleted = hasCompleted;
     }
+
+    // TODO: implement update with lock for these properties
+
+    public string Id { get; protected set; }
+
+    public Response Response { get; protected set; }
 
     public bool HasCompleted { get; protected set; }
 
