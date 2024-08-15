@@ -9,4 +9,8 @@
     <DisableEnhancedAnalysis>true</DisableEnhancedAnalysis>
     <NoWarn>$(NoWarn);CS1591;</NoWarn>
   </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\core\Azure.Core\src\Azure.Core.csproj" />
+    <ProjectReference Include="..\..\..\resourcemanager\Azure.ResourceManager\src\Azure.ResourceManager.csproj" />
+  </ItemGroup>
 </Project>

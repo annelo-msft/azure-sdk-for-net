@@ -93,10 +93,11 @@ namespace Azure.ResourceManager.Storage.Tests
                             null)),
                     null),
                 report: new StorageTaskAssignmentReport("containers"));
-            var taskAssignment1 = (await _storageTaskAssignmentCollection.CreateOrUpdateAsync(
+            ArmOperation<StorageTaskAssignmentResource> createOperation = await _storageTaskAssignmentCollection.CreateOrUpdateAsync(
                 WaitUntil.Completed,
                 taskAssignementName,
-                new StorageTaskAssignmentData(assignmentProperties))).Value;
+                new StorageTaskAssignmentData(assignmentProperties));
+            StorageTaskAssignmentResource taskAssignment1 = createOperation.Value;
 
             //validate
             Assert.AreEqual(taskAssignementName, taskAssignment1.Data.Name);
@@ -114,7 +115,8 @@ namespace Azure.ResourceManager.Storage.Tests
             Assert.AreEqual(assignmentProperties.ExecutionContext.Trigger.Parameters.StartOn, taskAssignment1.Data.Properties.ExecutionContext.Trigger.Parameters.StartOn);
 
             // Get TaskAssignement
-            taskAssignment1 = (await taskAssignment1.GetAsync()).Value;
+            Response<StorageTaskAssignmentResource> responseOfT = await taskAssignment1.GetAsync();
+            taskAssignment1 = responseOfT.Value;
 
             //validate
             Assert.AreEqual(taskAssignementName, taskAssignment1.Data.Name);
@@ -131,8 +133,8 @@ namespace Azure.ResourceManager.Storage.Tests
             Assert.AreEqual(assignmentProperties.ExecutionContext.Trigger.Parameters.EndBy, taskAssignment1.Data.Properties.ExecutionContext.Trigger.Parameters.EndBy);
             Assert.AreEqual(assignmentProperties.ExecutionContext.Trigger.Parameters.StartOn, taskAssignment1.Data.Properties.ExecutionContext.Trigger.Parameters.StartOn);
 
-            //udpate TaskAssignement
-            var assignmentPatchProperties = new StorageTaskAssignmentPatchProperties(
+            // Update TaskAssignement
+            StorageTaskAssignmentPatchProperties assignmentPatchProperties = new StorageTaskAssignmentPatchProperties(
                 assignmentProperties.TaskId,
                 true,
                 "test storage task assignment 2",
@@ -147,9 +149,11 @@ namespace Azure.ResourceManager.Storage.Tests
                 null,
                 null,
                 null);
-            taskAssignment1 = (await taskAssignment1.UpdateAsync(
+
+            ArmOperation<StorageTaskAssignmentResource> updateOperation = await taskAssignment1.UpdateAsync(
                 WaitUntil.Completed,
-                new StorageTaskAssignmentPatch(assignmentPatchProperties, null))).Value;
+                new StorageTaskAssignmentPatch(assignmentPatchProperties, null));
+            taskAssignment1 = updateOperation.Value;
 
             //validate
             Assert.AreEqual(taskAssignementName, taskAssignment1.Data.Name);
@@ -167,7 +171,8 @@ namespace Azure.ResourceManager.Storage.Tests
             Assert.AreEqual(assignmentProperties.ExecutionContext.Trigger.Parameters.StartOn, taskAssignment1.Data.Properties.ExecutionContext.Trigger.Parameters.StartOn);
 
             // list single TaskAssignement
-            taskAssignment1 = (await _storageTaskAssignmentCollection.GetAsync(taskAssignementName)).Value;
+            Response<StorageTaskAssignmentResource> listResponse = await _storageTaskAssignmentCollection.GetAsync(taskAssignementName);
+            taskAssignment1 = listResponse.Value;
 
             //validate
             Assert.AreEqual(taskAssignementName, taskAssignment1.Data.Name);
@@ -185,7 +190,8 @@ namespace Azure.ResourceManager.Storage.Tests
             Assert.AreEqual(assignmentProperties.ExecutionContext.Trigger.Parameters.StartOn, taskAssignment1.Data.Properties.ExecutionContext.Trigger.Parameters.StartOn);
 
             //delete TaskAssignement
-            await taskAssignment1.DeleteAsync(WaitUntil.Completed);
+            ArmOperation deleteOperation = await taskAssignment1.DeleteAsync(WaitUntil.Started);
+            await deleteOperation.WaitForCompletionResponseAsync();
 
             //validate if deleted successfully
             var exception = Assert.ThrowsAsync<RequestFailedException>(async () => { await _storageTaskAssignmentCollection.GetAsync(taskAssignementName); });

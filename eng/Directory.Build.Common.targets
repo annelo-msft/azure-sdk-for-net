@@ -242,7 +242,7 @@
     <!-- *********** Management Client Library Override section ************* -->
   <ItemGroup Condition="'$(IsMgmtLibrary)' == 'true' and '$(IsTestProject)' != 'true'">
 
-    <PackageReference Include="Azure.Core" />
+    <!-- <PackageReference Include="Azure.Core" /> -->
     <PackageReference Include="System.Text.Json" />
     <PackageReference Include="System.ClientModel" />
 
