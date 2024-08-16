@@ -33,6 +33,11 @@ namespace Azure.Security.KeyVault.Certificates
 
         private readonly KeyVaultPipeline _pipeline;
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "AZC0015:Unexpected client method return type.", Justification = "<Pending>")]
+        public virtual HttpPipeline GetPipeline() => _pipeline._pipeline;
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "AZC0015:Unexpected client method return type.", Justification = "<Pending>")]
+        public virtual Task<HttpPipeline> GetPipelineAsync() => Task.FromResult(_pipeline._pipeline);
+
         /// <summary>
         /// Initializes a new instance of the <see cref="CertificateClient"/> class for mocking.
         /// </summary>

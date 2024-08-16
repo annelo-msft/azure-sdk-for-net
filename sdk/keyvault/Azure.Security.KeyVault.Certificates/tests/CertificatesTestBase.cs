@@ -27,7 +27,11 @@ namespace Azure.Security.KeyVault.Certificates.Tests
 
         private readonly CertificateClientOptions.ServiceVersion _serviceVersion;
 
-        public CertificateClient Client { get; set; }
+        public CertificateClient Client
+        {
+            get;
+            set;
+        }
 
         public Uri VaultUri { get; set; }
 
@@ -215,7 +219,8 @@ namespace Azure.Security.KeyVault.Certificates.Tests
 
             using (Recording.DisableRecording())
             {
-                return TestRetryHelper.RetryAsync(async () => {
+                return TestRetryHelper.RetryAsync(async () =>
+                {
                     try
                     {
                         return await Client.GetDeletedCertificateAsync(name).ConfigureAwait(false);

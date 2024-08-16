@@ -11,7 +11,7 @@ namespace Azure.Security.KeyVault
 {
     internal partial class KeyVaultPipeline
     {
-        private readonly HttpPipeline _pipeline;
+        public readonly HttpPipeline _pipeline;
         public ClientDiagnostics Diagnostics { get; }
 
         public KeyVaultPipeline(Uri vaultUri, string apiVersion, HttpPipeline pipeline, ClientDiagnostics clientDiagnostics)

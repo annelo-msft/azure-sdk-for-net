@@ -65,6 +65,11 @@ namespace Azure.Security.KeyVault.Certificates
         /// </summary>
         public override bool HasValue => _value != null;
 
+        public override RehydrationToken? GetRehydrationToken()
+        {
+            return new RehydrationToken();
+        }
+
         /// <inheritdoc />
         public override string Id { get; }
 

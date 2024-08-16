@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using Azure.Core;
+using Azure.Core.Pipeline;
 using Azure.Core.TestFramework;
 using Azure.Security.KeyVault.Keys.Cryptography;
 using Azure.Security.KeyVault.Tests;
@@ -39,7 +41,7 @@ namespace Azure.Security.KeyVault.Certificates.Tests
         private static MethodInfo s_clearCacheMethod;
 
         public CertificateClientLiveTests(bool isAsync, CertificateClientOptions.ServiceVersion serviceVersion)
-            : base(isAsync, serviceVersion, null /* RecordedTestMode.Record /* to re-record */)
+            : base(isAsync, serviceVersion, RecordedTestMode.Live /* RecordedTestMode.Record /* to re-record */)
         {
             // TODO: https://github.com/Azure/azure-sdk-for-net/issues/11634
             CompareBodies = false;
@@ -1052,6 +1054,27 @@ namespace Azure.Security.KeyVault.Certificates.Tests
             Assert.That(recoveredCertificate, Is.EqualTo(certificate).Using<KeyVaultCertificateWithPolicy>(AreEquivalent));
         }
 
+        [Test]
+        public async Task CanRehydrateDeleteCertificateOperation()
+        {
+            CertificateOperation operation = await Client.StartCreateCertificateAsync("certName", DefaultPolicy);
+            HttpPipeline pipeline = null;
+            try
+            {
+                pipeline = await Client.GetPipelineAsync();
+            }
+            catch
+            {
+            }
+
+            RehydrationToken? token = operation.GetRehydrationToken();
+            await Operation.RehydrateAsync(pipeline, token.Value);
+
+            KeyVaultCertificateWithPolicy original = await operation.WaitForCompletionAsync(DefaultCertificateOperationPollingInterval, default);
+
+            Assert.NotNull(original);
+        }
+
         private static bool AreEquivalent(KeyVaultCertificateWithPolicy a, KeyVaultCertificateWithPolicy b) =>
             string.Equals(a.Name, b.Name) &&
             string.Equals(a.Properties.Version, b.Properties.Version) &&
@@ -1083,7 +1106,7 @@ namespace Azure.Security.KeyVault.Certificates.Tests
         private static bool IsExpectedP256KException(Exception ex, CertificateKeyCurveName keyCurveName) =>
             // OpenSSL-based implementations do not support P256K.
             // TODO: Remove this entire check when https://github.com/Azure/azure-sdk-for-net/issues/20244 is resolved.
-            (ex is CryptographicException || ex is TargetInvocationException tiex && tiex.InnerException is ArgumentException {  ParamName: "privateKey" }) &&
+            (ex is CryptographicException || ex is TargetInvocationException tiex && tiex.InnerException is ArgumentException { ParamName: "privateKey" }) &&
             !RuntimeInformation.IsOSPlatform(OSPlatform.Windows) &&
             keyCurveName == CertificateKeyCurveName.P256K;
 
