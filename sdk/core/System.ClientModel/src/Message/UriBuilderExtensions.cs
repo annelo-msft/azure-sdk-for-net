@@ -56,10 +56,10 @@ public static class UriBuilderExtensions
         uriBuilder.Query = queryBuilder.ToString();
     }
 
-    public static void AppendQuery(this UriBuilder uriBuilder, string name, int value)
+    public static void AppendQuery(this UriBuilder uriBuilder, string name, int value, bool escape)
     {
         string queryValue = value.ToString("G", CultureInfo.InvariantCulture);
-        uriBuilder.AppendQuery(name, queryValue, escape: true);
+        uriBuilder.AppendQuery(name, queryValue, escape);
     }
 }
 

@@ -317,4 +317,10 @@ namespace System.ClientModel.Primitives
         public virtual void Freeze() { }
         public void SetHeader(string name, string value) { }
     }
+    public static partial class UriBuilderExtensions
+    {
+        public static void AppendPath(this System.UriBuilder uriBuilder, string value, bool escape) { }
+        public static void AppendQuery(this System.UriBuilder uriBuilder, string name, int value, bool escape) { }
+        public static void AppendQuery(this System.UriBuilder uriBuilder, string name, string value, bool escape) { }
+    }
 }
