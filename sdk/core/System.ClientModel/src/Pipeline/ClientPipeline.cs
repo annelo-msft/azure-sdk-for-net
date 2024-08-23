@@ -178,6 +178,28 @@ public sealed partial class ClientPipeline
         return message;
     }
 
+    public PipelineMessage CreateMessage(string method, Uri uri, IEnumerable<KeyValuePair<string, string>>? headers = default, IEnumerable<int>? successCodes = default)
+    {
+        PipelineMessage message = _transport.CreateMessage();
+        PipelineRequest request = message.Request;
+        request.Method = method;
+        request.Uri = uri;
+
+        if (headers is not null)
+        {
+            foreach (KeyValuePair<string, string> header in headers)
+            {
+                request.Headers.Add(header.Key, header.Value);
+            }
+        }
+
+        if (successCodes is not null)
+        {
+            // TODO:
+            message.ResponseClassifier = PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });
+        }
+    }
+
     /// <summary>
     /// Send the provided <see cref="PipelineMessage"/>.
     /// </summary>
