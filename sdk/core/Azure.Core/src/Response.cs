@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using System;
+using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -153,6 +154,17 @@ namespace Azure
                 stream?.Dispose();
                 stream = null;
             }
+        }
+
+        /// <summary>
+        /// TBD.
+        /// </summary>
+        /// <param name="scmResponse"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public static Response FromPipelineResponse(PipelineResponse scmResponse)
+        {
+            throw new NotImplementedException();
         }
     }
 }

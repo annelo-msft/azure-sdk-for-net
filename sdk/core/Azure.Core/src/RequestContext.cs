@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using System;
+using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Threading;
 using Azure.Core;
@@ -145,6 +146,17 @@ namespace Azure
             }
 
             return new ChainingClassifier(_statusCodes, _handlers, classifier);
+        }
+
+        /// <summary>
+        /// TBD.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public static RequestOptions ToRequestOptions(RequestContext context)
+        {
+            throw new NotImplementedException();
         }
     }
 }

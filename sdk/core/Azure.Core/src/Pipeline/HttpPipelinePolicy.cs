@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using System;
+using System.ClientModel.Primitives;
 using System.Threading.Tasks;
 
 namespace Azure.Core.Pipeline
@@ -45,6 +46,17 @@ namespace Azure.Core.Pipeline
         protected static void ProcessNext(HttpMessage message, ReadOnlyMemory<HttpPipelinePolicy> pipeline)
         {
             pipeline.Span[0].Process(message, pipeline.Slice(1));
+        }
+
+        /// <summary>
+        /// TBD.
+        /// </summary>
+        /// <param name="azurePolicy"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public static PipelinePolicy ToPipelinePolicy(HttpPipelinePolicy azurePolicy)
+        {
+            throw new NotImplementedException();
         }
     }
 }

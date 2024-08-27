@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using System;
+using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.ComponentModel;
 using Azure.Core.Pipeline;
@@ -132,5 +133,16 @@ namespace Azure.Core
         /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override string? ToString() => base.ToString();
+
+        /// <summary>
+        /// TBD.
+        /// </summary>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public static ClientPipelineOptions ToPipelineOptions(ClientOptions options)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

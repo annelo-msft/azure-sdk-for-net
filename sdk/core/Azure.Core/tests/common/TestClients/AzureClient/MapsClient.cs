@@ -2,7 +2,9 @@
 // Licensed under the MIT License.
 
 using System;
+using System.ClientModel.Primitives;
 using System.Net;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Azure;
@@ -15,7 +17,7 @@ public class MapsClient
 {
     private readonly Uri _endpoint;
     private readonly AzureKeyCredential _credential;
-    private readonly HttpPipeline _pipeline;
+    private readonly ClientPipeline _scmPipeline;
     private readonly string _apiVersion;
 
     public MapsClient(Uri endpoint, AzureKeyCredential credential, MapsClientOptions options = default)
@@ -31,7 +33,17 @@ public class MapsClient
         _credential = credential;
         _apiVersion = options.Version;
 
-        _pipeline = HttpPipelineBuilder.Build(options, Array.Empty<HttpPipelinePolicy>(), new HttpPipelinePolicy[] { new AzureKeyCredentialPolicy(_credential, "subscription-key") }, new ResponseClassifier());
+        AzureKeyCredentialPolicy azureAuthPolicy = new(_credential, "subscription-key");
+        PipelinePolicy scmAuthPolicy = HttpPipelinePolicy.ToPipelinePolicy(azureAuthPolicy);
+
+        // TODO: convert Azure client options to SCM client options
+        ClientPipelineOptions scmPipelineOptions = ClientOptions.ToPipelineOptions(options);
+
+        // TODO: take an Azure policy in an SCM pipeline
+        _scmPipeline = ClientPipeline.Create(scmPipelineOptions,
+            perCallPolicies: ReadOnlySpan<PipelinePolicy>.Empty,
+            perTryPolicies: new PipelinePolicy[] { scmAuthPolicy },
+            beforeTransportPolicies: ReadOnlySpan<PipelinePolicy>.Empty);
     }
 
     public virtual async Task<Response<IPAddressCountryPair>> GetCountryCodeAsync(IPAddress ipAddress, CancellationToken cancellationToken = default)
@@ -57,18 +69,25 @@ public class MapsClient
 
         context ??= new RequestContext();
 
-        using HttpMessage message = CreateGetLocationRequest(ipAddress, context);
+        // TODO: convert RequestContext to RequestOptions
+        RequestOptions scmOptions = RequestContext.ToRequestOptions(context);
 
-        await _pipeline.SendAsync(message, context.CancellationToken).ConfigureAwait(false);
+        using PipelineMessage message = CreateGetLocationRequest(ipAddress, scmOptions);
 
-        Response response = message.Response;
+        await _scmPipeline.SendAsync(message).ConfigureAwait(false);
 
-        if (response.IsError && context.ErrorOptions == ErrorOptions.Default)
+        PipelineResponse scmResponse = message.Response!;
+
+        // TODO: convert SCM response to Azure Response
+        Response azureReponse = Response.FromPipelineResponse(scmResponse);
+
+        if (azureReponse.IsError && context.ErrorOptions == ErrorOptions.Default)
         {
-            throw new RequestFailedException(response);
+            // NOTE: throw RFE instead of CRE
+            throw new RequestFailedException(azureReponse);
         }
 
-        return response;
+        return azureReponse;
     }
 
     public virtual Response<IPAddressCountryPair> GetCountryCode(IPAddress ipAddress, CancellationToken cancellationToken = default)
@@ -96,38 +115,55 @@ public class MapsClient
 
         context ??= new RequestContext();
 
-        using HttpMessage message = CreateGetLocationRequest(ipAddress, context);
+        // TODO: convert RequestContext to RequestOptions
+        RequestOptions scmOptions = RequestContext.ToRequestOptions(context);
 
-        _pipeline.Send(message, context.CancellationToken);
+        using PipelineMessage message = CreateGetLocationRequest(ipAddress, scmOptions);
 
-        Response response = message.Response;
+        _scmPipeline.Send(message);
 
-        if (response.IsError && context.ErrorOptions == ErrorOptions.Default)
+        PipelineResponse scmResponse = message.Response!;
+
+        // TODO: convert SCM response to Azure Response
+        Response azureReponse = Response.FromPipelineResponse(scmResponse);
+
+        if (azureReponse.IsError && context.ErrorOptions == ErrorOptions.Default)
         {
-            throw new RequestFailedException(response);
+        	// NOTE: throw RFE instead of CRE
+            throw new RequestFailedException(azureReponse);
         }
 
-        return response;
+        return azureReponse;
     }
 
-    private HttpMessage CreateGetLocationRequest(string ipAddress, RequestContext context)
+    private PipelineMessage CreateGetLocationRequest(string ipAddress, RequestOptions options)
     {
-        HttpMessage message = _pipeline.CreateMessage();
-        // TODO: message.Apply(options)?
-        message.ResponseClassifier = new StatusCodeClassifier(stackalloc ushort[] { 200 });
+        PipelineMessage message = _scmPipeline.CreateMessage();
 
-        Request request = message.Request;
-        request.Method = RequestMethod.Get;
+        message.ResponseClassifier = PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });
 
-        RawRequestUriBuilder uriBuilder = new();
-        uriBuilder.Reset(_endpoint);
-        uriBuilder.AppendRaw("geolocation/ip", false);
-        uriBuilder.AppendPath("/json", false);
-        uriBuilder.AppendQuery("api-version", _apiVersion, true);
-        uriBuilder.AppendQuery("ip", ipAddress, true);
-        request.Uri = uriBuilder;
+        PipelineRequest request = message.Request;
+        request.Method = "GET";
+
+        UriBuilder uriBuilder = new(_endpoint.ToString());
+
+        StringBuilder path = new();
+        path.Append("geolocation/ip");
+        path.Append("/json");
+        uriBuilder.Path += path.ToString();
+
+        StringBuilder query = new();
+        query.Append("api-version=");
+        query.Append(Uri.EscapeDataString(_apiVersion));
+        query.Append("&ip=");
+        query.Append(Uri.EscapeDataString(ipAddress));
+        uriBuilder.Query = query.ToString();
+
+        request.Uri = uriBuilder.Uri;
 
         request.Headers.Add("Accept", "application/json");
+
+        message.Apply(options);
 
         return message;
     }
