@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using System.Collections.Generic;
+using System.Text.Json;
 
 namespace System.ClientModel.Primitives;
 
@@ -11,6 +12,7 @@ namespace System.ClientModel.Primitives;
 public class ModelReaderWriterOptions
 {
     private Dictionary<Type, object>? _proxies;
+
     /// <summary>
     /// Gets the proxies that are registered.
     /// </summary>
@@ -41,6 +43,9 @@ public class ModelReaderWriterOptions
     /// Gets the format to read and write the model.
     /// </summary>
     public string Format { get; }
+
+    internal Utf8JsonWriter? Writer { get; set; }
+    //internal Utf8JsonReader? Reader { get; set; }
 
     /// <summary>
     /// Registers an <see cref="IPersistableModel{T}"/> proxy to be used when reading or writing a model.

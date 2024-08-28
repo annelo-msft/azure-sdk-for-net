@@ -98,7 +98,7 @@ namespace System.ClientModel.Tests.Client.Models.ResourceManager.Resources
             return DeserializeResourceProviderData(doc.RootElement, options);
         }
 
-        // Serialize: write request content from model: implementation
+        // Serialize: Write request content from model: implementation
         private void Serialize(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             writer.WriteStartObject();

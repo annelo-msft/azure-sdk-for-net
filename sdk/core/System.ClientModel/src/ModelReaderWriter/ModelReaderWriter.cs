@@ -4,6 +4,7 @@
 using System.ClientModel.Internal;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 
 namespace System.ClientModel.Primitives;
 
@@ -111,7 +112,25 @@ public static partial class ModelReaderWriter
 
         options ??= ModelReaderWriterOptions.Json;
 
-        return options.GetPersistableInterface(GetInstance<T>()).Create(data, options);
+        IPersistableModel<T> model = options.GetPersistableInterface(GetInstance<T>());
+
+        if (model is IJsonModel<T> jsonModel)
+        {
+            Utf8JsonReader reader = new(data);
+            return jsonModel.Create(ref reader, options);
+        }
+
+        //if (typeof(T) is IJsonModel<T>)
+        //{
+        //    IPersistableModel<T> pmodel = options.GetPersistableInterface(GetInstance<T>());
+        //    IJsonModel<T> jmodel = (pmodel as IJsonModel<T>)!;
+        //    Utf8JsonReader reader = new(data);
+        //    return jmodel.Create(ref reader, options);
+
+        //    //return options.GetJsonInterface<T>(GetInstance<T>()).Create(data, options));
+        //}
+
+        return model.Create(data, options);
     }
 
     /// <summary>
