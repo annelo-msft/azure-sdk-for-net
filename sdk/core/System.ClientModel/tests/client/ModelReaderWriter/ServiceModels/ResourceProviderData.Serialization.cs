@@ -12,6 +12,7 @@ namespace System.ClientModel.Tests.Client.Models.ResourceManager.Resources
 {
     public partial class ResourceProviderData : IJsonModel<ResourceProviderData>
     {
+        // Deserialize: Create model from response content: implementation
         public static ResourceProviderData DeserializeResourceProviderData(JsonElement element, ModelReaderWriterOptions options = default)
         {
             options ??= ModelReaderWriterHelper.WireOptions;
@@ -79,6 +80,7 @@ namespace System.ClientModel.Tests.Client.Models.ResourceManager.Resources
             return new ResourceProviderData(id.Value, @namespace.Value, registrationState.Value, registrationPolicy.Value, OptionalProperty.ToList(resourceTypes), OptionalProperty.ToNullable(providerAuthorizationConsentState));
         }
 
+        // Deserialize: Create model from response content: IPersistableModel<T>.Create
         ResourceProviderData IPersistableModel<ResourceProviderData>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
             ModelReaderWriterHelper.ValidateFormat(this, options.Format);
@@ -87,13 +89,16 @@ namespace System.ClientModel.Tests.Client.Models.ResourceManager.Resources
             return DeserializeResourceProviderData(doc.RootElement, options);
         }
 
-        void IJsonModel<ResourceProviderData>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        // Deserialize: Create model from response content: IJsonModel<T>.Create
+        ResourceProviderData IJsonModel<ResourceProviderData>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
             ModelReaderWriterHelper.ValidateFormat(this, options.Format);
 
-            Serialize(writer, options);
+            using var doc = JsonDocument.ParseValue(ref reader);
+            return DeserializeResourceProviderData(doc.RootElement, options);
         }
 
+        // Serialize: write request content from model: implementation
         private void Serialize(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             writer.WriteStartObject();
@@ -135,6 +140,22 @@ namespace System.ClientModel.Tests.Client.Models.ResourceManager.Resources
             writer.WriteEndObject();
         }
 
+        // Serialize: Write request from model: IPersistableModel<T>.Write
+        BinaryData IPersistableModel<ResourceProviderData>.Write(ModelReaderWriterOptions options)
+        {
+            ModelReaderWriterHelper.ValidateFormat(this, options.Format);
+
+            return ModelReaderWriter.Write(this, options);
+        }
+
+        // Serialize: Write request from model: IJsonModel<T>.Write
+        void IJsonModel<ResourceProviderData>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        {
+            ModelReaderWriterHelper.ValidateFormat(this, options.Format);
+
+            Serialize(writer, options);
+        }
+
         private struct ResourceProviderDataProperties
         {
             public OptionalProperty<string> Id { get; set; }
@@ -143,21 +164,6 @@ namespace System.ClientModel.Tests.Client.Models.ResourceManager.Resources
             public OptionalProperty<string> RegistrationPolicy { get; set; }
             public OptionalProperty<IReadOnlyList<ProviderResourceType>> ResourceTypes { get; set; }
             public OptionalProperty<ProviderAuthorizationConsentState> ProviderAuthorizationConsentState { get; set; }
-        }
-
-        ResourceProviderData IJsonModel<ResourceProviderData>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
-        {
-            ModelReaderWriterHelper.ValidateFormat(this, options.Format);
-
-            using var doc = JsonDocument.ParseValue(ref reader);
-            return DeserializeResourceProviderData(doc.RootElement, options);
-        }
-
-        BinaryData IPersistableModel<ResourceProviderData>.Write(ModelReaderWriterOptions options)
-        {
-            ModelReaderWriterHelper.ValidateFormat(this, options.Format);
-
-            return ModelReaderWriter.Write(this, options);
         }
 
         string IPersistableModel<ResourceProviderData>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
