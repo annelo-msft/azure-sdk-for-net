@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using Azure.Core.Pipeline;
+using System.ClientModel.Primitives;
 
 namespace Azure.Core
 {
@@ -52,9 +53,9 @@ namespace Azure.Core
                 RetryPolicy = clientOptions.RetryPolicy;
                 Diagnostics = diagnostics ?? new DiagnosticsOptions(clientOptions.Diagnostics);
                 _transport = clientOptions.Transport;
-                if (clientOptions.Policies != null)
+                if (clientOptions.AzurePolicies != null)
                 {
-                    Policies = new(clientOptions.Policies);
+                    AzurePolicies = new(clientOptions.AzurePolicies);
                 }
             }
             else
@@ -115,11 +116,32 @@ namespace Azure.Core
                 throw new ArgumentOutOfRangeException(nameof(position), position, null);
             }
 
-            Policies ??= new();
-            Policies.Add((position, policy));
+            AzurePolicies ??= new();
+            AzurePolicies.Add((position, policy));
         }
 
-        internal List<(HttpPipelinePosition Position, HttpPipelinePolicy Policy)>? Policies { get; private set; }
+        internal List<(HttpPipelinePosition Position, HttpPipelinePolicy Policy)>? AzurePolicies { get; private set; }
+
+        internal List<(PipelinePosition Position, PipelinePolicy Policy)>? SystemPolicies { get; private set; }
+
+        /// <summary>
+        /// TBD.
+        /// </summary>
+        /// <param name="policy"></param>
+        /// <param name="position"></param>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        public void AddPolicy(PipelinePolicy policy, PipelinePosition position)
+        {
+            if (position != PipelinePosition.PerCall &&
+                position != PipelinePosition.PerTry &&
+                position != PipelinePosition.BeforeTransport)
+            {
+                throw new ArgumentOutOfRangeException(nameof(position), position, null);
+            }
+
+            SystemPolicies ??= new();
+            SystemPolicies.Add((position, policy));
+        }
 
         /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]

@@ -2,9 +2,11 @@
 // Licensed under the MIT License.
 
 using System;
+using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Linq;
 using Azure.Core.Diagnostics;
+using Azure.Core.Internal;
 
 namespace Azure.Core.Pipeline
 {
@@ -100,20 +102,36 @@ namespace Azure.Core.Pipeline
             Argument.AssertNotNull(buildOptions.PerRetryPolicies, nameof(buildOptions.PerRetryPolicies));
 
             var policies = new List<HttpPipelinePolicy>(DefaultPolicyCount +
-                                                        (buildOptions.ClientOptions.Policies?.Count ?? 0) +
+                                                        (buildOptions.ClientOptions.AzurePolicies?.Count ?? 0) +
                                                         buildOptions.PerCallPolicies.Count +
                                                         buildOptions.PerRetryPolicies.Count);
 
-            void AddUserPolicies(HttpPipelinePosition position)
+            void AddUserAzurePolicies(HttpPipelinePosition position)
             {
-                if (buildOptions.ClientOptions.Policies != null)
+                if (buildOptions.ClientOptions.AzurePolicies != null)
                 {
-                    foreach (var policy in buildOptions.ClientOptions.Policies)
+                    foreach (var policy in buildOptions.ClientOptions.AzurePolicies)
                     {
                         // skip null policies to ensure that calculations for perCallIndex and perRetryIndex are accurate
                         if (policy.Position == position && policy.Policy != null)
                         {
                             policies.Add(policy.Policy);
+                        }
+                    }
+                }
+            }
+
+            void AddUserSystemPolicies(PipelinePosition position)
+            {
+                if (buildOptions.ClientOptions.SystemPolicies != null)
+                {
+                    foreach (var tuple in buildOptions.ClientOptions.SystemPolicies)
+                    {
+                        // skip null policies to ensure that calculations for perCallIndex and perRetryIndex are accurate
+                        if (tuple.Position == position && tuple.Policy != null)
+                        {
+                            HttpPipelinePolicy azurePolicy = SystemToAzurePolicyAdapter.FromSystemPolicy(tuple.Policy);
+                            policies.Add(azurePolicy);
                         }
                     }
                 }
@@ -143,7 +161,9 @@ namespace Azure.Core.Pipeline
 
             AddNonNullPolicies(buildOptions.PerCallPolicies.ToArray());
 
-            AddUserPolicies(HttpPipelinePosition.PerCall);
+            AddUserAzurePolicies(HttpPipelinePosition.PerCall);
+
+            AddUserSystemPolicies(PipelinePosition.PerCall);
 
             var perCallIndex = policies.Count;
 
@@ -172,7 +192,8 @@ namespace Azure.Core.Pipeline
 
             AddNonNullPolicies(buildOptions.PerRetryPolicies.ToArray());
 
-            AddUserPolicies(HttpPipelinePosition.PerRetry);
+            AddUserAzurePolicies(HttpPipelinePosition.PerRetry);
+            AddUserSystemPolicies(PipelinePosition.PerTry);
 
             var perRetryIndex = policies.Count;
 
@@ -187,7 +208,8 @@ namespace Azure.Core.Pipeline
 
             policies.Add(new RequestActivityPolicy(isDistributedTracingEnabled, ClientDiagnostics.GetResourceProviderNamespace(buildOptions.ClientOptions.GetType().Assembly), sanitizer));
 
-            AddUserPolicies(HttpPipelinePosition.BeforeTransport);
+            AddUserAzurePolicies(HttpPipelinePosition.BeforeTransport);
+            AddUserSystemPolicies(PipelinePosition.BeforeTransport);
 
             // Override the provided Transport with the provided transport options if the transport has not been set after default construction and options are not null.
             HttpPipelineTransport transport = buildOptions.ClientOptions.Transport;

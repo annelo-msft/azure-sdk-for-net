@@ -7,6 +7,7 @@ using System;
 using Azure.Core.TestFramework;
 using Maps;
 using NUnit.Framework;
+using System.ClientModel.Primitives;
 
 namespace Azure.Core.Tests.Clients;
 
@@ -17,6 +18,25 @@ public class AzureClientTests
     {
         MapsClientOptions options = new();
         options.Transport = new MockTransport((request) => new MockResponse(200));
+
+        Uri endpoint = new Uri("https://www.example.com");
+        AzureKeyCredential credential = new AzureKeyCredential("MyMockKey");
+
+        MapsClient client = new(endpoint, credential, options);
+        Response response = client.GetCountryCode("127.0.0.1", new RequestContext());
+
+        Assert.IsNotNull(response);
+        Assert.AreEqual(200, response.Status);
+    }
+
+    [Test]
+    public void CanAddScmPolicyToAzureClient()
+    {
+        MapsClientOptions options = new();
+        options.Transport = new MockTransport((request) => new MockResponse(200));
+
+        ConsoleLoggingPolicy scmPolicy = new();
+        options.AddPolicy(scmPolicy, PipelinePosition.BeforeTransport);
 
         Uri endpoint = new Uri("https://www.example.com");
         AzureKeyCredential credential = new AzureKeyCredential("MyMockKey");
