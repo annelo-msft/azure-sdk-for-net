@@ -165,6 +165,11 @@
     <PackageReference Update="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="6.35.0" />
     <PackageReference Update="Microsoft.IdentityModel.Tokens" Version="6.35.0" />
     <PackageReference Update="System.IdentityModel.Tokens.Jwt" Version="6.35.0" />
+
+
+    <!-- TODO: we'll want to make this "IsCoreLibrary" or "Is3pLibrary" ? -->
+    <PackageReference Update="Microsoft.Extensions.Logging.Abstractions" Version="2.1.0" />
+
   </ItemGroup>
 
   <ItemGroup Condition="$(MSBuildProjectName.StartsWith('Azure.Monitor.OpenTelemetry'))">

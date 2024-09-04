@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <Description>
@@ -23,6 +23,10 @@
     </InternalsVisibleTo>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\core\Azure.Core\src\Azure.Core.csproj" />
+  </ItemGroup>
+
   <!-- Which Azure.Core library/code should we use? -->
   <Choose>
     <When Condition="'$(ExternalAzureCoreSource)' != ''">
@@ -35,11 +39,7 @@
         <Reference Include="$([System.IO.Path]::GetFileName('$(ExternalAzureCoreLibrary)'))" HintPath="$(ExternalAzureCoreLibrary)" />
       </ItemGroup>
     </When>
-    <Otherwise>
-      <ItemGroup>
-        <PackageReference Include="Azure.Core" />
-      </ItemGroup>
-    </Otherwise>
+    <Otherwise />
   </Choose>
 
   <!-- Which OpenAI library/code should we use? -->
@@ -52,7 +52,8 @@
     <When Condition="'$(ExternalOpenAILibrary)' != ''">
       <ItemGroup>
         <Reference Include="$([System.IO.Path]::GetFileName('$(ExternalOpenAILibrary)'))" HintPath="$(ExternalOpenAILibrary)" />
-        <PackageReference Include="System.ClientModel" VersionOverride="$(SystemClientModelVersion)" />
+        <ProjectReference Include="..\..\..\core\System.ClientModel\src\System.ClientModel.csproj" />
+        <!--<PackageReference Include="System.ClientModel" VersionOverride="$(SystemClientModelVersion)" />-->
       </ItemGroup>
     </When>
     <Otherwise>

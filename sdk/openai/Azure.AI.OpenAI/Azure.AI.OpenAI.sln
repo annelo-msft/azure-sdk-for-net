@@ -9,6 +9,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.AI.OpenAI.Tests", "te
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenAI.TestFramework", "..\tools\TestFramework\src\OpenAI.TestFramework.csproj", "{2D90AB0E-E458-4B28-97F7-33A70136EA2B}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "System.ClientModel", "..\..\core\System.ClientModel\src\System.ClientModel.csproj", "{DF1C4AEB-BF47-4368-A00A-CA7760767C59}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.Core", "..\..\core\Azure.Core\src\Azure.Core.csproj", "{B5F82E8F-A466-4A14-8470-2B278A201AE6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{2D90AB0E-E458-4B28-97F7-33A70136EA2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2D90AB0E-E458-4B28-97F7-33A70136EA2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2D90AB0E-E458-4B28-97F7-33A70136EA2B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF1C4AEB-BF47-4368-A00A-CA7760767C59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF1C4AEB-BF47-4368-A00A-CA7760767C59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF1C4AEB-BF47-4368-A00A-CA7760767C59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF1C4AEB-BF47-4368-A00A-CA7760767C59}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5F82E8F-A466-4A14-8470-2B278A201AE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5F82E8F-A466-4A14-8470-2B278A201AE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5F82E8F-A466-4A14-8470-2B278A201AE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5F82E8F-A466-4A14-8470-2B278A201AE6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

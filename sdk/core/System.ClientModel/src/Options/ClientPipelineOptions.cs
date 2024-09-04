@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using System.ClientModel.Internal;
+using Microsoft.Extensions.Logging;
 
 namespace System.ClientModel.Primitives;
 
@@ -22,6 +23,11 @@ public class ClientPipelineOptions
     private PipelinePolicy? _retryPolicy;
     private PipelineTransport? _transport;
     private TimeSpan? _timeout;
+
+    /// <summary>
+    /// TBD.
+    /// </summary>
+    public ILoggerFactory? LoggerFactory { get; set; }
 
     #region Pipeline creation: Overrides of default pipeline policies
 

@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace System.ClientModel.Primitives;
 
@@ -101,6 +102,10 @@ public sealed partial class ClientPipeline
         Argument.AssertNotNull(options, nameof(options));
 
         options.Freeze();
+
+        ILoggerFactory factory = options.LoggerFactory!;
+        ILogger logger = factory.CreateLogger("System-ClientModel");
+        logger.LogInformation("Creating ClientPipeline");
 
         // Add length of client-specific policies.
         int pipelineLength = perCallPolicies.Length + perTryPolicies.Length + beforeTransportPolicies.Length;
