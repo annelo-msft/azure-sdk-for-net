@@ -24,7 +24,6 @@ namespace System.ClientModel
     }
     public partial class ClientResult
     {
-        protected ClientResult() { }
         protected ClientResult(System.ClientModel.Primitives.PipelineResponse response) { }
         public static System.ClientModel.ClientResult<T?> FromOptionalValue<T>(T? value, System.ClientModel.Primitives.PipelineResponse response) { throw null; }
         public static System.ClientModel.ClientResult FromResponse(System.ClientModel.Primitives.PipelineResponse response) { throw null; }
@@ -42,7 +41,7 @@ namespace System.ClientModel
     }
     public partial class ClientResult<T> : System.ClientModel.ClientResult
     {
-        protected internal ClientResult(T value, System.ClientModel.Primitives.PipelineResponse response) { }
+        protected internal ClientResult(T value, System.ClientModel.Primitives.PipelineResponse response) : base (default(System.ClientModel.Primitives.PipelineResponse)) { }
         public virtual T Value { get { throw null; } }
         public static implicit operator T (System.ClientModel.ClientResult<T> result) { throw null; }
     }
@@ -173,7 +172,7 @@ namespace System.ClientModel.Primitives
     }
     public abstract partial class OperationResult : System.ClientModel.ClientResult
     {
-        protected OperationResult(System.ClientModel.Primitives.PipelineResponse response) { }
+        protected OperationResult(System.ClientModel.Primitives.PipelineResponse response) : base (default(System.ClientModel.Primitives.PipelineResponse)) { }
         public bool HasCompleted { get { throw null; } protected set { } }
         public abstract System.ClientModel.ContinuationToken? RehydrationToken { get; protected set; }
         public abstract System.ClientModel.ClientResult UpdateStatus(System.ClientModel.Primitives.RequestOptions? options = null);

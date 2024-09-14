@@ -11,18 +11,7 @@ namespace System.ClientModel;
 /// </summary>
 public class ClientResult
 {
-    private PipelineResponse? _response;
-
-    /// <summary>
-    /// Create a new instance of <see cref="ClientResult"/>.
-    /// </summary>
-    /// <remarks>If no <see cref="PipelineResponse"/> is provided when the
-    /// <see cref="ClientResult"/> instance is created, it is expected that
-    /// a derived type will call <see cref="SetRawResponse(PipelineResponse)"/>
-    /// prior to a user calling <see cref="GetRawResponse"/>.</remarks>
-    protected ClientResult()
-    {
-    }
+    private PipelineResponse _response;
 
     /// <summary>
     /// Create a new instance of <see cref="ClientResult"/> from a service
@@ -47,18 +36,7 @@ public class ClientResult
     /// <see cref="ClientResult"/> instance.  This can happen when the instance
     /// is a collection type like <see cref="AsyncCollectionResult{T}"/>
     /// that has not yet been enumerated.</exception>
-    public PipelineResponse GetRawResponse()
-    {
-        if (_response is null)
-        {
-            throw new InvalidOperationException("No response is associated " +
-                "with this result.  If the result is a collection result " +
-                "type, this may be because no request has been sent to the " +
-                "server yet.");
-        }
-
-        return _response;
-    }
+    public PipelineResponse GetRawResponse() => _response;
 
     /// <summary>
     /// Update the value returned from <see cref="GetRawResponse"/>.
