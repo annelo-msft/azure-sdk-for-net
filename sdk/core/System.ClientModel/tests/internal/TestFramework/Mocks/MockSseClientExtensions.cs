@@ -38,34 +38,39 @@ public static class MockSseClientExtensions
             _terminalData = terminalData;
         }
 
-        public async override IAsyncEnumerator<BinaryData> GetAsyncEnumerator(CancellationToken cancellationToken = default)
+        protected override IAsyncEnumerable<BinaryData> GetValuesAsync(ClientResult page)
         {
-            IAsyncEnumerable<ClientResult> rawPages = GetRawPagesAsync();
-
-            // We only support a single response for SSE streams right now.
-            ClientResult result = default!;
-            await foreach (ClientResult page in rawPages)
-            {
-                result = page;
-                break;
-            }
-
-            if (result is null)
-            {
-                throw new InvalidOperationException("Unable to obtain response for SSE stream");
-            }
-
-            PipelineResponse response = result.GetRawResponse();
-
-            // We validate that response.ContentStream is non-null in outer extension method.
-            Debug.Assert(response.ContentStream is not null);
-
-            IAsyncEnumerator<BinaryData> sseData = new AsyncSseDataEventEnumerator(response.ContentStream!, _terminalData, cancellationToken);
-            while (await sseData.MoveNextAsync())
-            {
-                yield return sseData.Current;
-            }
+            throw new NotImplementedException();
         }
+
+        //public async override IAsyncEnumerator<BinaryData> GetAsyncEnumerator(CancellationToken cancellationToken = default)
+        //{
+        //    IAsyncEnumerable<ClientResult> rawPages = GetRawPagesAsync();
+
+        //    // We only support a single response for SSE streams right now.
+        //    ClientResult result = default!;
+        //    await foreach (ClientResult page in rawPages)
+        //    {
+        //        result = page;
+        //        break;
+        //    }
+
+        //    if (result is null)
+        //    {
+        //        throw new InvalidOperationException("Unable to obtain response for SSE stream");
+        //    }
+
+        //    PipelineResponse response = result.GetRawResponse();
+
+        //    // We validate that response.ContentStream is non-null in outer extension method.
+        //    Debug.Assert(response.ContentStream is not null);
+
+        //    IAsyncEnumerator<BinaryData> sseData = new AsyncSseDataEventEnumerator(response.ContentStream!, _terminalData, cancellationToken);
+        //    while (await sseData.MoveNextAsync())
+        //    {
+        //        yield return sseData.Current;
+        //    }
+        //}
 
         public override ContinuationToken? GetContinuationToken(ClientResult page)
         {

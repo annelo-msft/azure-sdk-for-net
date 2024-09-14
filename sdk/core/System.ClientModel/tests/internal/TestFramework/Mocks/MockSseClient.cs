@@ -74,15 +74,13 @@ public class MockSseClient
             _protocolMethod = protocolMethod;
         }
 
-        public override IAsyncEnumerator<MockJsonModel> GetAsyncEnumerator(CancellationToken cancellationToken = default)
+        protected async override IAsyncEnumerable<MockJsonModel> GetValuesAsync(ClientResult page)
         {
-            async Task<ClientResult> getResultAsync()
+            IAsyncEnumerator<MockJsonModel> enumerator = new AsyncMockJsonModelEnumerator(page, CancellationToken.None);
+            while (await enumerator.MoveNextAsync().ConfigureAwait(false))
             {
-                await Task.Delay(0, cancellationToken);
-                return _protocolMethod(_content, /*options:*/ default);
+                yield return enumerator.Current;
             }
-
-            return new AsyncMockJsonModelEnumerator(getResultAsync, this, cancellationToken);
         }
 
         public override ContinuationToken? GetContinuationToken(ClientResult page) => null;
@@ -97,8 +95,7 @@ public class MockSseClient
         {
             private const string _terminalData = "[DONE]";
 
-            private readonly Func<Task<ClientResult>> _getResultAsync;
-            private readonly AsyncMockJsonModelCollection _enumerable;
+            private PipelineResponse _response;
             private readonly CancellationToken _cancellationToken;
 
             private IAsyncEnumerator<ServerSentEvent>? _events;
@@ -106,13 +103,9 @@ public class MockSseClient
 
             private bool _started;
 
-            public AsyncMockJsonModelEnumerator(Func<Task<ClientResult>> getResultAsync, AsyncMockJsonModelCollection enumerable, CancellationToken cancellationToken)
+            public AsyncMockJsonModelEnumerator(ClientResult result, CancellationToken cancellationToken)
             {
-                Debug.Assert(getResultAsync is not null);
-                Debug.Assert(enumerable is not null);
-
-                _getResultAsync = getResultAsync!;
-                _enumerable = enumerable!;
+                _response = result.GetRawResponse();
                 _cancellationToken = cancellationToken;
             }
 
@@ -127,7 +120,7 @@ public class MockSseClient
                 }
 
                 _cancellationToken.ThrowIfCancellationRequested();
-                _events ??= await CreateEventEnumeratorAsync().ConfigureAwait(false);
+                _events ??= CreateEventEnumeratorAsync();
                 _started = true;
 
                 if (await _events.MoveNextAsync().ConfigureAwait(false))
@@ -150,17 +143,14 @@ public class MockSseClient
                 return false;
             }
 
-            private async Task<IAsyncEnumerator<ServerSentEvent>> CreateEventEnumeratorAsync()
+            private IAsyncEnumerator<ServerSentEvent> CreateEventEnumeratorAsync()
             {
-                ClientResult result = await _getResultAsync().ConfigureAwait(false);
-                PipelineResponse response = result.GetRawResponse();
-
-                if (response.ContentStream is null)
+                if (_response.ContentStream is null)
                 {
-                    throw new ArgumentException("Unable to create result from response with null ContentStream", nameof(response));
+                    throw new ArgumentException("Unable to create result from response with null ContentStream", nameof(_response));
                 }
 
-                AsyncServerSentEventEnumerable enumerable = new(response.ContentStream);
+                AsyncServerSentEventEnumerable enumerable = new(_response.ContentStream);
                 return enumerable.GetAsyncEnumerator(_cancellationToken);
             }
 

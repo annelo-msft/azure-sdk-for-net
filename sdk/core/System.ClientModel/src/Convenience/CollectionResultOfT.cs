@@ -30,7 +30,23 @@ public abstract class CollectionResult<T> : CollectionResult, IEnumerable<T>
     }
 
     /// <inheritdoc/>
-    public abstract IEnumerator<T> GetEnumerator();
+    public IEnumerator<T> GetEnumerator()
+    {
+        foreach (ClientResult page in GetRawPages())
+        {
+            foreach (T value in GetValues(page))
+            {
+                yield return value;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Get a collection of the values from a page response.
+    /// </summary>
+    /// <param name="page"></param>
+    /// <returns></returns>
+    protected abstract IEnumerable<T> GetValues(ClientResult page);
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }

@@ -9,7 +9,8 @@ namespace System.ClientModel
     public abstract partial class AsyncCollectionResult<T> : System.ClientModel.Primitives.AsyncCollectionResult, System.Collections.Generic.IAsyncEnumerable<T>
     {
         protected internal AsyncCollectionResult() { }
-        public abstract System.Collections.Generic.IAsyncEnumerator<T> GetAsyncEnumerator(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        public System.Collections.Generic.IAsyncEnumerator<T> GetAsyncEnumerator(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { throw null; }
+        protected abstract System.Collections.Generic.IAsyncEnumerable<T> GetValuesAsync(System.ClientModel.ClientResult page);
     }
     public abstract partial class BinaryContent : System.IDisposable
     {
@@ -48,7 +49,8 @@ namespace System.ClientModel
     public abstract partial class CollectionResult<T> : System.ClientModel.Primitives.CollectionResult, System.Collections.Generic.IEnumerable<T>, System.Collections.IEnumerable
     {
         protected internal CollectionResult() { }
-        public abstract System.Collections.Generic.IEnumerator<T> GetEnumerator();
+        public System.Collections.Generic.IEnumerator<T> GetEnumerator() { throw null; }
+        protected abstract System.Collections.Generic.IEnumerable<T> GetValues(System.ClientModel.ClientResult page);
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() { throw null; }
     }
     public partial class ContinuationToken

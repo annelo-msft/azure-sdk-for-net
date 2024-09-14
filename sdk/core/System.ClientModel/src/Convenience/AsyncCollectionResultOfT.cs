@@ -4,6 +4,7 @@
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace System.ClientModel;
 
@@ -30,5 +31,21 @@ public abstract class AsyncCollectionResult<T> : AsyncCollectionResult, IAsyncEn
     }
 
     /// <inheritdoc/>
-    public abstract IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = default);
+    public async IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = default)
+    {
+        await foreach (ClientResult page in GetRawPagesAsync().ConfigureAwait(false).WithCancellation(cancellationToken))
+        {
+            await foreach (T value in GetValuesAsync(page).ConfigureAwait(false).WithCancellation(cancellationToken))
+            {
+                yield return value;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Get a collection of the values returned in a page response.
+    /// </summary>
+    /// <param name="page"></param>
+    /// <returns></returns>
+    protected abstract IAsyncEnumerable<T> GetValuesAsync(ClientResult page);
 }

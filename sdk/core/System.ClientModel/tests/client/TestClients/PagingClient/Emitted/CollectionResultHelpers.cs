@@ -4,7 +4,6 @@
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
-using System.Threading;
 
 namespace ClientModel.Tests.Paging;
 
@@ -31,19 +30,6 @@ internal class CollectionResultHelpers
             _pageEnumerator = pageEnumerator;
         }
 
-        public async override IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = default)
-        {
-            // TODO: use provided continuation token?
-            while (await _pageEnumerator.MoveNextAsync())
-            {
-                IEnumerable<T> page = await _pageEnumerator.GetCurrentPageAsync();
-                foreach (T value in page)
-                {
-                    yield return value;
-                }
-            }
-        }
-
         public override ContinuationToken? GetContinuationToken(ClientResult page)
             => _pageEnumerator.GetNextPageToken(page);
 
@@ -54,6 +40,10 @@ internal class CollectionResultHelpers
             {
                 yield return _pageEnumerator.Current;
             }
+        }
+        protected override IAsyncEnumerable<T> GetValuesAsync(ClientResult page)
+        {
+            throw new System.NotImplementedException();
         }
     }
 
@@ -69,16 +59,9 @@ internal class CollectionResultHelpers
         public override ContinuationToken? GetContinuationToken(ClientResult page)
             => _pageEnumerator.GetNextPageToken(page);
 
-        public override IEnumerator<T> GetEnumerator()
+        protected override IEnumerable<T> GetValues(ClientResult result)
         {
-            while (_pageEnumerator.MoveNext())
-            {
-                IEnumerable<T> page = _pageEnumerator.GetCurrentPage();
-                foreach (T value in page)
-                {
-                    yield return value;
-                }
-            }
+            throw new System.NotImplementedException();
         }
 
         public override IEnumerable<ClientResult> GetRawPages()
