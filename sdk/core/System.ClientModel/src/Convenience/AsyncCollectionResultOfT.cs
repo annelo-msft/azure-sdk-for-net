@@ -35,7 +35,7 @@ public abstract class AsyncCollectionResult<T> : AsyncCollectionResult, IAsyncEn
     {
         await foreach (ClientResult page in GetRawPagesAsync().ConfigureAwait(false).WithCancellation(cancellationToken))
         {
-            await foreach (T value in GetValuesAsync(page).ConfigureAwait(false).WithCancellation(cancellationToken))
+            await foreach (T value in GetValuesFromPageAsync(page).ConfigureAwait(false).WithCancellation(cancellationToken))
             {
                 yield return value;
             }
@@ -47,5 +47,5 @@ public abstract class AsyncCollectionResult<T> : AsyncCollectionResult, IAsyncEn
     /// </summary>
     /// <param name="page"></param>
     /// <returns></returns>
-    protected abstract IAsyncEnumerable<T> GetValuesAsync(ClientResult page);
+    protected abstract IAsyncEnumerable<T> GetValuesFromPageAsync(ClientResult page);
 }

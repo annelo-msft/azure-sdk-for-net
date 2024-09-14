@@ -34,7 +34,7 @@ public abstract class CollectionResult<T> : CollectionResult, IEnumerable<T>
     {
         foreach (ClientResult page in GetRawPages())
         {
-            foreach (T value in GetValues(page))
+            foreach (T value in GetValuesFromPage(page))
             {
                 yield return value;
             }
@@ -46,7 +46,7 @@ public abstract class CollectionResult<T> : CollectionResult, IEnumerable<T>
     /// </summary>
     /// <param name="page"></param>
     /// <returns></returns>
-    protected abstract IEnumerable<T> GetValues(ClientResult page);
+    protected abstract IEnumerable<T> GetValuesFromPage(ClientResult page);
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }

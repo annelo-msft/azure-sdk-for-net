@@ -38,7 +38,7 @@ public static class MockSseClientExtensions
             _terminalData = terminalData;
         }
 
-        protected override IAsyncEnumerable<BinaryData> GetValuesAsync(ClientResult page)
+        protected override IAsyncEnumerable<BinaryData> GetValuesFromPageAsync(ClientResult page)
         {
             throw new NotImplementedException();
         }

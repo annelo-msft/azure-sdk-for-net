@@ -74,7 +74,7 @@ public class MockSseClient
             _protocolMethod = protocolMethod;
         }
 
-        protected async override IAsyncEnumerable<MockJsonModel> GetValuesAsync(ClientResult page)
+        protected async override IAsyncEnumerable<MockJsonModel> GetValuesFromPageAsync(ClientResult page)
         {
             IAsyncEnumerator<MockJsonModel> enumerator = new AsyncMockJsonModelEnumerator(page, CancellationToken.None);
             while (await enumerator.MoveNextAsync().ConfigureAwait(false))

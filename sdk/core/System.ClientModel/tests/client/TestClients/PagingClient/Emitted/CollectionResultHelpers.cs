@@ -41,7 +41,7 @@ internal class CollectionResultHelpers
                 yield return _pageEnumerator.Current;
             }
         }
-        protected override IAsyncEnumerable<T> GetValuesAsync(ClientResult page)
+        protected override IAsyncEnumerable<T> GetValuesFromPageAsync(ClientResult page)
         {
             throw new System.NotImplementedException();
         }
@@ -59,7 +59,7 @@ internal class CollectionResultHelpers
         public override ContinuationToken? GetContinuationToken(ClientResult page)
             => _pageEnumerator.GetNextPageToken(page);
 
-        protected override IEnumerable<T> GetValues(ClientResult result)
+        protected override IEnumerable<T> GetValuesFromPage(ClientResult result)
         {
             throw new System.NotImplementedException();
         }
