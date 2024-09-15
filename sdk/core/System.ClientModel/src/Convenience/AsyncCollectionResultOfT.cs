@@ -8,24 +8,13 @@ using System.Threading.Tasks;
 
 namespace System.ClientModel;
 
+#pragma warning disable CS1591 // public XML comments
 /// <summary>
 /// Represents a collection of values returned from a cloud service operation.
 /// The collection values may be returned by one or more service responses.
 /// </summary>
 public abstract class AsyncCollectionResult<T> : AsyncCollectionResult, IAsyncEnumerable<T>
 {
-    /// <summary>
-    /// Create a new instance of <see cref="AsyncCollectionResult{T}"/>.
-    /// </summary>
-    /// <remarks>If no <see cref="PipelineResponse"/> is provided when the
-    /// <see cref="ClientResult"/> instance is created, it is expected that
-    /// a derived type will call <see cref="ClientResult.SetRawResponse(PipelineResponse)"/>
-    /// prior to a user calling <see cref="ClientResult.GetRawResponse"/>.
-    /// This constructor is indended for use by collection implementations that
-    /// postpone sending a request until <see cref="GetAsyncEnumerator(CancellationToken)"/>
-    /// is called. Such implementations will typically be returned from client
-    /// convenience methods so that callers of the methods don't need to
-    /// dispose the return value. </remarks>
     protected internal AsyncCollectionResult(CancellationToken cancellationToken)
         : base(cancellationToken)
     {
@@ -34,7 +23,18 @@ public abstract class AsyncCollectionResult<T> : AsyncCollectionResult, IAsyncEn
     /// <inheritdoc/>
     public async IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = default)
     {
-        // TODO: join CancellationTokens
+        // If a user passes a CancellationToken parameter, we'll need to join
+        // it with the one that was passed to the type constructor, which was
+        // passed to the service method of the client that created the instance
+        // of the AsyncCollectionResult<T>.
+        CancellationTokenSource? cts = default;
+
+        if (CancellationToken != CancellationToken.None &&
+            cancellationToken != CancellationToken.None)
+        {
+            cts = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken);
+            cancellationToken = cts.Token;
+        }
 
         await foreach (ClientResult page in GetRawPagesAsync().ConfigureAwait(false).WithCancellation(cancellationToken))
         {
@@ -43,6 +43,8 @@ public abstract class AsyncCollectionResult<T> : AsyncCollectionResult, IAsyncEn
                 yield return value;
             }
         }
+
+        cts?.Dispose();
     }
 
     /// <summary>
@@ -53,3 +55,4 @@ public abstract class AsyncCollectionResult<T> : AsyncCollectionResult, IAsyncEn
     // TODO: Document that implementation should use CancellationToken from property
     protected abstract IAsyncEnumerable<T> GetValuesFromPageAsync(ClientResult page);
 }
+#pragma warning restore CS1591 // public XML comments
