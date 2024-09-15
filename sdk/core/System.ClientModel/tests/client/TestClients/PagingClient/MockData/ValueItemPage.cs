@@ -38,8 +38,8 @@ public class ValueItemPage
                 sb.AppendLine(",");
             }
         }
-        sb.AppendLine("]");
-        sb.AppendLine($"\"has_more\": {HasMore}");
+        sb.AppendLine("],");
+        sb.AppendLine($"\"has_more\": {HasMore.ToString().ToLower()}");
         sb.AppendLine("}");
 
         return BinaryData.FromString(sb.ToString());

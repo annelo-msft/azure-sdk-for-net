@@ -47,6 +47,37 @@ public class PaginatedCollectionScenarioTests
     //    Assert.AreEqual(200, response.Status);
     //}
 
+    [Test]
+    public void CanGetDataInPagesFromTestServiceViaProtocolClient()
+    {
+        List<ValueItemPage> pages = MockServicePagingData.GetPages().ToList();
+        int pageIndex = 0;
+
+        using TestServer testServer = new TestServer(
+            async context =>
+            {
+                ValueItemPage page = pages[pageIndex++];
+                byte[] content = page.ToJson().ToArray();
+
+                context.Response.StatusCode = 200;
+                await context.Response.Body.WriteAsync(content, 0, content.Length);
+            });
+
+        PagingProtocolClient client = new(testServer.Address, new PagingClientOptions());
+        CollectionResult result = client.GetValues(order: default, pageSize: default, offset: default);
+        List<ClientResult> pageResults = result.GetRawPages().ToList();
+
+        //ClientPipeline pipeline = ClientPipeline.Create();
+        //using PipelineMessage message = pipeline.CreateMessage();
+        //message.Request.Uri = testServer.Address;
+
+        //await pipeline.SendAsync(message);
+
+        //PipelineResponse response = message.Response!;
+
+        //Assert.AreEqual(200, response.Status);
+    }
+
     //[Test]
     //public void CanGetValuesFromConvenienceMethod()
     //{

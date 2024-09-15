@@ -5,9 +5,7 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json;
 using System.Threading;
 
 namespace ClientModel.Tests.Paging;
@@ -47,6 +45,45 @@ internal class ValueCollectionResult : CollectionResult
 
     public override IEnumerable<ClientResult> GetRawPages()
     {
-        throw new NotImplementedException();
+        ClientResult page = GetFirstPage();
+        yield return page;
+
+        while (HasNextPage(page))
+        {
+            page = GetNextPage(page);
+            yield return page;
+        }
+    }
+
+    public ClientResult GetFirstPage()
+    {
+        using PipelineMessage message = _pipeline.CreateMessage();
+        message.Request.Uri = _endpoint;
+
+        _pipeline.Send(message);
+
+        return ClientResult.FromResponse(message.Response!);
+    }
+
+    public ClientResult GetNextPage(ClientResult result)
+    {
+        using PipelineMessage message = _pipeline.CreateMessage();
+        message.Request.Uri = _endpoint;
+
+        _pipeline.Send(message);
+
+        return ClientResult.FromResponse(message.Response!);
+    }
+
+    public static bool HasNextPage(ClientResult result)
+    {
+        Argument.AssertNotNull(result, nameof(result));
+
+        PipelineResponse response = result.GetRawResponse();
+
+        using JsonDocument doc = JsonDocument.Parse(response.Content);
+        bool hasMore = doc.RootElement.GetProperty("has_more"u8).GetBoolean();
+
+        return hasMore;
     }
 }
