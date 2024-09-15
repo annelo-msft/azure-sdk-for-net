@@ -26,13 +26,16 @@ public abstract class AsyncCollectionResult<T> : AsyncCollectionResult, IAsyncEn
     /// is called. Such implementations will typically be returned from client
     /// convenience methods so that callers of the methods don't need to
     /// dispose the return value. </remarks>
-    protected internal AsyncCollectionResult() : base()
+    protected internal AsyncCollectionResult(CancellationToken cancellationToken)
+        : base(cancellationToken)
     {
     }
 
     /// <inheritdoc/>
     public async IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = default)
     {
+        // TODO: join CancellationTokens
+
         await foreach (ClientResult page in GetRawPagesAsync().ConfigureAwait(false).WithCancellation(cancellationToken))
         {
             await foreach (T value in GetValuesFromPageAsync(page).ConfigureAwait(false).WithCancellation(cancellationToken))
@@ -47,5 +50,6 @@ public abstract class AsyncCollectionResult<T> : AsyncCollectionResult, IAsyncEn
     /// </summary>
     /// <param name="page"></param>
     /// <returns></returns>
+    // TODO: Document that implementation should use CancellationToken from property
     protected abstract IAsyncEnumerable<T> GetValuesFromPageAsync(ClientResult page);
 }
