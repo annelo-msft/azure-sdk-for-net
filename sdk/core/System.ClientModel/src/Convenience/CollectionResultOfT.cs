@@ -42,6 +42,20 @@ public abstract class CollectionResult<T> : CollectionResult, IEnumerable<T>
     }
 
     /// <summary>
+    /// TBD.
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerable<PageResult<T>> GetPages()
+    {
+        foreach (ClientResult page in GetRawPages())
+        {
+            IEnumerable<T> values = GetValuesFromPage(page);
+            ContinuationToken? continuationToken = GetContinuationToken(page);
+            yield return new PageResult<T>(values, continuationToken, page.GetRawResponse());
+        }
+    }
+
+    /// <summary>
     /// Get a collection of the values from a page response.
     /// </summary>
     /// <param name="page"></param>
