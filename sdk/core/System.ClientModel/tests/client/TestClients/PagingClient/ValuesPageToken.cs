@@ -3,6 +3,7 @@
 
 using System;
 using System.ClientModel;
+using System.ClientModel.Primitives;
 using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
@@ -126,4 +127,19 @@ internal class ValuesPageToken : ContinuationToken
 
     public static ValuesPageToken FromOptions(string? order, int? pageSize, int? offset)
         => new(order, pageSize, offset);
+
+    //public static ValuesPageToken? FromResponse(ClientResult result, int? limit, string? order, string? before)
+    //{
+    //    PipelineResponse response = result.GetRawResponse();
+    //    using JsonDocument doc = JsonDocument.Parse(response.Content);
+    //    string lastId = doc.RootElement.GetProperty("last_id"u8).GetString()!;
+    //    bool hasMore = doc.RootElement.GetProperty("has_more"u8).GetBoolean();
+
+    //    if (!hasMore || lastId is null)
+    //    {
+    //        return null;
+    //    }
+
+    //    return new(limit, order, lastId, before);
+    //}
 }

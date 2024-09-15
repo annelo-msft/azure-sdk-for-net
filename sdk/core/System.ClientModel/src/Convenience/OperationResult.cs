@@ -53,6 +53,9 @@ public abstract class OperationResult
     /// <value>A token that can be used to rehydrate the operation, for example
     /// to monitor its progress or to obtain its final result, from a process
     /// different than the one that started the operation.</value>
+    /// <remarks>This property is abstract so that derived types that do not
+    /// support rehydration can return null without using a backing field for
+    /// an unused ContinuationToken.</remarks>
     public abstract ContinuationToken? RehydrationToken { get; protected set; }
 
     /// <summary>

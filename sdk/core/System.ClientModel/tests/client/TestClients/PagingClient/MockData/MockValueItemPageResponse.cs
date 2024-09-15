@@ -17,6 +17,8 @@ internal class MockValueItemPageResponse : PipelineResponse
     public MockValueItemPageResponse(IEnumerable<ValueItem> values)
     {
         StringBuilder sb = new StringBuilder();
+        sb.AppendLine("{");
+        sb.AppendLine("\"data\":");
         sb.AppendLine("[");
 
         int count = 0;
@@ -30,6 +32,8 @@ internal class MockValueItemPageResponse : PipelineResponse
             }
         }
         sb.AppendLine("]");
+        sb.AppendLine("\"has_more\": true");
+        sb.AppendLine("}");
 
         Content = BinaryData.FromString(sb.ToString());
     }
