@@ -3,14 +3,9 @@
 
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Azure.Core.TestFramework;
 using ClientModel.Tests.Collections;
-using ClientModel.Tests.Mocks;
-using ClientModel.Tests.Paging;
 using NUnit.Framework;
 
 namespace System.ClientModel.Tests.Results;
@@ -96,15 +91,63 @@ public class PaginatedCollectionTests
         Assert.AreEqual(totalPageCount - 1, rehydratedPageCount);
     }
 
-    //[Test]
-    //public async Task CanEnumerateRawPagesAsync()
-    //{
-    //}
+    [Test]
+    public async Task CanEnumerateRawPagesAsync()
+    {
+        ProtocolPaginatedCollectionClient client = new();
 
-    //[Test]
-    //public async Task CanRehydrateCollectionAsync()
-    //{
-    //}
+        AsyncCollectionResult valueCollection = client.GetValuesAsync();
+        IAsyncEnumerable<ClientResult> pages = valueCollection.GetRawPagesAsync();
+
+        int expectedValueId = 0;
+        int pageCount = 0;
+        await foreach (ClientResult page in pages)
+        {
+            PipelineResponse response = page.GetRawResponse();
+            ValueItemPage conveniencePage = ValueItemPage.FromJson(response.Content);
+
+            Assert.AreEqual(MockPageResponseData.DefaultPageSize, conveniencePage.Values.Count);
+            Assert.AreEqual(expectedValueId, conveniencePage.Values[0].Id);
+
+            pageCount++;
+            expectedValueId += MockPageResponseData.DefaultPageSize;
+        }
+
+        Assert.AreEqual(MockPageResponseData.TotalItemCount / MockPageResponseData.DefaultPageSize, pageCount);
+    }
+
+    [Test]
+    public async Task CanRehydrateCollectionAsync()
+    {
+        ProtocolPaginatedCollectionClient client = new();
+
+        AsyncCollectionResult valueCollection = client.GetValuesAsync();
+        List<ClientResult> pages = await valueCollection.GetRawPagesAsync().ToListAsync();
+        ClientResult firstPage = pages[0];
+
+        ContinuationToken? nextPageToken = valueCollection.GetContinuationToken(firstPage);
+        AsyncCollectionResult rehydratedCollection = client.GetValuesAsync(nextPageToken!);
+
+        List<ClientResult> rehydratedPages = await rehydratedCollection.GetRawPagesAsync().ToListAsync();
+
+        int totalPageCount = MockPageResponseData.TotalItemCount / MockPageResponseData.DefaultPageSize;
+        int rehydratedPageCount = 0;
+        for (int i = 1; i < totalPageCount; i++)
+        {
+            ClientResult originalPageResult = pages[i];
+            ClientResult rehydratedPageResult = rehydratedPages[i - 1];
+
+            ValueItemPage originalPage = ValueItemPage.FromJson(originalPageResult.GetRawResponse().Content);
+            ValueItemPage rehydratedPage = ValueItemPage.FromJson(rehydratedPageResult.GetRawResponse().Content);
+
+            Assert.AreEqual(originalPage.Values.Count, rehydratedPage.Values.Count);
+            Assert.AreEqual(originalPage.Values[0].Id, rehydratedPage.Values[0].Id);
+
+            rehydratedPageCount++;
+        }
+
+        Assert.AreEqual(totalPageCount - 1, rehydratedPageCount);
+    }
 
     //[Test]
     //public void CanEnumerateValues()

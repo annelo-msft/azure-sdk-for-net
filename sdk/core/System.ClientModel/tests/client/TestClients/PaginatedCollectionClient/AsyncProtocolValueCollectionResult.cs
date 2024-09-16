@@ -4,24 +4,40 @@
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
-using System.Threading;
+using System.Threading.Tasks;
+using ClientModel.Tests.Paging;
 
 namespace ClientModel.Tests.Collections;
 
 internal class AsyncProtocolValueCollectionResult : AsyncCollectionResult
 {
-    public AsyncProtocolValueCollectionResult(CancellationToken cancellationToken)
-        : base(cancellationToken)
+    private readonly IEnumerable<ValueItemPage> _mockPagesData;
+
+    private readonly int? _pageSize;
+    private readonly int? _offset;
+    private readonly RequestOptions? _options;
+
+    public AsyncProtocolValueCollectionResult(int? pageSize, int? offset, RequestOptions? options)
+        : base(options?.CancellationToken ?? default)
     {
+        _pageSize = pageSize;
+        _offset = offset;
+        _options = options;
+
+        _mockPagesData = MockPageResponseData.GetPages(pageSize, offset);
     }
 
     public override ContinuationToken? GetContinuationToken(ClientResult page)
-    {
-        throw new System.NotImplementedException();
-    }
+        => ValueCollectionPageToken.FromResponse(page, _pageSize);
 
-    public override IAsyncEnumerable<ClientResult> GetRawPagesAsync()
+    public async override IAsyncEnumerable<ClientResult> GetRawPagesAsync()
     {
-        throw new System.NotImplementedException();
+        foreach (ValueItemPage page in _mockPagesData)
+        {
+            await Task.Delay(0, CancellationToken).ConfigureAwait(false);
+
+            PipelineResponse response = new MockPageResponse(page);
+            yield return ClientResult.FromResponse(response);
+        }
     }
 }

@@ -22,22 +22,20 @@ public class ProtocolPaginatedCollectionClient
         _pipeline = ClientPipeline.Create(options);
     }
 
-    //public virtual AsyncCollectionResult GetValuesAsync(
-    //    string? order,
-    //    int? pageSize,
-    //    int? offset,
-    //    RequestOptions? options = default)
-    //{
-    //    PageEnumerator enumerator = new ValuesPageEnumerator(
-    //        _pipeline,
-    //        _endpoint,
-    //        order,
-    //        pageSize,
-    //        offset,
-    //        options);
-    //    return CollectionResultHelpers.CreateAsync(enumerator);
-    //}
+    public virtual AsyncCollectionResult GetValuesAsync(
+        int? pageSize = default,
+        RequestOptions? options = default)
+    {
+        return new AsyncProtocolValueCollectionResult(pageSize, offset: default, options);
+    }
+    public virtual AsyncCollectionResult GetValuesAsync(
+        ContinuationToken pageToken,
+        RequestOptions? options = default)
+    {
+        ValueCollectionPageToken token = ValueCollectionPageToken.FromToken(pageToken);
 
+        return new AsyncProtocolValueCollectionResult(token.PageSize, token.Offset, options);
+    }
     public virtual CollectionResult GetValues(
         int? pageSize = default,
         RequestOptions? options = default)
