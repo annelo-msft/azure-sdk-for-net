@@ -5,7 +5,6 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ClientModel.Tests.Paging;
 
 namespace ClientModel.Tests.Collections;
 
@@ -30,7 +29,7 @@ internal class AsyncProtocolValueCollectionResult : AsyncCollectionResult
     public override ContinuationToken? GetContinuationToken(ClientResult page)
         => ValueCollectionPageToken.FromResponse(page, _pageSize);
 
-    public async override IAsyncEnumerable<ClientResult> GetRawPagesAsync()
+    public override async IAsyncEnumerable<ClientResult> GetRawPagesAsync()
     {
         foreach (ValueItemPage page in _mockPagesData)
         {

@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Threading;
@@ -12,110 +11,68 @@ namespace ClientModel.Tests.Collections;
 // endpoints that have both convenience and protocol methods.
 public class PaginatedCollectionClient
 {
-    private readonly ClientPipeline _pipeline;
-    private readonly Uri _endpoint;
-
-    public PaginatedCollectionClient(PaginatedCollectionClientOptions options)
+    public PaginatedCollectionClient(PaginatedCollectionClientOptions? options = default)
     {
-        _pipeline = ClientPipeline.Create(options);
-        _endpoint = new Uri("https://www.paging.com");
     }
 
-    //public virtual AsyncCollectionResult<ValueItem> GetValuesAsync(
-    //    string? order = default,
-    //    int? pageSize = default,
-    //    int? offset = default,
-    //    CancellationToken cancellationToken = default)
-    //{
-    //    ValuesPageEnumerator enumerator = new ValuesPageEnumerator(
-    //        _pipeline,
-    //        _endpoint,
-    //        order: order,
-    //        pageSize: pageSize,
-    //        offset: offset,
-    //        cancellationToken.ToRequestOptions());
-    //    return CollectionResultHelpers.CreateAsync(enumerator);
-    //}
+    public virtual AsyncCollectionResult<ValueItem> GetValuesAsync(
+        int? pageSize = default,
+        CancellationToken cancellationToken = default)
+    {
+        return new AsyncValueCollectionResult(pageSize, offset: default, cancellationToken.ToRequestOptions());
+    }
 
-    //public virtual AsyncCollectionResult<ValueItem> GetValuesAsync(
-    //    ContinuationToken firstPageToken,
-    //    CancellationToken cancellationToken = default)
-    //{
-    //    Argument.AssertNotNull(firstPageToken, nameof(firstPageToken));
+    public virtual AsyncCollectionResult<ValueItem> GetValuesAsync(
+        ContinuationToken continuationToken,
+        CancellationToken cancellationToken = default)
+    {
+        ValueCollectionPageToken token = ValueCollectionPageToken.FromToken(continuationToken);
 
-    //    ValuesPageToken token = ValuesPageToken.FromToken(firstPageToken);
-    //    ValuesPageEnumerator enumerator = new ValuesPageEnumerator(
-    //        _pipeline,
-    //        _endpoint,
-    //        token.Order,
-    //        token.PageSize,
-    //        token.Offset,
-    //        cancellationToken.ToRequestOptions());
-    //    return CollectionResultHelpers.CreateAsync(enumerator);
-    //}
+        return new AsyncValueCollectionResult(token.PageSize, token.Offset, cancellationToken.ToRequestOptions());
+    }
+    public virtual CollectionResult<ValueItem> GetValues(
+        int? pageSize = default,
+        CancellationToken cancellationToken = default)
+    {
+        return new ValueCollectionResult(pageSize, offset: default, cancellationToken.ToRequestOptions());
+    }
 
-    //public virtual CollectionResult<ValueItem> GetValues(
-    //    string? order = default,
-    //    int? pageSize = default,
-    //    int? offset = default,
-    //    CancellationToken cancellationToken = default)
-    //{
-    //    ValuesPageEnumerator enumerator = new ValuesPageEnumerator(
-    //        _pipeline,
-    //        _endpoint,
-    //        order: order,
-    //        pageSize: pageSize,
-    //        offset: offset,
-    //        cancellationToken.ToRequestOptions());
-    //    return CollectionResultHelpers.Create(enumerator);
-    //}
+    public virtual CollectionResult<ValueItem> GetValues(
+        ContinuationToken continuationToken,
+        CancellationToken cancellationToken = default)
+    {
+        ValueCollectionPageToken token = ValueCollectionPageToken.FromToken(continuationToken);
 
-    //public virtual CollectionResult<ValueItem> GetValues(
-    //    ContinuationToken firstPageToken,
-    //    CancellationToken cancellationToken = default)
-    //{
-    //    Argument.AssertNotNull(firstPageToken, nameof(firstPageToken));
+        return new ValueCollectionResult(token.PageSize, token.Offset, cancellationToken.ToRequestOptions());
+    }
+    public virtual AsyncCollectionResult<ValueItem> GetValuesAsync(
+        int? pageSize,
+        RequestOptions? options)
+    {
+        return new AsyncValueCollectionResult(pageSize, offset: default, options);
+    }
 
-    //    ValuesPageToken token = ValuesPageToken.FromToken(firstPageToken);
-    //    ValuesPageEnumerator enumerator = new ValuesPageEnumerator(
-    //        _pipeline,
-    //        _endpoint,
-    //        token.Order,
-    //        token.PageSize,
-    //        token.Offset,
-    //        cancellationToken.ToRequestOptions());
-    //    return CollectionResultHelpers.Create(enumerator);
-    //}
+    public virtual AsyncCollectionResult<ValueItem> GetValuesAsync(
+        ContinuationToken continuationToken,
+        RequestOptions? options)
+    {
+        ValueCollectionPageToken token = ValueCollectionPageToken.FromToken(continuationToken);
 
-    //public virtual AsyncCollectionResult GetValuesAsync(
-    //    string? order,
-    //    int? pageSize,
-    //    int? offset,
-    //    RequestOptions options)
-    //{
-    //    ValuesPageEnumerator enumerator = new ValuesPageEnumerator(
-    //        _pipeline,
-    //        _endpoint,
-    //        order: order,
-    //        pageSize: pageSize,
-    //        offset: offset,
-    //        options);
-    //    return CollectionResultHelpers.CreateAsync(enumerator);
-    //}
+        return new AsyncValueCollectionResult(token.PageSize, token.Offset, options);
+    }
+    public virtual CollectionResult<ValueItem> GetValues(
+        int? pageSize,
+        RequestOptions? options)
+    {
+        return new ValueCollectionResult(pageSize, offset: default, options);
+    }
 
-    //public virtual CollectionResult GetValues(
-    //    string? order,
-    //    int? pageSize,
-    //    int? offset,
-    //    RequestOptions options)
-    //{
-    //    ValuesPageEnumerator enumerator = new ValuesPageEnumerator(
-    //        _pipeline,
-    //        _endpoint,
-    //        order: order,
-    //        pageSize: pageSize,
-    //        offset: offset,
-    //        options);
-    //    return CollectionResultHelpers.Create(enumerator);
-    //}
+    public virtual CollectionResult<ValueItem> GetValues(
+        ContinuationToken continuationToken,
+        RequestOptions? options)
+    {
+        ValueCollectionPageToken token = ValueCollectionPageToken.FromToken(continuationToken);
+
+        return new ValueCollectionResult(token.PageSize, token.Offset, options);
+    }
 }

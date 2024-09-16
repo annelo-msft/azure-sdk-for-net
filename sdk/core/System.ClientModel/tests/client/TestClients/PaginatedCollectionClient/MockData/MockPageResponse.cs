@@ -6,9 +6,8 @@ using System.ClientModel.Primitives;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using ClientModel.Tests.Collections;
 
-namespace ClientModel.Tests.Paging;
+namespace ClientModel.Tests.Collections;
 
 internal class MockPageResponse : PipelineResponse
 {

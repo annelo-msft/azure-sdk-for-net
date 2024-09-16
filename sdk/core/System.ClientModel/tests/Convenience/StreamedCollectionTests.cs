@@ -9,7 +9,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Azure.Core.TestFramework;
 using ClientModel.Tests.Mocks;
-using ClientModel.Tests.Paging;
 using NUnit.Framework;
 
 namespace System.ClientModel.Tests.Results;
