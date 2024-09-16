@@ -9,12 +9,9 @@ namespace System.ClientModel.Primitives;
 #pragma warning disable CS1591 // public XML comments
 public abstract class AsyncCollectionResult
 {
-    protected AsyncCollectionResult(CancellationToken cancellationToken)
+    protected AsyncCollectionResult()
     {
-        CancellationToken = cancellationToken;
     }
-
-    protected CancellationToken CancellationToken { get; }
 
     // Note: implementation should use CancellationToken from property
     // instead of passed-in parameter

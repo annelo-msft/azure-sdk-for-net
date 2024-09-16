@@ -17,7 +17,6 @@ internal class AsyncProtocolValueCollectionResult : AsyncCollectionResult
     private readonly RequestOptions? _options;
 
     public AsyncProtocolValueCollectionResult(int? pageSize, int? offset, RequestOptions? options)
-        : base(options?.CancellationToken ?? default)
     {
         _pageSize = pageSize;
         _offset = offset;
@@ -33,7 +32,7 @@ internal class AsyncProtocolValueCollectionResult : AsyncCollectionResult
     {
         foreach (ValueItemPage page in _mockPagesData)
         {
-            await Task.Delay(0, CancellationToken).ConfigureAwait(false);
+            await Task.Delay(0, _options?.CancellationToken ?? default).ConfigureAwait(false);
 
             PipelineResponse response = new MockPageResponse(page);
             yield return ClientResult.FromResponse(response);

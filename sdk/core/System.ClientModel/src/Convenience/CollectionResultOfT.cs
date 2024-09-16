@@ -15,8 +15,7 @@ namespace System.ClientModel;
 /// </summary>
 public abstract class CollectionResult<T> : CollectionResult, IEnumerable<T>
 {
-    protected internal CollectionResult(CancellationToken cancellationToken)
-        : base(cancellationToken)
+    protected internal CollectionResult()
     {
     }
 
