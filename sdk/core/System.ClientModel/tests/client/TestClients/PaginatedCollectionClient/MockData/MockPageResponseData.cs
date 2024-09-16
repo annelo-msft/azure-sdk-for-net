@@ -4,14 +4,13 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ClientModel.Tests.Paging;
+namespace ClientModel.Tests.Collections;
 
-public class MockServicePagingData
+public class MockPageResponseData
 {
     public const int TotalItemCount = 16;
 
-    public const string DefaultOrder = "asc";
-    public const int DefaultPageSize = 8;
+    public const int DefaultPageSize = 4;
     public const int DefaultOffset = 0;
 
     // Source of all the data
@@ -23,14 +22,16 @@ public class MockServicePagingData
         }
     }
 
-    public static IEnumerable<ValueItemPage> GetPages()
+    public static IEnumerable<ValueItemPage> GetPages(int? pageSize = DefaultPageSize)
     {
+        pageSize ??= DefaultPageSize;
+
         IEnumerable<ValueItem> valueSource = GetAllValues();
 
         for (int i = 0; i < TotalItemCount;)
         {
-            IEnumerable<ValueItem> pageItems = valueSource.Skip(i).Take(DefaultPageSize);
-            i += DefaultPageSize;
+            IEnumerable<ValueItem> pageItems = valueSource.Skip(i).Take(pageSize.Value);
+            i += pageSize.Value;
             yield return new ValueItemPage(pageItems, i < TotalItemCount);
         }
     }

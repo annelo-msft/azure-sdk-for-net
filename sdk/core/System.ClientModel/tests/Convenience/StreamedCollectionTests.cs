@@ -15,7 +15,9 @@ using NUnit.Framework;
 namespace System.ClientModel.Tests.Results;
 
 /// <summary>
-/// Scenario tests for sync and async page collections.
+/// Scenario tests for sync and async streamed collections.
+/// These tests use a reference implementation of a client that calls streaming
+/// service endpoints.
 /// </summary>
 public class StreamedCollectionTests
 {

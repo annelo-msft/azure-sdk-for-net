@@ -13,12 +13,12 @@ namespace ClientModel.Tests.Collections;
 public class ProtocolPaginatedCollectionClient
 {
     private readonly ClientPipeline _pipeline;
-    private readonly Uri _endpoint;
 
-    public ProtocolPaginatedCollectionClient(Uri endpoint, PaginatedCollectionClientOptions options)
+    public ProtocolPaginatedCollectionClient(PaginatedCollectionClientOptions? options = default)
     {
+        options ??= new();
+
         _pipeline = ClientPipeline.Create(options);
-        _endpoint = endpoint;
     }
 
     //public virtual AsyncCollectionResult GetValuesAsync(
@@ -38,11 +38,9 @@ public class ProtocolPaginatedCollectionClient
     //}
 
     public virtual CollectionResult GetValues(
-        string? order,
-        int? pageSize,
-        int? offset,
+        int? pageSize = default,
         RequestOptions? options = default)
     {
-        return new ValueCollectionResult(_pipeline, _endpoint, options, order, pageSize, offset);
+        return new ProtocolValueCollectionResult(options, pageSize);
     }
 }

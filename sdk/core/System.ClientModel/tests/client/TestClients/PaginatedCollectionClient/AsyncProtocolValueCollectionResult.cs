@@ -4,9 +4,24 @@
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace ClientModel.Tests.Collections;
 
-internal class AsyncValueCollectionResult
+internal class AsyncProtocolValueCollectionResult : AsyncCollectionResult
 {
+    public AsyncProtocolValueCollectionResult(CancellationToken cancellationToken)
+        : base(cancellationToken)
+    {
+    }
+
+    public override ContinuationToken? GetContinuationToken(ClientResult page)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override IAsyncEnumerable<ClientResult> GetRawPagesAsync()
+    {
+        throw new System.NotImplementedException();
+    }
 }

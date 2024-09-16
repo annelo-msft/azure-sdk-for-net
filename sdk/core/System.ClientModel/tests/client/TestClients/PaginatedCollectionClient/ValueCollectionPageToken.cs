@@ -6,20 +6,19 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 
 namespace ClientModel.Tests.Paging;
 
 internal class ValueCollectionPageToken : ContinuationToken
 {
-    protected ValueCollectionPageToken(string? order, int? pageSize, int? offset)
+    protected ValueCollectionPageToken(int? pageSize, int? offset)
     {
-        Order = order;
         PageSize = pageSize;
         Offset = offset;
     }
 
-    public string? Order { get; }
     public int? PageSize { get; }
     public int? Offset { get; }
 
@@ -29,11 +28,6 @@ internal class ValueCollectionPageToken : ContinuationToken
         using Utf8JsonWriter writer = new(stream);
 
         writer.WriteStartObject();
-
-        if (Order is not null)
-        {
-            writer.WriteString("order", Order);
-        }
 
         if (PageSize.HasValue)
         {
@@ -60,7 +54,7 @@ internal class ValueCollectionPageToken : ContinuationToken
             return null;
         }
 
-        return new ValueCollectionPageToken(Order, PageSize, offset);
+        return new ValueCollectionPageToken(PageSize, offset);
     }
 
     public static ValueCollectionPageToken FromToken(ContinuationToken pageToken)
@@ -74,12 +68,11 @@ internal class ValueCollectionPageToken : ContinuationToken
 
         if (data.ToMemory().Length == 0)
         {
-            throw new ArgumentException("Failed to create ValuesPageToken from provided pageToken.", nameof(pageToken));
+            throw new ArgumentException("Failed to create ValueCollectionPageToken from provided pageToken.", nameof(pageToken));
         }
 
         Utf8JsonReader reader = new(data);
 
-        string? order = null;
         int? pageSize = null;
         int? offset = null;
 
@@ -100,12 +93,6 @@ internal class ValueCollectionPageToken : ContinuationToken
 
             switch (propertyName)
             {
-                case "order":
-                    reader.Read();
-                    Debug.Assert(reader.TokenType == JsonTokenType.String);
-                    order = reader.GetString();
-                    break;
-
                 case "pageSize":
                     reader.Read();
                     Debug.Assert(reader.TokenType == JsonTokenType.Number);
@@ -122,24 +109,27 @@ internal class ValueCollectionPageToken : ContinuationToken
             }
         }
 
-        return new(order, pageSize, offset);
+        return new( pageSize, offset);
     }
 
-    public static ValueCollectionPageToken FromOptions(string? order, int? pageSize, int? offset)
-        => new(order, pageSize, offset);
+    public static ValueCollectionPageToken FromOptions(int? pageSize, int? offset)
+        => new(pageSize, offset);
 
-    //public static ValuesPageToken? FromResponse(ClientResult result, int? limit, string? order, string? before)
-    //{
-    //    PipelineResponse response = result.GetRawResponse();
-    //    using JsonDocument doc = JsonDocument.Parse(response.Content);
-    //    string lastId = doc.RootElement.GetProperty("last_id"u8).GetString()!;
-    //    bool hasMore = doc.RootElement.GetProperty("has_more"u8).GetBoolean();
+    public static ValueCollectionPageToken? FromResponse(ClientResult page, int? pageSize)
+    {
+        PipelineResponse response = page.GetRawResponse();
 
-    //    if (!hasMore || lastId is null)
-    //    {
-    //        return null;
-    //    }
+        using JsonDocument doc = JsonDocument.Parse(response.Content);
 
-    //    return new(limit, order, lastId, before);
-    //}
+        JsonElement data = doc.RootElement.GetProperty("data");
+        int lastId = data.EnumerateArray().LastOrDefault().GetProperty("id").GetInt32();
+        bool hasMore = doc.RootElement.GetProperty("has_more"u8).GetBoolean();
+
+        if (!hasMore)
+        {
+            return null;
+        }
+
+        return new(pageSize, lastId);
+    }
 }

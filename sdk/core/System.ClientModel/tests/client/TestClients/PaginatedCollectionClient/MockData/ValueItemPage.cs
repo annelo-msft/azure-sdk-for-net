@@ -7,8 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 
-namespace ClientModel.Tests.Paging;
+namespace ClientModel.Tests.Collections;
 
+// public as a convience for tests.
 public class ValueItemPage
 {
     public ValueItemPage(IEnumerable<ValueItem> values, bool hasMore)
