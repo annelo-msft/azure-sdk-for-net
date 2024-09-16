@@ -9,7 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 
-namespace ClientModel.Tests.Paging;
+namespace ClientModel.Tests.Collections;
 
 internal class ValueCollectionPageToken : ContinuationToken
 {
@@ -20,6 +20,7 @@ internal class ValueCollectionPageToken : ContinuationToken
     }
 
     public int? PageSize { get; }
+
     public int? Offset { get; }
 
     public override BinaryData ToBytes()
@@ -109,7 +110,7 @@ internal class ValueCollectionPageToken : ContinuationToken
             }
         }
 
-        return new( pageSize, offset);
+        return new(pageSize, offset);
     }
 
     public static ValueCollectionPageToken FromOptions(int? pageSize, int? offset)
@@ -130,6 +131,6 @@ internal class ValueCollectionPageToken : ContinuationToken
             return null;
         }
 
-        return new(pageSize, lastId);
+        return new(pageSize, lastId + 1);
     }
 }

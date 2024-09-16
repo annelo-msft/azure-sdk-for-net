@@ -13,18 +13,20 @@ namespace ClientModel.Tests.Collections;
 /// </summary>
 internal class ProtocolValueCollectionResult : CollectionResult
 {
-    private readonly RequestOptions? _options;
-    private readonly int? _pageSize;
-
     private readonly IEnumerable<ValueItemPage> _mockPagesData;
 
-    public ProtocolValueCollectionResult(RequestOptions? options, int? pageSize)
+    private readonly int? _pageSize;
+    private readonly int? _offset;
+    private readonly RequestOptions? _options;
+
+    public ProtocolValueCollectionResult(int? pageSize, int? offset, RequestOptions? options)
         : base(options?.CancellationToken ?? default)
     {
-        _options = options;
         _pageSize = pageSize;
+        _offset = offset;
+        _options = options;
 
-        _mockPagesData = MockPageResponseData.GetPages();
+        _mockPagesData = MockPageResponseData.GetPages(pageSize, offset);
     }
 
     public override ContinuationToken? GetContinuationToken(ClientResult page)

@@ -5,6 +5,7 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
+using ClientModel.Tests.Paging;
 
 namespace ClientModel.Tests.Collections;
 
@@ -41,6 +42,14 @@ public class ProtocolPaginatedCollectionClient
         int? pageSize = default,
         RequestOptions? options = default)
     {
-        return new ProtocolValueCollectionResult(options, pageSize);
+        return new ProtocolValueCollectionResult(pageSize, offset: default, options);
+    }
+    public virtual CollectionResult GetValues(
+        ContinuationToken pageToken,
+        RequestOptions? options = default)
+    {
+        ValueCollectionPageToken token = ValueCollectionPageToken.FromToken(pageToken);
+
+        return new ProtocolValueCollectionResult(token.PageSize, token.Offset, options);
     }
 }

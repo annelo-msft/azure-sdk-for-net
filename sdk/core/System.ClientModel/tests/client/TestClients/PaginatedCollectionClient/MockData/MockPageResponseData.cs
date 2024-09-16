@@ -22,13 +22,15 @@ public class MockPageResponseData
         }
     }
 
-    public static IEnumerable<ValueItemPage> GetPages(int? pageSize = DefaultPageSize)
+    public static IEnumerable<ValueItemPage> GetPages(int? pageSize = default,
+        int? offset = default)
     {
         pageSize ??= DefaultPageSize;
+        offset ??= DefaultOffset;
 
         IEnumerable<ValueItem> valueSource = GetAllValues();
 
-        for (int i = 0; i < TotalItemCount;)
+        for (int i = offset.Value; i < TotalItemCount;)
         {
             IEnumerable<ValueItem> pageItems = valueSource.Skip(i).Take(pageSize.Value);
             i += pageSize.Value;

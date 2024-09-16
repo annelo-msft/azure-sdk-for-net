@@ -63,9 +63,38 @@ public class PaginatedCollectionTests
         Assert.AreEqual(MockPageResponseData.TotalItemCount / MockPageResponseData.DefaultPageSize, pageCount);
     }
 
-    //[Test]
-    //public void CanRehydrateCollection() {
-    //}
+    [Test]
+    public void CanRehydrateCollection()
+    {
+        ProtocolPaginatedCollectionClient client = new();
+
+        CollectionResult valueCollection = client.GetValues();
+        List<ClientResult> pages = valueCollection.GetRawPages().ToList();
+        ClientResult firstPage = pages[0];
+
+        ContinuationToken? nextPageToken = valueCollection.GetContinuationToken(firstPage);
+        CollectionResult rehydratedCollection = client.GetValues(nextPageToken!);
+
+        List<ClientResult> rehydratedPages = rehydratedCollection.GetRawPages().ToList();
+
+        int totalPageCount = MockPageResponseData.TotalItemCount / MockPageResponseData.DefaultPageSize;
+        int rehydratedPageCount = 0;
+        for (int i = 1; i < totalPageCount; i++)
+        {
+            ClientResult originalPageResult = pages[i];
+            ClientResult rehydratedPageResult = rehydratedPages[i - 1];
+
+            ValueItemPage originalPage = ValueItemPage.FromJson(originalPageResult.GetRawResponse().Content);
+            ValueItemPage rehydratedPage = ValueItemPage.FromJson(rehydratedPageResult.GetRawResponse().Content);
+
+            Assert.AreEqual(originalPage.Values.Count, rehydratedPage.Values.Count);
+            Assert.AreEqual(originalPage.Values[0].Id, rehydratedPage.Values[0].Id);
+
+            rehydratedPageCount++;
+        }
+
+        Assert.AreEqual(totalPageCount - 1, rehydratedPageCount);
+    }
 
     //[Test]
     //public async Task CanEnumerateRawPagesAsync()
