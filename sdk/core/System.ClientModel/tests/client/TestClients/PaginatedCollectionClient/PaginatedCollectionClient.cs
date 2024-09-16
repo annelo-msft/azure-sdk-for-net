@@ -7,8 +7,8 @@ using System.Threading;
 
 namespace ClientModel.Tests.Collections;
 
-// A mock client implementation that illustrates paging patterns for client
-// endpoints that have both convenience and protocol methods.
+// A reference implementation that illustrates client patterns for paginated
+// service endpoints for clients that have both convenience and protocol methods.
 public class PaginatedCollectionClient
 {
     public PaginatedCollectionClient(PaginatedCollectionClientOptions? options = default)

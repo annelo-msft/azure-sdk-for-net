@@ -6,8 +6,8 @@ using System.ClientModel.Primitives;
 
 namespace ClientModel.Tests.Collections;
 
-// A mock client implementation that illustrates paging patterns for client
-// endpoints that only have protocol methods.
+// A reference implementation that illustrates client patterns for paginated
+// service endpoints for clients that have only protocol methods.
 public class ProtocolPaginatedCollectionClient
 {
     public ProtocolPaginatedCollectionClient(PaginatedCollectionClientOptions? options = default)
