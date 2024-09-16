@@ -35,6 +35,10 @@ internal class ProtocolValueCollectionResult : CollectionResult
     {
         foreach (ValueItemPage page in _mockPagesData)
         {
+            // Simulate the pipeline checking for cancellation,
+            // which happens in the transport
+            CancellationToken.ThrowIfCancellationRequested();
+
             PipelineResponse response = new MockPageResponse(page);
             yield return ClientResult.FromResponse(response);
         }

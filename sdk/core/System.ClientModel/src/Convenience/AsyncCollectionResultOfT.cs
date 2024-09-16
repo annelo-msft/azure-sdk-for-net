@@ -23,19 +23,6 @@ public abstract class AsyncCollectionResult<T> : AsyncCollectionResult, IAsyncEn
     /// <inheritdoc/>
     public async IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = default)
     {
-        // If a user passes a CancellationToken parameter, we'll need to join
-        // it with the one that was passed to the type constructor, which was
-        // passed to the service method of the client that created the instance
-        // of the AsyncCollectionResult<T>.
-        CancellationTokenSource? cts = default;
-
-        if (CancellationToken != CancellationToken.None &&
-            cancellationToken != CancellationToken.None)
-        {
-            cts = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken);
-            cancellationToken = cts.Token;
-        }
-
         await foreach (ClientResult page in GetRawPagesAsync().ConfigureAwait(false).WithCancellation(cancellationToken))
         {
             await foreach (T value in GetValuesFromPageAsync(page).ConfigureAwait(false).WithCancellation(cancellationToken))
@@ -43,8 +30,6 @@ public abstract class AsyncCollectionResult<T> : AsyncCollectionResult, IAsyncEn
                 yield return value;
             }
         }
-
-        cts?.Dispose();
     }
 
     /// <summary>
@@ -52,7 +37,6 @@ public abstract class AsyncCollectionResult<T> : AsyncCollectionResult, IAsyncEn
     /// </summary>
     /// <param name="page"></param>
     /// <returns></returns>
-    // TODO: Document that implementation should use CancellationToken from property
     protected abstract IAsyncEnumerable<T> GetValuesFromPageAsync(ClientResult page);
 }
 #pragma warning restore CS1591 // public XML comments

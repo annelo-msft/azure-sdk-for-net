@@ -4,10 +4,10 @@
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Azure.Core.TestFramework;
 using ClientModel.Tests.Collections;
-using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 
 namespace System.ClientModel.Tests.Results;
@@ -167,10 +167,17 @@ public class PaginatedCollectionTests
         Assert.AreEqual(MockPageResponseData.TotalItemCount, count);
     }
 
-    //[Test]
-    //public void CanCancelViaServiceMethodCancellationToken()
-    //{
-    //}
+    [Test]
+    public void CanCancelViaServiceMethodCancellationToken()
+    {
+        using CancellationTokenSource cts = new();
+        cts.Cancel();
+
+        PaginatedCollectionClient client = new();
+        CollectionResult<ValueItem> values = client.GetValues(cancellationToken: cts.Token);
+
+        Assert.Throws<OperationCanceledException>(() => values.First());
+    }
 
     [Test]
     public void CanEvolveFromProtocolLayer()
@@ -252,19 +259,46 @@ public class PaginatedCollectionTests
         Assert.AreEqual(MockPageResponseData.TotalItemCount, count);
     }
 
-    //[Test]
-    //public async Task CanCancelViaServiceMethodCancellationTokenAsync()
-    //{
-    //}
+    [Test]
+    public void CanCancelViaServiceMethodCancellationTokenAsync()
+    {
+        using CancellationTokenSource cts = new();
+        cts.Cancel();
 
-    //[Test]
-    //public async Task CanCancelViaAsyncEnumerableCancellationTokenAsync()
-    //{
-    //}
+        PaginatedCollectionClient client = new();
+        AsyncCollectionResult<ValueItem> values = client.GetValuesAsync(cancellationToken: cts.Token);
+
+        Assert.ThrowsAsync<TaskCanceledException>(async () => await values.FirstAsync());
+    }
+
+    [Test]
+    public async Task CanCancelViaAsyncEnumerableCancellationTokenAsync()
+    {
+        using CancellationTokenSource cts = new();
+        cts.Cancel();
+
+        PaginatedCollectionClient client = new();
+        AsyncCollectionResult<ValueItem> values = client.GetValuesAsync();
+
+        bool threwException = false;
+        try
+        {
+            await foreach (ValueItem value in values.WithCancellation(cts.Token))
+            {
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            threwException = true;
+        }
+
+        Assert.IsTrue(threwException);
+    }
 
     [Test]
     public async Task CanEvolveFromProtocolLayerAsync()
-    {        // This tests validates that user code doesn't break when convenience
+    {
+        // This tests validates that user code doesn't break when convenience
         // methods are added.  We show this by illustrating that code written
         // at the protocol layer continues to work the same way when using a
         // client that has only protocol methods and when using client that has
