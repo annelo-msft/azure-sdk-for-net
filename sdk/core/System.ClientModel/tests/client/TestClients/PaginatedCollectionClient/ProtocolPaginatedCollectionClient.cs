@@ -6,16 +6,16 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 
-namespace ClientModel.Tests.Paging;
+namespace ClientModel.Tests.Collections;
 
 // A mock client implementation that illustrates paging patterns for client
 // endpoints that only have protocol methods.
-public class PagingProtocolClient
+public class ProtocolPaginatedCollectionClient
 {
     private readonly ClientPipeline _pipeline;
     private readonly Uri _endpoint;
 
-    public PagingProtocolClient(Uri endpoint, PagingClientOptions options)
+    public ProtocolPaginatedCollectionClient(Uri endpoint, PaginatedCollectionClientOptions options)
     {
         _pipeline = ClientPipeline.Create(options);
         _endpoint = endpoint;

@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading;
 
-namespace ClientModel.Tests.Paging;
+namespace ClientModel.Tests.Collections;
 
 /// <summary>
 /// Protocol-layer paginated collection

@@ -10,9 +10,9 @@ using System.Text.Json;
 
 namespace ClientModel.Tests.Paging;
 
-internal class ValuesPageToken : ContinuationToken
+internal class ValueCollectionPageToken : ContinuationToken
 {
-    protected ValuesPageToken(string? order, int? pageSize, int? offset)
+    protected ValueCollectionPageToken(string? order, int? pageSize, int? offset)
     {
         Order = order;
         PageSize = pageSize;
@@ -53,19 +53,19 @@ internal class ValuesPageToken : ContinuationToken
         return BinaryData.FromStream(stream);
     }
 
-    public ValuesPageToken? GetNextPageToken(int offset, int count)
+    public ValueCollectionPageToken? GetNextPageToken(int offset, int count)
     {
         if (offset >= count)
         {
             return null;
         }
 
-        return new ValuesPageToken(Order, PageSize, offset);
+        return new ValueCollectionPageToken(Order, PageSize, offset);
     }
 
-    public static ValuesPageToken FromToken(ContinuationToken pageToken)
+    public static ValueCollectionPageToken FromToken(ContinuationToken pageToken)
     {
-        if (pageToken is ValuesPageToken token)
+        if (pageToken is ValueCollectionPageToken token)
         {
             return token;
         }
@@ -125,7 +125,7 @@ internal class ValuesPageToken : ContinuationToken
         return new(order, pageSize, offset);
     }
 
-    public static ValuesPageToken FromOptions(string? order, int? pageSize, int? offset)
+    public static ValueCollectionPageToken FromOptions(string? order, int? pageSize, int? offset)
         => new(order, pageSize, offset);
 
     //public static ValuesPageToken? FromResponse(ClientResult result, int? limit, string? order, string? before)
