@@ -23,6 +23,17 @@ public class ClientPipelineOptions
     private PipelineTransport? _transport;
     private TimeSpan? _timeout;
 
+    /// <summary>
+    /// Gets a new instance of the <see cref="ClientPipelineOptions"/>  class.
+    /// </summary>
+    public ClientPipelineOptions()
+    {
+        // TODO: make sure this doesn't result in overriding global defaults.
+        // if it carries that risk, we may want to make copies of these things.
+        _retryPolicy = ClientRetryPolicy.Default;
+        _transport = HttpClientPipelineTransport.Shared;
+    }
+
     #region Pipeline creation: Overrides of default pipeline policies
 
     /// <summary>

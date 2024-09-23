@@ -18,6 +18,10 @@ namespace System.ClientModel.Primitives;
 /// </summary>
 public sealed partial class ClientPipeline
 {
+    // Note: that this is separate from the transport value -- that allows it to be
+    // configured differently per client pipeline, but still share a transport, which
+    // is good because of:
+    // https://devblogs.microsoft.com/azure-sdk/lifetime-management-and-thread-safety-guarantees-of-azure-sdk-net-clients/#clients-are-not-disposable:-shared-httpclient-as-default
     internal static TimeSpan DefaultNetworkTimeout { get; } = TimeSpan.FromSeconds(100);
 
     private readonly int _perCallIndex;
@@ -110,7 +114,11 @@ public sealed partial class ClientPipeline
         pipelineLength += options.PerCallPolicies?.Length ?? 0;
         pipelineLength += options.BeforeTransportPolicies?.Length ?? 0;
 
-        pipelineLength++; // for retry policy
+        if (options.RetryPolicy is not null)
+        {
+            pipelineLength++; // for retry policy
+        }
+
         pipelineLength++; // for transport
 
         PipelinePolicy[] policies = new PipelinePolicy[pipelineLength];
@@ -129,8 +137,11 @@ public sealed partial class ClientPipeline
 
         int perCallIndex = index;
 
-        // Add retry policy.
-        policies[index++] = options.RetryPolicy ?? ClientRetryPolicy.Default;
+        if (options.RetryPolicy is not null)
+        {
+            // Add retry policy.
+            policies[index++] = options.RetryPolicy;
+        }
 
         // Per try policies come after the retry policy.
         perTryPolicies.CopyTo(policies.AsSpan(index));
