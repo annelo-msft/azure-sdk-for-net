@@ -30,6 +30,9 @@ public partial class SimplePostClient
     /// <summary> Initializes a new instance of SimplePostClient for mocking. </summary>
     protected SimplePostClient()
     {
+        _pipeline = default!;
+        _endpoint = default!;
+        ClientDiagnostics = default!;
     }
 
     /// <summary> Initializes a new instance of SimplePostClient. </summary>
@@ -59,8 +62,7 @@ public partial class SimplePostClient
     /// <include file="Docs/SimplePostClient.xml" path="doc/members/member[@name='IncrementCountAsync(int,CancellationToken)']/*" />
     public virtual async Task<Response<int>> IncrementCountAsync(int addend, CancellationToken cancellationToken = default)
     {
-        RequestContext context = FromCancellationToken(cancellationToken);
-        Response response = await IncrementCountAsync(addend, context).ConfigureAwait(false);
+        Response response = await IncrementCountAsync(addend, cancellationToken.ToRequestContext()).ConfigureAwait(false);
         return Response.FromValue(response.Content.ToObjectFromJson<int>(), response);
     }
 
@@ -70,8 +72,7 @@ public partial class SimplePostClient
     /// <include file="Docs/SimplePostClient.xml" path="doc/members/member[@name='IncrementCount(int,CancellationToken)']/*" />
     public virtual Response<int> IncrementCount(int addend, CancellationToken cancellationToken = default)
     {
-        RequestContext context = FromCancellationToken(cancellationToken);
-        Response response = IncrementCount(addend, context);
+        Response response = IncrementCount(addend, cancellationToken.ToRequestContext());
         return Response.FromValue(response.Content.ToObjectFromJson<int>(), response);
     }
 
@@ -131,7 +132,7 @@ public partial class SimplePostClient
     /// <exception cref="RequestFailedException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
     /// <include file="Docs/SimplePostClient.xml" path="doc/members/member[@name='IncrementCount(int,RequestContext)']/*" />
-    public virtual Response IncrementCount(int addend, RequestContext context)
+    public virtual Response IncrementCount(int addend, RequestContext? context)
     {
         using var scope = ClientDiagnostics.CreateScope("SimplePostClient.IncrementCount");
         scope.Start();
@@ -147,7 +148,7 @@ public partial class SimplePostClient
         }
     }
 
-    internal HttpMessage CreateIncrementCountRequest(int addend, RequestContext context)
+    internal HttpMessage CreateIncrementCountRequest(int addend, RequestContext? context)
     {
         var message = _pipeline.CreateMessage(context, ResponseClassifier200);
         var request = message.Request;
@@ -161,17 +162,6 @@ public partial class SimplePostClient
         return message;
     }
 
-    private static RequestContext DefaultRequestContext = new RequestContext();
-    internal static RequestContext FromCancellationToken(CancellationToken cancellationToken = default)
-    {
-        if (!cancellationToken.CanBeCanceled)
-        {
-            return DefaultRequestContext;
-        }
-
-        return new RequestContext() { CancellationToken = cancellationToken };
-    }
-
-    private static ResponseClassifier _responseClassifier200;
+    private static ResponseClassifier? _responseClassifier200;
     private static ResponseClassifier ResponseClassifier200 => _responseClassifier200 ??= new StatusCodeClassifier(stackalloc ushort[] { 200 });
 }
