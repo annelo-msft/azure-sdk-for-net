@@ -14,20 +14,17 @@ using Azure.Core.Pipeline;
 
 namespace SimplePost;
 
-// Data plane generated client.
+// Data plane generated client.  Generated from TypeSpec and @azure-typespec emitter.  Generator version x.x.x.
 /// <summary> The SimplePost service client. </summary>
 public partial class SimplePostClient
 {
-    private readonly HttpPipeline _pipeline;
     private readonly Uri _endpoint;
+    private readonly HttpPipeline _pipeline;
 
     /// <summary> The ClientDiagnostics is used to provide tracing support for the client library. </summary>
     internal ClientDiagnostics ClientDiagnostics { get; }
 
-    /// <summary> The HTTP pipeline for sending and receiving REST requests and responses. </summary>
-    public virtual HttpPipeline Pipeline => _pipeline;
-
-    /// <summary> Initializes a new instance of SimplePostClient for mocking. </summary>
+    /// <summary> Creates a new instance of <see cref="SimplePostClient"/> for mocking. </summary>
     protected SimplePostClient()
     {
         _pipeline = default!;
@@ -49,32 +46,16 @@ public partial class SimplePostClient
     public SimplePostClient(Uri endpoint, SimplePostClientOptions options)
     {
         Argument.AssertNotNull(endpoint, nameof(endpoint));
+
         options ??= new SimplePostClientOptions();
 
+        _endpoint = endpoint;
         ClientDiagnostics = new ClientDiagnostics(options, true);
         _pipeline = HttpPipelineBuilder.Build(options, Array.Empty<HttpPipelinePolicy>(), Array.Empty<HttpPipelinePolicy>(), new ResponseClassifier());
-        _endpoint = endpoint;
     }
 
-    /// <summary> Increment count. </summary>
-    /// <param name="addend"> The <see cref="int"/> to use. </param>
-    /// <param name="cancellationToken"> The cancellation token to use. </param>
-    /// <include file="Docs/SimplePostClient.xml" path="doc/members/member[@name='IncrementCountAsync(int,CancellationToken)']/*" />
-    public virtual async Task<Response<int>> IncrementCountAsync(int addend, CancellationToken cancellationToken = default)
-    {
-        Response response = await IncrementCountAsync(addend, cancellationToken.ToRequestContext()).ConfigureAwait(false);
-        return Response.FromValue(response.Content.ToObjectFromJson<int>(), response);
-    }
-
-    /// <summary> Increment count. </summary>
-    /// <param name="addend"> The <see cref="int"/> to use. </param>
-    /// <param name="cancellationToken"> The cancellation token to use. </param>
-    /// <include file="Docs/SimplePostClient.xml" path="doc/members/member[@name='IncrementCount(int,CancellationToken)']/*" />
-    public virtual Response<int> IncrementCount(int addend, CancellationToken cancellationToken = default)
-    {
-        Response response = IncrementCount(addend, cancellationToken.ToRequestContext());
-        return Response.FromValue(response.Content.ToObjectFromJson<int>(), response);
-    }
+    /// <summary> The HTTP pipeline for sending and receiving REST requests and responses. </summary>
+    public virtual HttpPipeline Pipeline => _pipeline;
 
     /// <summary>
     /// [Protocol Method] Increment count.
@@ -96,7 +77,7 @@ public partial class SimplePostClient
     /// <exception cref="RequestFailedException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
     /// <include file="Docs/SimplePostClient.xml" path="doc/members/member[@name='IncrementCountAsync(int,RequestContext)']/*" />
-    public virtual async Task<Response> IncrementCountAsync(int addend, RequestContext context)
+    public virtual async Task<Response> IncrementCountAsync(int addend, RequestContext? context)
     {
         using var scope = ClientDiagnostics.CreateScope("SimplePostClient.IncrementCount");
         scope.Start();
@@ -146,6 +127,26 @@ public partial class SimplePostClient
             scope.Failed(e);
             throw;
         }
+    }
+
+    /// <summary> Increment count. </summary>
+    /// <param name="addend"> The <see cref="int"/> to use. </param>
+    /// <param name="cancellationToken"> The cancellation token to use. </param>
+    /// <include file="Docs/SimplePostClient.xml" path="doc/members/member[@name='IncrementCount(int,CancellationToken)']/*" />
+    public virtual Response<int> IncrementCount(int addend, CancellationToken cancellationToken = default)
+    {
+        Response response = IncrementCount(addend, cancellationToken.ToRequestContext());
+        return Response.FromValue(response.Content.ToObjectFromJson<int>(), response);
+    }
+
+    /// <summary> Increment count. </summary>
+    /// <param name="addend"> The <see cref="int"/> to use. </param>
+    /// <param name="cancellationToken"> The cancellation token to use. </param>
+    /// <include file="Docs/SimplePostClient.xml" path="doc/members/member[@name='IncrementCountAsync(int,CancellationToken)']/*" />
+    public virtual async Task<Response<int>> IncrementCountAsync(int addend, CancellationToken cancellationToken = default)
+    {
+        Response response = await IncrementCountAsync(addend, cancellationToken.ToRequestContext()).ConfigureAwait(false);
+        return Response.FromValue(response.Content.ToObjectFromJson<int>(), response);
     }
 
     internal HttpMessage CreateIncrementCountRequest(int addend, RequestContext? context)
