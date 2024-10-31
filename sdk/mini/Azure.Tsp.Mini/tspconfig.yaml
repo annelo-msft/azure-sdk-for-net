@@ -1,0 +1,4 @@
+	additionalDirectories: []
+	repo: Azure/azure-sdk-for-net
+	commit: 
+  directory: sdk\mini\Azure.Tsp.Mini\typespec
